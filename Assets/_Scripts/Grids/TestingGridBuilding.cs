@@ -19,6 +19,7 @@ public class TestingGridBuilding : MonoBehaviour
             foreach (Cell c in test)
             {
                 c.Placed = true;
+                c.UpdateColor(Color.black);
             }
         }
     }

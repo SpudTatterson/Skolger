@@ -28,6 +28,10 @@ public class Cell : MonoBehaviour
 
         grid.cells[x, y] = this;
     }
+    public void UpdateColor(Color color)
+    {
+        mr.material.color = color;
+    }
     void GetCenterPoint()
     {
         bounds = mr.bounds;
