@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 [System.Serializable]
@@ -24,10 +21,6 @@ public class Cell : MonoBehaviour
         mr = GetComponentInChildren<MeshRenderer>();
         GetCenterPoint();
     }
-    void Update()
-    {
-        if(Placed ) mr.material.color = Color.blue;
-    }
     public void ReconnectWithGrid()
     {
         if (grid == null) grid = GetComponentInParent<GridManager>();
@@ -50,22 +43,5 @@ public class Cell : MonoBehaviour
     {
         this.x = x;
         this.y = y;
-    }
-}
-
-[InitializeOnLoad]
-public class GridReloader
-{
-    static GridReloader()
-    {
-        EditorApplication.delayCall += ReconnectCells;
-    }
-
-    static void ReconnectCells()
-    {
-        foreach (var cell in Object.FindObjectsOfType<Cell>())
-        {
-            cell.ReconnectWithGrid();
-        }
     }
 }

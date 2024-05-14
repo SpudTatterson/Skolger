@@ -1,10 +1,9 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
+public class GridManager : MonoBehaviour
 {
     [SerializeField] int height;
     [SerializeField] int width;
@@ -32,12 +31,16 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
             }
         }
     }
+    void Awake()
+    {
+        ConvertFlatArrayTo2D();
+    }
 
     private void ConvertFlatArrayTo2D()
     {
         if (flatCells != null && flatCells.Count > 0)
         {
-            cells = new Cell[width, height];
+            InitializeCells();
             for (int i = 0; i < flatCells.Count; i++)
             {
                 int x = i / height;
@@ -57,15 +60,8 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     [ContextMenu("GenerateGrid")] //allows calling function from editor 
     void GenerateGrid()
     {
-        if (cells != null)
-        {
-            foreach (Cell cell in cells)
-            {
-                if (cell != null)
-                    DestroyImmediate(cell.gameObject); // destroy all old cells when generating new grid this is not reversible  
-            }
-        }
-        cells = new Cell[width, height];
+        ResetGrid();
+        InitializeCells();
         flatCells = new List<Cell>();
 
         for (int x = 0; x < cells.GetLength(0); x++)
@@ -81,9 +77,16 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     void GenerateCell(int x, int y)
     {
         int randomCellPrefabIndex = Random.Range(0, cellPrefabs.Length - 1);
-        GameObject cellVisual = Instantiate(cellPrefabs[randomCellPrefabIndex], GetWorldPosition(x, y), Quaternion.identity, this.transform);
+        //GameObject cellVisual = PrefabUtility.InstantiatePrefab(cellPrefabs[randomCellPrefabIndex]) as GameObject;
+        GameObject cellVisual = Instantiate(cellPrefabs[randomCellPrefabIndex]);
+
+        cellVisual.transform.SetParent(this.transform);
+        cellVisual.transform.position = GetWorldPosition(x, y);
+        cellVisual.transform.rotation = Quaternion.identity;
+        //GameObject cellVisual = Instantiate(cellPrefabs[randomCellPrefabIndex], GetWorldPosition(x, y), Quaternion.identity, this.transform);
         cellVisual.name = x + "/" + y + " " + "Cell";
         Cell cell = cellVisual.GetComponent<Cell>();
+        cellVisual.isStatic = true;
         cells[x, y] = cell;
         flatCells.Add(cell);
 
@@ -96,13 +99,13 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
         cells[x, y].SetGridManager(this);
     }
 
-    //[ContextMenu("UpdateGrid")] dont use this for now
+    //[ContextMenu("UpdateGrid")] don't use this for now
     void UpdateGrid()
     {
         if (cells == null) ConvertFlatArrayTo2D();
         Cell[,] tempCopy = cells.Clone() as Cell[,]; // create backup of grid
 
-        cells = new Cell[width, height]; // expand/shrink array
+        InitializeCells(); // expand/shrink array
 
 
         for (int x = 0; x < cells.GetLength(0); x++)
@@ -147,31 +150,48 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     {
         return transform.TransformPoint(new Vector3(x, 0, y) * cellSize);// transforms the position from global to local position
     }
-    public List<Vector2Int> GetGridIndexes(Vector2Int initialIndex, int width, int height)
+    public bool GetGridIndexes(Vector2Int initialIndex, int width, int height, out List<Vector2Int> indexes)
     {
-        List<Vector2Int> indexes = new List<Vector2Int>();
+        indexes = new List<Vector2Int>();
 
-        // Iterate through the grid starting from initialIndex up to calculated max bounds
+        // Check if the requested grid area is out of the overall grid bounds
+        if (initialIndex.x + width > cells.GetLength(0) || initialIndex.y + height > cells.GetLength(1))
+        {
+            Debug.Log("Requested grid area is out of bounds.");
+            return false;
+        }
+
+        // Populate the list of indexes within the specified sub-area
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                // Add the coordinates to the list
-                indexes.Add(initialIndex + new Vector2Int(x, y));
+                Vector2Int index = initialIndex + new Vector2Int(x, y);
+                if (cells[index.x, index.y] == null) // Check if the cell at this index is null
+                {
+                    Debug.Log("Null cell encountered at index: " + index);
+                    indexes.Clear(); // Clear the list since the operation failed
+                    return false;
+                }
+                indexes.Add(index); // Add the coordinate to the list
             }
         }
-        return indexes;
+        return true; // All checks passed, and the list of indexes is populated
     }
-    public List<Cell> GetGrids(Vector2Int initialIndex, int width, int height)
+    public bool GetGrids(Vector2Int initialIndex, int width, int height, out List<Cell> cells)
     {
-        List<Vector2Int> indexes = GetGridIndexes(initialIndex, width, height);
-        List<Cell> cells = new List<Cell>();
+        List<Vector2Int> indexes;
+        bool insideArray = GetGridIndexes(initialIndex, width, height, out indexes);
+
+        cells = new List<Cell>();
+        if (!insideArray) return false;
 
         foreach (Vector2Int i in indexes)
         {
+            if (this.cells[i.x, i.y] == null) return false;
             cells.Add(this.cells[i.x, i.y]);
         }
-        return cells;
+        return true;
     }
     public Cell GetCellFromIndex(int x, int y)
     {
@@ -183,7 +203,7 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
 
     public void OnBeforeSerialize()
     {
-        if(cells == null) return;
+        if (cells == null) return;
         flatCells.Clear();
         foreach (Cell cell in cells)
         {
@@ -195,12 +215,22 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     {
         ConvertFlatArrayTo2D();
     }
-    [ContextMenu("ReadCells")]
-    void ReadCells()
+    [ContextMenu("TestCells")]
+    void TestCells()
     {
         foreach (Cell cell in cells)
         {
             Debug.Log(cell.name);
+        }
+    }
+    [ContextMenu("ResetGrid")]
+    void ResetGrid()
+    {
+
+        Cell[] objects = GetComponentsInChildren<Cell>();
+        foreach (Cell cell in objects)
+        {
+            DestroyImmediate(cell.gameObject);
         }
     }
 }
