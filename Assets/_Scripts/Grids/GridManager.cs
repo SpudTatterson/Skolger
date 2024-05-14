@@ -77,13 +77,12 @@ public class GridManager : MonoBehaviour
     void GenerateCell(int x, int y)
     {
         int randomCellPrefabIndex = Random.Range(0, cellPrefabs.Length - 1);
-        //GameObject cellVisual = PrefabUtility.InstantiatePrefab(cellPrefabs[randomCellPrefabIndex]) as GameObject;
-        GameObject cellVisual = Instantiate(cellPrefabs[randomCellPrefabIndex]);
+        GameObject cellVisual = PrefabUtility.InstantiatePrefab(cellPrefabs[randomCellPrefabIndex]) as GameObject;
+        // GameObject cellVisual = Instantiate(cellPrefabs[randomCellPrefabIndex]);
 
         cellVisual.transform.SetParent(this.transform);
         cellVisual.transform.position = GetWorldPosition(x, y);
         cellVisual.transform.rotation = Quaternion.identity;
-        //GameObject cellVisual = Instantiate(cellPrefabs[randomCellPrefabIndex], GetWorldPosition(x, y), Quaternion.identity, this.transform);
         cellVisual.name = x + "/" + y + " " + "Cell";
         Cell cell = cellVisual.GetComponent<Cell>();
         cellVisual.isStatic = true;
@@ -226,11 +225,14 @@ public class GridManager : MonoBehaviour
     [ContextMenu("ResetGrid")]
     void ResetGrid()
     {
+        if (flatCells == null || flatCells.Count == 0) return;
 
-        Cell[] objects = GetComponentsInChildren<Cell>();
-        foreach (Cell cell in objects)
-        {
-            DestroyImmediate(cell.gameObject);
-        }
+            foreach (Cell cell in flatCells)
+            {
+                DestroyImmediate(cell.gameObject);
+            }
+            flatCells = new List<Cell>();
+
+
     }
 }
