@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c2d85c210dbb24f966b0c6d0546203, type: 3}
   m_Name: Wall
   m_EditorClassIdentifier: 
-  height: 0
-  width: 0
+  length: 1
+  width: 1
+  costs:
+  - type: 0
+    cost: 20
