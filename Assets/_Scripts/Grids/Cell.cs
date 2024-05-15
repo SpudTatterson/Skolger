@@ -19,7 +19,10 @@ public class Cell
         this.grid = grid;
         this.id = x + "/" + y + " " + "Cell";
     }
-
+    public bool IsFreeForBuilding()
+    {
+        return !inUse;
+    }
     public override string ToString()
     {
         return id;

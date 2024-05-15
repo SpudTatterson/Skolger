@@ -42,6 +42,7 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     [ContextMenu("ResetGrid")]
     void ResetGrid()
     {
+        if(flatCells == null) return;
         Debug.Log("Old Grid Deleted");
         InitializeCells();
         foreach (GameObject chunk in visualGridChunks)
