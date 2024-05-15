@@ -5,17 +5,19 @@ using UnityEditor;
 [System.Serializable]
 public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
 {
+    [Header("Settings")]
     [SerializeField] int height;
     [SerializeField] int width;
     [SerializeField] float cellSize;
     [SerializeField] GameObject[] cellPrefabs;
     [SerializeField] Material material;
 
+    [Header("Cells")]
     public Cell[,] cells;
     [SerializeField] List<Cell> flatCells = new List<Cell>();
     List<GameObject> visualGridChunks = new List<GameObject>();
 
-    
+
     public GridManager(int height, int width, float cellSize, GameObject[] cellPrefabs, Material material)
     {
         this.height = height;
@@ -31,32 +33,28 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
         ConvertFlatArrayTo2D();
     }
 
-    private void ConvertFlatArrayTo2D()
-    {
-        if (flatCells != null && flatCells.Count > 0)
-        {
-            InitializeCells();
-            for (int i = 0; i < flatCells.Count; i++)
-            {
-                int x = i / height;
-                int y = i % height;
-                cells[x, y] = flatCells[i];
-                //cells[x, y].SetXY(x, y);
-            }
-        }
-    }
-
-
+    #region Grid Generation
     public void InitializeCells()
     {
         cells = new Cell[width, height];
+    }
+
+    [ContextMenu("ResetGrid")]
+    void ResetGrid()
+    {
+        Debug.Log("Old Grid Deleted");
+        InitializeCells();
+        foreach (GameObject chunk in visualGridChunks)
+        {
+            DestroyImmediate(chunk);
+        }
     }
 
     [ContextMenu("GenerateGrid")] //allows calling function from editor 
     void GenerateGrid()
     {
         ResetGrid();
-        
+
         flatCells = new List<Cell>();
 
         for (int x = 0; x < cells.GetLength(0); x++)
@@ -69,8 +67,6 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
         CreateVisualGrid();
         Debug.Log("Grid Created");
     }
-
-
 
     void GenerateCell(int x, int y)
     {
@@ -149,6 +145,13 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
         visualGridChunks.Add(gridVisual);
     }
 
+    public Vector3 GetWorldPosition(int x, int y)
+    {
+        return transform.position + new Vector3(x * cellSize + cellSize / 2, 0, y * cellSize + cellSize / 2);
+    }
+    
+    #endregion
+
     public Cell GetCellFromPosition(Vector3 position)
     {
         Vector3 localPosition = position - transform.position;
@@ -161,10 +164,7 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
         }
         return null; // or handle out-of-bounds case
     }
-    public Vector3 GetWorldPosition(int x, int y)
-    {
-        return transform.position + new Vector3(x * cellSize + cellSize / 2, 0, y * cellSize + cellSize / 2);
-    }
+
     public bool TryGetCellIndexes(Vector2Int initialIndex, int width, int height, out List<Vector2Int> indexes)
     {
         indexes = new List<Vector2Int>();
@@ -216,6 +216,7 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
             return cells[x, y];
     }
 
+    #region serialization 
     public void OnBeforeSerialize()
     {
         if (cells == null) return;
@@ -230,22 +231,29 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     {
         ConvertFlatArrayTo2D();
     }
+    void ConvertFlatArrayTo2D()
+    {
+        if (flatCells != null && flatCells.Count > 0)
+        {
+            InitializeCells();
+            for (int i = 0; i < flatCells.Count; i++)
+            {
+                int x = i / height;
+                int y = i % height;
+                cells[x, y] = flatCells[i];
+                //cells[x, y].SetXY(x, y);
+            }
+        }
+    }
+    
+    #endregion
+
     [ContextMenu("TestCells")]
     void TestCells()
     {
         foreach (Cell cell in cells)
         {
             Debug.Log(cell.id);
-        }
-    }
-    [ContextMenu("ResetGrid")]
-    void ResetGrid()
-    {
-        Debug.Log("Old Grid Deleted");
-        InitializeCells();
-        foreach (GameObject chunk in visualGridChunks)
-        {
-            DestroyImmediate(chunk);
         }
     }
 }
