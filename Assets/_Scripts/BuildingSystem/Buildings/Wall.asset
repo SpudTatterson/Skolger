@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c2d85c210dbb24f966b0c6d0546203, type: 3}
   m_Name: Wall
   m_EditorClassIdentifier: 
-  length: 1
-  width: 1
+  xSize: 1
+  ySize: 1
   costs:
   - type: 0
     cost: 20
+  visualGO: {fileID: 1993355150303815632, guid: 7f854f9557d5636489828ba36c77ff98,
+    type: 3}
+  walkable: 0
+  takesFullCell: 1
