@@ -3,33 +3,28 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class GridManager : MonoBehaviour
+public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
 {
     [SerializeField] int height;
     [SerializeField] int width;
     [SerializeField] float cellSize;
     [SerializeField] GameObject[] cellPrefabs;
+    [SerializeField] Material material;
 
     public Cell[,] cells;
     [SerializeField] List<Cell> flatCells = new List<Cell>();
-    public GridManager(int height, int width, float cellSize, GameObject[] cellPrefabs)
+    List<GameObject> visualGridChunks = new List<GameObject>();
+
+    
+    public GridManager(int height, int width, float cellSize, GameObject[] cellPrefabs, Material material)
     {
         this.height = height;
         this.width = width;
         this.cellSize = cellSize;
         this.cellPrefabs = cellPrefabs;
+        this.material = material;
 
         GenerateGrid();
-    }
-    void UpdateCellsInfo()
-    {
-        for (int x = 0; x < cells.GetLength(0); x++)
-        {
-            for (int y = 0; y < cells.GetLength(1); y++)
-            {
-                UpdateCellInfo(x, y);
-            }
-        }
     }
     void Awake()
     {
@@ -46,7 +41,7 @@ public class GridManager : MonoBehaviour
                 int x = i / height;
                 int y = i % height;
                 cells[x, y] = flatCells[i];
-                cells[x, y].SetXY(x, y);
+                //cells[x, y].SetXY(x, y);
             }
         }
     }
@@ -61,7 +56,7 @@ public class GridManager : MonoBehaviour
     void GenerateGrid()
     {
         ResetGrid();
-        InitializeCells();
+        
         flatCells = new List<Cell>();
 
         for (int x = 0; x < cells.GetLength(0); x++)
@@ -71,85 +66,106 @@ public class GridManager : MonoBehaviour
                 GenerateCell(x, y);
             }
         }
-        UpdateCellsInfo();
+        CreateVisualGrid();
+        Debug.Log("Grid Created");
     }
+
+
 
     void GenerateCell(int x, int y)
     {
-        int randomCellPrefabIndex = Random.Range(0, cellPrefabs.Length - 1);
-        GameObject cellVisual = PrefabUtility.InstantiatePrefab(cellPrefabs[randomCellPrefabIndex]) as GameObject;
-        // GameObject cellVisual = Instantiate(cellPrefabs[randomCellPrefabIndex]);
-
-        cellVisual.transform.SetParent(this.transform);
-        cellVisual.transform.position = GetWorldPosition(x, y);
-        cellVisual.transform.rotation = Quaternion.identity;
-        cellVisual.name = x + "/" + y + " " + "Cell";
-        Cell cell = cellVisual.GetComponent<Cell>();
-        cellVisual.isStatic = true;
+        Cell cell = new Cell(x, y, GetWorldPosition(x, y), this);
         cells[x, y] = cell;
         flatCells.Add(cell);
-
     }
 
-
-    void UpdateCellInfo(int x, int y)
+    void CreateVisualGrid()
     {
-        cells[x, y].SetXY(x, y);
-        cells[x, y].SetGridManager(this);
-    }
+        int chunkSize = 100; // Adjust the chunk size to ensure you stay within the vertex limit
 
-    //[ContextMenu("UpdateGrid")] don't use this for now
-    void UpdateGrid()
-    {
-        if (cells == null) ConvertFlatArrayTo2D();
-        Cell[,] tempCopy = cells.Clone() as Cell[,]; // create backup of grid
-
-        InitializeCells(); // expand/shrink array
-
-
-        for (int x = 0; x < cells.GetLength(0); x++)
+        for (int chunkX = 0; chunkX < width; chunkX += chunkSize)
         {
-            for (int y = 0; y < cells.GetLength(1); y++)
+            for (int chunkY = 0; chunkY < height; chunkY += chunkSize)
             {
-                if (x < tempCopy.GetLength(0) && y < tempCopy.GetLength(1))
-                {
-                    // Transfer cell from the old grid if within bounds of the new grid.
-                    cells[x, y] = tempCopy[x, y];
-                }
-                else
-                {
-                    // Create a new cell if the position is new in the grid.
-                    GenerateCell(x, y);
-                }
+                int currentChunkWidth = Mathf.Min(chunkSize, width - chunkX);
+                int currentChunkHeight = Mathf.Min(chunkSize, height - chunkY);
+
+                CreateGridChunk(chunkX, chunkY, currentChunkWidth, currentChunkHeight);
+            }
+        }
+    }
+
+    void CreateGridChunk(int startX, int startY, int chunkWidth, int chunkHeight)
+    {
+        GameObject gridVisual = new GameObject("GridChunk_" + startX + "_" + startY);
+        gridVisual.transform.SetParent(transform);
+        MeshFilter meshFilter = gridVisual.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = gridVisual.AddComponent<MeshRenderer>();
+        meshRenderer.material = material;
+
+        Mesh mesh = new Mesh();
+        Vector3[] vertices = new Vector3[chunkWidth * chunkHeight * 4];
+        int[] triangles = new int[chunkWidth * chunkHeight * 6];
+        Vector2[] uv = new Vector2[chunkWidth * chunkHeight * 4];
+
+        int vertIndex = 0;
+        int triIndex = 0;
+
+        for (int x = 0; x < chunkWidth; x++)
+        {
+            for (int y = 0; y < chunkHeight; y++)
+            {
+                Vector3 basePosition = new Vector3((startX + x) * cellSize, 0, (startY + y) * cellSize);
+
+                vertices[vertIndex + 0] = basePosition + new Vector3(0, 0, 0) + transform.position;
+                vertices[vertIndex + 1] = basePosition + new Vector3(0, 0, cellSize) + transform.position;
+                vertices[vertIndex + 2] = basePosition + new Vector3(cellSize, 0, cellSize) + transform.position;
+                vertices[vertIndex + 3] = basePosition + new Vector3(cellSize, 0, 0) + transform.position;
+
+                triangles[triIndex + 0] = vertIndex + 0;
+                triangles[triIndex + 1] = vertIndex + 1;
+                triangles[triIndex + 2] = vertIndex + 2;
+                triangles[triIndex + 3] = vertIndex + 2;
+                triangles[triIndex + 4] = vertIndex + 3;
+                triangles[triIndex + 5] = vertIndex + 0;
+
+                uv[vertIndex + 0] = new Vector2(0, 0);
+                uv[vertIndex + 1] = new Vector2(0, 1);
+                uv[vertIndex + 2] = new Vector2(1, 1);
+                uv[vertIndex + 3] = new Vector2(1, 0);
+
+                vertIndex += 4;
+                triIndex += 6;
             }
         }
 
-        // Destroy any cells that were in the old grid but not transferred to the new grid.
-        for (int x = 0; x < tempCopy.GetLength(0); x++)
-        {
-            for (int y = 0; y < tempCopy.GetLength(1); y++)
-            {
-                if (x >= width || y >= height)
-                {
-                    // Check if the cell exists before destroying it.
-                    if (tempCopy[x, y] != null)
-                    {
-                        flatCells.Remove(tempCopy[x, y]);
-                        DestroyImmediate(tempCopy[x, y].gameObject);
-                    }
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uv;
+        mesh.RecalculateNormals();
 
-                }
-            }
-        }
-
-        UpdateCellsInfo();
+        meshFilter.mesh = mesh;
+        gridVisual.AddComponent<MeshCollider>();
+        visualGridChunks.Add(gridVisual);
     }
 
-    Vector3 GetWorldPosition(int x, int y)
+    public Cell GetCellFromPosition(Vector3 position)
     {
-        return transform.TransformPoint(new Vector3(x, 0, y) * cellSize);// transforms the position from global to local position
+        Vector3 localPosition = position - transform.position;
+        int x = Mathf.FloorToInt(localPosition.x / cellSize);
+        int y = Mathf.FloorToInt(localPosition.z / cellSize);
+
+        if (x >= 0 && x < width && y >= 0 && y < height)
+        {
+            return cells[x, y];
+        }
+        return null; // or handle out-of-bounds case
     }
-    public bool GetGridIndexes(Vector2Int initialIndex, int width, int height, out List<Vector2Int> indexes)
+    public Vector3 GetWorldPosition(int x, int y)
+    {
+        return transform.position + new Vector3(x * cellSize + cellSize / 2, 0, y * cellSize + cellSize / 2);
+    }
+    public bool TryGetCellIndexes(Vector2Int initialIndex, int width, int height, out List<Vector2Int> indexes)
     {
         indexes = new List<Vector2Int>();
 
@@ -177,12 +193,12 @@ public class GridManager : MonoBehaviour
         }
         return true; // All checks passed, and the list of indexes is populated
     }
-    public bool GetGrids(Vector2Int initialIndex, int width, int height, out List<Cell> cells)
+    public bool TryGetCells(Vector2Int initialIndex, int width, int height, out List<Cell> cells)
     {
         List<Vector2Int> indexes;
-        bool insideArray = GetGridIndexes(initialIndex, width, height, out indexes);
-
         cells = new List<Cell>();
+
+        bool insideArray = TryGetCellIndexes(initialIndex, width, height, out indexes);
         if (!insideArray) return false;
 
         foreach (Vector2Int i in indexes)
@@ -219,20 +235,17 @@ public class GridManager : MonoBehaviour
     {
         foreach (Cell cell in cells)
         {
-            Debug.Log(cell.name);
+            Debug.Log(cell.id);
         }
     }
     [ContextMenu("ResetGrid")]
     void ResetGrid()
     {
-        if (flatCells == null || flatCells.Count == 0) return;
-
-            foreach (Cell cell in flatCells)
-            {
-                DestroyImmediate(cell.gameObject);
-            }
-            flatCells = new List<Cell>();
-
-
+        Debug.Log("Old Grid Deleted");
+        InitializeCells();
+        foreach (GameObject chunk in visualGridChunks)
+        {
+            DestroyImmediate(chunk);
+        }
     }
 }

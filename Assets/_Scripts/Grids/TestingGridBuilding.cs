@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class TestingGridBuilding : MonoBehaviour
 {
-    public List<Cell> test;
-
+    public GameObject testGO;
+    public List<Cell> cells;
 
     void Update()
     {
@@ -12,15 +12,21 @@ public class TestingGridBuilding : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit) && Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Cell cell = hit.transform.GetComponentInParent<Cell>();
-            if(cell == null) Debug.Log("Cell null");
-            if(cell.grid == null) cell.ReconnectWithGrid();
-            if(cell.grid.GetGrids(new Vector2Int(cell.x, cell.y), 2, 2, out test) == false)  Debug.Log("NO space");
-            foreach (Cell c in test)
+
+            Debug.Log(hit.transform.name);
+            GridManager grid = hit.transform.GetComponentInParent<GridManager>();
+            if(grid == null) Debug.Log("No grid found");
+            Cell cell = grid.GetCellFromPosition(hit.point);
+            if(cell == null) Debug.Log("No cell found");
+            Debug.Log(cell.position);
+            if(grid.TryGetCells(new Vector2Int(cell.x, cell.y), 2,2, out cells))
             {
-                c.Placed = true;
-                c.UpdateColor(Color.black);
+                foreach (Cell c in cells)
+                {
+                    Instantiate(testGO, c.position, Quaternion.identity);
+                }
             }
+            
         }
     }
 }
