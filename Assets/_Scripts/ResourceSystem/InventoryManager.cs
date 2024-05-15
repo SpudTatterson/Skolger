@@ -50,4 +50,8 @@ public class InventoryManager : MonoBehaviour
             materials[cost.type] -= cost.cost;
         }
     }
+    public int CheckAmount(MaterialType type)
+    {
+        return materials[type];
+    }
 }

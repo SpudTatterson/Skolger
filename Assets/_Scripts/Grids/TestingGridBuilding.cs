@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class TestingGridBuilding : MonoBehaviour
 {
-    public GameObject testGO;
     public List<Cell> cells;
+    public Building building;
 
     void Update()
     {
@@ -19,11 +19,22 @@ public class TestingGridBuilding : MonoBehaviour
             Cell cell = grid.GetCellFromPosition(hit.point);
             if(cell == null) Debug.Log("No cell found");
             Debug.Log(cell.position);
-            if(grid.TryGetCells(new Vector2Int(cell.x, cell.y), 2,2, out cells))
+            bool cellsExist = grid.TryGetCells(new Vector2Int(cell.x, cell.y), building.xSize, building.ySize, out cells);
+            bool cellsFree = true;
+            foreach(Cell c in cells)
             {
+                cellsFree = c.IsFreeForBuilding();
+                if(cellsFree == false) break;
+            }
+            if(cellsExist && cellsFree && InventoryManager.instance.HasMaterials(building.costs))
+            {
+                InventoryManager.instance.UseMaterials(building.costs);
+                Debug.Log(InventoryManager.instance.CheckAmount(MaterialType.Wood));
+                Instantiate(building.visualGO, cell.position, Quaternion.identity);
                 foreach (Cell c in cells)
                 {
-                    Instantiate(testGO, c.position, Quaternion.identity);
+                    c.inUse = building.takesFullCell;
+                    c.Walkable = building.walkable;
                 }
             }
             
