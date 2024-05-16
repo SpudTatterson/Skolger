@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xSize: 1
   ySize: 1
-  costs: []
-  visualGO: {fileID: 0}
-  walkable: 0
   takesFullCell: 1
+  walkable: 0
+  costs: []
+  building: {fileID: 1993355150303815632, guid: 7f854f9557d5636489828ba36c77ff98,
+    type: 3}

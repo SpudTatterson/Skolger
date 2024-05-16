@@ -5,6 +5,5 @@ using UnityEngine;
 public class Building : Placeable
 {
   public List<MaterialCost> costs = new List<MaterialCost>();
-  public GameObject visualGO;   
-  public bool walkable = false;
+  public GameObject building;   
 }
