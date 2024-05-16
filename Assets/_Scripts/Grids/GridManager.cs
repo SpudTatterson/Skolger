@@ -43,12 +43,17 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     void ResetGrid()
     {
         if(flatCells == null) return;
-        Debug.Log("Old Grid Deleted");
         InitializeCells();
+        if(visualGridChunks.Count == 0) 
+        {
+            Debug.LogWarning("No old grid Chunks found \n if old grid chunks exist please delete manually");
+            return;
+        }
         foreach (GameObject chunk in visualGridChunks)
         {
             DestroyImmediate(chunk);
         }
+        Debug.Log("Old Grid Deleted");
     }
 
     [ContextMenu("GenerateGrid")] //allows calling function from editor 
