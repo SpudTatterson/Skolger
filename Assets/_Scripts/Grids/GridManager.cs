@@ -53,6 +53,7 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
         {
             DestroyImmediate(chunk);
         }
+        visualGridChunks.Clear();
         Debug.Log("Old Grid Deleted");
     }
 
