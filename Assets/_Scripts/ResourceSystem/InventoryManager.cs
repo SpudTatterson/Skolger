@@ -5,29 +5,29 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance;
-    [SerializeField] Dictionary<MaterialType, int> materials = new Dictionary<MaterialType, int>{
-        { MaterialType.Iron, 100 },
-        { MaterialType.Wood, 100 },
+    [SerializeField] SerializableDictionary<ItemData, int> materials = new SerializableDictionary<ItemData, int>{
+        // { MaterialType.Iron, 100 },
+        // { MaterialType.Wood, 100 },
     };
         
     void Awake()
     {
         instance = this;
     }
-    public void AddMaterial(MaterialType type, int amount)
+    public void AddMaterial(ItemData item, int amount)
     {
-        materials[type] = amount;
+        materials[item] = amount;
     }
 
-    public bool HasMaterial(MaterialCost materialCost)
+    public bool HasMaterial(ItemCost materialCost)
     {
-        if(!materials.ContainsKey(materialCost.type)) return false;
-        if(materials[materialCost.type] >= materialCost.cost) return true;
+        if(!materials.ContainsKey(materialCost.item)) return false;
+        if(materials[materialCost.item] >= materialCost.cost) return true;
         else return false;
     }
-    public bool HasMaterials(List<MaterialCost> materialCosts)
+    public bool HasMaterials(List<ItemCost> materialCosts)
     {
-        foreach(MaterialCost Cost in materialCosts)
+        foreach(ItemCost Cost in materialCosts)
         {
             bool has;
             has = HasMaterial(Cost);
@@ -39,19 +39,27 @@ public class InventoryManager : MonoBehaviour
         }
         return true;
     }
-    public void UseMaterial(MaterialCost materialCost)
+    public void UseMaterial(ItemCost materialCost)
     {
-        materials[materialCost.type] -= materialCost.cost;
+        materials[materialCost.item] -= materialCost.cost;
     }
-    public void UseMaterials(List<MaterialCost> materialCosts)
+    public void UseMaterials(List<ItemCost> materialCosts)
     {
-        foreach (MaterialCost cost in materialCosts)
+        foreach (ItemCost cost in materialCosts)
         {
-            materials[cost.type] -= cost.cost;
+            materials[cost.item] -= cost.cost;
         }
     }
-    public int CheckAmount(MaterialType type)
+    public int CheckAmount(ItemData type)
     {
         return materials[type];
+    }
+    [ContextMenu("CheckInv")]
+    void CheckInv()
+    {
+        foreach(KeyValuePair<ItemData, int> material in materials)
+        {
+            Debug.Log(material.Key + ": " + material.Value);
+        }
     }
 }

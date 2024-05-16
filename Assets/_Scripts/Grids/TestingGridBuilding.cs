@@ -5,12 +5,19 @@ public class TestingGridBuilding : MonoBehaviour
 {
     public List<Cell> cells;
     public Building building;
+    [SerializeField] LayerMask groundLayer;
+    [SerializeField] ItemData wood;
+
+    void Start()
+    {
+        InventoryManager.instance.AddMaterial(wood, 100);
+    }
 
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit) && Input.GetKeyDown(KeyCode.Mouse0))
+        if (Physics.Raycast(ray, out hit, 500f, groundLayer) && Input.GetKeyDown(KeyCode.Mouse0))
         {
             GridManager grid = hit.transform.GetComponentInParent<GridManager>();
             Cell cell = grid.GetCellFromPosition(hit.point);
@@ -24,7 +31,6 @@ public class TestingGridBuilding : MonoBehaviour
             if(cellsExist && cellsFree && InventoryManager.instance.HasMaterials(building.costs))
             {
                 InventoryManager.instance.UseMaterials(building.costs);
-                Debug.Log(InventoryManager.instance.CheckAmount(MaterialType.Wood));
                 Instantiate(building.building, cell.position, Quaternion.identity);
                 foreach (Cell c in cells)
                 {
