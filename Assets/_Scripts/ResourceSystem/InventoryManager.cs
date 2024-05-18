@@ -5,59 +5,71 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance;
-    [SerializeField] SerializableDictionary<ItemData, int> materials = new SerializableDictionary<ItemData, int>{
-        // { MaterialType.Iron, 100 },
-        // { MaterialType.Wood, 100 },
-    };
-        
+
+    public List<Stockpile> stockpiles = new List<Stockpile>();
+    public SerializableDictionary<ItemData, int> totalItems = new SerializableDictionary<ItemData, int>();
+
     void Awake()
     {
-        instance = this;
-    }
-    public void AddMaterial(ItemData item, int amount)
-    {
-        materials[item] = amount;
+        if (instance == null)
+            instance = this;
+        else
+        {
+            Destroy(this);
+            Debug.Log("more the one inventory manager exists");
+        }
+
     }
 
-    public bool HasMaterial(ItemCost materialCost)
+    // make method to get stockpile with empty space
+    public void AddItem(ItemData item, int amount)
     {
-        if(!materials.ContainsKey(materialCost.item)) return false;
-        if(materials[materialCost.item] >= materialCost.cost) return true;
+        if(totalItems.ContainsKey(item))
+            totalItems[item] += amount;
+        else
+            totalItems.Add(item, amount);
+    }
+
+    public bool HasItem(ItemCost materialCost)
+    {
+        if (!totalItems.ContainsKey(materialCost.item)) return false;
+        if (totalItems[materialCost.item] >= materialCost.cost) return true;
         else return false;
     }
-    public bool HasMaterials(List<ItemCost> materialCosts)
+    public bool HasItems(List<ItemCost> materialCosts)
     {
-        foreach(ItemCost Cost in materialCosts)
+        foreach (ItemCost Cost in materialCosts)
         {
             bool has;
-            has = HasMaterial(Cost);
-            if(has == false)
+            has = HasItem(Cost);
+            if (has == false)
             {
                 Debug.Log("missing: " + Cost.ToString());
                 return false;
-            } 
+            }
         }
         return true;
     }
-    public void UseMaterial(ItemCost materialCost)
+    public void UseItem(ItemCost materialCost)
     {
-        materials[materialCost.item] -= materialCost.cost;
+        totalItems[materialCost.item] -= materialCost.cost;
     }
-    public void UseMaterials(List<ItemCost> materialCosts)
+    public void UseItems(List<ItemCost> materialCosts)
     {
         foreach (ItemCost cost in materialCosts)
         {
-            materials[cost.item] -= cost.cost;
+            totalItems[cost.item] -= cost.cost;
         }
     }
+
     public int CheckAmount(ItemData type)
     {
-        return materials[type];
+        return totalItems[type];
     }
     [ContextMenu("CheckInv")]
     void CheckInv()
     {
-        foreach(KeyValuePair<ItemData, int> material in materials)
+        foreach (KeyValuePair<ItemData, int> material in totalItems)
         {
             Debug.Log(material.Key + ": " + material.Value);
         }
