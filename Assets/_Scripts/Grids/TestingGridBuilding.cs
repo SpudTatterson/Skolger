@@ -10,7 +10,7 @@ public class TestingGridBuilding : MonoBehaviour
 
     void Start()
     {
-        InventoryManager.instance.AddMaterial(wood, 100);
+        InventoryManager.instance.AddItem(wood, 100);
     }
 
     void Update()
@@ -28,9 +28,9 @@ public class TestingGridBuilding : MonoBehaviour
                 cellsFree = c.IsFreeForBuilding();
                 if(cellsFree == false) break;
             }
-            if(cellsExist && cellsFree && InventoryManager.instance.HasMaterials(building.costs))
+            if(cellsExist && cellsFree && InventoryManager.instance.HasItems(building.costs))
             {
-                InventoryManager.instance.UseMaterials(building.costs);
+                InventoryManager.instance.UseItems(building.costs);
                 Instantiate(building.building, cell.position, Quaternion.identity);
                 foreach (Cell c in cells)
                 {
