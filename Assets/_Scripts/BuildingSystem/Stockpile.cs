@@ -54,10 +54,9 @@ public class Stockpile : MonoBehaviour
     {
         if (cells.ContainsKey(cell) && cells[cell] == null)
         {
-
-            visualItems[cell] = Instantiate(item.itemData.visual, cell.position, Quaternion.identity, transform);
-            visualItems[cell].layer = LayerManager.instance.itemLayer;
-            cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, visualItems[cell].transform, true, this);
+            GameObject visual;
+            cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, cell.position, out visual, transform, true, this);
+            visualItems[cell] = visual;
             emptyCells.Remove(cell);
             InventoryManager.instance.AddItem(item.itemData, item.amount);
         }
