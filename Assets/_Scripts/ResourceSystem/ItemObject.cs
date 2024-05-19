@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 using UnityEngine;
 
 public class ItemObject : MonoBehaviour
@@ -18,11 +15,11 @@ public class ItemObject : MonoBehaviour
 
     void Awake()
     {
-        if(doManualInitialized)
+        if (doManualInitialized)
             Initialize(itemData);
     }
 
-    public void Initialize(ItemData itemData, int amount = 0, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile= null)
+    public void Initialize(ItemData itemData, int amount = 0, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         this.itemData = itemData;
 
@@ -47,21 +44,23 @@ public class ItemObject : MonoBehaviour
         return false;
     }
 
-    public static ItemObject MakeInstance(ItemData itemData, int amount = 0, Transform parent = null, bool inStockpile = false, Stockpile stockpile= null)
+    public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, out GameObject visualGO, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
     {
-        GameObject itemGO = new GameObject(itemData.name);
+        visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
 
-        itemGO.transform.parent = parent;
-        itemGO.layer = LayerManager.instance.itemLayer;
-        itemGO.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        visualGO.AddComponent<BoxCollider>();
 
-        itemGO.AddComponent<BoxCollider>();
+        ItemObject item = visualGO.AddComponent<ItemObject>();
+        item.Initialize(itemData, amount, visualGO, inStockpile, stockpile);
+        item.transform.position = position;
 
-        ItemObject item = itemGO.AddComponent<ItemObject>();
-        item.Initialize(itemData, amount, parent.gameObject, inStockpile, stockpile);
+        visualGO.transform.parent = parent;
+        visualGO.layer = LayerManager.instance.itemLayer;
+        
 
         return item;
     }
+
 
     public bool CheckIfInStockpile(out Stockpile stockpile)
     {
