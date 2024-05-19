@@ -18,7 +18,7 @@ public class TreeObject : MonoBehaviour, IHarvestable
         {
             int amount = Random.Range(drop.minDropAmount, drop.maxDropAmount);
             if (amount == 0) continue;
-            ItemObject.MakeInstance(drop.itemData, amount, potentialDropPoints[0].position, out GameObject visualGO);
+            ItemObject.MakeInstance(drop.itemData, amount, potentialDropPoints[0].position);
             potentialDropPoints.RemoveAt(0);
         }
         harvester.RemoveFromHarvestQueue(this);
