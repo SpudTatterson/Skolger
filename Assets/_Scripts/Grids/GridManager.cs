@@ -11,6 +11,7 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     [SerializeField] float cellSize;
     [SerializeField] GameObject[] cellPrefabs;
     [SerializeField] Material material;
+    [SerializeField] int groundLayer;
 
     [Header("Cells")]
     public Cell[,] cells;
@@ -53,6 +54,7 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
         {
             DestroyImmediate(chunk);
         }
+        visualGridChunks.Clear();
         Debug.Log("Old Grid Deleted");
     }
 
@@ -100,6 +102,7 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     void CreateGridChunk(int startX, int startY, int chunkWidth, int chunkHeight)
     {
         GameObject gridVisual = new GameObject("GridChunk_" + startX + "_" + startY);
+        gridVisual.layer = groundLayer;
         gridVisual.transform.SetParent(transform);
         MeshFilter meshFilter = gridVisual.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = gridVisual.AddComponent<MeshRenderer>();
