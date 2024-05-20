@@ -3,30 +3,46 @@ using UnityEngine;
 
 public class TestingGridBuilding : MonoBehaviour
 {
-    public GameObject testGO;
     public List<Cell> cells;
+    Building building;
+
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            building = null;
+        }
+        if(building == null) return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit) && Input.GetKeyDown(KeyCode.Mouse0))
+        if (Physics.Raycast(ray, out hit, 500f, LayerManager.instance.GroundLayerMask) && Input.GetKeyDown(KeyCode.Mouse0))
         {
-
-            Debug.Log(hit.transform.name);
             GridManager grid = hit.transform.GetComponentInParent<GridManager>();
-            if(grid == null) Debug.Log("No grid found");
             Cell cell = grid.GetCellFromPosition(hit.point);
-            if(cell == null) Debug.Log("No cell found");
-            Debug.Log(cell.position);
-            if(grid.TryGetCells(new Vector2Int(cell.x, cell.y), 2,2, out cells))
+            bool cellsExist = grid.TryGetCells(new Vector2Int(cell.x, cell.y), building.xSize, building.ySize, out cells);
+            bool cellsFree = true;
+            foreach(Cell c in cells)
             {
+                cellsFree = c.IsFreeForBuilding();
+                if(cellsFree == false) break;
+            }
+            if(cellsExist && cellsFree && InventoryManager.instance.HasItems(building.costs))
+            {
+                InventoryManager.instance.UseItems(building.costs);
+                Instantiate(building.building, cell.position, Quaternion.identity);
                 foreach (Cell c in cells)
                 {
-                    Instantiate(testGO, c.position, Quaternion.identity);
+                    c.inUse = building.takesFullCell;
+                    c.Walkable = building.walkable;
                 }
             }
             
         }
+    }
+
+    public void SetBuildingToPlace(Building building)
+    {
+        this.building = building;
     }
 }
