@@ -73,7 +73,6 @@ public class Stockpile : MonoBehaviour
             int amountToDistribute = item.amount;
             foreach (ItemObject stockpileItem in itemsInStockpile)
             {
-
                 if (stockpileItem.amount + amountToDistribute <= item.itemData.stackSize)
                 {
                     stockpileItem.MergeItem(item, Vector3.zero);
@@ -135,6 +134,8 @@ public class Stockpile : MonoBehaviour
             else if (item.amount > requiredAmount)
             {
                 ItemObject newItem = item.SplitItem(requiredAmount, position, parent);
+                InventoryManager.instance.RemoveAmountOfItem(item.itemData, requiredAmount);
+                totalItems[item.itemData] -= requiredAmount;
                 itemsToTake.Add(newItem);
                 return itemsToTake;
             }
