@@ -4,20 +4,19 @@ using UnityEngine;
 public class TestingGridBuilding : MonoBehaviour
 {
     public List<Cell> cells;
-    public Building building;
-    [SerializeField] LayerMask groundLayer;
-    [SerializeField] ItemData wood;
+    Building building;
 
-    void Start()
-    {
-        InventoryManager.instance.AddItem(wood, 100);
-    }
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            building = null;
+        }
+        if(building == null) return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 500f, groundLayer) && Input.GetKeyDown(KeyCode.Mouse0))
+        if (Physics.Raycast(ray, out hit, 500f, LayerManager.instance.GroundLayerMask) && Input.GetKeyDown(KeyCode.Mouse0))
         {
             GridManager grid = hit.transform.GetComponentInParent<GridManager>();
             Cell cell = grid.GetCellFromPosition(hit.point);
@@ -40,5 +39,10 @@ public class TestingGridBuilding : MonoBehaviour
             }
             
         }
+    }
+
+    public void SetBuildingToPlace(Building building)
+    {
+        this.building = building;
     }
 }
