@@ -23,6 +23,15 @@ public class Cell
     {
         return !inUse;
     }
+    public static bool AreCellsFree(List<Cell> cells)
+    {
+        foreach (Cell cell in cells)
+        {
+            bool isFree = cell.IsFreeForBuilding();
+            if (!isFree) return false;
+        }
+        return true;
+    }
     public override string ToString()
     {
         return id;
