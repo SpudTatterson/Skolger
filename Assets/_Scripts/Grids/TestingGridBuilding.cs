@@ -4,7 +4,7 @@ using UnityEngine;
 public class TestingGridBuilding : MonoBehaviour
 {
     public List<Cell> cells;
-    Building building;
+    BuildingData building;
 
 
     void Update()
@@ -30,7 +30,7 @@ public class TestingGridBuilding : MonoBehaviour
             if(cellsExist && cellsFree && InventoryManager.instance.HasItems(building.costs))
             {
                 InventoryManager.instance.UseItems(building.costs);
-                Instantiate(building.building, cell.position, Quaternion.identity);
+                Instantiate(building.buildingVisualUnplaced, cell.position, Quaternion.identity);
                 foreach (Cell c in cells)
                 {
                     c.inUse = building.takesFullCell;
@@ -41,7 +41,7 @@ public class TestingGridBuilding : MonoBehaviour
         }
     }
 
-    public void SetBuildingToPlace(Building building)
+    public void SetBuildingToPlace(BuildingData building)
     {
         this.building = building;
     }
