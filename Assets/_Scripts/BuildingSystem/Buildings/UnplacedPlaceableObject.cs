@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class UnplacedPlaceableObject : MonoBehaviour, IConstructable
 {
     public BuildingData buildingData { get; private set; }
-    SerializableDictionary<ItemData, int> costs = new SerializableDictionary<ItemData, int>();
+    List<ItemCost> costs = new List<ItemCost>();
     SerializableDictionary<ItemData, int> fulfilledCosts = new SerializableDictionary<ItemData, int>();
     List<Cell> occupiedCells = new List<Cell>();
 
@@ -19,22 +19,32 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable
 
         foreach (ItemCost cost in this.buildingData.costs)
         {
-            costs.Add(cost.item, cost.cost);
-            fulfilledCosts.Add(cost.item, 0);
+            costs.Add(cost);
+            if (fulfilledCosts.ContainsKey(cost.item))
+                fulfilledCosts[cost.item] += cost.cost;
+            else
+                fulfilledCosts.Add(cost.item, 0);
         }
     }
 
     public void AddItem(ItemObject itemObject)
     {
         fulfilledCosts[itemObject.itemData] += itemObject.amount;
-        costs[itemObject.itemData] -= itemObject.amount;
-        if (costs[itemObject.itemData] == 0)
-        {
-            costs.Remove(itemObject.itemData);
-        }
+        costs.RemoveAt(0);
+
         itemObject.UpdateAmount(itemObject.amount);
 
         CheckIfCanConstruct();
+    }
+    public ItemCost GetNextCost()
+    {
+        if (costs.Count != 0)
+            return costs[0];
+        return null;
+    }
+    public Vector3 GetPosition()
+    {
+        return transform.position;
     }
 
     public void CheckIfCanConstruct()
@@ -76,8 +86,6 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable
                 return null;
             }
         }
-        //set all cells in building size as in use
-        //in building object set them as unwalkable
 
         UnplacedPlaceableObject building = buildingGO.AddComponent<UnplacedPlaceableObject>();
         building.Initialize(buildingData, cells);
