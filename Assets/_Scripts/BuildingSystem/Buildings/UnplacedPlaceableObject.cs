@@ -21,7 +21,7 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable
         {
             costs.Add(cost);
             if (fulfilledCosts.ContainsKey(cost.item))
-                fulfilledCosts[cost.item] += cost.cost;
+                continue;
             else
                 fulfilledCosts.Add(cost.item, 0);
         }
