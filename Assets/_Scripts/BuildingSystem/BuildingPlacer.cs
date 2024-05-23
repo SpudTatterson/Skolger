@@ -33,6 +33,10 @@ public class BuildingPlacer : MonoBehaviour
                 {
                     UnplacedPlaceableObject building = UnplacedPlaceableObject.MakeInstance(buildingData, hitCell);
                     placedBuildings.Add(building.gameObject);
+
+                    //hauler testing
+                    HaulerTest hauler = FindObjectOfType<HaulerTest>();
+                    hauler.AddConstructable(building);
                 }
             }
         }
