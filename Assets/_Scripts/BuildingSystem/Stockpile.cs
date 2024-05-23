@@ -64,6 +64,19 @@ public class Stockpile : MonoBehaviour
                 totalItems.Add(item.itemData, item.amount);
         }
     }
+    public List<Cell> GetItemsCells(ItemData itemData, int cost)
+    {
+        List<ItemObject> foundItems =  FindItems(new ItemCost(itemData, cost));
+        List<Cell> cells = new List<Cell>();    
+        foreach( ItemObject item in foundItems)
+        {
+            cells.Add(item.occupiedCell);
+            Debug.Log(item.name + " " + item.amount);
+        }
+
+        if(cells.Count >= 0) Debug.Log("no cells found " + cells.Count);
+        return cells;
+    }
     public bool AddItem(ItemObject item)
     {
         if (HasItem(item.itemData) && item.itemData.stackSize != 1)
@@ -83,7 +96,7 @@ public class Stockpile : MonoBehaviour
                 else if (stockpileItem.amount + amountToDistribute > item.itemData.stackSize)
                 {
                     int amountTaken = stockpileItem.MergeItem(item, Vector3.zero);
-                    amountToDistribute -= amountTaken;  
+                    amountToDistribute -= amountTaken;
                     InventoryManager.instance.AddItem(item.itemData, amountTaken);
                     totalItems[item.itemData] += amountTaken;
                 }
@@ -106,15 +119,6 @@ public class Stockpile : MonoBehaviour
         return true;
     }
 
-    // void MergeItems(ItemObject itemInStockpile, ItemObject item)
-    // {
-    //     int amountToMove = Mathf.Min(item.itemData.stackSize - itemInStockpile.amount, item.amount);
-    //     item.UpdateAmount(-amountToMove);
-    //     itemInStockpile.UpdateAmount(amountToMove);
-    //     totalItems[item.itemData] += amountToMove;
-    //     InventoryManager.instance.AddItem(item.itemData, amountToMove);
-    //     Debug.Log($"Merged {amountToMove} items. Stockpile now has {itemInStockpile.amount}, item has {item.amount}");
-    // }
 
     public List<ItemObject> TakeItem(ItemData itemData, int amount, Vector3 position = default, Transform parent = null)
     {
@@ -155,16 +159,17 @@ public class Stockpile : MonoBehaviour
         if (!existInInv) return false;
         existInInv = totalItems[itemData] != 0f;
         if (!existInInv) return false;
-        foreach (KeyValuePair<Cell, ItemObject> pair in cells)
-        {
-            if (pair.Value != null && pair.Value.itemData == itemData)
-            {
-                if (pair.Value.amount <= amount)
-                {
-                    return true;
-                }
-            }
-        }
+        // foreach (KeyValuePair<Cell, ItemObject> pair in cells)
+        // {
+        //     if (pair.Value != null && pair.Value.itemData == itemData)
+        //     {
+        //         if (pair.Value.amount >= amount)
+        //         {
+        //             return true;
+        //         }
+        //     }
+        // }
+        if(totalItems[itemData] > amount) return true;
 
         Debug.Log("Not enough of " + itemData.name + " was found in the stockpile or item not found.");
         return false;
@@ -181,6 +186,20 @@ public class Stockpile : MonoBehaviour
             if (pair.Value != null && pair.Value.itemData == itemData)
             {
                 foundItems.Add(pair.Value);
+            }
+        }
+        return foundItems;
+    }
+    List<ItemObject> FindItems(ItemCost itemCost)
+    {
+        List<ItemObject> foundItems = new List<ItemObject>();
+        int costToFulfil = itemCost.cost;
+        foreach (KeyValuePair<Cell, ItemObject> pair in cells)
+        {
+            if (pair.Value != null && pair.Value.itemData == itemCost.item && costToFulfil >= 0)
+            {
+                foundItems.Add(pair.Value);
+                costToFulfil -= pair.Value.amount;
             }
         }
         return foundItems;
