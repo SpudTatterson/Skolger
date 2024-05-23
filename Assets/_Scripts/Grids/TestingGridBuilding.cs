@@ -18,7 +18,7 @@ public class TestingGridBuilding : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 500f, LayerManager.instance.GroundLayerMask) && Input.GetKeyDown(KeyCode.Mouse0))
         {
-            GridManager grid = hit.transform.GetComponentInParent<GridManager>();
+            GridObject grid = hit.transform.GetComponentInParent<GridObject>();
             Cell cell = grid.GetCellFromPosition(hit.point);
             bool cellsExist = grid.TryGetCells(new Vector2Int(cell.x, cell.y), building.xSize, building.ySize, out cells);
             bool cellsFree = true;
@@ -29,7 +29,7 @@ public class TestingGridBuilding : MonoBehaviour
             }
             if(cellsExist && cellsFree && InventoryManager.instance.HasItems(building.costs))
             {
-                InventoryManager.instance.UseItems(building.costs);
+                InventoryManager.instance.TakeItems(building.costs);
                 Instantiate(building.buildingVisualUnplaced, cell.position, Quaternion.identity);
                 foreach (Cell c in cells)
                 {

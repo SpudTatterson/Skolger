@@ -20,7 +20,7 @@ public class BuildingPlacer : MonoBehaviour
             if(Physics.Raycast(ray, out hit, 100f, LayerManager.instance.GroundLayerMask))
             {
 
-                GridManager hitGrid = hit.transform.GetComponentInParent<GridManager>();
+                GridObject hitGrid = hit.transform.GetComponentInParent<GridObject>();
 
                 Cell hitCell = hitGrid.GetCellFromPosition(hit.point);
 

@@ -41,7 +41,7 @@ public class StockpileTest : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 500f, LayerManager.instance.GroundLayerMask) && Input.GetKeyDown(KeyCode.Mouse0))
         {
-            GridManager grid = hit.transform.GetComponentInParent<GridManager>();
+            GridObject grid = hit.transform.GetComponentInParent<GridObject>();
             Cell cell = grid.GetCellFromPosition(hit.point);
             bool cellsExist = grid.TryGetCells(new Vector2Int(cell.x, cell.y), size.x, size.y, out cells);
             bool cellsFree = true;
