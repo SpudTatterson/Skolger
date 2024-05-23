@@ -7,15 +7,15 @@ public class HaulerTest : MonoBehaviour
 {
     [SerializeField] float speed = 2.5f;
     List<IConstructable> constructionQueue = new List<IConstructable>();
-    List<ItemObject> heldItems = new List<ItemObject>();
+    ItemObject heldItems;
     ItemCost costToGet;
     bool hauling;
 
     // Update is called once per frame
     void Update()
     {
-        
-        if(constructionQueue.Count > 0 && !hauling)
+
+        if (constructionQueue.Count > 0 && !hauling)
         {
             StartCoroutine(HaulItem(constructionQueue[0]));
         }
@@ -24,7 +24,7 @@ public class HaulerTest : MonoBehaviour
     IEnumerator HaulItem(IConstructable constructable)
     {
         costToGet = constructable.GetNextCost();
-        if(costToGet == null) 
+        if (costToGet == null)
         {
             constructionQueue.Remove(constructable);
             hauling = false;
@@ -33,37 +33,36 @@ public class HaulerTest : MonoBehaviour
 
         hauling = true;
 
-        if(InventoryManager.instance.HasItem(costToGet))
+        if (InventoryManager.instance.HasItem(costToGet))
         {
-            List<Vector3> positions = InventoryManager.instance.GetItemLocations(costToGet.item, costToGet.cost);
-            foreach (Vector3 position in positions)
-            {
-                while(Vector3.Distance(transform.position, position) > 1)
-                {
-                    // go to stockpile item
-                    transform.Translate(VectorUtility.GetDirection(transform.position, position) * speed * Time.deltaTime);
-                    yield return null;
-                }
-                heldItems = InventoryManager.instance.TakeItem(costToGet);// take item
-                Vector3 constructablePosition = constructable.GetPosition(); // get constructable position
-                while(Vector3.Distance(constructablePosition, transform.position) > 1)
-                {
-                    // go to constructable
-                    transform.Translate(VectorUtility.GetDirection(transform.position, constructablePosition) * speed * Time.deltaTime);
-                    yield return null;
-                }
-                foreach(ItemObject item in heldItems)
-                {
-                    constructable.AddItem(item); // add taken items
-                }
-                hauling = false;
-                heldItems.Clear();
+            Vector3 itemPosition = InventoryManager.instance.GetItemLocation(costToGet.item, costToGet.cost);
 
+            while (Vector3.Distance(transform.position, itemPosition) > 1)
+            {
+                // go to stockpile item
+                transform.Translate(VectorUtility.GetDirection(transform.position, itemPosition) * speed * Time.deltaTime);
+                yield return null;
             }
+            heldItems = InventoryManager.instance.TakeItem(costToGet);// take item
+            Vector3 constructablePosition = constructable.GetPosition(); // get constructable position
+            while (Vector3.Distance(constructablePosition, transform.position) > 1)
+            {
+                // go to constructable
+                transform.Translate(VectorUtility.GetDirection(transform.position, constructablePosition) * speed * Time.deltaTime);
+                yield return null;
+            }
+
+            constructable.AddItem(heldItems); // add taken item
+
+            hauling = false;
+            heldItems = null;
+
         }
         else
         {
+            yield return new WaitForSeconds(3);
             hauling = false;
+            Debug.Log("cant find enough items");
         }
         // find where can obtain item with correct amount
         // walk there
@@ -76,5 +75,5 @@ public class HaulerTest : MonoBehaviour
     {
         constructionQueue.Add(constructable);
     }
-    
+
 }
