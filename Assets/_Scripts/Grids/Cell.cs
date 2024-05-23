@@ -7,11 +7,11 @@ public class Cell
 {
     public string id;
     public int x, y; // index
-    public GridManager grid; // the grid the cell belongs to
+    public GridObject grid; // the grid the cell belongs to
     public Vector3 position; // position in the world
     public bool Walkable = true; // for Path Finding 
     public bool inUse = false; // does this cell have a building, tree, item etc on it
-    public Cell(int x, int y, Vector3 position, GridManager grid)
+    public Cell(int x, int y, Vector3 position, GridObject grid)
     {
         this.x = x;
         this.y = y;

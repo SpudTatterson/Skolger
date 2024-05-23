@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
+public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 {
     [Header("Settings")]
     [SerializeField] int height;
@@ -19,7 +19,7 @@ public class GridManager : MonoBehaviour, ISerializationCallbackReceiver
     List<GameObject> visualGridChunks = new List<GameObject>();
 
 
-    public GridManager(int height, int width, float cellSize, GameObject[] cellPrefabs, Material material)
+    public GridObject(int height, int width, float cellSize, GameObject[] cellPrefabs, Material material)
     {
         this.height = height;
         this.width = width;
