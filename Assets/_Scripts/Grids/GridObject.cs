@@ -43,9 +43,9 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     [ContextMenu("ResetGrid")]
     void ResetGrid()
     {
-        if(flatCells == null) return;
+        if (flatCells == null) return;
         InitializeCells();
-        if(visualGridChunks.Count == 0) 
+        if (visualGridChunks.Count == 0)
         {
             Debug.LogWarning("No old grid Chunks found \n if old grid chunks exist please delete manually");
             return;
@@ -158,7 +158,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     {
         return transform.position + new Vector3(x * cellSize + cellSize / 2, 0, y * cellSize + cellSize / 2);
     }
-    
+
     #endregion
 
     public Cell GetCellFromPosition(Vector3 position)
@@ -219,7 +219,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     }
     public Cell GetCellFromIndex(int x, int y)
     {
-        if (x < 0 || y < 0 || x < width || y < height)
+        if (x < 0 || y < 0 || x >= width || y >= height) // Use '>= width' and '>= height' to check boundaries
             return null;
         else
             return cells[x, y];
@@ -254,7 +254,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             }
         }
     }
-    
+
     #endregion
 
     [ContextMenu("TestCells")]
