@@ -75,7 +75,7 @@ public class ItemObject : MonoBehaviour
 
         return newItem;
     }
-    public int MergeItem(ItemObject item, Vector3 excessPosition)
+    public int MergeItem(ItemObject item)
     {
         // take amount into this item and return excess
         int maxIntake = stackSize - amount;
