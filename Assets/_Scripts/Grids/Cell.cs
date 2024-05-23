@@ -32,6 +32,56 @@ public class Cell
         }
         return true;
     }
+    public Cell GetClosestEmptyCell()
+    {
+        Queue<Vector2Int> toExplore = new Queue<Vector2Int>();
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+
+        Vector2Int[] directions = new Vector2Int[]
+        {
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0),
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1)
+        };
+
+        Vector2Int start = new Vector2Int(x, y);
+        toExplore.Enqueue(start);
+        visited.Add(start);
+
+        while (toExplore.Count > 0)
+        {
+            Vector2Int current = toExplore.Dequeue();
+            Cell currentCell = grid.GetCellFromIndex(current.x, current.y);
+
+            Debug.Log($"Exploring cell at {current.x}, {current.y}");
+
+            if (currentCell != null && currentCell.IsFreeForBuilding())
+            {
+                Debug.Log($"Found empty cell at {current.x}, {current.y}");
+                return currentCell;
+            }
+
+            foreach (Vector2Int direction in directions)
+            {
+                Vector2Int neighbor = current + direction;
+
+                if (!visited.Contains(neighbor))
+                {
+                    Cell neighborCell = grid.GetCellFromIndex(neighbor.x, neighbor.y);
+                    if (neighborCell != null)
+                    {
+                        toExplore.Enqueue(neighbor);
+                        visited.Add(neighbor);
+                        Debug.Log($"Enqueueing neighbor cell at {neighbor.x}, {neighbor.y}");
+                    }
+                }
+            }
+        }
+
+        Debug.Log("No empty cell found");
+        return null; // No free cell found
+    }
     public override string ToString()
     {
         return id;
