@@ -64,38 +64,30 @@ public class Stockpile : MonoBehaviour
                 totalItems.Add(item.itemData, item.amount);
         }
     }
-    public List<Cell> GetItemsCells(ItemData itemData, int cost)
+    public Cell GetItemCell(ItemData itemData, int cost)
     {
-        List<ItemObject> foundItems =  FindItems(new ItemCost(itemData, cost));
-        List<Cell> cells = new List<Cell>();    
-        foreach( ItemObject item in foundItems)
-        {
-            cells.Add(item.occupiedCell);
-            Debug.Log(item.name + " " + item.amount);
-        }
+        ItemObject foundItems = FindAndMergeItem(new ItemCost(itemData, cost));
 
-        if(cells.Count >= 0) Debug.Log("no cells found " + cells.Count);
-        return cells;
+        return foundItems.occupiedCell;
     }
     public bool AddItem(ItemObject item)
     {
         if (HasItem(item.itemData) && item.itemData.stackSize != 1)
         {
-            Debug.Log("has item in inv");
             List<ItemObject> itemsInStockpile = FindItems(item.itemData);
             int amountToDistribute = item.amount;
             foreach (ItemObject stockpileItem in itemsInStockpile)
             {
                 if (stockpileItem.amount + amountToDistribute <= item.itemData.stackSize)
                 {
-                    stockpileItem.MergeItem(item, Vector3.zero);
+                    stockpileItem.MergeItem(item);
                     InventoryManager.instance.AddItem(item.itemData, amountToDistribute);
                     totalItems[item.itemData] += amountToDistribute;
                     return true;
                 }
                 else if (stockpileItem.amount + amountToDistribute > item.itemData.stackSize)
                 {
-                    int amountTaken = stockpileItem.MergeItem(item, Vector3.zero);
+                    int amountTaken = stockpileItem.MergeItem(item);
                     amountToDistribute -= amountTaken;
                     InventoryManager.instance.AddItem(item.itemData, amountTaken);
                     totalItems[item.itemData] += amountTaken;
@@ -120,56 +112,39 @@ public class Stockpile : MonoBehaviour
     }
 
 
-    public List<ItemObject> TakeItem(ItemData itemData, int amount, Vector3 position = default, Transform parent = null)
+    public ItemObject TakeItem(ItemData itemData, int amount, Vector3 position = default, Transform parent = null)
     {
         List<ItemObject> matchingItems = FindItems(itemData);
         int requiredAmount = amount;
 
-        List<ItemObject> itemsToTake = new List<ItemObject>();
-
+        List<ItemObject> items = new List<ItemObject>();
         foreach (ItemObject item in matchingItems)
         {
             if (item.amount == requiredAmount)
             {
-                itemsToTake.Add(item);
                 RemoveItem(item);
-                return itemsToTake;
+                return item;
             }
             else if (item.amount > requiredAmount)
             {
                 ItemObject newItem = item.SplitItem(requiredAmount, position, parent);
                 InventoryManager.instance.RemoveAmountOfItem(item.itemData, requiredAmount);
                 totalItems[item.itemData] -= requiredAmount;
-                itemsToTake.Add(newItem);
-                return itemsToTake;
+                return newItem;
             }
             else if (item.amount < requiredAmount)
             {
-                itemsToTake.Add(item);
                 requiredAmount -= item.amount;
+                AddItem(item);
                 RemoveItem(item);
             }
         }
-        return itemsToTake;
+        return null;
     }
     public bool HasItem(ItemData itemData, int amount)
     {
-
-        bool existInInv = InventoryManager.instance.HasItem(new ItemCost(itemData, amount));
-        if (!existInInv) return false;
-        existInInv = totalItems[itemData] != 0f;
-        if (!existInInv) return false;
-        // foreach (KeyValuePair<Cell, ItemObject> pair in cells)
-        // {
-        //     if (pair.Value != null && pair.Value.itemData == itemData)
-        //     {
-        //         if (pair.Value.amount >= amount)
-        //         {
-        //             return true;
-        //         }
-        //     }
-        // }
-        if(totalItems[itemData] > amount) return true;
+        Debug.Log(totalItems[itemData]);
+        if (totalItems[itemData] >= amount) return true;
 
         Debug.Log("Not enough of " + itemData.name + " was found in the stockpile or item not found.");
         return false;
@@ -190,7 +165,7 @@ public class Stockpile : MonoBehaviour
         }
         return foundItems;
     }
-    List<ItemObject> FindItems(ItemCost itemCost)
+    ItemObject FindAndMergeItem(ItemCost itemCost)
     {
         List<ItemObject> foundItems = new List<ItemObject>();
         int costToFulfil = itemCost.cost;
@@ -199,10 +174,19 @@ public class Stockpile : MonoBehaviour
             if (pair.Value != null && pair.Value.itemData == itemCost.item && costToFulfil >= 0)
             {
                 foundItems.Add(pair.Value);
+                Debug.Log(costToFulfil);
                 costToFulfil -= pair.Value.amount;
             }
         }
-        return foundItems;
+        if(foundItems.Count == 1) return foundItems[0];
+
+        ItemObject fullItem = foundItems[0];
+        foundItems.RemoveAt(0);
+        foreach (ItemObject item in foundItems)
+        {
+            fullItem.MergeItem(item);
+        }
+        return fullItem;
     }
     public void RemoveItem(ItemObject item)
     {

@@ -60,37 +60,32 @@ public class InventoryManager : MonoBehaviour
         }
         return true;
     }
-    public List<ItemObject> TakeItem(ItemCost ItemCost)
+    public ItemObject TakeItem(ItemCost ItemCost)
     {
         Stockpile stockpile = GetStockpileWithItem(ItemCost.item, ItemCost.cost);
-        List<ItemObject> itemToTake = stockpile.TakeItem(ItemCost.item, ItemCost.cost);
+        ItemObject itemToTake = stockpile.TakeItem(ItemCost.item, ItemCost.cost);
         return itemToTake;
        
     }
-    public List<ItemObject> TakeItems(List<ItemCost> ItemCosts)
+    // public List<ItemObject> TakeItems(List<ItemCost> ItemCosts)
+    // {
+    //     List<ItemObject> itemToTake = new List<ItemObject>();
+    //     foreach (ItemCost cost in ItemCosts)
+    //     {
+    //         List<ItemObject> items = TakeItem(cost);
+    //         foreach (ItemObject item in items)
+    //         {
+    //             itemToTake.Add(item);
+    //         }
+    //     }
+    //     return itemToTake;
+    // }
+    public Vector3 GetItemLocation(ItemData itemData, int cost)
     {
-        List<ItemObject> itemToTake = new List<ItemObject>();
-        foreach (ItemCost cost in ItemCosts)
-        {
-            List<ItemObject> items = TakeItem(cost);
-            foreach (ItemObject item in items)
-            {
-                itemToTake.Add(item);
-            }
-        }
-        return itemToTake;
-    }
-    public List<Vector3> GetItemLocations(ItemData itemData, int cost)
-    {
-        List<Cell> cells = GetStockpileWithItem(itemData, cost).GetItemsCells(itemData, cost);
-        List<Vector3> positions = new List<Vector3>();
-
-        foreach (Cell cell in cells)
-        {
-            positions.Add(cell.position);
-            Debug.Log(cell);
-        }
-        return positions;
+        Debug.Log(GetStockpileWithItem(itemData, cost) == null);
+        Debug.Log(GetStockpileWithItem(itemData, cost).GetItemCell(itemData, cost) == null) ;
+        Cell cell = GetStockpileWithItem(itemData, cost).GetItemCell(itemData, cost);
+        return cell.position;
     }
     public void RemoveAmountOfItem(ItemData item, int amount)
     {
