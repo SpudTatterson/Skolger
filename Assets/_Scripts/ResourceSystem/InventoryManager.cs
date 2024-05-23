@@ -21,8 +21,7 @@ public class InventoryManager : MonoBehaviour
 
     }
 
-    // make method to get stockpile with empty space
-    // make method to get stockpile with required item
+    // make method to get stockpile with empty space    
     Stockpile GetStockpileWithItem(ItemData itemData, int amount)
     {
         foreach (Stockpile stockpile in stockpiles)
@@ -41,15 +40,15 @@ public class InventoryManager : MonoBehaviour
             totalItems.Add(item, amount);
     }
 
-    public bool HasItem(ItemCost materialCost)
+    public bool HasItem(ItemCost itemCost)
     {
-        if (!totalItems.ContainsKey(materialCost.item)) return false;
-        if (totalItems[materialCost.item] >= materialCost.cost) return true;
+        if (!totalItems.ContainsKey(itemCost.item)) return false;
+        if (totalItems[itemCost.item] >= itemCost.cost) return true;
         else return false;
     }
-    public bool HasItems(List<ItemCost> materialCosts)
+    public bool HasItems(List<ItemCost> itemCosts)
     {
-        foreach (ItemCost Cost in materialCosts)
+        foreach (ItemCost Cost in itemCosts)
         {
             bool has;
             has = HasItem(Cost);
@@ -61,20 +60,37 @@ public class InventoryManager : MonoBehaviour
         }
         return true;
     }
-    public void UseItem(ItemCost materialCost)
+    public List<ItemObject> TakeItem(ItemCost ItemCost)
     {
-        Stockpile stockpile = GetStockpileWithItem(materialCost.item, materialCost.cost);
-        List<ItemObject> itemToUse = stockpile.TakeItem(materialCost.item, materialCost.cost);
-        // in actual game this item will need to go to the building to be used for now i will just destroy it
-        foreach (ItemObject item in itemToUse)
-            Destroy(item.gameObject);
+        Stockpile stockpile = GetStockpileWithItem(ItemCost.item, ItemCost.cost);
+        List<ItemObject> itemToTake = stockpile.TakeItem(ItemCost.item, ItemCost.cost);
+        return itemToTake;
+       
     }
-    public void UseItems(List<ItemCost> materialCosts)
+    public List<ItemObject> TakeItems(List<ItemCost> ItemCosts)
     {
-        foreach (ItemCost cost in materialCosts)
+        List<ItemObject> itemToTake = new List<ItemObject>();
+        foreach (ItemCost cost in ItemCosts)
         {
-            UseItem(cost);
+            List<ItemObject> items = TakeItem(cost);
+            foreach (ItemObject item in items)
+            {
+                itemToTake.Add(item);
+            }
         }
+        return itemToTake;
+    }
+    public List<Vector3> GetItemLocations(ItemData itemData, int cost)
+    {
+        List<Cell> cells = GetStockpileWithItem(itemData, cost).GetItemsCells(itemData, cost);
+        List<Vector3> positions = new List<Vector3>();
+
+        foreach (Cell cell in cells)
+        {
+            positions.Add(cell.position);
+            Debug.Log(cell);
+        }
+        return positions;
     }
     public void RemoveAmountOfItem(ItemData item, int amount)
     {
@@ -87,9 +103,9 @@ public class InventoryManager : MonoBehaviour
     [ContextMenu("CheckInv")]
     void CheckInv()
     {
-        foreach (KeyValuePair<ItemData, int> material in totalItems)
+        foreach (KeyValuePair<ItemData, int> item in totalItems)
         {
-            Debug.Log(material.Key + ": " + material.Value);
+            Debug.Log(item.Key + ": " + item.Value);
         }
     }
 }
