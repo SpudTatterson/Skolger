@@ -101,6 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridMaterial: {fileID: 2100000, guid: 728b3d800a13b1c4a920504130fb8f08, type: 2}
   stockpileMaterial: {fileID: 2100000, guid: 1e5ec0d2a694829409f038ae45d3d69b, type: 2}
+  unfinishedBuildingMaterial: {fileID: 2100000, guid: 54a61d413f961ee40b69cc0af66181b7,
+    type: 2}
 --- !u!114 &8654645700902479148
 MonoBehaviour:
   m_ObjectHideFlags: 0

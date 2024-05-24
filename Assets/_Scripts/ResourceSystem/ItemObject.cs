@@ -12,8 +12,9 @@ public class ItemObject : MonoBehaviour
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
     Stockpile currentStockpile;
+    public Cell occupiedCell { get; private set; }
 
-    void Awake()
+    void Start()
     {
         if (doManualInitialized)
             Initialize(itemData, amount);
@@ -30,6 +31,7 @@ public class ItemObject : MonoBehaviour
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
+        occupiedCell = GridManager.instance.GetGridFromPosition(transform.position).GetCellFromPosition(transform.position);
 
         UpdateAmount(initialAmount);
     }
@@ -43,12 +45,16 @@ public class ItemObject : MonoBehaviour
             this.amount = newAmount;
             if (this.amount == 0)
             {
-                if(inStockpile)
+                if (inStockpile)
                     currentStockpile.RemoveItem(this);
-                else 
+                else
+                {
+                    Debug.Log("destroying object");
                     Destroy(this.gameObject);
+                }
+                    
             }
-            if(this.amount < 0) Debug.LogWarning("item amount less then 0 something went wrong" + transform.name);
+            if (this.amount < 0) Debug.LogWarning("item amount less then 0 something went wrong" + transform.name);
             return true;
         }
 
@@ -69,7 +75,7 @@ public class ItemObject : MonoBehaviour
 
         return newItem;
     }
-    public int MergeItem(ItemObject item, Vector3 excessPosition)
+    public int MergeItem(ItemObject item)
     {
         // take amount into this item and return excess
         int maxIntake = stackSize - amount;
@@ -77,7 +83,7 @@ public class ItemObject : MonoBehaviour
 
         this.UpdateAmount(takeAmount);
         item.UpdateAmount(-takeAmount);
-        
+
         return takeAmount;
     }
     public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)

@@ -8,6 +8,7 @@ public class MaterialManager : MonoBehaviour
 
     public Material gridMaterial;
     public Material stockpileMaterial;
+    public Material unfinishedBuildingMaterial;
 
     void Awake()
     {

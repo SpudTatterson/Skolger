@@ -38,7 +38,7 @@ public class TreeObject : MonoBehaviour, IHarvestable
         RaycastHit gridHit;
         Physics.Raycast(transform.position + new Vector3(0, 1, 0), Vector3.down, out gridHit, 3f, LayerManager.instance.GroundLayerMask);
         Debug.Log(gridHit.transform.name);
-        GridManager grid = gridHit.transform.GetComponentInParent<GridManager>();
+        GridObject grid = gridHit.transform.GetComponentInParent<GridObject>();
         occupiedCell = grid.GetCellFromPosition(gridHit.point);
         occupiedCell.inUse = true;
         occupiedCell.Walkable = false;
