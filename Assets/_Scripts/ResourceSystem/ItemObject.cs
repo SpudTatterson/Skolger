@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class ItemObject : MonoBehaviour
 {
+    [Header("Settings")]
     public ItemData itemData;
     [SerializeField] int initialAmount;
-    public int amount { get; private set; }
-    string itemName;
     int stackSize;
-    ItemType itemType;
-    public GameObject visualGO { get; private set; }
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
+
+    public int amount { get; private set; }
+
+    [Header("References")]
     Stockpile currentStockpile;
+    public GameObject visualGO { get; private set; }
     public Cell occupiedCell { get; private set; }
 
     void Start()
@@ -25,9 +27,7 @@ public class ItemObject : MonoBehaviour
         this.itemData = itemData;
 
         this.amount = amount;
-        itemName = itemData.name;
         stackSize = itemData.stackSize;
-        itemType = itemData.itemType;
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
@@ -52,7 +52,7 @@ public class ItemObject : MonoBehaviour
                     Debug.Log("destroying object");
                     Destroy(this.gameObject);
                 }
-                    
+
             }
             if (this.amount < 0) Debug.LogWarning("item amount less then 0 something went wrong" + transform.name);
             return true;
