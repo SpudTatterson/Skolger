@@ -54,11 +54,8 @@ public class Cell
             Vector2Int current = toExplore.Dequeue();
             Cell currentCell = grid.GetCellFromIndex(current.x, current.y);
 
-            Debug.Log($"Exploring cell at {current.x}, {current.y}");
-
             if (currentCell != null && currentCell.IsFreeForBuilding())
             {
-                Debug.Log($"Found empty cell at {current.x}, {current.y}");
                 return currentCell;
             }
 
@@ -73,7 +70,6 @@ public class Cell
                     {
                         toExplore.Enqueue(neighbor);
                         visited.Add(neighbor);
-                        Debug.Log($"Enqueueing neighbor cell at {neighbor.x}, {neighbor.y}");
                     }
                 }
             }

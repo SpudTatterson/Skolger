@@ -143,7 +143,6 @@ public class Stockpile : MonoBehaviour
     }
     public bool HasItem(ItemData itemData, int amount)
     {
-        Debug.Log(totalItems[itemData]);
         if (totalItems[itemData] >= amount) return true;
 
         Debug.Log("Not enough of " + itemData.name + " was found in the stockpile or item not found.");

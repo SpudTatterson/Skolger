@@ -64,11 +64,6 @@ public class HaulerTest : MonoBehaviour
             hauling = false;
             Debug.Log("cant find enough items");
         }
-        // find where can obtain item with correct amount
-        // walk there
-        // walk to constructable prob use a courntine for walking with distance check or something or check what cell he is in 
-        // additem to constuctable
-
     }
 
     public void AddConstructable(IConstructable constructable)
