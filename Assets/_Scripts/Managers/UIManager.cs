@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("Selection")]
+    public GameObject selectionPanel;
+    public ItemSelectionMenu itemSelection;
+    
+
+
     public static UIManager instance { get; private set; }
 
     void Awake()
