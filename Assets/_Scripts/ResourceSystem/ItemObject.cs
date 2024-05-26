@@ -124,7 +124,6 @@ public class ItemObject : MonoBehaviour, ISelectable
     public void OnDeselect()
     {
         SelectionManager manager = SelectionManager.instance;
-
         manager.RemoveFromCurrentSelected(this);
     }
 
@@ -135,6 +134,12 @@ public class ItemObject : MonoBehaviour, ISelectable
     public GameObject GetGameObject()
     {
         return gameObject;
+    }
+
+    public string GetMultipleSelectionString(out int amount)
+    {
+        amount = this.amount;
+        return itemData.itemName;
     }
 
     #endregion

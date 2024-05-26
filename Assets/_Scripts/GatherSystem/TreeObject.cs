@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeObject : MonoBehaviour, IHarvestable
+public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
 {
     [SerializeField] float baseGatherTime = 5f;
 
@@ -12,6 +12,7 @@ public class TreeObject : MonoBehaviour, IHarvestable
     Cell occupiedCell;
     bool beingHarvested = false;
     Harvester harvester;
+    SelectionType selectionType = SelectionType.Harvestable;
     public void Harvest()
     {
         foreach (ItemDrop drop in drops)
@@ -66,5 +67,37 @@ public class TreeObject : MonoBehaviour, IHarvestable
     {
         return beingHarvested;
     }
+    public List<ItemDrop> GetItemDrops()
+    {
+        return drops;
+    }
 
+    public SelectionType GetSelectionType()
+    {
+        return selectionType;
+    }
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+
+    public string GetMultipleSelectionString(out int amount)
+    {
+        amount = 1;
+        return "Tree";
+    }
+
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+        manager.SetSelectionType(selectionType);
+    }
+
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+    }
 }
