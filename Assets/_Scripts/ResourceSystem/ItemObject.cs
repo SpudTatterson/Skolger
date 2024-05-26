@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class ItemObject : MonoBehaviour
+public class ItemObject : MonoBehaviour, ISelectable
 {
     [Header("Settings")]
     public ItemData itemData;
@@ -8,6 +9,7 @@ public class ItemObject : MonoBehaviour
     int stackSize;
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
+    [SerializeField] SelectionType selectionType;
 
     public int amount { get; private set; }
 
@@ -15,6 +17,7 @@ public class ItemObject : MonoBehaviour
     Stockpile currentStockpile;
     public GameObject visualGO { get; private set; }
     public Cell occupiedCell { get; private set; }
+    
 
     void Start()
     {
@@ -108,4 +111,31 @@ public class ItemObject : MonoBehaviour
         stockpile = currentStockpile;
         return inStockpile;
     }
+
+    #region Selection
+    
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+        manager.SetSelectionType(selectionType);
+    }
+
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+
+        manager.RemoveFromCurrentSelected(this);
+    }
+
+    public SelectionType GetSelectionType()
+    {
+        return selectionType;
+    }
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+
+    #endregion
 }
