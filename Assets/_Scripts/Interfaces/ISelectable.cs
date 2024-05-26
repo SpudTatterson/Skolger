@@ -7,15 +7,17 @@ public enum SelectionType
     Item,
     Constructable,
     Harvestable,
-    Colonist
+    Colonist,
+    Multiple
 }
 public interface ISelectable
 {
     public SelectionType GetSelectionType();
     public GameObject GetGameObject();
+    public string GetMultipleSelectionString(out int amount);
 
     public void OnSelect();
     public void OnDeselect();
 
-    
+
 }
