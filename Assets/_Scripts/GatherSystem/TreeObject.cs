@@ -103,18 +103,6 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
         return "Tree";
     }
 
-    public void OnSelect()
-    {
-        SelectionManager manager = SelectionManager.instance;
-        manager.AddToCurrentSelected(this);
-        manager.SetSelectionType(selectionType);
-    }
-
-    public void OnDeselect()
-    {
-        SelectionManager manager = SelectionManager.instance;
-        manager.RemoveFromCurrentSelected(this);
-    }
 
     public bool HasActiveCancelableAction()
     {

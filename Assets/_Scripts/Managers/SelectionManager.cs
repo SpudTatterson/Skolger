@@ -37,6 +37,7 @@ public class SelectionManager : MonoBehaviour
         Input.GetKeyDown(KeyCode.Mouse0) && !currentSelected.Contains(selectable))
         {
             selectable.OnSelect();
+            SetSelectionType(selectable.GetSelectionType());
             UIManager.instance.selectionPanel.SetActive(true);
             Debug.Log("selected " + currentSelected.Count);
         }

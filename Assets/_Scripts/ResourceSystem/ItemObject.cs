@@ -114,19 +114,6 @@ public class ItemObject : MonoBehaviour, ISelectable
 
     #region Selection
 
-    public void OnSelect()
-    {
-        SelectionManager manager = SelectionManager.instance;
-        manager.AddToCurrentSelected(this);
-        manager.SetSelectionType(selectionType);
-    }
-
-    public void OnDeselect()
-    {
-        SelectionManager manager = SelectionManager.instance;
-        manager.RemoveFromCurrentSelected(this);
-    }
-
     public SelectionType GetSelectionType()
     {
         return selectionType;
