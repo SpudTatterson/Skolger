@@ -127,11 +127,16 @@ public class SelectionManager : MonoBehaviour
     {
         foreach (ISelectable selectable in currentSelected)
         {
-            if (selectable.GetGameObject().TryGetComponent<IHarvestable>(out IHarvestable harvestable))
+            GameObject GO = selectable.GetGameObject();
+            if (GO.TryGetComponent(out IHarvestable harvestable))
             {
                 harvestable.RemoveFromHarvestQueue();
                 UIManager.instance.EnableHarvestableButtons();
-                UIManager.instance.harvestButton.SetActive(true);
+            }
+            if(GO.TryGetComponent(out IConstructable constructable))
+            {
+                constructable.CancelConstruction();
+                UIManager.instance.EnableConstructableButtons();
             }
         }
     }

@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class UnplacedPlaceableObject : MonoBehaviour, IConstructable
+public class UnplacedPlaceableObject : MonoBehaviour, IConstructable, ISelectable
 {
     public BuildingData buildingData { get; private set; }
     List<ItemCost> costs = new List<ItemCost>();
@@ -27,6 +26,8 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable
         }
     }
 
+    #region Construction
+
     public void AddItem(ItemObject itemObject)
     {
         fulfilledCosts[itemObject.itemData] += itemObject.amount;
@@ -42,6 +43,10 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable
             return costs[0];
         return null;
     }
+    public List<ItemCost> GetAllCosts()
+    {
+        return costs;
+    }
     public Vector3 GetPosition()
     {
         return transform.position;
@@ -55,12 +60,49 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable
         }
     }
 
-    [ContextMenu("ConstructBuilding")]
     public void ConstructBuilding()
     {
         BuildingObject.MakeInstance(buildingData, this.transform.position, occupiedCells);
+        Destroy(this);
         Destroy(this.gameObject);
     }
+    [ContextMenu("CancelConstruction")]
+    public void CancelConstruction()
+    {
+        foreach (Cell c in occupiedCells)
+        {
+            c.inUse = false;
+        }
+        foreach(KeyValuePair<ItemData, int> cost in fulfilledCosts)
+        {
+            int stackSize = cost.Key.stackSize;
+            Cell cell;
+            if(cost.Value > stackSize)
+            {
+                int costToDisperse = cost.Value;
+                while(costToDisperse > stackSize)
+                {
+                    cell = occupiedCells[0].GetClosestEmptyCell();
+
+                    ItemObject.MakeInstance(cost.Key, stackSize, cell.position);
+                    cell.inUse = true;
+                    costToDisperse -= stackSize;
+                }
+                cell =  occupiedCells[0].GetClosestEmptyCell();
+                ItemObject.MakeInstance(cost.Key, costToDisperse, cell.position);
+                cell.inUse = true;
+            }
+            else
+            {
+                cell = occupiedCells[0].GetClosestEmptyCell();
+                ItemObject.MakeInstance(cost.Key, cost.Value, cell.position);
+                cell.inUse = true;
+            }
+            Destroy(this.gameObject);
+        }
+    }
+
+    #endregion
 
     public static UnplacedPlaceableObject MakeInstance(BuildingData buildingData, Cell cell, bool tempObject = false, Transform parent = null)
     {
@@ -94,4 +136,28 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable
         return building;
     }
 
+    #region Selection
+
+    public SelectionType GetSelectionType()
+    {
+        return SelectionType.Constructable;
+    }
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+
+    public string GetMultipleSelectionString(out int amount)
+    {
+        amount =1 ;
+        return buildingData.placeableName;
+    }
+
+    public bool HasActiveCancelableAction()
+    {
+        return true;
+    }
+
+    #endregion
 }

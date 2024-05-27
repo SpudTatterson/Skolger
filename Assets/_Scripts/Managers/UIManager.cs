@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public GameObject selectionPanel;
     public HarvestableSelectionMenu harvestableSelection;
     public ItemSelectionMenu itemSelection;
+    public ConstructableSelectionMenu constructableSelection;
     public GameObject multipleSelection;
     public Transform multipleSelectionContent;
     public TextMeshProUGUI defaultTextAsset;
@@ -34,6 +35,7 @@ public class UIManager : MonoBehaviour
         itemSelection.gameObject.SetActive(false);
         harvestableSelection.gameObject.SetActive(false);
         multipleSelection.SetActive(false);
+        constructableSelection.gameObject.SetActive(false);
     }
     public void SetAllActionButtonsInactive()
     {
@@ -56,7 +58,8 @@ public class UIManager : MonoBehaviour
 
     public void EnableConstructableButtons()
     {
-        throw new NotImplementedException();
+        SetAllActionButtonsInactive();
+        allowButton.SetActive(true);
     }
 
 
