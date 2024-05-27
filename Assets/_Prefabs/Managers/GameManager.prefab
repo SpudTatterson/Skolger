@@ -172,4 +172,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionPanel: {fileID: 0}
+  harvestableSelection: {fileID: 0}
   itemSelection: {fileID: 0}
+  multipleSelection: {fileID: 0}
+  multipleSelectionContent: {fileID: 0}
+  defaultTextAsset: {fileID: 0}
+  harvestButton: {fileID: 0}
+  allowButton: {fileID: 0}
+  cancelButton: {fileID: 0}
