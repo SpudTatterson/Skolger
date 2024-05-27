@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -26,5 +27,61 @@ public class UIManager : MonoBehaviour
             instance = this;
         else
             Debug.Log("More then 1 UIManager Exists");
+    }
+
+    public void SetAllSelectionUIInactive()
+    {
+        itemSelection.gameObject.SetActive(false);
+        harvestableSelection.gameObject.SetActive(false);
+        multipleSelection.SetActive(false);
+    }
+    public void SetAllActionButtonsInactive()
+    {
+
+        allowButton.SetActive(false);
+        harvestButton.SetActive(false);
+        cancelButton.SetActive(false);
+    }
+
+    public void EnableItemButtons()
+    {
+        SetAllActionButtonsInactive();
+        allowButton.SetActive(true);
+    }
+    public void EnableCancelButton()
+    {
+        SetAllActionButtonsInactive();
+        cancelButton.SetActive(true);
+    }
+
+    public void EnableConstructableButtons()
+    {
+        throw new NotImplementedException();
+    }
+
+
+    public void EnableHarvestableButtons()
+    {
+        SetAllActionButtonsInactive();
+        harvestButton.SetActive(true);
+    }
+
+    public void EnableColonistButtons()
+    {
+        throw new NotImplementedException();
+    }
+
+        public void EnableButtons(SelectionType type)
+    {
+        if (type == SelectionType.Colonist)
+            EnableColonistButtons();
+        else if (type == SelectionType.Harvestable)
+            EnableHarvestableButtons();
+        else if (type == SelectionType.Item)
+            EnableItemButtons();
+        else if (type == SelectionType.Constructable)
+            EnableConstructableButtons();
+
+        SelectionManager.instance.CheckForCancelableAction();
     }
 }
