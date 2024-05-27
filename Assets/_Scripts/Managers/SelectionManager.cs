@@ -169,6 +169,8 @@ public class SelectionManager : MonoBehaviour
 
         selectionMenu.SetDrops(drops);
         selectionMenu.harvestableName.text = $"Name: {currentSelected[0].GetMultipleSelectionString(out _)}";
+
+        CheckForCancelableAction();
     }
 
     #endregion
@@ -185,6 +187,21 @@ public class SelectionManager : MonoBehaviour
             EnableItemButtons();
         else if (type == SelectionType.Constructable)
             EnableConstructableButtons();
+
+        CheckForCancelableAction();
+    }
+
+    private void CheckForCancelableAction()
+    {
+        if (currentSelected[0].HasActiveCancelableAction())
+        {
+            EnableCancelButton();
+        }
+    }
+
+    void EnableCancelButton()
+    {
+        UIManager.instance.cancelButton.SetActive(true);
     }
 
     void EnableConstructableButtons()
@@ -207,6 +224,33 @@ public class SelectionManager : MonoBehaviour
     void EnableColonistButtons()
     {
         throw new NotImplementedException();
+    }
+
+    #endregion
+
+    #region Button Actions
+
+    public void SetToHarvest()
+    {
+        foreach (ISelectable selectable in currentSelected)
+        {
+            selectable.GetGameObject().GetComponent<IHarvestable>().AddToHarvestQueue();
+        }
+        EnableCancelButton();
+        UIManager.instance.harvestButton.SetActive(false);
+    }
+
+    public void TryToCancelActions()
+    {
+        foreach (ISelectable selectable in currentSelected)
+        {
+            if (selectable.GetGameObject().TryGetComponent<IHarvestable>(out IHarvestable harvestable))
+            {
+                harvestable.RemoveFromHarvestQueue();
+                EnableHarvestableButtons();
+                UIManager.instance.harvestButton.SetActive(true);
+            }
+        }
     }
 
     #endregion
@@ -239,6 +283,7 @@ public class SelectionManager : MonoBehaviour
         UIManager uiManager = UIManager.instance;
         uiManager.allowButton.SetActive(false);
         uiManager.harvestButton.SetActive(false);
+        uiManager.cancelButton.SetActive(false);
     }
     void ClearMultipleSelectionTexts()
     {

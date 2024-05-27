@@ -17,7 +17,7 @@ public class ItemObject : MonoBehaviour, ISelectable
     Stockpile currentStockpile;
     public GameObject visualGO { get; private set; }
     public Cell occupiedCell { get; private set; }
-    
+
 
     void Start()
     {
@@ -113,7 +113,7 @@ public class ItemObject : MonoBehaviour, ISelectable
     }
 
     #region Selection
-    
+
     public void OnSelect()
     {
         SelectionManager manager = SelectionManager.instance;
@@ -134,6 +134,10 @@ public class ItemObject : MonoBehaviour, ISelectable
     public GameObject GetGameObject()
     {
         return gameObject;
+    }
+    public bool HasActiveCancelableAction()
+    {
+        return false;
     }
 
     public string GetMultipleSelectionString(out int amount)

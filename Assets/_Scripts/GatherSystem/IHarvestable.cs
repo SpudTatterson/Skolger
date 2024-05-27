@@ -9,4 +9,7 @@ public interface IHarvestable
     public bool IsBeingHarvested();
 
     public List<ItemDrop> GetItemDrops();
+
+    public void AddToHarvestQueue();
+    public void RemoveFromHarvestQueue();
 }

@@ -15,9 +15,9 @@ public interface ISelectable
     public SelectionType GetSelectionType();
     public GameObject GetGameObject();
     public string GetMultipleSelectionString(out int amount);
+    bool HasActiveCancelableAction();
 
     public void OnSelect();
     public void OnDeselect();
-
 
 }

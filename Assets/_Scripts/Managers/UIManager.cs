@@ -11,10 +11,11 @@ public class UIManager : MonoBehaviour
     public GameObject multipleSelection;
     public Transform multipleSelectionContent;
     public TextMeshProUGUI defaultTextAsset;
-    
+
     [Header("Selection Action Buttons")]
     public GameObject harvestButton;
     public GameObject allowButton;
+    public GameObject cancelButton;
 
 
     public static UIManager instance { get; private set; }
