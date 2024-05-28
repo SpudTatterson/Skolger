@@ -6,13 +6,14 @@ public class Harvester : MonoBehaviour
 {
 
     [SerializeField] List<IHarvestable> toHarvest = new List<IHarvestable>();
+    Coroutine currentHarvesting;
 
     // Update is called once per frame
     void Update()
     {
         if (toHarvest.Count > 0 && !toHarvest[0].IsBeingHarvested())
         {
-            StartCoroutine(toHarvest[0].StartHarvesting());
+            currentHarvesting = StartCoroutine(toHarvest[0].StartHarvesting());
         }
     }
 
@@ -23,6 +24,10 @@ public class Harvester : MonoBehaviour
 
     public void RemoveFromHarvestQueue(IHarvestable harvestable)
     {
+        if(toHarvest[0] == harvestable)
+        {
+            StopCoroutine(currentHarvesting);
+        }
         toHarvest.Remove(harvestable);
     }
 }

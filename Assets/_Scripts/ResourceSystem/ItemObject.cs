@@ -1,18 +1,26 @@
+using System;
 using UnityEngine;
 
-public class ItemObject : MonoBehaviour
+public class ItemObject : MonoBehaviour, ISelectable, IAllowable
 {
+    [Header("Settings")]
     public ItemData itemData;
     [SerializeField] int initialAmount;
-    public int amount { get; private set; }
-    string itemName;
     int stackSize;
-    ItemType itemType;
-    public GameObject visualGO { get; private set; }
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
+    [SerializeField] SelectionType selectionType;
+    [SerializeField] bool allowed = true;
+
+    public int amount { get; private set; }
+
+    [Header("References")]
     Stockpile currentStockpile;
+    public GameObject visualGO { get; private set; }
     public Cell occupiedCell { get; private set; }
+
+    
+
 
     void Start()
     {
@@ -20,14 +28,15 @@ public class ItemObject : MonoBehaviour
             Initialize(itemData, amount);
     }
 
-    public void Initialize(ItemData itemData, int amount, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile = null)
+    public void Initialize(ItemData itemData, int amount, bool allowed = true, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         this.itemData = itemData;
 
         this.amount = amount;
-        itemName = itemData.name;
         stackSize = itemData.stackSize;
-        itemType = itemData.itemType;
+        this.allowed = allowed;
+        if(allowed) OnAllow();
+        else OnDisallow();
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
@@ -52,7 +61,7 @@ public class ItemObject : MonoBehaviour
                     Debug.Log("destroying object");
                     Destroy(this.gameObject);
                 }
-                    
+
             }
             if (this.amount < 0) Debug.LogWarning("item amount less then 0 something went wrong" + transform.name);
             return true;
@@ -86,14 +95,14 @@ public class ItemObject : MonoBehaviour
 
         return takeAmount;
     }
-    public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
+    public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position,bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         GameObject visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
 
         visualGO.AddComponent<BoxCollider>();
 
         ItemObject item = visualGO.AddComponent<ItemObject>();
-        item.Initialize(itemData, amount, visualGO, inStockpile, stockpile);
+        item.Initialize(itemData, amount, allowed, visualGO, inStockpile, stockpile);
         item.transform.position = position;
 
         visualGO.transform.parent = parent;
@@ -108,4 +117,48 @@ public class ItemObject : MonoBehaviour
         stockpile = currentStockpile;
         return inStockpile;
     }
+
+    #region Selection
+
+    public SelectionType GetSelectionType()
+    {
+        return selectionType;
+    }
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+    public bool HasActiveCancelableAction()
+    {
+        return false;
+    }
+
+    public string GetMultipleSelectionString(out int amount)
+    {
+        amount = this.amount;
+        return itemData.itemName;
+    }
+    
+    #endregion
+    
+    #region IAllowable 
+
+    public void OnAllow()
+    {
+        allowed = true;
+        // add to haul queue
+    }
+
+    public void OnDisallow()
+    {
+        allowed = false;
+        //remove from haul queue
+        // visually show that item is disallowed with billboard or something similar
+    }
+    public bool IsAllowed()
+    {
+        return allowed;
+    }
+
+    #endregion
 }

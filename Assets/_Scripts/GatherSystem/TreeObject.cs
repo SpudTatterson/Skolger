@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeObject : MonoBehaviour, IHarvestable
+public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
 {
     [SerializeField] float baseGatherTime = 5f;
 
@@ -11,7 +11,9 @@ public class TreeObject : MonoBehaviour, IHarvestable
     List<Cell> potentialDropPoints = new List<Cell>();
     Cell occupiedCell;
     bool beingHarvested = false;
+    bool setForHarvesting = false;
     Harvester harvester;
+    SelectionType selectionType = SelectionType.Harvestable;
     public void Harvest()
     {
         foreach (ItemDrop drop in drops)
@@ -29,8 +31,7 @@ public class TreeObject : MonoBehaviour, IHarvestable
         if (occupiedCell == null)
             Init();
 
-        harvester = FindObjectOfType<Harvester>();
-        harvester.AddToHarvestQueue(this);
+
     }
     public void Init()
     {
@@ -66,5 +67,45 @@ public class TreeObject : MonoBehaviour, IHarvestable
     {
         return beingHarvested;
     }
+    public void AddToHarvestQueue()
+    {
+        if (!setForHarvesting)
+        {
+            harvester = FindObjectOfType<Harvester>();
+            harvester.AddToHarvestQueue(this);
+        }
+        setForHarvesting = true;
+    }
+    public void RemoveFromHarvestQueue()
+    {
+        harvester.RemoveFromHarvestQueue(this);
+        beingHarvested = false;
+        setForHarvesting = false;
+    }
+    public List<ItemDrop> GetItemDrops()
+    {
+        return drops;
+    }
 
+    public SelectionType GetSelectionType()
+    {
+        return selectionType;
+    }
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+
+    public string GetMultipleSelectionString(out int amount)
+    {
+        amount = 1;
+        return "Tree";
+    }
+
+
+    public bool HasActiveCancelableAction()
+    {
+        return setForHarvesting;
+    }
 }

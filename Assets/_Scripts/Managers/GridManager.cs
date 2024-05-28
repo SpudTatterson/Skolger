@@ -8,7 +8,7 @@ public class GridManager : MonoBehaviour
     public static GridManager instance { get; private set; }
     public List<GridObject> grids { get; private set; }
 
-    void Start()
+    void Awake()
     {
         if (instance == null)
             instance = this;

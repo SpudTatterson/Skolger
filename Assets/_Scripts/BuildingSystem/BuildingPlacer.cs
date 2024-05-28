@@ -31,7 +31,7 @@ public class BuildingPlacer : MonoBehaviour
 
                 if(Input.GetKeyDown(KeyCode.Mouse0) && !hitCell.inUse)
                 {
-                    UnplacedPlaceableObject building = UnplacedPlaceableObject.MakeInstance(buildingData, hitCell);
+                    ConstructionSiteObject building = ConstructionSiteObject.MakeInstance(buildingData, hitCell);
                     placedBuildings.Add(building.gameObject);
 
                     //hauler testing
@@ -44,7 +44,7 @@ public class BuildingPlacer : MonoBehaviour
 
     private void InitializeNewPlacement(Cell hitCell)
     {
-        tempGO = UnplacedPlaceableObject.MakeInstance(buildingData, hitCell, true).gameObject;
+        tempGO = ConstructionSiteObject.MakeInstance(buildingData, hitCell, true).gameObject;
     }
 
     public void SetNewBuilding(BuildingData buildingData)

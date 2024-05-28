@@ -10,6 +10,7 @@ public class HaulerTest : MonoBehaviour
     ItemObject heldItems;
     ItemCost costToGet;
     bool hauling;
+    Coroutine currentHaul;
 
     // Update is called once per frame
     void Update()
@@ -17,7 +18,10 @@ public class HaulerTest : MonoBehaviour
 
         if (constructionQueue.Count > 0 && !hauling)
         {
-            StartCoroutine(HaulItem(constructionQueue[0]));
+            if ((UnityEngine.Object)constructionQueue[0] == null)
+                constructionQueue.Remove(constructionQueue[0]);
+            else
+                currentHaul = StartCoroutine(HaulItem(constructionQueue[0]));
         }
     }
 
@@ -42,6 +46,12 @@ public class HaulerTest : MonoBehaviour
                 // go to stockpile item
                 transform.Translate(VectorUtility.GetDirection(transform.position, itemPosition) * speed * Time.deltaTime);
                 yield return null;
+            }
+            if ((UnityEngine.Object)constructable == null)
+            {
+                constructionQueue.Remove(constructable);
+                hauling = false;
+                yield break;
             }
             heldItems = InventoryManager.instance.TakeItem(costToGet);// take item
             Vector3 constructablePosition = constructable.GetPosition(); // get constructable position
@@ -68,7 +78,12 @@ public class HaulerTest : MonoBehaviour
 
     public void AddConstructable(IConstructable constructable)
     {
-        constructionQueue.Add(constructable);
+        if(!constructionQueue.Contains(constructable))
+            constructionQueue.Add(constructable);
+    }
+    public void RemoveConstructable(IConstructable constructable)
+    {
+        constructionQueue.Remove(constructable);
     }
 
 }

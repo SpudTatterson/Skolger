@@ -54,7 +54,7 @@ public class Stockpile : MonoBehaviour
     {
         if (cells.ContainsKey(cell) && cells[cell] == null)
         {
-            cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, cell.position, transform, true, this);
+            cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, cell.position, true, transform, true, this);
             visualItems[cell] = cells[cell].gameObject;
             emptyCells.Remove(cell);
             InventoryManager.instance.AddItem(item.itemData, item.amount);
@@ -99,7 +99,7 @@ public class Stockpile : MonoBehaviour
         if (!GetEmptyCell(out cell)) return false;
         if (cells.ContainsKey(cell) && cells[cell] == null)
         {
-            cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, cell.position, transform, true, this);
+            cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, cell.position,true, transform, true, this);
             visualItems[cell] = cells[cell].gameObject;
             emptyCells.Remove(cell);
             InventoryManager.instance.AddItem(item.itemData, item.amount);
