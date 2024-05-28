@@ -6,6 +6,8 @@ public enum SelectionType
 {
     Item,
     Constructable,
+    Building,
+    Workbench,
     Harvestable,
     Colonist,
     Multiple

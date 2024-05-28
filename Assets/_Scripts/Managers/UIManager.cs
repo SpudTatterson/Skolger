@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     public HarvestableSelectionMenu harvestableSelection;
     public ItemSelectionMenu itemSelection;
     public ConstructableSelectionMenu constructableSelection;
+    public BuildingSelectionMenu buildingSelection; 
     public GameObject multipleSelection;
     public Transform multipleSelectionContent;
     public TextMeshProUGUI defaultTextAsset;
@@ -19,6 +20,7 @@ public class UIManager : MonoBehaviour
     public GameObject allowButton;
     public GameObject disallowButton;
     public GameObject cancelButton;
+    public GameObject deconstructButton;
 
 
     public static UIManager instance { get; private set; }
@@ -37,6 +39,7 @@ public class UIManager : MonoBehaviour
         harvestableSelection.gameObject.SetActive(false);
         multipleSelection.SetActive(false);
         constructableSelection.gameObject.SetActive(false);
+        buildingSelection.gameObject.SetActive(false);
     }
     public void SetAllActionButtonsInactive()
     {
@@ -44,6 +47,7 @@ public class UIManager : MonoBehaviour
         allowButton.SetActive(false);
         harvestButton.SetActive(false);
         cancelButton.SetActive(false);
+        deconstructButton.SetActive(false);
     }
     public void EnableAllowDisallowButton(bool allowed)
     {
@@ -70,6 +74,11 @@ public class UIManager : MonoBehaviour
         cancelButton.SetActive(true);
     }
 
+    public void EnableBuildingButtons()
+    {
+        SetAllActionButtonsInactive();
+        deconstructButton.SetActive(true);
+    }
 
     public void EnableHarvestableButtons()
     {
@@ -92,6 +101,8 @@ public class UIManager : MonoBehaviour
             EnableItemButtons(allowed);
         else if (type == SelectionType.Constructable)
             EnableConstructableButtons(allowed);
+        else if (type == SelectionType.Building)
+            EnableBuildingButtons();
 
         SelectionManager.instance.CheckForCancelableAction();
     }

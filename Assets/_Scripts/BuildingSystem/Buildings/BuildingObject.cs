@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingObject : MonoBehaviour
+public class BuildingObject : MonoBehaviour, ISelectable
 {
     public BuildingData buildingData { get; private set; }
     List<Cell> occupiedCells;
@@ -28,4 +28,30 @@ public class BuildingObject : MonoBehaviour
 
         return building;
     }
+
+    #region ISelectable
+
+    public SelectionType GetSelectionType()
+    {
+        return SelectionType.Building;
+    }
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+
+    public string GetMultipleSelectionString(out int amount)
+    {
+        amount = 1;
+        return buildingData.placeableName;
+    }
+
+    public bool HasActiveCancelableAction()
+    {
+        return false;
+    }
+
+    #endregion
+
 }

@@ -78,6 +78,9 @@ public class SelectionManager : MonoBehaviour
                 case SelectionType.Colonist:
                     SetSelectionStrategy(new ColonistSelectionStrategy());
                     break;
+                case SelectionType.Building:
+                    SetSelectionStrategy(new BuildingSelectionStrategy());
+                    break;
             }
         }
         selectionStrategy.ApplySelection(currentSelected);
