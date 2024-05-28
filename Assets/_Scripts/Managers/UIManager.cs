@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     [Header("Selection Action Buttons")]
     public GameObject harvestButton;
     public GameObject allowButton;
+    public GameObject disallowButton;
     public GameObject cancelButton;
 
 
@@ -39,16 +40,22 @@ public class UIManager : MonoBehaviour
     }
     public void SetAllActionButtonsInactive()
     {
-
+        disallowButton.SetActive(false);
         allowButton.SetActive(false);
         harvestButton.SetActive(false);
         cancelButton.SetActive(false);
     }
+    public void EnableAllowDisallowButton(bool allowed)
+    {
+        allowButton.SetActive(!allowed);
+        disallowButton.SetActive(allowed);
+    }
 
-    public void EnableItemButtons()
+    public void EnableItemButtons(bool allowed)
     {
         SetAllActionButtonsInactive();
-        allowButton.SetActive(true);
+        EnableAllowDisallowButton(allowed);
+        
     }
     public void EnableCancelButton()
     {
@@ -56,10 +63,11 @@ public class UIManager : MonoBehaviour
         cancelButton.SetActive(true);
     }
 
-    public void EnableConstructableButtons()
+    public void EnableConstructableButtons(bool allowed)
     {
         SetAllActionButtonsInactive();
-        allowButton.SetActive(true);
+        EnableAllowDisallowButton(allowed);
+        cancelButton.SetActive(true);
     }
 
 
@@ -74,16 +82,16 @@ public class UIManager : MonoBehaviour
         throw new NotImplementedException();
     }
 
-        public void EnableButtons(SelectionType type)
+    public void EnableButtons(SelectionType type, bool allowed)
     {
         if (type == SelectionType.Colonist)
             EnableColonistButtons();
         else if (type == SelectionType.Harvestable)
             EnableHarvestableButtons();
         else if (type == SelectionType.Item)
-            EnableItemButtons();
+            EnableItemButtons(allowed);
         else if (type == SelectionType.Constructable)
-            EnableConstructableButtons();
+            EnableConstructableButtons(allowed);
 
         SelectionManager.instance.CheckForCancelableAction();
     }

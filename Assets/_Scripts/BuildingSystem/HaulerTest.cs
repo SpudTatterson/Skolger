@@ -10,6 +10,7 @@ public class HaulerTest : MonoBehaviour
     ItemObject heldItems;
     ItemCost costToGet;
     bool hauling;
+    Coroutine currentHaul;
 
     // Update is called once per frame
     void Update()
@@ -20,7 +21,7 @@ public class HaulerTest : MonoBehaviour
             if ((UnityEngine.Object)constructionQueue[0] == null)
                 constructionQueue.Remove(constructionQueue[0]);
             else
-                StartCoroutine(HaulItem(constructionQueue[0]));
+                currentHaul = StartCoroutine(HaulItem(constructionQueue[0]));
         }
     }
 
@@ -77,7 +78,12 @@ public class HaulerTest : MonoBehaviour
 
     public void AddConstructable(IConstructable constructable)
     {
-        constructionQueue.Add(constructable);
+        if(!constructionQueue.Contains(constructable))
+            constructionQueue.Add(constructable);
+    }
+    public void RemoveConstructable(IConstructable constructable)
+    {
+        constructionQueue.Remove(constructable);
     }
 
 }

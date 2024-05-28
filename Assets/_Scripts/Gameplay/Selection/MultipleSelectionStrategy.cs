@@ -39,8 +39,10 @@ public class MultipleSelectionStrategy : ISelectionStrategy
             multipleSelectionTexts.Add(text);
         }
 
+        IAllowable allowable = selectedItems[0].GetGameObject().GetComponent<IAllowable>();
+
         if (allSelectedOfSameType)
-            UIManager.instance.EnableButtons(type);
+            UIManager.instance.EnableButtons(type, allowable.IsAllowed());
         else
             UIManager.instance.SetAllActionButtonsInactive();
     }

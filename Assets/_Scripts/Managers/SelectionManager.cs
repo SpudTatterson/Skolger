@@ -84,7 +84,7 @@ public class SelectionManager : MonoBehaviour
     }
     void SetSelectionStrategy(ISelectionStrategy selectionStrategy)
     {
-        if(this.selectionStrategy != null)
+        if (this.selectionStrategy != null)
             this.selectionStrategy.CleanUp();
         this.selectionStrategy = selectionStrategy;
     }
@@ -120,7 +120,23 @@ public class SelectionManager : MonoBehaviour
             selectable.GetGameObject().GetComponent<IHarvestable>().AddToHarvestQueue();
         }
         UIManager.instance.EnableCancelButton();
-        UIManager.instance.harvestButton.SetActive(false);
+    }
+
+    public void Allow()
+    {
+        foreach (ISelectable selectable in currentSelected)
+        {
+            selectable.GetGameObject().GetComponent<IAllowable>().OnAllow();
+        }
+        UIManager.instance.EnableAllowDisallowButton(true);
+    }
+    public void Disallow()
+    {
+        foreach (ISelectable selectable in currentSelected)
+        {
+            selectable.GetGameObject().GetComponent<IAllowable>().OnDisallow();
+        }
+        UIManager.instance.EnableAllowDisallowButton(false);
     }
 
     public void TryToCancelActions()
@@ -133,10 +149,11 @@ public class SelectionManager : MonoBehaviour
                 harvestable.RemoveFromHarvestQueue();
                 UIManager.instance.EnableHarvestableButtons();
             }
-            if(GO.TryGetComponent(out IConstructable constructable))
+            if (GO.TryGetComponent(out IConstructable constructable))
             {
                 constructable.CancelConstruction();
-                UIManager.instance.EnableConstructableButtons();
+                bool allowed = GO.GetComponent<IAllowable>().IsAllowed();
+                UIManager.instance.EnableConstructableButtons(allowed);
             }
         }
     }
@@ -152,7 +169,7 @@ public class SelectionManager : MonoBehaviour
         {
             selectable.OnDeselect();
         }
-        if(this.selectionStrategy != null)
+        if (this.selectionStrategy != null)
             this.selectionStrategy.CleanUp();
         currentSelected.Clear();
         UIManager.instance.SetAllSelectionUIInactive();

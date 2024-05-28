@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ItemObject : MonoBehaviour, ISelectable
+public class ItemObject : MonoBehaviour, ISelectable, IAllowable
 {
     [Header("Settings")]
     public ItemData itemData;
@@ -10,6 +10,7 @@ public class ItemObject : MonoBehaviour, ISelectable
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
     [SerializeField] SelectionType selectionType;
+    [SerializeField] bool allowed = true;
 
     public int amount { get; private set; }
 
@@ -18,6 +19,8 @@ public class ItemObject : MonoBehaviour, ISelectable
     public GameObject visualGO { get; private set; }
     public Cell occupiedCell { get; private set; }
 
+    
+
 
     void Start()
     {
@@ -25,12 +28,15 @@ public class ItemObject : MonoBehaviour, ISelectable
             Initialize(itemData, amount);
     }
 
-    public void Initialize(ItemData itemData, int amount, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile = null)
+    public void Initialize(ItemData itemData, int amount, bool allowed = true, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         this.itemData = itemData;
 
         this.amount = amount;
         stackSize = itemData.stackSize;
+        this.allowed = allowed;
+        if(allowed) OnAllow();
+        else OnDisallow();
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
@@ -89,14 +95,14 @@ public class ItemObject : MonoBehaviour, ISelectable
 
         return takeAmount;
     }
-    public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
+    public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position,bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         GameObject visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
 
         visualGO.AddComponent<BoxCollider>();
 
         ItemObject item = visualGO.AddComponent<ItemObject>();
-        item.Initialize(itemData, amount, visualGO, inStockpile, stockpile);
+        item.Initialize(itemData, amount, allowed, visualGO, inStockpile, stockpile);
         item.transform.position = position;
 
         visualGO.transform.parent = parent;
@@ -131,6 +137,27 @@ public class ItemObject : MonoBehaviour, ISelectable
     {
         amount = this.amount;
         return itemData.itemName;
+    }
+    
+    #endregion
+    
+    #region IAllowable 
+
+    public void OnAllow()
+    {
+        allowed = true;
+        // add to haul queue
+    }
+
+    public void OnDisallow()
+    {
+        allowed = false;
+        //remove from haul queue
+        // visually show that item is disallowed with billboard or something similar
+    }
+    public bool IsAllowed()
+    {
+        return allowed;
     }
 
     #endregion

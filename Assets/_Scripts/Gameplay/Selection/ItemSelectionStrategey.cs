@@ -4,9 +4,11 @@ public class ItemSelectionStrategy : ISelectionStrategy
 {
     public void ApplySelection(List<ISelectable> selectedItems)
     {
+        IAllowable allowable = selectedItems[0].GetGameObject().GetComponent<IAllowable>();
+
         UIManager.instance.SetAllSelectionUIInactive();
         UIManager.instance.itemSelection.gameObject.SetActive(true);
-        EnableItemButtons();
+        UIManager.instance.EnableItemButtons(allowable.IsAllowed());
 
         ItemObject selectedItem = selectedItems[0].GetGameObject().GetComponent<ItemObject>();
         ItemSelectionMenu selectionMenu = UIManager.instance.itemSelection;
@@ -17,9 +19,5 @@ public class ItemSelectionStrategy : ISelectionStrategy
     }
 
 
-    void EnableItemButtons()
-    {
-        UIManager.instance.SetAllActionButtonsInactive();
-        UIManager.instance.allowButton.SetActive(true);
-    }
+
 }

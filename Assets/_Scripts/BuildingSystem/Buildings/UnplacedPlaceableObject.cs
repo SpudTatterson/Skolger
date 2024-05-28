@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnplacedPlaceableObject : MonoBehaviour, IConstructable, ISelectable
+public class UnplacedPlaceableObject : MonoBehaviour, IConstructable, ISelectable, IAllowable
 {
     public BuildingData buildingData { get; private set; }
     List<ItemCost> costs = new List<ItemCost>();
     SerializableDictionary<ItemData, int> fulfilledCosts = new SerializableDictionary<ItemData, int>();
     List<Cell> occupiedCells = new List<Cell>();
-
+    bool allowed = true;
+    // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
     public void Initialize(BuildingData buildingData, List<Cell> occupiedCells)
     {
@@ -73,14 +74,14 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable, ISelectabl
         {
             c.inUse = false;
         }
-        foreach(KeyValuePair<ItemData, int> cost in fulfilledCosts)
+        foreach (KeyValuePair<ItemData, int> cost in fulfilledCosts)
         {
             int stackSize = cost.Key.stackSize;
             Cell cell;
-            if(cost.Value > stackSize)
+            if (cost.Value > stackSize)
             {
                 int costToDisperse = cost.Value;
-                while(costToDisperse > stackSize)
+                while (costToDisperse > stackSize)
                 {
                     cell = occupiedCells[0].GetClosestEmptyCell();
 
@@ -88,7 +89,7 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable, ISelectabl
                     cell.inUse = true;
                     costToDisperse -= stackSize;
                 }
-                cell =  occupiedCells[0].GetClosestEmptyCell();
+                cell = occupiedCells[0].GetClosestEmptyCell();
                 ItemObject.MakeInstance(cost.Key, costToDisperse, cell.position);
                 cell.inUse = true;
             }
@@ -150,7 +151,7 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable, ISelectabl
 
     public string GetMultipleSelectionString(out int amount)
     {
-        amount =1 ;
+        amount = 1;
         return buildingData.placeableName;
     }
 
@@ -158,6 +159,32 @@ public class UnplacedPlaceableObject : MonoBehaviour, IConstructable, ISelectabl
     {
         return true;
     }
+
+    #endregion
+
+    #region IAllowable
+
+    public void OnAllow()
+    {
+        allowed = true;
+        // add to construction queue
+        HaulerTest hauler = FindObjectOfType<HaulerTest>();
+        hauler.AddConstructable(this);
+    }
+
+    public void OnDisallow()
+    {
+        allowed = false;
+        // remove from construction queue
+        HaulerTest hauler = FindObjectOfType<HaulerTest>();
+        hauler.RemoveConstructable(this);
+        // visually show that this is disallowed 
+    }
+    public bool IsAllowed()
+    {
+        return allowed;
+    }
+
 
     #endregion
 }
