@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class SelectionManager : MonoBehaviour
     List<ISelectable> currentSelected = new List<ISelectable>();
     SelectionType selectionType;
     ISelectionStrategy selectionStrategy;
+
+    Vector3 mouseStartPos;
+    Vector3 mouseEndPos;
     void Awake()
     {
         if (instance == null)
@@ -24,22 +28,58 @@ public class SelectionManager : MonoBehaviour
     {
         HandleDeselectionInput();
 
-        HandleSelection();
+        HandleSelectionInput();
     }
 
     #region Selection Logic
 
-    void HandleSelection()
+    void HandleSelectionInput()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
-        hit.transform.TryGetComponent(out ISelectable selectable) &&
-        Input.GetKeyDown(KeyCode.Mouse0) && !currentSelected.Contains(selectable))
+        // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // if (Physics.Raycast(ray, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
+        // hit.transform.TryGetComponent(out ISelectable selectable) &&
+        // Input.GetKeyDown(KeyCode.Mouse0) && !currentSelected.Contains(selectable))
+        // {
+        //     selectable.OnSelect();
+        //     SetSelectionType(selectable.GetSelectionType());
+        //     UIManager.instance.selectionPanel.SetActive(true);
+        //     Debug.Log("selected " + currentSelected.Count);
+        // }
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            selectable.OnSelect();
-            SetSelectionType(selectable.GetSelectionType());
-            UIManager.instance.selectionPanel.SetActive(true);
-            Debug.Log("selected " + currentSelected.Count);
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                mouseStartPos = Input.mousePosition;
+            }
+            else if (Input.GetKey(KeyCode.Mouse0))
+            {
+                mouseEndPos = Input.mousePosition;
+                UIManager.instance.ResizeSelectionBox(mouseStartPos, mouseEndPos);
+                Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBox(mouseStartPos, mouseEndPos, out Vector3 center);
+                List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents);
+                ExtendedDebug.DrawBox(center, halfExtents * 2, Quaternion.identity);
+
+
+                //on hover
+            }
+            else if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                mouseEndPos = Input.mousePosition;
+                UIManager.instance.selectionBoxImage.gameObject.SetActive(false);
+                Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBox(mouseStartPos, mouseEndPos, out Vector3 center);
+                Debug.Log(center);
+                List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents);
+
+                if (!(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
+                    currentSelected.Clear();
+
+                Select(selectables);
+                //on select
+            }
+        }
+        else
+        {
+            UIManager.instance.selectionBoxImage.gameObject.SetActive(false);
         }
     }
 
@@ -49,6 +89,27 @@ public class SelectionManager : MonoBehaviour
         {
             DeselectAll();
         }
+    }
+
+    void Select(List<ISelectable> selectables)
+    {
+        foreach (var selectable in selectables)
+        {
+            if (!currentSelected.Contains(selectable))
+            {
+                selectable.OnSelect();
+                SetSelectionType(selectable.GetSelectionType());
+            }
+        }
+        if (selectables.Count > 0)
+        {
+            UIManager.instance.selectionPanel.SetActive(true);
+        }
+        else
+        {
+            DeselectAll();
+        }
+
     }
 
     #endregion

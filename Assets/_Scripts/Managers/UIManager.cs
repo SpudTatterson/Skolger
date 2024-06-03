@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public GameObject multipleSelection;
     public Transform multipleSelectionContent;
     public TextMeshProUGUI defaultTextAsset;
+    public RectTransform selectionBoxImage;
 
     [Header("Selection Action Buttons")]
     public GameObject harvestButton;
@@ -33,6 +34,7 @@ public class UIManager : MonoBehaviour
             Debug.Log("More then 1 UIManager Exists");
     }
 
+#region SelectionUI
     public void SetAllSelectionUIInactive()
     {
         itemSelection.gameObject.SetActive(false);
@@ -49,6 +51,21 @@ public class UIManager : MonoBehaviour
         cancelButton.SetActive(false);
         deconstructButton.SetActive(false);
     }
+    public void ResizeSelectionBox(Vector3 mouseStart, Vector3 mouseEnd)
+    {
+        if(!selectionBoxImage.gameObject.activeSelf)
+            selectionBoxImage.gameObject.SetActive(true);
+
+        float width = mouseEnd.x - mouseStart.x;
+        float height = mouseEnd.y - mouseStart.y;
+
+        selectionBoxImage.anchoredPosition = mouseStart + new Vector3(width/2, height/2);
+        selectionBoxImage.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
+    }
+
+    #endregion
+
+    #region SelectionUIButtons
     public void EnableAllowDisallowButton(bool allowed)
     {
         allowButton.SetActive(!allowed);
@@ -106,4 +123,8 @@ public class UIManager : MonoBehaviour
 
         SelectionManager.instance.CheckForCancelableAction();
     }
+
+    #endregion
+
+
 }

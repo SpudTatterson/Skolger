@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class VectorUtility : MonoBehaviour
+public class VectorUtility
 {
     static public Vector3 FlattenVector(Vector3 vectorToFlatten)
     {
@@ -40,6 +40,34 @@ public class VectorUtility : MonoBehaviour
     static public Color ToColor(Vector3 color)
     {
         return new Color(color.x, color.y, color.z);
+    }
+    public static Vector3 ScreeToWorldPosition(Vector3 screenPosition)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            return hit.point;
+        }
+        else 
+        {
+            Plane plane = new Plane();
+            plane.Raycast(ray ,out float distance);
+            return ray.GetPoint(distance);
+        }
+    }
+
+    public static Vector3 ScreenBoxToWorldBox(Vector3 mouseStartPos, Vector3 mouseEndPos, out Vector3 center)
+    {
+        Vector3 firstCorner = ScreeToWorldPosition(mouseStartPos);
+        Debug.DrawLine(firstCorner, firstCorner + Vector3.up);
+        Vector3 secondCorner = ScreeToWorldPosition(mouseEndPos);
+        Debug.DrawLine(secondCorner, secondCorner + Vector3.up);
+        
+        center = (firstCorner + secondCorner) / 2;
+
+        Vector3 size = new Vector3(Mathf.Abs(firstCorner.x - secondCorner.x), 3f, Mathf.Abs(firstCorner.z - secondCorner.z));
+
+        return size / 2;
     }
 
 }
