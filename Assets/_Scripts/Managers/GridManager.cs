@@ -30,5 +30,10 @@ public class GridManager : MonoBehaviour
         }
         return null;
     }
+    public Cell GetCellFromPosition(Vector3 position)
+    {
+        return GetGridFromPosition(position).GetCellFromPosition(position);
+
+    }
 
 }

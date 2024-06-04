@@ -41,17 +41,17 @@ public class VectorUtility
     {
         return new Color(color.x, color.y, color.z);
     }
-    public static Vector3 ScreeToWorldPosition(Vector3 screenPosition)
+    public static Vector3 ScreeToWorldPosition(Vector3 screenPosition, LayerMask layerMask = default)
     {
         Ray ray = Camera.main.ScreenPointToRay(screenPosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
             return hit.point;
         }
-        else 
+        else
         {
             Plane plane = new Plane();
-            plane.Raycast(ray ,out float distance);
+            plane.Raycast(ray, out float distance);
             return ray.GetPoint(distance);
         }
     }
@@ -62,7 +62,24 @@ public class VectorUtility
         Debug.DrawLine(firstCorner, firstCorner + Vector3.up);
         Vector3 secondCorner = ScreeToWorldPosition(mouseEndPos);
         Debug.DrawLine(secondCorner, secondCorner + Vector3.up);
-        
+
+        center = (firstCorner + secondCorner) / 2;
+
+        Vector3 size = new Vector3(Mathf.Abs(firstCorner.x - secondCorner.x), 3f, Mathf.Abs(firstCorner.z - secondCorner.z));
+
+        return size / 2;
+    }
+
+    public static Vector3 ScreenBoxToWorldBoxGridAligned(Vector3 mouseStartPos, Vector3 mouseEndPos, float cellSize, LayerMask layerMask, out Vector3 center)
+    {
+        Vector3 firstCorner = ScreeToWorldPosition(mouseStartPos, layerMask);
+        Debug.DrawLine(firstCorner, firstCorner + Vector3.up);
+        firstCorner = GridManager.instance.GetCellFromPosition(firstCorner).position - new Vector3(cellSize / 2, 0, cellSize / 2);
+
+        Vector3 secondCorner = ScreeToWorldPosition(mouseEndPos, layerMask);
+        Debug.DrawLine(secondCorner, secondCorner + Vector3.up);
+        secondCorner = GridManager.instance.GetCellFromPosition(secondCorner).position + new Vector3(cellSize / 2, 0, cellSize / 2);
+
         center = (firstCorner + secondCorner) / 2;
 
         Vector3 size = new Vector3(Mathf.Abs(firstCorner.x - secondCorner.x), 3f, Mathf.Abs(firstCorner.z - secondCorner.z));

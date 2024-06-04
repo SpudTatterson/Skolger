@@ -11,9 +11,18 @@ public class SelectionManager : MonoBehaviour
     List<ISelectable> currentSelected = new List<ISelectable>();
     SelectionType selectionType;
     ISelectionStrategy selectionStrategy;
+    [SerializeField] float dragDelay = 0.1f;
 
     Vector3 mouseStartPos;
     Vector3 mouseEndPos;
+    float mouseDownTime;
+    SelectionAction selectionAction;
+    enum SelectionAction
+    {
+        Single,
+        Add,
+        Remove
+    }
     void Awake()
     {
         if (instance == null)
@@ -26,6 +35,8 @@ public class SelectionManager : MonoBehaviour
     }
     void Update()
     {
+        HandleSelectionAction();
+
         HandleDeselectionInput();
 
         HandleSelectionInput();
@@ -35,52 +46,71 @@ public class SelectionManager : MonoBehaviour
 
     void HandleSelectionInput()
     {
-        // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        // if (Physics.Raycast(ray, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
-        // hit.transform.TryGetComponent(out ISelectable selectable) &&
-        // Input.GetKeyDown(KeyCode.Mouse0) && !currentSelected.Contains(selectable))
-        // {
-        //     selectable.OnSelect();
-        //     SetSelectionType(selectable.GetSelectionType());
-        //     UIManager.instance.selectionPanel.SetActive(true);
-        //     Debug.Log("selected " + currentSelected.Count);
-        // }
-        if (!EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())// started clicking
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            mouseStartPos = Input.mousePosition;
+            mouseDownTime = Time.time;
+        }
+        else if (Input.GetKeyUp(KeyCode.Mouse0) && mouseDownTime + dragDelay > Time.time)//not dragging player only clicked
+        {
+            List<ISelectable> selectables = new List<ISelectable>();
+            Debug.Log("pressed");
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
+            hit.transform.TryGetComponent(out ISelectable selectable) && !currentSelected.Contains(selectable))
             {
-                mouseStartPos = Input.mousePosition;
+                selectables.Add(selectable);
             }
-            else if (Input.GetKey(KeyCode.Mouse0))
-            {
-                mouseEndPos = Input.mousePosition;
-                UIManager.instance.ResizeSelectionBox(mouseStartPos, mouseEndPos);
-                Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBox(mouseStartPos, mouseEndPos, out Vector3 center);
-                List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents);
-                ExtendedDebug.DrawBox(center, halfExtents * 2, Quaternion.identity);
+            mouseStartPos = Vector3.zero;
+            mouseEndPos = Vector3.zero;
+            mouseDownTime = 0;
+            Select(selectables);
+        }
+        else if (mouseDownTime + dragDelay > Time.time)
+            return;
+        else if (Input.GetKey(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)// started dragging
+        {
+            Debug.Log("dragging");
+            mouseEndPos = Input.mousePosition;
+            //UIManager.instance.ResizeSelectionBox(mouseStartPos, mouseEndPos);
+            Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
+            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents);
+            ExtendedDebug.DrawBox(center, halfExtents * 2, Quaternion.identity);
 
 
-                //on hover
-            }
-            else if (Input.GetKeyUp(KeyCode.Mouse0))
-            {
-                mouseEndPos = Input.mousePosition;
-                UIManager.instance.selectionBoxImage.gameObject.SetActive(false);
-                Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBox(mouseStartPos, mouseEndPos, out Vector3 center);
-                Debug.Log(center);
-                List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents);
+            //on hover
+        }
+        else if (Input.GetKeyUp(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)// stopped dragging
+        {
+            mouseEndPos = Input.mousePosition;
+            UIManager.instance.selectionBoxImage.gameObject.SetActive(false);
+            Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask,
+             out Vector3 center);
+            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents);
 
-                if (!(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
-                    currentSelected.Clear();
+            Select(selectables);
 
-                Select(selectables);
-                //on select
-            }
+            mouseStartPos = Vector3.zero;
+            mouseEndPos = Vector3.zero;
+            mouseDownTime = 0;
+        }
+    }
+
+    void HandleSelectionAction()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            selectionAction = SelectionAction.Add;
+            return;
+        }
+        else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        {
+            selectionAction = SelectionAction.Remove;
+            return;
         }
         else
-        {
-            UIManager.instance.selectionBoxImage.gameObject.SetActive(false);
-        }
+            selectionAction = SelectionAction.Single;
+
     }
 
     void HandleDeselectionInput()
@@ -93,14 +123,50 @@ public class SelectionManager : MonoBehaviour
 
     void Select(List<ISelectable> selectables)
     {
-        foreach (var selectable in selectables)
+        if (selectionAction == SelectionAction.Add)
         {
-            if (!currentSelected.Contains(selectable))
+            foreach (var selectable in selectables)
             {
-                selectable.OnSelect();
-                SetSelectionType(selectable.GetSelectionType());
+                if (!currentSelected.Contains(selectable))
+                {
+                    selectable.OnSelect();
+                    SetSelectionType(selectable.GetSelectionType());
+                }
             }
         }
+        else if (selectionAction == SelectionAction.Remove)
+        {
+            foreach (var selectable in selectables)
+            {
+                if (currentSelected.Contains(selectable))
+                {
+                    selectable.OnDeselect();
+                }
+            }
+            if (currentSelected.Count != 0)
+            {
+                foreach (var selectable in currentSelected)
+                {
+                    SetSelectionType(selectable.GetSelectionType());
+                }
+            }
+            else
+                DeselectAll();
+            return;
+        }
+        else if (selectionAction == SelectionAction.Single)
+        {
+            currentSelected.Clear();
+            foreach (var selectable in selectables)
+            {
+                if (!currentSelected.Contains(selectable))
+                {
+                    selectable.OnSelect();
+                    SetSelectionType(selectable.GetSelectionType());
+                }
+            }
+        }
+
         if (selectables.Count > 0)
         {
             UIManager.instance.selectionPanel.SetActive(true);
@@ -233,8 +299,8 @@ public class SelectionManager : MonoBehaviour
         {
             selectable.OnDeselect();
         }
-        if (this.selectionStrategy != null)
-            this.selectionStrategy.CleanUp();
+        selectionStrategy?.CleanUp();
+
         currentSelected.Clear();
         UIManager.instance.SetAllSelectionUIInactive();
         UIManager.instance.selectionPanel.SetActive(false);
