@@ -54,7 +54,6 @@ public class SelectionManager : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.Mouse0) && mouseDownTime + dragDelay > Time.time)//not dragging player only clicked
         {
             List<ISelectable> selectables = new List<ISelectable>();
-            Debug.Log("pressed");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
             hit.transform.TryGetComponent(out ISelectable selectable) && !currentSelected.Contains(selectable))
@@ -70,7 +69,6 @@ public class SelectionManager : MonoBehaviour
             return;
         else if (Input.GetKey(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)// started dragging
         {
-            Debug.Log("dragging");
             mouseEndPos = Input.mousePosition;
             //UIManager.instance.ResizeSelectionBox(mouseStartPos, mouseEndPos);
             Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
