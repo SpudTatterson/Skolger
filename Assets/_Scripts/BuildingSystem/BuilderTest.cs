@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HaulerTest : MonoBehaviour
+public class BuilderTest : MonoBehaviour
 {
     [SerializeField] float speed = 2.5f;
     List<IConstructable> constructionQueue = new List<IConstructable>();

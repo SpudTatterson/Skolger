@@ -168,7 +168,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         allowed = true;
         // add to construction queue
-        HaulerTest hauler = FindObjectOfType<HaulerTest>();
+        BuilderTest hauler = FindObjectOfType<BuilderTest>();
         hauler.AddConstructable(this);
     }
 
@@ -176,7 +176,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         allowed = false;
         // remove from construction queue
-        HaulerTest hauler = FindObjectOfType<HaulerTest>();
+        BuilderTest hauler = FindObjectOfType<BuilderTest>();
         hauler.RemoveConstructable(this);
         // visually show that this is disallowed 
     }
