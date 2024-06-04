@@ -35,12 +35,14 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
 
         this.amount = amount;
         stackSize = itemData.stackSize;
-        if (allowed) OnAllow();
-        else OnDisallow();
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
-        occupiedCell = GridManager.instance.GetGridFromPosition(transform.position).GetCellFromPosition(transform.position);
+        if (allowed) OnAllow();
+        else OnDisallow();
+        if (GridManager.instance.GetCellFromPosition(transform.position) == null) occupiedCell = null;
+        else
+            occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
 
         UpdateAmount(initialAmount);
     }
@@ -146,12 +148,16 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     public void OnAllow()
     {
         allowed = true;
-        // add to haul queue
+        if (!inStockpile)
+            FindObjectOfType<HaulerTest>().AddToHaulQueue(this);
+        
     }
 
     public void OnDisallow()
     {
         allowed = false;
+        if (!inStockpile)
+            FindObjectOfType<HaulerTest>().RemoveFromHaulQueue(this);
         //remove from haul queue
         // visually show that item is disallowed with billboard or something similar
     }

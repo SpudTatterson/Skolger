@@ -2,15 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BuilderTest : MonoBehaviour
 {
-    [SerializeField] float speed = 2.5f;
     List<IConstructable> constructionQueue = new List<IConstructable>();
     ItemObject heldItems;
     ItemCost costToGet;
     bool hauling;
     Coroutine currentHaul;
+    NavMeshAgent agent;
+
+    void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -40,11 +46,11 @@ public class BuilderTest : MonoBehaviour
         if (InventoryManager.instance.HasItem(costToGet))
         {
             Vector3 itemPosition = InventoryManager.instance.GetItemLocation(costToGet.item, costToGet.cost);
-
-            while (Vector3.Distance(transform.position, itemPosition) > 1)
+            agent.SetDestination(itemPosition);
+            while (!ReachedDestinationOrGaveUp())
             {
                 // go to stockpile item
-                transform.Translate(VectorUtility.GetDirection(transform.position, itemPosition) * speed * Time.deltaTime);
+                //transform.Translate(VectorUtility.GetDirection(transform.position, itemPosition) * speed * Time.deltaTime);
                 yield return null;
             }
             if ((UnityEngine.Object)constructable == null)
@@ -55,10 +61,11 @@ public class BuilderTest : MonoBehaviour
             }
             heldItems = InventoryManager.instance.TakeItem(costToGet);// take item
             Vector3 constructablePosition = constructable.GetPosition(); // get constructable position
-            while (Vector3.Distance(constructablePosition, transform.position) > 1)
+            agent.SetDestination(constructablePosition);
+            while (!ReachedDestinationOrGaveUp())
             {
                 // go to constructable
-                transform.Translate(VectorUtility.GetDirection(transform.position, constructablePosition) * speed * Time.deltaTime);
+                // transform.Translate(VectorUtility.GetDirection(transform.position, constructablePosition) * speed * Time.deltaTime);
                 yield return null;
             }
 
@@ -78,7 +85,7 @@ public class BuilderTest : MonoBehaviour
 
     public void AddConstructable(IConstructable constructable)
     {
-        if(!constructionQueue.Contains(constructable))
+        if (!constructionQueue.Contains(constructable))
             constructionQueue.Add(constructable);
     }
     public void RemoveConstructable(IConstructable constructable)
@@ -86,4 +93,20 @@ public class BuilderTest : MonoBehaviour
         constructionQueue.Remove(constructable);
     }
 
+    public bool ReachedDestinationOrGaveUp()
+    {
+
+        if (!agent.pathPending)
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
