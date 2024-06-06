@@ -15,6 +15,7 @@ public enum SelectionType
 public interface ISelectable
 {
     public SelectionType GetSelectionType();
+    public ISelectionStrategy GetSelectionStrategy();
     public GameObject GetGameObject();
     public string GetMultipleSelectionString(out int amount);
     bool HasActiveCancelableAction();

@@ -192,24 +192,7 @@ public class SelectionManager : MonoBehaviour
         else
         {
             var selectable = currentSelected[0];
-            switch (selectable.GetSelectionType())
-            {
-                case SelectionType.Item:
-                    SetSelectionStrategy(new ItemSelectionStrategy());
-                    break;
-                case SelectionType.Constructable:
-                    SetSelectionStrategy(new ConstructableSelectionStrategy());
-                    break;
-                case SelectionType.Harvestable:
-                    SetSelectionStrategy(new HarvestableSelectionStrategy());
-                    break;
-                case SelectionType.Colonist:
-                    SetSelectionStrategy(new ColonistSelectionStrategy());
-                    break;
-                case SelectionType.Building:
-                    SetSelectionStrategy(new BuildingSelectionStrategy());
-                    break;
-            }
+            SetSelectionStrategy(selectable.GetSelectionStrategy());
         }
         selectionStrategy.ApplySelection(currentSelected);
     }

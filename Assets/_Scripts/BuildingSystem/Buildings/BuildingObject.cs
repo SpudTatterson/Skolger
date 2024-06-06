@@ -35,6 +35,10 @@ public class BuildingObject : MonoBehaviour, ISelectable
     {
         return SelectionType.Building;
     }
+    public ISelectionStrategy GetSelectionStrategy()
+    {
+        return new BuildingSelectionStrategy();
+    }
 
     public GameObject GetGameObject()
     {

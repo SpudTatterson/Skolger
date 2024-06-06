@@ -129,6 +129,10 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     {
         return selectionType;
     }
+    public ISelectionStrategy GetSelectionStrategy()
+    {
+        return new ItemSelectionStrategy();
+    }
     public GameObject GetGameObject()
     {
         return gameObject;

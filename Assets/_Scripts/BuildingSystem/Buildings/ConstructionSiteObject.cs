@@ -144,6 +144,11 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         return SelectionType.Constructable;
     }
 
+    public ISelectionStrategy GetSelectionStrategy()
+    {
+        return new ConstructableSelectionStrategy();
+    }
+
     public GameObject GetGameObject()
     {
         return gameObject;
