@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
+    public bool isSelecting = true;
     public static SelectionManager instance { get; private set; }
     List<ISelectable> currentSelected = new List<ISelectable>();
     SelectionType selectionType;
@@ -35,6 +36,8 @@ public class SelectionManager : MonoBehaviour
     }
     void Update()
     {
+        if(!isSelecting) return;
+        
         HandleSelectionAction();
 
         HandleDeselectionInput();
