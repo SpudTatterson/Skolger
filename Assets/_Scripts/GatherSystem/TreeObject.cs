@@ -91,6 +91,10 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
     {
         return selectionType;
     }
+    public ISelectionStrategy GetSelectionStrategy()
+    {
+        return new HarvestableSelectionStrategy();
+    }
 
     public GameObject GetGameObject()
     {
