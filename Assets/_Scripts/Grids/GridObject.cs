@@ -227,16 +227,18 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             return cells[x, y];
     }
 
-    public static Vector2Int GetGridSizeFrom2Cells(Cell Cell1, Cell cell2)
+    public static (Vector2Int size, Cell cornerCell) GetGridSizeFrom2Cells(Cell cell1, Cell cell2)
     {
-        if (Cell1 == cell2) return new Vector2Int(1, 1);
-        
-        int xSize = Mathf.Abs(Cell1.x - cell2.x);
-        int ySize = Mathf.Abs(Cell1.y - cell2.y);
+        int xMin = Mathf.Min(cell1.x, cell2.x);
+        int yMin = Mathf.Min(cell1.y, cell2.y);
+        int xMax = Mathf.Max(cell1.x, cell2.x);
+        int yMax = Mathf.Max(cell1.y, cell2.y);
 
-        return new Vector2Int(xSize + 1, ySize + 1);
+        Vector2Int size = new Vector2Int(xMax - xMin + 1, yMax - yMin + 1);
+        Cell cornerCell = cell1.grid.GetCellFromIndex(xMin, yMin);
+
+        return (size, cornerCell);
     }
-
     #endregion
 
     #region serialization 
