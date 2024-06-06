@@ -22,6 +22,16 @@ public class InventoryManager : MonoBehaviour
     }
 
     // make method to get stockpile with empty space    
+    public Stockpile GetStockpileWithEmptySpace(out Cell cell)
+    {
+        foreach (Stockpile stockpile in stockpiles)
+        {
+            if(stockpile.GetEmptyCell(out cell))
+                return stockpile;
+        }
+        cell = null;
+        return null;
+    }
     Stockpile GetStockpileWithItem(ItemData itemData, int amount)
     {
         foreach (Stockpile stockpile in stockpiles)

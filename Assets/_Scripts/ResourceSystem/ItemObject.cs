@@ -10,7 +10,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
     [SerializeField] SelectionType selectionType;
-    [SerializeField] bool allowed = true;
+    [SerializeField] bool allowedOnInit = true;
 
     public int amount { get; private set; }
 
@@ -18,14 +18,15 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     Stockpile currentStockpile;
     public GameObject visualGO { get; private set; }
     public Cell occupiedCell { get; private set; }
+    public bool allowed { get; private set; }
 
-    
+
 
 
     void Start()
     {
         if (doManualInitialized)
-            Initialize(itemData, amount);
+            Initialize(itemData, amount, allowedOnInit);
     }
 
     public void Initialize(ItemData itemData, int amount, bool allowed = true, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile = null)
@@ -34,13 +35,14 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
 
         this.amount = amount;
         stackSize = itemData.stackSize;
-        this.allowed = allowed;
-        if(allowed) OnAllow();
-        else OnDisallow();
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
-        occupiedCell = GridManager.instance.GetGridFromPosition(transform.position).GetCellFromPosition(transform.position);
+        if (allowed) OnAllow();
+        else OnDisallow();
+        if (GridManager.instance.GetCellFromPosition(transform.position) == null) occupiedCell = null;
+        else
+            occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
 
         UpdateAmount(initialAmount);
     }
@@ -95,7 +97,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
 
         return takeAmount;
     }
-    public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position,bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
+    public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         GameObject visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
 
@@ -138,20 +140,24 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
         amount = this.amount;
         return itemData.itemName;
     }
-    
+
     #endregion
-    
+
     #region IAllowable 
 
     public void OnAllow()
     {
         allowed = true;
-        // add to haul queue
+        if (!inStockpile)
+            FindObjectOfType<HaulerTest>().AddToHaulQueue(this);
+        
     }
 
     public void OnDisallow()
     {
         allowed = false;
+        if (!inStockpile)
+            FindObjectOfType<HaulerTest>().RemoveFromHaulQueue(this);
         //remove from haul queue
         // visually show that item is disallowed with billboard or something similar
     }

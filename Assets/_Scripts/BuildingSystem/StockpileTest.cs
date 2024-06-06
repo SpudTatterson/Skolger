@@ -12,30 +12,30 @@ public class StockpileTest : MonoBehaviour
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit itemHit;
-        if (Physics.Raycast(ray, out itemHit, 100, LayerManager.instance.ItemLayerMask) && Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            ItemObject item = itemHit.transform.GetComponent<ItemObject>();
-            Stockpile stockpile = InventoryManager.instance.stockpiles[0];
-            Cell cell;
-            if (stockpile.GetEmptyCell(out cell)) // small bug - cannot merge items if no empty cells are found
-            {
-                if (item.CheckIfInStockpile(out _))
-                {
-                    return;
-                }
-                else
-                {
-                    stockpile.AddItem(item);
-                    Destroy(itemHit.transform.gameObject);
-                }
-            }
-            else
-            {
-                Debug.Log("No empty spots found in stockpile");
-            }
+        // RaycastHit itemHit;
+        // if (Physics.Raycast(ray, out itemHit, 100, LayerManager.instance.ItemLayerMask) && Input.GetKeyDown(KeyCode.Mouse0))
+        // {
+        //     ItemObject item = itemHit.transform.GetComponent<ItemObject>();
+        //     Stockpile stockpile = InventoryManager.instance.stockpiles[0];
+        //     Cell cell;
+        //     if (stockpile.GetEmptyCell(out cell)) // small bug - cannot merge items if no empty cells are found
+        //     {
+        //         if (item.CheckIfInStockpile(out _))
+        //         {
+        //             return;
+        //         }
+        //         else
+        //         {
+        //             stockpile.AddItem(item);
+        //             Destroy(itemHit.transform.gameObject);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         Debug.Log("No empty spots found in stockpile");
+        //     }
 
-        }
+        // }
 
         if(!makingStockpile) return;
         RaycastHit hit;
