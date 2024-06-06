@@ -161,6 +161,8 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
     #endregion
 
+    #region Public Methods
+
     public Cell GetCellFromPosition(Vector3 position)
     {
         Vector3 localPosition = position - transform.position;
@@ -224,6 +226,18 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         else
             return cells[x, y];
     }
+
+    public static Vector2Int GetGridSizeFrom2Cells(Cell Cell1, Cell cell2)
+    {
+        if (Cell1 == cell2) return new Vector2Int(1, 1);
+        
+        int xSize = Mathf.Abs(Cell1.x - cell2.x);
+        int ySize = Mathf.Abs(Cell1.y - cell2.y);
+
+        return new Vector2Int(xSize + 1, ySize + 1);
+    }
+
+    #endregion
 
     #region serialization 
     public void OnBeforeSerialize()

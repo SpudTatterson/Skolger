@@ -5,45 +5,42 @@ using UnityEngine;
 public class StockpileTest : MonoBehaviour
 {
     public List<Cell> cells;
-    [SerializeField] Vector2Int size = new Vector2Int(1, 1);
 
     bool makingStockpile = false;
-
+    Cell firstCell;
+    Cell previousCell;
+    GameObject tempGrid;
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        // RaycastHit itemHit;
-        // if (Physics.Raycast(ray, out itemHit, 100, LayerManager.instance.ItemLayerMask) && Input.GetKeyDown(KeyCode.Mouse0))
-        // {
-        //     ItemObject item = itemHit.transform.GetComponent<ItemObject>();
-        //     Stockpile stockpile = InventoryManager.instance.stockpiles[0];
-        //     Cell cell;
-        //     if (stockpile.GetEmptyCell(out cell)) // small bug - cannot merge items if no empty cells are found
-        //     {
-        //         if (item.CheckIfInStockpile(out _))
-        //         {
-        //             return;
-        //         }
-        //         else
-        //         {
-        //             stockpile.AddItem(item);
-        //             Destroy(itemHit.transform.gameObject);
-        //         }
-        //     }
-        //     else
-        //     {
-        //         Debug.Log("No empty spots found in stockpile");
-        //     }
-
-        // }
 
         if(!makingStockpile) return;
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 500f, LayerManager.instance.GroundLayerMask) && Input.GetKeyDown(KeyCode.Mouse0))
+        if(Input.GetKeyDown(KeyCode.Mouse0) && Physics.Raycast(ray, out RaycastHit hit, 500f, LayerManager.instance.GroundLayerMask))
         {
+            firstCell = GridManager.instance.GetCellFromPosition(hit.point);
+        }
+        else if(Input.GetKey(KeyCode.Mouse0) && Physics.Raycast(ray, out hit, 500f, LayerManager.instance.GroundLayerMask))
+        {
+            Cell currentCell = GridManager.instance.GetCellFromPosition(hit.point);
+            
+            if(previousCell == null || currentCell != previousCell)
+            {
+                Vector2Int size = GridObject.GetGridSizeFrom2Cells(firstCell, currentCell);
+                Destroy(tempGrid);
+                Vector3 cornerPos = firstCell.position - new Vector3(0.5f, -0.01f, 0.5f);
+                tempGrid = MeshUtility.CreateGridMesh(size.x, size.y, cornerPos, "StockpileTempVisual", MaterialManager.instance.stockpileMaterial);
+            }
+
+            previousCell = currentCell;
+        }
+        else if (Input.GetKeyUp(KeyCode.Mouse0) && Physics.Raycast(ray, out hit, 500f, LayerManager.instance.GroundLayerMask))
+        {
+            Destroy(tempGrid);
+
             GridObject grid = hit.transform.GetComponentInParent<GridObject>();
             Cell cell = grid.GetCellFromPosition(hit.point);
-            bool cellsExist = grid.TryGetCells(new Vector2Int(cell.x, cell.y), size.x, size.y, out cells);
+            Vector2Int size = GridObject.GetGridSizeFrom2Cells(firstCell, cell);
+            bool cellsExist = grid.TryGetCells(new Vector2Int(firstCell.x, firstCell.y), size.x, size.y, out cells);
             bool cellsFree = true;
             foreach (Cell c in cells)
             {
@@ -55,7 +52,7 @@ public class StockpileTest : MonoBehaviour
                 makingStockpile = false;
                 GameObject stockpileGO = new GameObject("Stockpile");
                 Stockpile stockpile = stockpileGO.AddComponent<Stockpile>();
-                stockpile.Initialize(size.x, size.y, cells, cell.position, 1);
+                stockpile.Initialize(size.x, size.y, cells, firstCell.position, 1);
                 foreach (Cell c in cells)
                 {
                     c.inUse = true;

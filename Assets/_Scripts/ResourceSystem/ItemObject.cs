@@ -42,7 +42,10 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
         else OnDisallow();
         if (GridManager.instance.GetCellFromPosition(transform.position) == null) occupiedCell = null;
         else
+        {
             occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
+            occupiedCell.inUse = true;
+        }
 
         UpdateAmount(initialAmount);
     }
@@ -150,7 +153,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
         allowed = true;
         if (!inStockpile)
             FindObjectOfType<HaulerTest>().AddToHaulQueue(this);
-        
+
     }
 
     public void OnDisallow()
