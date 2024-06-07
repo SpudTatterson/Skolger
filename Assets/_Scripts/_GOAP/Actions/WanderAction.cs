@@ -1,5 +1,3 @@
-using System.Data.Common;
-using System.Runtime.CompilerServices;
 using CrashKonijn.Goap.Behaviours;
 using CrashKonijn.Goap.Classes;
 using CrashKonijn.Goap.Enums;
@@ -15,7 +13,7 @@ public class WanderAction : ActionBase<CommonData>
 
     public override void Start(IMonoAgent agent, CommonData data)
     {
-        data.Timer = Random.Range(2f,5f);
+        data.Timer = Random.Range(5f,10f);
     }
 
     public override ActionRunState Perform(IMonoAgent agent, CommonData data, ActionContext context)

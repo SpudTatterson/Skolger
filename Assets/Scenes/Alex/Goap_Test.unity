@@ -1144,7 +1144,7 @@ PrefabInstance:
         type: 3}
       propertyPath: GoapRunner
       value: 
-      objectReference: {fileID: 1186851789}
+      objectReference: {fileID: 1186851792}
     - target: {fileID: 4028279811694217197, guid: a27d7623309a08b4b97a80c8c791e155,
         type: 3}
       propertyPath: m_Layer
@@ -1219,6 +1219,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AxeMan (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8217019701658514860, guid: a27d7623309a08b4b97a80c8c791e155,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1671,7 +1676,7 @@ PrefabInstance:
         type: 3}
       propertyPath: GoapRunner
       value: 
-      objectReference: {fileID: 1186851789}
+      objectReference: {fileID: 1186851792}
     - target: {fileID: 4028279811694217197, guid: a27d7623309a08b4b97a80c8c791e155,
         type: 3}
       propertyPath: m_Layer
@@ -1746,6 +1751,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AxeMan (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8217019701658514860, guid: a27d7623309a08b4b97a80c8c791e155,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3186,7 +3196,7 @@ PrefabInstance:
         type: 3}
       propertyPath: GoapRunner
       value: 
-      objectReference: {fileID: 1186851789}
+      objectReference: {fileID: 1186851792}
     - target: {fileID: 4028279811694217197, guid: a27d7623309a08b4b97a80c8c791e155,
         type: 3}
       propertyPath: m_Layer
@@ -3261,6 +3271,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AxeMan (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8217019701658514860, guid: a27d7623309a08b4b97a80c8c791e155,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4626,7 +4641,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1186851791}
   - component: {fileID: 1186851790}
-  - component: {fileID: 1186851789}
+  - component: {fileID: 1186851792}
+  - component: {fileID: 1186851793}
   m_Layer: 0
   m_Name: ------ Goap Config ------
   m_TagString: Untagged
@@ -4634,22 +4650,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1186851789
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1186851788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19925b6b65787cf439172e5e095b51fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  configInitializer: {fileID: 0}
-  setConfigFactories: []
-  goapSetConfigFactories:
-  - {fileID: 1186851790}
 --- !u!114 &1186851790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4677,6 +4677,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1186851792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186851788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19925b6b65787cf439172e5e095b51fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configInitializer: {fileID: 1186851793}
+  setConfigFactories: []
+  goapSetConfigFactories:
+  - {fileID: 1186851790}
+--- !u!114 &1186851793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186851788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb6d7a34132e3bc4582919a9e7104b0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AttackConfig: {fileID: 11400000, guid: 7237c40f5448e0a4b80034dbd78cd830, type: 2}
 --- !u!1001 &1191457809
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6073,7 +6102,7 @@ PrefabInstance:
         type: 3}
       propertyPath: GoapRunner
       value: 
-      objectReference: {fileID: 1186851789}
+      objectReference: {fileID: 1186851792}
     - target: {fileID: 4028279811694217197, guid: a27d7623309a08b4b97a80c8c791e155,
         type: 3}
       propertyPath: m_Layer
@@ -6148,6 +6177,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AxeMan (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8217019701658514860, guid: a27d7623309a08b4b97a80c8c791e155,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9672,7 +9706,7 @@ PrefabInstance:
         type: 3}
       propertyPath: GoapRunner
       value: 
-      objectReference: {fileID: 1186851789}
+      objectReference: {fileID: 1186851792}
     - target: {fileID: 4028279811694217197, guid: a27d7623309a08b4b97a80c8c791e155,
         type: 3}
       propertyPath: m_Layer
@@ -9747,6 +9781,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AxeMan (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8217019701658514860, guid: a27d7623309a08b4b97a80c8c791e155,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9859,7 +9898,7 @@ PrefabInstance:
         type: 3}
       propertyPath: GoapRunner
       value: 
-      objectReference: {fileID: 1186851789}
+      objectReference: {fileID: 1186851792}
     - target: {fileID: 4028279811694217197, guid: a27d7623309a08b4b97a80c8c791e155,
         type: 3}
       propertyPath: m_Layer

@@ -1,11 +1,8 @@
-using System.Runtime.InteropServices.WindowsRuntime;
-using CrashKonijn.Goap.Behaviours;
 using CrashKonijn.Goap.Classes;
 using CrashKonijn.Goap.Interfaces;
 using CrashKonijn.Goap.Sensors;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
 
 public class WanderTargetSensor : LocalTargetSensorBase
 {
@@ -32,7 +29,7 @@ public class WanderTargetSensor : LocalTargetSensorBase
 
         while (count < 5)
         {
-            Vector2 random = Random.insideUnitCircle * 5;
+            Vector2 random = Random.insideUnitCircle * 15;
             Vector3 position = agent.transform.position + new Vector3(random.x, 0, random.y);
 
             if (NavMesh.SamplePosition(position, out NavMeshHit hit, 1, NavMesh.AllAreas))
