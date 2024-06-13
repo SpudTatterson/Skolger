@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using NaughtyAttributes;
 
 public class ItemObject : MonoBehaviour, ISelectable, IAllowable
 {
@@ -11,7 +12,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     [SerializeField] bool inStockpile = false;
     [SerializeField] bool allowedOnInit = true;
 
-    public int amount { get; private set; }
+    [field: SerializeField, ReadOnly] public int amount { get; private set; }
 
     [Header("References")]
     Stockpile currentStockpile;
@@ -25,15 +26,19 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     void Start()
     {
         if (doManualInitialized)
-            Initialize(itemData, amount, allowedOnInit);
+            Initialize(itemData, initialAmount, allowedOnInit);
     }
 
     public void Initialize(ItemData itemData, int amount, bool allowed = true, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         this.itemData = itemData;
-
-        this.amount = amount;
         stackSize = itemData.stackSize;
+        if (!UpdateAmount(amount))
+        {
+            Debug.Log("tried to initiate with invalid amount");
+            Destroy(gameObject);
+            return;
+        }
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
@@ -45,8 +50,6 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
             occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
             occupiedCell.inUse = true;
         }
-
-        UpdateAmount(initialAmount);
     }
 
     public bool UpdateAmount(int amount)
@@ -70,7 +73,6 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
             if (this.amount < 0) Debug.LogWarning("item amount less then 0 something went wrong" + transform.name);
             return true;
         }
-
         return false;
     }
 

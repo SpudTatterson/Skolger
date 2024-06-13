@@ -236,11 +236,6 @@ public class Stockpile : MonoBehaviour, ISelectable
         return new StockpileSelectionStrategy();
     }
 
-    public GameObject GetGameObject()
-    {
-        return gameObject;
-    }
-
     public string GetMultipleSelectionString(out int amount)
     {
         amount = 1;
