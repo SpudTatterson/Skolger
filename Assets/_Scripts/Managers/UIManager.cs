@@ -72,57 +72,12 @@ public class UIManager : MonoBehaviour
         disallowButton.SetActive(allowed);
     }
 
-    public void EnableItemButtons(bool allowed)
-    {
-        SetAllActionButtonsInactive();
-        EnableAllowDisallowButton(allowed);
-        
-    }
     public void EnableCancelButton()
     {
         SetAllActionButtonsInactive();
         cancelButton.SetActive(true);
     }
 
-    public void EnableConstructableButtons(bool allowed)
-    {
-        SetAllActionButtonsInactive();
-        EnableAllowDisallowButton(allowed);
-        cancelButton.SetActive(true);
-    }
-
-    public void EnableBuildingButtons()
-    {
-        SetAllActionButtonsInactive();
-        deconstructButton.SetActive(true);
-    }
-
-    public void EnableHarvestableButtons()
-    {
-        SetAllActionButtonsInactive();
-        harvestButton.SetActive(true);
-    }
-
-    public void EnableColonistButtons()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void EnableButtons(SelectionType type, bool allowed)
-    {
-        if (type == SelectionType.Colonist)
-            EnableColonistButtons();
-        else if (type == SelectionType.Harvestable)
-            EnableHarvestableButtons();
-        else if (type == SelectionType.Item)
-            EnableItemButtons(allowed);
-        else if (type == SelectionType.Constructable)
-            EnableConstructableButtons(allowed);
-        else if (type == SelectionType.Building)
-            EnableBuildingButtons();
-
-        SelectionManager.instance.CheckForCancelableAction();
-    }
 
     #endregion
 

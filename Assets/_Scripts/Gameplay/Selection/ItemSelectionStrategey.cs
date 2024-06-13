@@ -8,7 +8,7 @@ public class ItemSelectionStrategy : ISelectionStrategy
 
         UIManager.instance.SetAllSelectionUIInactive();
         UIManager.instance.itemSelection.gameObject.SetActive(true);
-        UIManager.instance.EnableItemButtons(allowable.IsAllowed());
+        EnableButtons();
 
         ItemObject selectedItem = selectedItems[0].GetGameObject().GetComponent<ItemObject>();
         ItemSelectionMenu selectionMenu = UIManager.instance.itemSelection;
@@ -18,6 +18,10 @@ public class ItemSelectionStrategy : ISelectionStrategy
         selectionMenu.stackSize.text = $"Stack Size: {selectedItem.itemData.stackSize}";
     }
 
+    public void EnableButtons()
+    {
+        UIManager.instance.SetAllActionButtonsInactive();
 
-
+        SelectionManager.instance.CheckForAllowableSelection();
+    }
 }

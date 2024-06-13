@@ -8,7 +8,7 @@ public class ConstructableSelectionStrategy : ISelectionStrategy
 
         UIManager.instance.SetAllSelectionUIInactive();
         UIManager.instance.constructableSelection.gameObject.SetActive(true);
-        UIManager.instance.EnableConstructableButtons(allowable.IsAllowed());
+        EnableButtons();
 
         IConstructable constructable = selectedItems[0].GetGameObject().GetComponent<IConstructable>();
         List<ItemCost> costs = constructable.GetAllCosts();
@@ -17,5 +17,13 @@ public class ConstructableSelectionStrategy : ISelectionStrategy
 
         selectionMenu.SetCosts(costs);
         selectionMenu.constructableName.text = $"Name: {selectedItems[0].GetMultipleSelectionString(out _)}";
+    }
+
+    public void EnableButtons()
+    {
+        UIManager.instance.SetAllActionButtonsInactive();
+
+        SelectionManager.instance.CheckForAllowableSelection();
+        SelectionManager.instance.CheckForCancelableAction();
     }
 }

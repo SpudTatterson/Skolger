@@ -20,7 +20,7 @@ public class SelectionManager : MonoBehaviour
     SelectionAction selectionAction;
     enum SelectionAction
     {
-        Single,
+        Default,
         Add,
         Remove
     }
@@ -36,8 +36,8 @@ public class SelectionManager : MonoBehaviour
     }
     void Update()
     {
-        if(!isSelecting) return;
-        
+        if (!isSelecting) return;
+
         HandleSelectionAction();
 
         HandleDeselectionInput();
@@ -110,7 +110,7 @@ public class SelectionManager : MonoBehaviour
             return;
         }
         else
-            selectionAction = SelectionAction.Single;
+            selectionAction = SelectionAction.Default;
 
     }
 
@@ -155,9 +155,10 @@ public class SelectionManager : MonoBehaviour
                 DeselectAll();
             return;
         }
-        else if (selectionAction == SelectionAction.Single)
+        else if (selectionAction == SelectionAction.Default)
         {
             currentSelected.Clear();
+
             foreach (var selectable in selectables)
             {
                 if (!currentSelected.Contains(selectable))
@@ -198,8 +199,7 @@ public class SelectionManager : MonoBehaviour
     }
     void SetSelectionStrategy(ISelectionStrategy selectionStrategy)
     {
-        if (this.selectionStrategy != null)
-            this.selectionStrategy.CleanUp();
+        this.selectionStrategy?.CleanUp();
         this.selectionStrategy = selectionStrategy;
     }
     public void AddToCurrentSelected(ISelectable selectable)
@@ -220,6 +220,13 @@ public class SelectionManager : MonoBehaviour
         if (currentSelected[0].HasActiveCancelableAction())
         {
             UIManager.instance.EnableCancelButton();
+        }
+    }
+    public void CheckForAllowableSelection()
+    {
+        if(currentSelected[0].GetGameObject().TryGetComponent(out IAllowable allowable))
+        {
+            UIManager.instance.EnableAllowDisallowButton(allowable.IsAllowed());
         }
     }
 
@@ -261,13 +268,15 @@ public class SelectionManager : MonoBehaviour
             if (GO.TryGetComponent(out IHarvestable harvestable))
             {
                 harvestable.RemoveFromHarvestQueue();
-                UIManager.instance.EnableHarvestableButtons();
+                selectable.GetSelectionStrategy().EnableButtons();
             }
             if (GO.TryGetComponent(out IConstructable constructable))
             {
                 constructable.CancelConstruction();
-                bool allowed = GO.GetComponent<IAllowable>().IsAllowed();
-                UIManager.instance.EnableConstructableButtons(allowed);
+                selectable.GetSelectionStrategy().EnableButtons();
+            }
+        }
+    }
             }
         }
     }
