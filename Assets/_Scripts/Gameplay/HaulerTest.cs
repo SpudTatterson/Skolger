@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -41,6 +40,7 @@ public class HaulerTest : MonoBehaviour
             yield return null;
         }
         heldItem = item;
+        if(heldItem == null) yield break;
         heldItem.gameObject.SetActive(false);
 
         agent.SetDestination(cell.position);
@@ -49,10 +49,19 @@ public class HaulerTest : MonoBehaviour
             yield return null;
         }
         RemoveFromHaulQueue(item);
-        stockpile.AddItem(item);
-        Destroy(item.gameObject);
-        heldItem = null;
-        
+        if (stockpile.AddItem(item))
+        {
+            Destroy(item.gameObject);
+            heldItem = null;
+        }
+        else
+        {
+            Cell newCell = GridManager.instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell();
+            item.transform.position = newCell.position;
+            newCell.inUse = true;
+        }
+            
+
         hauling = false;
     }
 
@@ -60,7 +69,6 @@ public class HaulerTest : MonoBehaviour
     {
         if (!itemsToHaul.Contains(itemObject))
             itemsToHaul.Add(itemObject);
-            Debug.Log("added to queue");
     }
     public void RemoveFromHaulQueue(ItemObject itemObject)
     {
