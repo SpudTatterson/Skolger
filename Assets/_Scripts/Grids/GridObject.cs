@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+using System.Linq;
 
 [System.Serializable]
 public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
@@ -9,9 +9,8 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     [SerializeField] int height;
     [SerializeField] int width;
     [SerializeField] float cellSize;
-    [SerializeField] GameObject[] cellPrefabs;
     [SerializeField] Material material;
-    [SerializeField] int groundLayer;
+    [SerializeField] int groundLayer = 7;
 
     [Header("Cells")]
     public Cell[,] cells;
@@ -24,7 +23,6 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         this.height = height;
         this.width = width;
         this.cellSize = cellSize;
-        this.cellPrefabs = cellPrefabs;
         this.material = material;
 
         GenerateGrid();
@@ -43,12 +41,14 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     [ContextMenu("ResetGrid")]
     void ResetGrid()
     {
-        if (flatCells == null) return;
         InitializeCells();
         if (visualGridChunks.Count == 0)
         {
-            Debug.LogWarning("No old grid Chunks found \n if old grid chunks exist please delete manually");
-            return;
+            List<MeshFilter> meshFilters = GetComponentsInChildren<MeshFilter>().ToList();
+            foreach (MeshFilter filter in meshFilters)
+            {
+                visualGridChunks.Add(filter.gameObject);
+            }
         }
         foreach (GameObject chunk in visualGridChunks)
         {
