@@ -12,6 +12,7 @@ public class SelectionManager : MonoBehaviour
     List<ISelectable> currentSelected = new List<ISelectable>();
     SelectionType selectionType;
     ISelectionStrategy selectionStrategy;
+    [SerializeField] List<SelectionType> specialSelectionTypes;
     [SerializeField] float dragDelay = 0.1f;
 
     Vector3 mouseStartPos;
@@ -161,11 +162,24 @@ public class SelectionManager : MonoBehaviour
 
             foreach (var selectable in selectables)
             {
+                bool doBreak = false;
+                if (CheckForSpecialSelectionCase(selectable, out SelectionType type))
+                {
+                    if (type == SelectionType.Stockpile)
+                    {
+                        if (selectable == selectables[0] && selectables.Count == 1)
+                            doBreak = true;
+                        else
+                            continue;
+
+                    }
+                }
                 if (!currentSelected.Contains(selectable))
                 {
                     selectable.OnSelect();
                     SetSelectionType(selectable.GetSelectionType());
                 }
+                if (doBreak) break;
             }
         }
 
@@ -178,6 +192,20 @@ public class SelectionManager : MonoBehaviour
             DeselectAll();
         }
 
+    }
+
+    bool CheckForSpecialSelectionCase(ISelectable selectable, out SelectionType selectionType)
+    {
+        foreach (SelectionType type in specialSelectionTypes)
+        {
+            if (selectable.GetSelectionType() == type)
+            {
+                selectionType = type;
+                return true;
+            }
+        }
+        selectionType = default;
+        return false;
     }
 
     #endregion
@@ -224,9 +252,9 @@ public class SelectionManager : MonoBehaviour
     }
     public void CheckForAllowableSelection()
     {
-        if(currentSelected[0].GetGameObject().TryGetComponent(out IAllowable allowable))
+        if (currentSelected[0] is IAllowable)
         {
-            UIManager.instance.EnableAllowDisallowButton(allowable.IsAllowed());
+            UIManager.instance.EnableAllowDisallowButton((currentSelected[0] as IAllowable).IsAllowed());
         }
     }
 
@@ -238,7 +266,7 @@ public class SelectionManager : MonoBehaviour
     {
         foreach (ISelectable selectable in currentSelected)
         {
-            selectable.GetGameObject().GetComponent<IHarvestable>().AddToHarvestQueue();
+            (selectable as IHarvestable).AddToHarvestQueue();
         }
         UIManager.instance.EnableCancelButton();
     }
@@ -247,7 +275,7 @@ public class SelectionManager : MonoBehaviour
     {
         foreach (ISelectable selectable in currentSelected)
         {
-            selectable.GetGameObject().GetComponent<IAllowable>().OnAllow();
+            (selectable as IAllowable).OnAllow();
         }
         UIManager.instance.EnableAllowDisallowButton(true);
     }
@@ -255,7 +283,7 @@ public class SelectionManager : MonoBehaviour
     {
         foreach (ISelectable selectable in currentSelected)
         {
-            selectable.GetGameObject().GetComponent<IAllowable>().OnDisallow();
+            (selectable as IAllowable).OnDisallow();
         }
         UIManager.instance.EnableAllowDisallowButton(false);
     }
@@ -264,19 +292,30 @@ public class SelectionManager : MonoBehaviour
     {
         foreach (ISelectable selectable in currentSelected)
         {
-            GameObject GO = selectable.GetGameObject();
-            if (GO.TryGetComponent(out IHarvestable harvestable))
+            if (selectable is IHarvestable)
             {
-                harvestable.RemoveFromHarvestQueue();
+                (selectable as IHarvestable).RemoveFromHarvestQueue();
                 selectable.GetSelectionStrategy().EnableButtons();
             }
-            if (GO.TryGetComponent(out IConstructable constructable))
+            if (selectable is IConstructable)
             {
-                constructable.CancelConstruction();
+                (selectable as IConstructable).CancelConstruction();
                 selectable.GetSelectionStrategy().EnableButtons();
             }
         }
     }
+    public void TryToDeconstruct()
+    {
+        foreach (ISelectable selectable in currentSelected)
+        {
+
+            if (selectable is BuildingObject)
+            {
+                // deconstruct building
+            }
+            if (selectable is Stockpile)
+            {
+                (selectable as Stockpile).DestroyStockpile();
             }
         }
     }

@@ -10,13 +10,13 @@ public enum SelectionType
     Workbench,
     Harvestable,
     Colonist,
+    Stockpile,
     Multiple
 }
 public interface ISelectable
 {
     public SelectionType GetSelectionType();
     public ISelectionStrategy GetSelectionStrategy();
-    public GameObject GetGameObject();
     public string GetMultipleSelectionString(out int amount);
     bool HasActiveCancelableAction();
 

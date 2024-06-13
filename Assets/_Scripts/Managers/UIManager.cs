@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     public ItemSelectionMenu itemSelection;
     public ConstructableSelectionMenu constructableSelection;
     public BuildingSelectionMenu buildingSelection; 
+    public StockpileSelectionMenu stockpileSelection;
     public GameObject multipleSelection;
     public Transform multipleSelectionContent;
     public TextMeshProUGUI defaultTextAsset;
@@ -42,6 +43,7 @@ public class UIManager : MonoBehaviour
         multipleSelection.SetActive(false);
         constructableSelection.gameObject.SetActive(false);
         buildingSelection.gameObject.SetActive(false);
+        stockpileSelection.gameObject.SetActive(false);
     }
     public void SetAllActionButtonsInactive()
     {

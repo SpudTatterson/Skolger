@@ -8,7 +8,7 @@ public class HarvestableSelectionStrategy : ISelectionStrategy
         UIManager.instance.harvestableSelection.gameObject.SetActive(true);
         EnableButtons();
 
-        IHarvestable harvestable = selectedItems[0].GetGameObject().GetComponent<IHarvestable>();
+        IHarvestable harvestable = selectedItems[0]as IHarvestable;
         List<ItemDrop> drops = harvestable.GetItemDrops();
 
         HarvestableSelectionMenu selectionMenu = UIManager.instance.harvestableSelection;

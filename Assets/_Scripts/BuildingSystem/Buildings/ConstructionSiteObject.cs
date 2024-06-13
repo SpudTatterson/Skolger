@@ -149,11 +149,6 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         return new ConstructableSelectionStrategy();
     }
 
-    public GameObject GetGameObject()
-    {
-        return gameObject;
-    }
-
     public string GetMultipleSelectionString(out int amount)
     {
         amount = 1;

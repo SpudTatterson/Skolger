@@ -9,7 +9,6 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     int stackSize;
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
-    [SerializeField] SelectionType selectionType;
     [SerializeField] bool allowedOnInit = true;
 
     public int amount { get; private set; }
@@ -122,20 +121,26 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
         stockpile = currentStockpile;
         return inStockpile;
     }
+    public void RemoveFromStockpile()
+    {
+        if (!inStockpile) return;
+
+        inStockpile = false;
+        currentStockpile = null;
+        transform.parent = null;
+
+        InventoryManager.instance.RemoveAmountOfItem(itemData, amount);
+    }
 
     #region Selection
 
     public SelectionType GetSelectionType()
     {
-        return selectionType;
+        return SelectionType.Item;
     }
     public ISelectionStrategy GetSelectionStrategy()
     {
         return new ItemSelectionStrategy();
-    }
-    public GameObject GetGameObject()
-    {
-        return gameObject;
     }
     public bool HasActiveCancelableAction()
     {
@@ -174,4 +179,12 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     }
 
     #endregion
+
+    void OnDestroy()
+    {
+        if (!inStockpile)
+        {
+            occupiedCell.inUse = true;
+        }
+    }
 }
