@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using NaughtyAttributes;
 
 public class ItemObject : MonoBehaviour, ISelectable, IAllowable
 {
@@ -9,10 +10,9 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     int stackSize;
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
-    [SerializeField] SelectionType selectionType;
     [SerializeField] bool allowedOnInit = true;
 
-    public int amount { get; private set; }
+    [field: SerializeField, ReadOnly] public int amount { get; private set; }
 
     [Header("References")]
     Stockpile currentStockpile;
@@ -26,15 +26,19 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     void Start()
     {
         if (doManualInitialized)
-            Initialize(itemData, amount, allowedOnInit);
+            Initialize(itemData, initialAmount, allowedOnInit);
     }
 
     public void Initialize(ItemData itemData, int amount, bool allowed = true, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         this.itemData = itemData;
-
-        this.amount = amount;
         stackSize = itemData.stackSize;
+        if (!UpdateAmount(amount))
+        {
+            Debug.Log("tried to initiate with invalid amount");
+            Destroy(gameObject);
+            return;
+        }
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
@@ -42,9 +46,10 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
         else OnDisallow();
         if (GridManager.instance.GetCellFromPosition(transform.position) == null) occupiedCell = null;
         else
+        {
             occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
-
-        UpdateAmount(initialAmount);
+            occupiedCell.inUse = true;
+        }
     }
 
     public bool UpdateAmount(int amount)
@@ -68,7 +73,6 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
             if (this.amount < 0) Debug.LogWarning("item amount less then 0 something went wrong" + transform.name);
             return true;
         }
-
         return false;
     }
 
@@ -119,20 +123,27 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
         stockpile = currentStockpile;
         return inStockpile;
     }
+    public void RemoveFromStockpile()
+    {
+        if (!inStockpile) return;
+
+        inStockpile = false;
+        currentStockpile = null;
+        transform.parent = null;
+        OnAllow();
+
+        InventoryManager.instance.RemoveAmountOfItem(itemData, amount);
+    }
 
     #region Selection
 
     public SelectionType GetSelectionType()
     {
-        return selectionType;
+        return SelectionType.Item;
     }
     public ISelectionStrategy GetSelectionStrategy()
     {
         return new ItemSelectionStrategy();
-    }
-    public GameObject GetGameObject()
-    {
-        return gameObject;
     }
     public bool HasActiveCancelableAction()
     {
@@ -154,7 +165,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
         allowed = true;
         if (!inStockpile)
             FindObjectOfType<HaulerTest>().AddToHaulQueue(this);
-        
+
     }
 
     public void OnDisallow()
@@ -171,4 +182,12 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     }
 
     #endregion
+
+    void OnDestroy()
+    {
+        if (!inStockpile)
+        {
+            occupiedCell.inUse = true;
+        }
+    }
 }

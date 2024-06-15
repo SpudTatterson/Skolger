@@ -7,6 +7,8 @@ public class MultipleSelectionStrategy : ISelectionStrategy
 {
     Dictionary<string, int> selectedNamesAndAmounts = new Dictionary<string, int>();
     List<TextMeshProUGUI> multipleSelectionTexts = new List<TextMeshProUGUI>();
+    SelectionType type;
+    ISelectable mainSelectable;
 
     public void ApplySelection(List<ISelectable> selectedItems)
     {
@@ -16,7 +18,7 @@ public class MultipleSelectionStrategy : ISelectionStrategy
         Transform scrollViewContent = UIManager.instance.multipleSelectionContent;
         ClearMultipleSelectionTexts();
         selectedNamesAndAmounts.Clear();
-        SelectionType type = selectedItems[0].GetSelectionType();
+        type = selectedItems[0].GetSelectionType();
         bool allSelectedOfSameType = true;
         foreach (ISelectable selectable in selectedItems)
         {
@@ -41,10 +43,8 @@ public class MultipleSelectionStrategy : ISelectionStrategy
 
         if (allSelectedOfSameType)
         {
-            if (selectedItems[0].GetGameObject().TryGetComponent(out IAllowable allowable))
-                UIManager.instance.EnableButtons(type, allowable.IsAllowed());
-            else
-                UIManager.instance.EnableButtons(type, false);
+            mainSelectable = selectedItems[0];
+            EnableButtons();
         }
         else
             UIManager.instance.SetAllActionButtonsInactive();
@@ -63,5 +63,12 @@ public class MultipleSelectionStrategy : ISelectionStrategy
     public void CleanUp()
     {
         ClearMultipleSelectionTexts();
+    }
+    public void EnableButtons()
+    {
+        mainSelectable.GetSelectionStrategy().EnableButtons();
+
+        SelectionManager.instance.CheckForCancelableAction();
+        SelectionManager.instance.CheckForAllowableSelection();
     }
 }
