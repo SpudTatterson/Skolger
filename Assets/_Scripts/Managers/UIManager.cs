@@ -23,6 +23,8 @@ public class UIManager : MonoBehaviour
     public GameObject disallowButton;
     public GameObject cancelButton;
     public GameObject deconstructButton;
+    public GameObject growZoneButton;
+    public GameObject shrinkZoneButton;
 
 
     public static UIManager instance { get; private set; }
@@ -52,6 +54,8 @@ public class UIManager : MonoBehaviour
         harvestButton.SetActive(false);
         cancelButton.SetActive(false);
         deconstructButton.SetActive(false);
+        growZoneButton.SetActive(false);
+        shrinkZoneButton.SetActive(false);
     }
     public void ResizeSelectionBox(Vector3 mouseStart, Vector3 mouseEnd)
     {

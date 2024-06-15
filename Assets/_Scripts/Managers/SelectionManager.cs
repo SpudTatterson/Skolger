@@ -320,6 +320,23 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
+    public void TryToGrowZone()
+    {
+        if(currentSelected[0] is Stockpile)
+        {
+            Stockpile stockpile = currentSelected[0] as Stockpile;
+            StockpileTest.instance.GrowStockpile(stockpile);
+        }
+    }
+     public void TryToShrinkZone()
+    {
+        if(currentSelected[0] is Stockpile)
+        {
+            Stockpile stockpile = currentSelected[0] as Stockpile;
+            StockpileTest.instance.ShrinkStockpile(stockpile);
+        }
+    }
+
     #endregion
 
     #region Cleanup

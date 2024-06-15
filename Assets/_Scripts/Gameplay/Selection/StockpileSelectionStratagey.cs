@@ -19,5 +19,7 @@ public class StockpileSelectionStrategy : ISelectionStrategy
         UIManager.instance.SetAllActionButtonsInactive();
 
         UIManager.instance.deconstructButton.SetActive(true);
+        UIManager.instance.growZoneButton.SetActive(true);
+        UIManager.instance.shrinkZoneButton.SetActive(true);
     }
 }
