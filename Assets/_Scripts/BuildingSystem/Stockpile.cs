@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stockpile : MonoBehaviour
+public class Stockpile : MonoBehaviour, ISelectable
 {
     int sizeX;
     int sizeY;
@@ -9,6 +10,8 @@ public class Stockpile : MonoBehaviour
     [SerializeField] SerializableDictionary<Cell, GameObject> visualItems = new SerializableDictionary<Cell, GameObject>();
     [SerializeField] SerializableDictionary<ItemData, int> totalItems = new SerializableDictionary<ItemData, int>();
     List<Cell> emptyCells = new List<Cell>();
+    List<Cell> occupiedCells = new List<Cell>();
+    GameObject visual;
 
 
     public void Initialize(int sizeX, int sizeY, List<Cell> occupiedCells, Vector3 cellPosition, float cellSize = 1)
@@ -21,9 +24,7 @@ public class Stockpile : MonoBehaviour
 
         foreach (Cell cell in occupiedCells)
         {
-            cells.Add(cell, null);
-            visualItems.Add(cell, null);
-            emptyCells.Add(cell);
+            AddCell(cell);
         }
 
         // Calculate the position of the bottom-left corner of the cell
@@ -35,7 +36,7 @@ public class Stockpile : MonoBehaviour
         InventoryManager.instance.stockpiles.Add(this);
 
         // Create the grid mesh
-        MeshUtility.CreateGridMesh(sizeX, sizeY, transform.position, "Stockpile", MaterialManager.instance.stockpileMaterial, transform);
+        visual = MeshUtility.CreateGridMesh(occupiedCells, transform.position, "Stockpile", MaterialManager.instance.stockpileMaterial, transform, 1);
     }
     public bool GetEmptyCell(out Cell cell)
     {
@@ -47,8 +48,6 @@ public class Stockpile : MonoBehaviour
         }
         return false;
     }
-
-    // add method to stack similar items in to 1 stack
 
     public void AddItem(Cell cell, ItemObject item)
     {
@@ -99,7 +98,7 @@ public class Stockpile : MonoBehaviour
         if (!GetEmptyCell(out cell)) return false;
         if (cells.ContainsKey(cell) && cells[cell] == null)
         {
-            cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, cell.position,true, transform, true, this);
+            cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, cell.position, true, transform, true, this);
             visualItems[cell] = cells[cell].gameObject;
             emptyCells.Remove(cell);
             InventoryManager.instance.AddItem(item.itemData, item.amount);
@@ -177,7 +176,7 @@ public class Stockpile : MonoBehaviour
                 costToFulfil -= pair.Value.amount;
             }
         }
-        if(foundItems.Count == 1) return foundItems[0];
+        if (foundItems.Count == 1) return foundItems[0];
 
         ItemObject fullItem = foundItems[0];
         foundItems.RemoveAt(0);
@@ -209,4 +208,93 @@ public class Stockpile : MonoBehaviour
             totalItems[item.itemData] -= item.amount;
         }
     }
+    [ContextMenu("DestroyStockpile")]
+    public void DestroyStockpile()
+    {
+        foreach (KeyValuePair<Cell, ItemObject> pair in cells)
+        {
+            if (pair.Value != null)
+            {
+                pair.Value.RemoveFromStockpile();
+            }
+        }
+        foreach (Cell cell in emptyCells)
+        {
+            cell.inUse = false;
+        }
+        InventoryManager.instance.stockpiles.Remove(this);
+        Destroy(this.gameObject);
+    }
+
+    public void ShrinkStockpile(List<Cell> cellsToRemove)
+    {
+        foreach (Cell cell in cellsToRemove)
+        {
+            if (emptyCells.Contains(cell))
+            {
+                RemoveCell(cell);
+            }
+        }
+        if (occupiedCells.Count == 0)
+            DestroyStockpile();
+
+        MeshUtility.UpdateGridMesh(occupiedCells, visual.GetComponent<MeshFilter>());
+    }
+    public void GrowStockpile(List<Cell> cellsToAdd)
+    {
+        foreach (Cell cell in cellsToAdd)
+        {
+            if (!occupiedCells.Contains(cell) && cell.IsFreeForBuilding())
+            {
+                AddCell(cell);
+            }
+        }
+
+        MeshUtility.UpdateGridMesh(occupiedCells, visual.GetComponent<MeshFilter>());
+    }
+
+    private void RemoveCell(Cell cell)
+    {
+        occupiedCells.Remove(cell);
+        if (cells[cell] != null)
+            cells[cell].RemoveFromStockpile();
+        else
+            cell.inUse = false;
+        cells.Remove(cell);
+        visualItems.Remove(cell);
+        emptyCells.Remove(cell);
+
+    }
+    private void AddCell(Cell cell)
+    {
+        occupiedCells.Add(cell);
+        cells.Add(cell, null);
+        visualItems.Add(cell, null);
+        emptyCells.Add(cell);
+        cell.inUse = true;
+    }
+    #region ISelectable
+
+    public SelectionType GetSelectionType()
+    {
+        return SelectionType.Stockpile;
+    }
+
+    public ISelectionStrategy GetSelectionStrategy()
+    {
+        return new StockpileSelectionStrategy();
+    }
+
+    public string GetMultipleSelectionString(out int amount)
+    {
+        amount = 1;
+        return $"Stockpile {sizeX} x {sizeY}";
+    }
+
+    public bool HasActiveCancelableAction()
+    {
+        return false;
+    }
+
+    #endregion
 }

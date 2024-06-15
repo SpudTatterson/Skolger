@@ -4,13 +4,13 @@ public class ItemSelectionStrategy : ISelectionStrategy
 {
     public void ApplySelection(List<ISelectable> selectedItems)
     {
-        IAllowable allowable = selectedItems[0].GetGameObject().GetComponent<IAllowable>();
+        IAllowable allowable = selectedItems[0] as IAllowable;
 
         UIManager.instance.SetAllSelectionUIInactive();
         UIManager.instance.itemSelection.gameObject.SetActive(true);
-        UIManager.instance.EnableItemButtons(allowable.IsAllowed());
+        EnableButtons();
 
-        ItemObject selectedItem = selectedItems[0].GetGameObject().GetComponent<ItemObject>();
+        ItemObject selectedItem = selectedItems[0]as ItemObject;
         ItemSelectionMenu selectionMenu = UIManager.instance.itemSelection;
 
         selectionMenu.itemName.text = $"Item Name: {selectedItem.itemData.name}";
@@ -18,6 +18,10 @@ public class ItemSelectionStrategy : ISelectionStrategy
         selectionMenu.stackSize.text = $"Stack Size: {selectedItem.itemData.stackSize}";
     }
 
+    public void EnableButtons()
+    {
+        UIManager.instance.SetAllActionButtonsInactive();
 
-
+        SelectionManager.instance.CheckForAllowableSelection();
+    }
 }

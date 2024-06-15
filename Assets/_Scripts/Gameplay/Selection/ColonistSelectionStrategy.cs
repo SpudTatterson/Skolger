@@ -7,4 +7,9 @@ public class ColonistSelectionStrategy : ISelectionStrategy
     {
         // Implement logic for colonist selection
     }
+
+    public void EnableButtons()
+    {
+        throw new System.NotImplementedException();
+    }
 }

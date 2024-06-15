@@ -18,8 +18,8 @@ public class BuildingObject : MonoBehaviour, ISelectable
             cell.inUse = buildingData.takesFullCell;
         }
     }
-
-    public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position,List<Cell> occupiedCells,  Transform parent = null)
+    // add method for deconstructing
+    public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, List<Cell> occupiedCells, Transform parent = null)
     {
         GameObject buildingVisual = Instantiate(buildingData.buildingPrefab, position, Quaternion.identity, parent);
 
@@ -38,11 +38,6 @@ public class BuildingObject : MonoBehaviour, ISelectable
     public ISelectionStrategy GetSelectionStrategy()
     {
         return new BuildingSelectionStrategy();
-    }
-
-    public GameObject GetGameObject()
-    {
-        return gameObject;
     }
 
     public string GetMultipleSelectionString(out int amount)
