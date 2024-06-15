@@ -33,7 +33,6 @@ public class StockpileTest : MonoBehaviour
 
         if (!inUse) return;
 
-        Debug.Log("test");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Input.GetKeyDown(KeyCode.Mouse0) && Physics.Raycast(ray, out RaycastHit hit, 500f, LayerManager.instance.GroundLayerMask))
         {
