@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEditor;
 
 [System.Serializable]
 public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
@@ -52,7 +53,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         }
         foreach (GameObject chunk in visualGridChunks)
         {
-            DestroyImmediate(chunk);
+            DestroyImmediate(chunk);    
         }
         visualGridChunks.Clear();
         Debug.Log("Old Grid Deleted");
@@ -61,9 +62,12 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     [ContextMenu("GenerateGrid")] //allows calling function from editor 
     void GenerateGrid()
     {
+        Undo.RecordObject(this, "Generated Grid");
+
         ResetGrid();
 
         flatCells = new List<Cell>();
+        EditorUtility.SetDirty(this);
 
         for (int x = 0; x < cells.GetLength(0); x++)
         {
@@ -81,6 +85,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         Cell cell = new Cell(x, y, GetWorldPosition(x, y), this);
         cells[x, y] = cell;
         flatCells.Add(cell);
+        EditorUtility.SetDirty(this);
     }
 
     void CreateVisualGrid()
@@ -107,6 +112,9 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         MeshFilter meshFilter = gridVisual.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = gridVisual.AddComponent<MeshRenderer>();
         meshRenderer.material = material;
+
+        Undo.RegisterCreatedObjectUndo(gridVisual, $"Generated {gridVisual.name}");
+
 
         Mesh mesh = new Mesh();
         Vector3[] vertices = new Vector3[chunkWidth * chunkHeight * 4];
