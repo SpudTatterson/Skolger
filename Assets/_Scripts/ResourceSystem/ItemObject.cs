@@ -187,7 +187,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
     {
         if (!inStockpile)
         {
-            occupiedCell.inUse = true;
+            occupiedCell.inUse = false;
         }
     }
 }
