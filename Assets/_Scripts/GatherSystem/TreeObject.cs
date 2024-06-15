@@ -8,7 +8,6 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
     float timeHarvesting = 0f;
-    List<Cell> potentialDropPoints = new List<Cell>();
     Cell occupiedCell;
     bool beingHarvested = false;
     bool setForHarvesting = false;
@@ -16,12 +15,15 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
     SelectionType selectionType = SelectionType.Harvestable;
     public void Harvest()
     {
+        occupiedCell.inUse = false;
+        occupiedCell.Walkable = true;
         foreach (ItemDrop drop in drops)
         {
             int amount = Random.Range(drop.minDropAmount, drop.maxDropAmount);
             if (amount == 0) continue;
-            ItemObject.MakeInstance(drop.itemData, amount, potentialDropPoints[0].position);
-            potentialDropPoints.RemoveAt(0);
+            Cell dropCell = occupiedCell.GetClosestEmptyCell();
+            ItemObject.MakeInstance(drop.itemData, amount, dropCell.position);
+            dropCell.inUse = true;
         }
         harvester.RemoveFromHarvestQueue(this);
         Destroy(this.gameObject);
@@ -35,17 +37,12 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
     }
     public void Init()
     {
-        // get occupied cell somehow
         RaycastHit gridHit;
         Physics.Raycast(transform.position + new Vector3(0, 1, 0), Vector3.down, out gridHit, 3f, LayerManager.instance.GroundLayerMask);
         Debug.Log(gridHit.transform.name);
-        GridObject grid = gridHit.transform.GetComponentInParent<GridObject>();
-        occupiedCell = grid.GetCellFromPosition(gridHit.point);
+        occupiedCell = GridManager.instance.GetCellFromPosition(gridHit.point);
         occupiedCell.inUse = true;
         occupiedCell.Walkable = false;
-        //add method to gridManager to get all cells adjacent to this cell
-        grid.TryGetCells(new Vector2Int(occupiedCell.x, occupiedCell.y), 2, 2, out potentialDropPoints);
-        //add them to potential cells
     }
 
     public IEnumerator StartHarvesting()
