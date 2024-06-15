@@ -130,6 +130,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
         inStockpile = false;
         currentStockpile = null;
         transform.parent = null;
+        OnAllow();
 
         InventoryManager.instance.RemoveAmountOfItem(itemData, amount);
     }
