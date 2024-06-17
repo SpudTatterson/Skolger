@@ -318,7 +318,7 @@ public class SelectionManager : MonoBehaviour
 
             if (selectable is BuildingObject)
             {
-                // deconstruct building
+                (selectable as BuildingObject).Deconstruct();
             }
             if (selectable is Stockpile)
             {
