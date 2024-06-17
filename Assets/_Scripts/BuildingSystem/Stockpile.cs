@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stockpile : MonoBehaviour, ISelectable
+public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 {
     int sizeX;
     int sizeY;
@@ -223,6 +223,7 @@ public class Stockpile : MonoBehaviour, ISelectable
             cell.inUse = false;
         }
         InventoryManager.instance.stockpiles.Remove(this);
+        OnRelease();
         Destroy(this.gameObject);
     }
 
@@ -294,6 +295,26 @@ public class Stockpile : MonoBehaviour, ISelectable
     public bool HasActiveCancelableAction()
     {
         return false;
+    }
+
+    #endregion
+
+       #region ICellOccupier
+
+    public void OnOccupy()
+    {
+        foreach (Cell cell in occupiedCells)
+        {
+            cell.inUse = true;
+        }
+    }
+
+    public void OnRelease()
+    {
+        foreach (Cell cell in occupiedCells)
+        {
+            cell.inUse = false;
+        }
     }
 
     #endregion

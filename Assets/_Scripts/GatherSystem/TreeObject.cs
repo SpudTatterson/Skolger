@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
+public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
     [SerializeField] float baseGatherTime = 5f;
 
@@ -15,34 +15,15 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
     SelectionType selectionType = SelectionType.Harvestable;
     public void Harvest()
     {
-        occupiedCell.inUse = false;
-        occupiedCell.Walkable = true;
         foreach (ItemDrop drop in drops)
         {
             int amount = Random.Range(drop.minDropAmount, drop.maxDropAmount);
             if (amount == 0) continue;
             Cell dropCell = occupiedCell.GetClosestEmptyCell();
             ItemObject.MakeInstance(drop.itemData, amount, dropCell.position);
-            dropCell.inUse = true;
         }
         harvester.RemoveFromHarvestQueue(this);
         Destroy(this.gameObject);
-    }
-    void Start()
-    {
-        if (occupiedCell == null)
-            Init();
-
-
-    }
-    public void Init()
-    {
-        RaycastHit gridHit;
-        Physics.Raycast(transform.position + new Vector3(0, 1, 0), Vector3.down, out gridHit, 3f, LayerManager.instance.GroundLayerMask);
-        Debug.Log(gridHit.transform.name);
-        occupiedCell = GridManager.instance.GetCellFromPosition(gridHit.point);
-        occupiedCell.inUse = true;
-        occupiedCell.Walkable = false;
     }
 
     public IEnumerator StartHarvesting()
@@ -104,5 +85,31 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
     public bool HasActiveCancelableAction()
     {
         return setForHarvesting;
+    }
+
+    #region ICellOccupier
+
+    public void OnOccupy()
+    {
+        if (occupiedCell == null) occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
+        occupiedCell.inUse = true;
+        occupiedCell.Walkable = false;
+    }
+
+    public void OnRelease()
+    {
+        occupiedCell.inUse = false;
+        occupiedCell.Walkable = true;
+    }
+
+    #endregion
+
+    void OnEnable()
+    {
+        OnOccupy();
+    }
+    void OnDisable()
+    {
+        OnRelease();
     }
 }

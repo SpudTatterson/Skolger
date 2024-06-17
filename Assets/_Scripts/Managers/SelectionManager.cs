@@ -60,7 +60,7 @@ public class SelectionManager : MonoBehaviour
             List<ISelectable> selectables = new List<ISelectable>();
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
-            hit.transform.TryGetComponent(out ISelectable selectable) && !currentSelected.Contains(selectable))
+            hit.transform.TryGetComponent(out ISelectable selectable))
             {
                 selectables.Add(selectable);
             }
@@ -88,7 +88,7 @@ public class SelectionManager : MonoBehaviour
             UIManager.instance.selectionBoxImage.gameObject.SetActive(false);
             Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask,
              out Vector3 center);
-            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents);
+            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents * 0.95f);
 
             Select(selectables);
 
@@ -158,28 +158,35 @@ public class SelectionManager : MonoBehaviour
         }
         else if (selectionAction == SelectionAction.Default)
         {
-            currentSelected.Clear();
-
-            foreach (var selectable in selectables)
+            if (selectables.Count > 0 && currentSelected.Count > 0 && selectables[0] == currentSelected[0])
             {
-                bool doBreak = false;
-                if (CheckForSpecialSelectionCase(selectable, out SelectionType type))
-                {
-                    if (type == SelectionType.Stockpile)
-                    {
-                        if (selectable == selectables[0] && selectables.Count == 1)
-                            doBreak = true;
-                        else
-                            continue;
+                TryToSelectOtherItemInCell();
+            }
+            else
+            {
+                currentSelected.Clear();
 
-                    }
-                }
-                if (!currentSelected.Contains(selectable))
+                foreach (var selectable in selectables)
                 {
-                    selectable.OnSelect();
-                    SetSelectionType(selectable.GetSelectionType());
+                    bool doBreak = false;
+                    if (CheckForSpecialSelectionCase(selectable, out SelectionType type))
+                    {
+                        if (type == SelectionType.Stockpile)
+                        {
+                            if (selectable == selectables[0] && selectables.Count == 1)
+                                doBreak = true;
+                            else
+                                continue;
+
+                        }
+                    }
+                    if (!currentSelected.Contains(selectable))
+                    {
+                        selectable.OnSelect();
+                        SetSelectionType(selectable.GetSelectionType());
+                    }
+                    if (doBreak) break;
                 }
-                if (doBreak) break;
             }
         }
 
@@ -311,7 +318,7 @@ public class SelectionManager : MonoBehaviour
 
             if (selectable is BuildingObject)
             {
-                // deconstruct building
+                (selectable as BuildingObject).Deconstruct();
             }
             if (selectable is Stockpile)
             {
@@ -322,18 +329,36 @@ public class SelectionManager : MonoBehaviour
 
     public void TryToGrowZone()
     {
-        if(currentSelected[0] is Stockpile)
+        if (currentSelected[0] is Stockpile)
         {
             Stockpile stockpile = currentSelected[0] as Stockpile;
             StockpileTest.instance.GrowStockpile(stockpile);
         }
     }
-     public void TryToShrinkZone()
+    public void TryToShrinkZone()
     {
-        if(currentSelected[0] is Stockpile)
+        if (currentSelected[0] is Stockpile)
         {
             Stockpile stockpile = currentSelected[0] as Stockpile;
             StockpileTest.instance.ShrinkStockpile(stockpile);
+        }
+    }
+    public void TryToSelectOtherItemInCell()
+    {
+        ISelectable selectable = currentSelected[0];
+        Cell cell = GridManager.instance.GetCellFromPosition((selectable as MonoBehaviour).transform.position);
+        Vector3 corner1 = cell.position - new Vector3(1f / 2, 0, 1f / 2);
+        Vector3 corner2 = cell.position + new Vector3(1f / 2, 0, 1f / 2);
+        Vector3 halfSize = new Vector3(Mathf.Abs(corner1.x - corner2.x), 3f, Mathf.Abs(corner1.z - corner2.z) / 2f);
+
+        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(cell.position, halfSize * 0.95f);
+        selectables.Remove(selectable);
+
+        if (selectables.Count != 0)
+        {
+            currentSelected.Clear();
+            selectables[0].OnSelect();
+            SetSelectionType(selectables[0].GetSelectionType());
         }
     }
 

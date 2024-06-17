@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using NaughtyAttributes;
 
-public class ItemObject : MonoBehaviour, ISelectable, IAllowable
+public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
 {
     [Header("Settings")]
     public ItemData itemData;
@@ -48,7 +48,6 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
         else
         {
             occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
-            occupiedCell.inUse = true;
         }
     }
 
@@ -183,11 +182,32 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable
 
     #endregion
 
-    void OnDestroy()
+    #region ICellOccupier
+
+    public void OnOccupy()
+    {
+        occupiedCell.inUse = true;
+    }
+
+    public void OnRelease()
+    {
+        occupiedCell.inUse = false;
+    }
+
+    #endregion
+
+    void OnDisable()
     {
         if (!inStockpile)
         {
-            occupiedCell.inUse = true;
+            OnRelease();
         }
     }
+    void OnEnable()
+    {
+        if(occupiedCell == null) occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
+        OnOccupy();
+    }
+
+
 }
