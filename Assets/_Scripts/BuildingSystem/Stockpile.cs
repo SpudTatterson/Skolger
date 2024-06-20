@@ -14,7 +14,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     GameObject visual;
 
 
-    public void Initialize(int sizeX, int sizeY, List<Cell> occupiedCells, Vector3 cellPosition, float cellSize = 1)
+    public void Initialize(int sizeX, int sizeY, List<Cell> occupiedCells, Vector3 cellPosition)
     {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -27,6 +27,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             AddCell(cell);
         }
 
+        float cellSize = GridManager.instance.worldSettings.cellSize;
         // Calculate the position of the bottom-left corner of the cell
         Vector3 cornerPosition = cellPosition - new Vector3(cellSize / 2, 0, cellSize / 2);
 

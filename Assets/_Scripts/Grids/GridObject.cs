@@ -2,16 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEditor;
+using NaughtyAttributes;
+using Unity.AI.Navigation;
 
 [System.Serializable]
 public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 {
     [Header("Settings")]
-    [SerializeField] int height;
-    [SerializeField] int width;
-    [SerializeField] float cellSize;
-    [SerializeField] Material material;
-    [SerializeField] int groundLayer = 7;
+    [SerializeField, ReadOnly] int height;
+    [SerializeField, ReadOnly] int width;
+    [SerializeField, ReadOnly] float cellSize;
+    [SerializeField, ReadOnly] float cellHeight;
+    [SerializeField, ReadOnly] Material material;
+    [SerializeField, ReadOnly] int groundLayer = 7;
 
     [Header("Cells")]
     public Cell[,] cells;
@@ -19,12 +22,28 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     List<GameObject> visualGridChunks = new List<GameObject>();
 
 
-    public GridObject(int height, int width, float cellSize, GameObject[] cellPrefabs, Material material)
+    public static GridObject MakeInstance(WorldSettings worldSettings, Vector3 position, Transform parent, string gridName)
     {
-        this.height = height;
-        this.width = width;
-        this.cellSize = cellSize;
-        this.material = material;
+        GameObject gridGO = new GameObject(gridName);
+        gridGO.transform.position = position;
+        gridGO.transform.parent = parent;
+
+        GridObject gridObject = gridGO.AddComponent<GridObject>();
+        gridObject.Init(worldSettings);
+
+        NavMeshSurface navMeshSurface = gridGO.AddComponent<NavMeshSurface>();
+        navMeshSurface.collectObjects = CollectObjects.Children;
+        navMeshSurface.BuildNavMesh();
+
+        return gridObject;
+    }
+    public void Init(WorldSettings worldSettings)
+    {
+        this.height = worldSettings.gridXSize;
+        this.width = worldSettings.gridYSize;
+        this.cellSize = worldSettings.cellSize;
+        this.cellHeight = worldSettings.cellHeight;
+        this.material = worldSettings.material;
 
         GenerateGrid();
     }
@@ -53,17 +72,15 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         }
         foreach (GameObject chunk in visualGridChunks)
         {
-            DestroyImmediate(chunk);    
+            DestroyImmediate(chunk);
         }
         visualGridChunks.Clear();
         Debug.Log("Old Grid Deleted");
     }
 
     [ContextMenu("GenerateGrid")] //allows calling function from editor 
-    void GenerateGrid()
+    public void GenerateGrid()
     {
-        Undo.RecordObject(this, "Generated Grid");
-
         ResetGrid();
 
         flatCells = new List<Cell>();
@@ -90,7 +107,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
     void CreateVisualGrid()
     {
-        int chunkSize = 100; // Adjust the chunk size to ensure you stay within the vertex limit
+        int chunkSize = 50; // Adjust the chunk size to ensure you stay within the vertex limit
 
         for (int chunkX = 0; chunkX < width; chunkX += chunkSize)
         {
@@ -106,8 +123,10 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
     void CreateGridChunk(int startX, int startY, int chunkWidth, int chunkHeight)
     {
-        GameObject gridVisual = new GameObject("GridChunk_" + startX + "_" + startY);
-        gridVisual.layer = groundLayer;
+        GameObject gridVisual = new GameObject("GridChunk_" + startX + "_" + startY)
+        {
+            layer = groundLayer
+        };
         gridVisual.transform.SetParent(transform);
         MeshFilter meshFilter = gridVisual.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = gridVisual.AddComponent<MeshRenderer>();
@@ -115,11 +134,14 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
         Undo.RegisterCreatedObjectUndo(gridVisual, $"Generated {gridVisual.name}");
 
+        int numberOfCells = chunkWidth * chunkHeight;
+        int verticesPerCell = 20; // 5 faces, 4 vertices each
+        int trianglesPerCell = 30; // 5 faces, 6 indices each
 
         Mesh mesh = new Mesh();
-        Vector3[] vertices = new Vector3[chunkWidth * chunkHeight * 4];
-        int[] triangles = new int[chunkWidth * chunkHeight * 6];
-        Vector2[] uv = new Vector2[chunkWidth * chunkHeight * 4];
+        Vector3[] vertices = new Vector3[numberOfCells * verticesPerCell];
+        int[] triangles = new int[numberOfCells * trianglesPerCell];
+        Vector2[] uv = new Vector2[numberOfCells * verticesPerCell];
 
         int vertIndex = 0;
         int triIndex = 0;
@@ -130,25 +152,102 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             {
                 Vector3 basePosition = new Vector3((startX + x) * cellSize, 0, (startY + y) * cellSize);
 
-                vertices[vertIndex + 0] = basePosition + new Vector3(0, 0, 0) + transform.position;
-                vertices[vertIndex + 1] = basePosition + new Vector3(0, 0, cellSize) + transform.position;
-                vertices[vertIndex + 2] = basePosition + new Vector3(cellSize, 0, cellSize) + transform.position;
-                vertices[vertIndex + 3] = basePosition + new Vector3(cellSize, 0, 0) + transform.position;
+                // Define vertices for the cube (excluding the bottom face)
+                Vector3[] cubeVertices = new Vector3[]
+                {
+                // Top face
+                new Vector3(0, 0, 0),
+                new Vector3(0, 0, cellSize),
+                new Vector3(cellSize, 0, cellSize),
+                new Vector3(cellSize, 0, 0),
+                // Front face
+                new Vector3(0, 0, cellSize),
+                new Vector3(cellSize, 0, cellSize),
+                new Vector3(0, -cellHeight, cellSize),
+                new Vector3(cellSize, -cellHeight, cellSize),
+                // Back face
+                new Vector3(0, 0, 0),
+                new Vector3(cellSize, 0, 0),
+                new Vector3(0, -cellHeight, 0),
+                new Vector3(cellSize, -cellHeight, 0),
+                // Left face
+                new Vector3(0, 0, 0),
+                new Vector3(0, 0, cellSize),
+                new Vector3(0, -cellHeight, 0),
+                new Vector3(0, -cellHeight, cellSize),
+                // Right face
+                new Vector3(cellSize, 0, 0),
+                new Vector3(cellSize, 0, cellSize),
+                new Vector3(cellSize, -cellHeight, 0),
+                new Vector3(cellSize, -cellHeight, cellSize)
+                };
 
-                triangles[triIndex + 0] = vertIndex + 0;
-                triangles[triIndex + 1] = vertIndex + 1;
-                triangles[triIndex + 2] = vertIndex + 2;
-                triangles[triIndex + 3] = vertIndex + 2;
-                triangles[triIndex + 4] = vertIndex + 3;
-                triangles[triIndex + 5] = vertIndex + 0;
+                // Apply transform to vertices
+                for (int i = 0; i < cubeVertices.Length; i++)
+                {
+                    vertices[vertIndex + i] = basePosition + cubeVertices[i] + transform.position;
+                }
 
-                uv[vertIndex + 0] = new Vector2(0, 0);
-                uv[vertIndex + 1] = new Vector2(0, 1);
-                uv[vertIndex + 2] = new Vector2(1, 1);
-                uv[vertIndex + 3] = new Vector2(1, 0);
+                // Define triangles for the cube (excluding the bottom face)
+                int[] cubeTriangles = new int[]
+                {
+                // Top face
+                0, 1, 2, 2, 3, 0,
+                // Front face
+                6, 5, 4, 5, 6, 7,
+                // Back face
+                8, 9, 10, 11, 10, 9,
+                // Left face
+                14, 13, 12, 13, 14, 15,
+                // Right face
+                19, 16, 17, 16, 19, 18
+                };
 
-                vertIndex += 4;
-                triIndex += 6;
+                // Assign triangles with offset
+                for (int i = 0; i < cubeTriangles.Length; i++)
+                {
+                    triangles[triIndex + i] = vertIndex + cubeTriangles[i];
+                }
+
+                // Define UVs for the cube
+                Vector2[] cubeUVs = new Vector2[]
+                {
+                // Top face
+                new Vector2(0, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1),
+                new Vector2(1, 0),
+                // Front face
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1),
+                // Back face
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1),
+                // Left face
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1),
+                // Right face
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1)
+                };
+
+                // Assign UVs with offset
+                for (int i = 0; i < cubeUVs.Length; i++)
+                {
+                    uv[vertIndex + i] = cubeUVs[i];
+                }
+
+                // Increment indices for the next cube
+                vertIndex += cubeVertices.Length;
+                triIndex += cubeTriangles.Length;
             }
         }
 
@@ -162,14 +261,15 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         visualGridChunks.Add(gridVisual);
     }
 
-    public Vector3 GetWorldPosition(int x, int y)
-    {
-        return transform.position + new Vector3(x * cellSize + cellSize / 2, 0, y * cellSize + cellSize / 2);
-    }
 
     #endregion
 
     #region Public Methods
+
+    public Vector3 GetWorldPosition(int x, int y)
+    {
+        return transform.position + new Vector3(x * cellSize + cellSize / 2, 0, y * cellSize + cellSize / 2);
+    }
 
     public Cell GetCellFromPosition(Vector3 position)
     {
