@@ -29,7 +29,7 @@ public class GridManager : MonoBehaviour
     }
     public GridObject GetGridFromPosition(Vector3 position)
     {
-        if(grids == null || grids.Count == 0)
+        if (grids == null || grids.Count == 0)  
             grids = FindObjectsOfType<GridObject>().ToList();
 
         foreach (GridObject grid in grids)
@@ -47,28 +47,33 @@ public class GridManager : MonoBehaviour
     }
 
 
-    [ContextMenu("GenerateWorld")] 
+    [ContextMenu("GenerateWorld")]
     public void GenerateWorld()
     {
         DestroyOldWorld();
-        GridObject.MakeInstance(worldSettings, gridsParent.transform.position, gridsParent.transform, "FloorGrid");
+        GridObject.MakeInstance(worldSettings, false, gridsParent.transform.position, gridsParent.transform, "FloorGrid");
 
         for (int i = 0; i < worldSettings.belowGroundLayers; i++)
         {
             Vector3 position = gridsParent.transform.position - Vector3.up * worldSettings.cellHeight * (i + 1);
-            GridObject.MakeInstance(worldSettings, position, gridsParent.transform, $"Underground Grid Layer #{i}");
+            GridObject.MakeInstance(worldSettings, false, position, gridsParent.transform, $"Underground Grid Layer #{i}");
+        }
+        for (int i = 0; i < worldSettings.aboveGroundLayers; i++)
+        {
+            Vector3 position = gridsParent.transform.position + Vector3.up * worldSettings.cellHeight * (i + 1);
+            GridObject.MakeInstance(worldSettings, true, position, gridsParent.transform, $"Aboveground Grid Layer #{i}");
         }
     }
 
     private void DestroyOldWorld()
     {
-        List<GridObject> grids = new List<GridObject>();
         grids = gridsParent.GetComponentsInChildren<GridObject>().ToList();
 
         foreach (var grid in grids)
         {
             DestroyImmediate(grid.gameObject);
         }
+        grids.Clear();
     }
 
     // make method to find all ICellOccupiers and make them find the cells they sit on and update the cells as needed

@@ -246,7 +246,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     {
         foreach (Cell cell in cellsToAdd)
         {
-            if (!occupiedCells.Contains(cell) && cell.IsFreeForBuilding())
+            if (!occupiedCells.Contains(cell) && cell.IsFreeAndExists())
             {
                 AddCell(cell);
             }

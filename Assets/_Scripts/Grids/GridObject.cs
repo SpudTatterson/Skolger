@@ -15,21 +15,21 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     [SerializeField, ReadOnly] float cellHeight;
     [SerializeField, ReadOnly] Material material;
     [SerializeField, ReadOnly] int groundLayer = 7;
+    bool startEmpty;
 
     [Header("Cells")]
     public Cell[,] cells;
     [SerializeField] List<Cell> flatCells = new List<Cell>();
     List<GameObject> visualGridChunks = new List<GameObject>();
 
-
-    public static GridObject MakeInstance(WorldSettings worldSettings, Vector3 position, Transform parent, string gridName)
+    public static GridObject MakeInstance(WorldSettings worldSettings, bool startEmpty, Vector3 position, Transform parent, string gridName)
     {
         GameObject gridGO = new GameObject(gridName);
         gridGO.transform.position = position;
         gridGO.transform.parent = parent;
 
         GridObject gridObject = gridGO.AddComponent<GridObject>();
-        gridObject.Init(worldSettings);
+        gridObject.Init(worldSettings, startEmpty);
 
         NavMeshSurface navMeshSurface = gridGO.AddComponent<NavMeshSurface>();
         navMeshSurface.collectObjects = CollectObjects.Children;
@@ -37,13 +37,14 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
         return gridObject;
     }
-    public void Init(WorldSettings worldSettings)
+    public void Init(WorldSettings worldSettings, bool startEmpty)
     {
         this.height = worldSettings.gridXSize;
         this.width = worldSettings.gridYSize;
         this.cellSize = worldSettings.cellSize;
         this.cellHeight = worldSettings.cellHeight;
         this.material = worldSettings.material;
+        this.startEmpty = startEmpty;
 
         GenerateGrid();
     }
@@ -77,6 +78,19 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         visualGridChunks.Clear();
         Debug.Log("Old Grid Deleted");
     }
+    [ContextMenu("UpdatedGridVisual")]
+    public void UpdateVisualGrid()
+    {
+        // Clear existing visual grid
+        visualGridChunks.ForEach(chunk => DestroyImmediate(chunk));
+        visualGridChunks.Clear();
+
+        // Recreate visual grid based on cell visibility
+        CreateVisualGrid();
+
+        // update nav mesh
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
 
     [ContextMenu("GenerateGrid")] //allows calling function from editor 
     public void GenerateGrid()
@@ -99,7 +113,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
     void GenerateCell(int x, int y)
     {
-        Cell cell = new Cell(x, y, GetWorldPosition(x, y), this);
+        Cell cell = new Cell(x, y, !startEmpty, GetWorldPosition(x, y), this);
         cells[x, y] = cell;
         flatCells.Add(cell);
         EditorUtility.SetDirty(this);
@@ -146,10 +160,17 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         int vertIndex = 0;
         int triIndex = 0;
 
+        bool meshEmpty = true;
+
         for (int x = 0; x < chunkWidth; x++)
         {
             for (int y = 0; y < chunkHeight; y++)
             {
+                Cell cell = cells[startX + x, startY + y];
+                if (cell == null || !cell.isVisible) continue;
+
+                meshEmpty = false;
+
                 Vector3 basePosition = new Vector3((startX + x) * cellSize, 0, (startY + y) * cellSize);
 
                 // Define vertices for the cube (excluding the bottom face)
@@ -256,8 +277,12 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         mesh.uv = uv;
         mesh.RecalculateNormals();
 
-        meshFilter.mesh = mesh;
-        gridVisual.AddComponent<MeshCollider>();
+        if (!meshEmpty)
+        {
+            meshFilter.mesh = mesh;
+            gridVisual.AddComponent<MeshCollider>();
+        }
+
         visualGridChunks.Add(gridVisual);
     }
 
@@ -282,6 +307,13 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             return cells[x, y];
         }
         return null; // or handle out-of-bounds case
+    }
+
+    public void ChangeCellVisibility(Cell cell, bool visible)
+    {
+        Undo.RecordObject(this, $"Changed visibility on {cell}");
+        cells[cell.x, cell.y].isVisible = visible;
+        EditorUtility.SetDirty(this);
     }
 
     public bool TryGetCellIndexes(Vector2Int initialIndex, int width, int height, out List<Vector2Int> indexes)

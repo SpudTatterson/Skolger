@@ -61,7 +61,7 @@ public class StockpileTest : MonoBehaviour
             if (!grid.TryGetCells(new Vector2Int(cornerCell.x, cornerCell.y), size.x, size.y, out List<Cell> allCells)) return; // if failed to get cells abort
             foreach (Cell c in allCells)
             {
-                if (c.IsFreeForBuilding())
+                if (c.IsFreeAndExists())
                     cells.Add(c);
             }
 
