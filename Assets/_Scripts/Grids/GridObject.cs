@@ -146,8 +146,6 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         MeshRenderer meshRenderer = gridVisual.AddComponent<MeshRenderer>();
         meshRenderer.material = material;
 
-        Undo.RegisterCreatedObjectUndo(gridVisual, $"Generated {gridVisual.name}");
-
         int numberOfCells = chunkWidth * chunkHeight;
         int verticesPerCell = 20; // 5 faces, 4 vertices each
         int trianglesPerCell = 30; // 5 faces, 6 indices each
@@ -230,35 +228,9 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
                     triangles[triIndex + i] = vertIndex + cubeTriangles[i];
                 }
 
-                // Define UVs for the cube
-                Vector2[] cubeUVs = new Vector2[]
-                {
-                // Top face
-                new Vector2(0, 0),
-                new Vector2(0, 1),
-                new Vector2(1, 1),
-                new Vector2(1, 0),
-                // Front face
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(0, 1),
-                new Vector2(1, 1),
-                // Back face
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(0, 1),
-                new Vector2(1, 1),
-                // Left face
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(0, 1),
-                new Vector2(1, 1),
-                // Right face
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(0, 1),
-                new Vector2(1, 1)
-                };
+                // Define UVs for the cube using texture atlas
+                int textureIndex = (int)cell.cellType; // You'll need to define how to get the texture index for each cell
+                Vector2[] cubeUVs = GetUVsForCellAtlas(0);
 
                 // Assign UVs with offset
                 for (int i = 0; i < cubeUVs.Length; i++)
@@ -285,7 +257,47 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
         visualGridChunks.Add(gridVisual);
     }
+    Vector2[] GetUVsForCellAtlas(int textureIndex)
+    {
+        int atlasSize = 2; // Assuming a 4x4 texture atlas
+        float uvSize = 1.0f / atlasSize;
 
+        int xIndex = textureIndex % atlasSize;
+        int yIndex = atlasSize - 1 - (textureIndex / atlasSize);
+
+        float u = xIndex * uvSize;
+        float v = yIndex * uvSize;
+
+        // Define UV mapping for a cell in the texture atlas
+        return new Vector2[]
+        {
+        // Top face
+        new Vector2(u, v),
+        new Vector2(u, v + uvSize),
+        new Vector2(u + uvSize, v + uvSize),
+        new Vector2(u + uvSize, v),
+        // Front face
+        new Vector2(u, v),
+        new Vector2(u + uvSize, v),
+        new Vector2(u, v + uvSize),
+        new Vector2(u + uvSize, v + uvSize),
+        // Back face
+        new Vector2(u, v),
+        new Vector2(u + uvSize, v),
+        new Vector2(u, v + uvSize),
+        new Vector2(u + uvSize, v + uvSize),
+        // Left face
+        new Vector2(u, v),
+        new Vector2(u + uvSize, v),
+        new Vector2(u, v + uvSize),
+        new Vector2(u + uvSize, v + uvSize),
+        // Right face
+        new Vector2(u, v),
+        new Vector2(u + uvSize, v),
+        new Vector2(u, v + uvSize),
+        new Vector2(u + uvSize, v + uvSize)
+        };
+    }
 
     #endregion
 

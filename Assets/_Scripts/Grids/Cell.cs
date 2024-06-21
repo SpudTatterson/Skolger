@@ -12,6 +12,7 @@ public class Cell
     public bool Walkable = true; // for Path Finding 
     public bool inUse = false; // does this cell have a building, tree, item etc on it
     public bool isVisible = true;
+    public CellType cellType;
 
     public Cell(int x, int y, bool isVisible, Vector3 position, GridObject grid)
     {
@@ -20,6 +21,7 @@ public class Cell
         this.isVisible = isVisible;
         this.position = position;
         this.grid = grid;
+        cellType = CellType.Grass;
         this.id = x + "/" + y + " " + "Cell";
     }
     public bool IsFreeAndExists()
@@ -97,4 +99,10 @@ public class Cell
     {
         return id;
     }
+}
+
+public enum CellType
+{
+    Grass,
+    Rock,
 }
