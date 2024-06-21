@@ -14,10 +14,10 @@ public class GridBuilderTool : EditorWindow
 
     private List<Cell> selectedCells = new List<Cell>();
 
-    [MenuItem("Tools/Grid Visibility Tool")]
+    [MenuItem("Tools/Grid Builder Tool")]
     public static void ShowWindow()
     {
-        GetWindow<GridBuilderTool>("Grid Visibility Tool");
+        GetWindow<GridBuilderTool>("Grid Builder Tool");
     }
     void Awake()
     {
@@ -27,7 +27,7 @@ public class GridBuilderTool : EditorWindow
 
     private void OnGUI()
     {
-        GUILayout.Label("Grid Visibility Tool", EditorStyles.boldLabel);
+        GUILayout.Label("Grid Builder Tool", EditorStyles.boldLabel);
 
         brushSize = EditorGUILayout.FloatField("Brush Size", brushSize);
 
