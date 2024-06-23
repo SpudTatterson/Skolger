@@ -5,7 +5,7 @@ using NaughtyAttributes;
 public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
 {
     [Header("Settings")]
-    public ItemData itemData;
+    [Expandable] public ItemData itemData;
     [SerializeField] int initialAmount;
     int stackSize;
     [SerializeField] bool doManualInitialized = false;
@@ -205,7 +205,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
     }
     void OnEnable()
     {
-        if(occupiedCell == null) occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
+        if (occupiedCell == null) occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
         OnOccupy();
     }
 
