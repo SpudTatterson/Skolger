@@ -46,9 +46,21 @@ public class GridManager : MonoBehaviour
         return GetGridFromPosition(position).GetCellFromPosition(position);
 
     }
-
-
-    [ContextMenu("GenerateWorld")]
+    [Button]
+    public void RecalculateCellUsage()
+    {
+        foreach (GridObject grid in grids)
+        {
+            grid.ResetCellUse();
+        }
+        List<ICellOccupier> cellOccupiers = FindObjectsOfType<MonoBehaviour>(true).OfType<ICellOccupier>().ToList();
+        foreach (ICellOccupier occupier in cellOccupiers)
+        {
+            occupier.GetOccupiedCells();
+            occupier.OnOccupy();
+        }
+    }
+    [ContextMenu("GenerateWorld"), Button]
     public void GenerateWorld()
     {
         DestroyOldWorld();

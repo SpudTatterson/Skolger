@@ -337,7 +337,13 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         }
         EditorUtility.SetDirty(this);
     }
-
+    public void ResetCellUse()
+    {
+        foreach(Cell cell in cells)
+        {
+            cell.SetUseAndWalkable(false, true);
+        }
+    }
     public bool TryGetCellIndexes(Vector2Int initialIndex, int width, int height, out List<Vector2Int> indexes)
     {
         indexes = new List<Vector2Int>();
@@ -460,12 +466,12 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
     #endregion
 
-    [ContextMenu("TestCells")]
+    [ContextMenu("TestCells"), Button]
     void TestCells()
     {
         foreach (Cell cell in cells)
         {
-            Debug.Log(cell.id);
+            Debug.Log(cell.grid == null);
         }
     }
 }

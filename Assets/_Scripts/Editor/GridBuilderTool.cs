@@ -91,6 +91,10 @@ public class GridBuilderTool : EditorWindow, IBrushTool
                 BrushToolManager.DisableAllBrushTools();
                 isPlacing = !isPlacing;
             }
+            if(GUILayout.Button("Recalculate Cell Usage"))
+            {
+                gridManager.RecalculateCellUsage();
+            }
 
             // Begin the scroll view
             buildingScrollPos = GUILayout.BeginScrollView(buildingScrollPos);

@@ -9,7 +9,7 @@ public class Cell
     public int x, y; // index
     public GridObject grid; // the grid the cell belongs to
     public Vector3 position; // position in the world
-    public bool Walkable = true; // for Path Finding 
+    public bool walkable = true; // for Path Finding 
     public bool inUse = false; // does this cell have a building, tree, item etc on it
     public bool isVisible = true;
     public CellType cellType;
@@ -30,6 +30,11 @@ public class Cell
             return true;
         else
             return false;
+    }
+    public void SetUseAndWalkable(bool inUse, bool walkable)
+    {
+        this.inUse = inUse;
+        this.walkable = walkable;
     }
     public static bool AreCellsFree(List<Cell> cells)
     {
@@ -98,6 +103,10 @@ public class Cell
     public override string ToString()
     {
         return id;
+    }
+    public static explicit operator Vector2Int(Cell cell)
+    {
+        return new Vector2Int(cell.x, cell.y);
     }
 }
 
