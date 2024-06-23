@@ -8,7 +8,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
     float timeHarvesting = 0f;
-    Cell occupiedCell;
+    public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
     bool setForHarvesting = false;
     Harvester harvester;
@@ -19,7 +19,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
         {
             int amount = Random.Range(drop.minDropAmount, drop.maxDropAmount);
             if (amount == 0) continue;
-            Cell dropCell = occupiedCell.GetClosestEmptyCell();
+            Cell dropCell = cornerCell.GetClosestEmptyCell();
             ItemObject.MakeInstance(drop.itemData, amount, dropCell.position);
         }
         harvester.RemoveFromHarvestQueue(this);
@@ -89,17 +89,21 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
 
     #region ICellOccupier
 
+    public void GetOccupiedCells()
+    {
+        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+    }
     public void OnOccupy()
     {
-        if (occupiedCell == null) occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
-        occupiedCell.inUse = true;
-        occupiedCell.Walkable = false;
+        if (cornerCell == null) cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell.inUse = true;
+        cornerCell.walkable = false;
     }
 
     public void OnRelease()
     {
-        occupiedCell.inUse = false;
-        occupiedCell.Walkable = true;
+        cornerCell.inUse = false;
+        cornerCell.walkable = true;
     }
 
     #endregion

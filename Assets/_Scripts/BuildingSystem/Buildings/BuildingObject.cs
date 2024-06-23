@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
+using UnityEditor;
 using UnityEngine;
 
 public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 {
     public BuildingData buildingData { get; private set; }
     List<Cell> occupiedCells;
+    [field: SerializeField] public Cell cornerCell { get; private set; }
 
     public void Initialize(BuildingData buildingData, List<Cell> occupiedCells)
     {
@@ -78,13 +81,19 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     #endregion
 
     #region ICellOccupier
-
+    
+    public void GetOccupiedCells()
+    {
+        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells);
+        this.occupiedCells = occupiedCells;
+    }
     public void OnOccupy()
     {
         foreach (Cell cell in occupiedCells)
         {
             cell.inUse = buildingData.takesFullCell;
-            cell.Walkable = buildingData.walkable;
+            cell.walkable = buildingData.walkable;
         }
     }
 
@@ -93,7 +102,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         foreach (Cell cell in occupiedCells)
         {
             cell.inUse = false;
-            cell.Walkable = true;
+            cell.walkable = true;
         }
     }
 

@@ -17,7 +17,8 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
     [Header("References")]
     Stockpile currentStockpile;
     public GameObject visualGO { get; private set; }
-    public Cell occupiedCell { get; private set; }
+    public Cell cornerCell { get; private set; }
+
     public bool allowed { get; private set; }
 
 
@@ -44,10 +45,10 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
         currentStockpile = stockpile;
         if (allowed) OnAllow();
         else OnDisallow();
-        if (GridManager.instance.GetCellFromPosition(transform.position) == null) occupiedCell = null;
+        if (GridManager.instance.GetCellFromPosition(transform.position) == null) cornerCell = null;
         else
         {
-            occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
+            cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
         }
     }
 
@@ -184,14 +185,18 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
 
     #region ICellOccupier
 
+    public void GetOccupiedCells()
+    {
+        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+    }
     public void OnOccupy()
     {
-        occupiedCell.inUse = true;
+        cornerCell.inUse = true;
     }
 
     public void OnRelease()
     {
-        occupiedCell.inUse = false;
+        cornerCell.inUse = false;
     }
 
     #endregion
@@ -205,7 +210,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
     }
     void OnEnable()
     {
-        if (occupiedCell == null) occupiedCell = GridManager.instance.GetCellFromPosition(transform.position);
+        GetOccupiedCells();
         OnOccupy();
     }
 

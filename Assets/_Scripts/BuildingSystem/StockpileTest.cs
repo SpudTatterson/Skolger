@@ -85,11 +85,11 @@ public class StockpileTest : MonoBehaviour
     {
         GameObject stockpileGO = new GameObject("Stockpile");
         Stockpile stockpile = stockpileGO.AddComponent<Stockpile>();
-        stockpile.Initialize(size.x, size.y, cells, cornerCell.position);
+        stockpile.Initialize(size.x, size.y, cornerCell, cornerCell.position);
         foreach (Cell c in cells)
         {
             c.inUse = true;
-            c.Walkable = true;
+            c.walkable = true;
         }
     }
 

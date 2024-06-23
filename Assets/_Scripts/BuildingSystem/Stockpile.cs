@@ -11,16 +11,20 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     [SerializeField] SerializableDictionary<ItemData, int> totalItems = new SerializableDictionary<ItemData, int>();
     List<Cell> emptyCells = new List<Cell>();
     List<Cell> occupiedCells = new List<Cell>();
+    public Cell cornerCell { get; private set; }
     GameObject visual;
 
 
-    public void Initialize(int sizeX, int sizeY, List<Cell> occupiedCells, Vector3 cellPosition)
+    public void Initialize(int sizeX, int sizeY, Cell cornerCell, Vector3 cellPosition)
     {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         cells.Clear();
         emptyCells.Clear();
         visualItems.Clear();
+
+        this.cornerCell = cornerCell;
+        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, sizeX, sizeY, out List<Cell> occupiedCells);
 
         foreach (Cell cell in occupiedCells)
         {
@@ -68,7 +72,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     {
         ItemObject foundItems = FindAndMergeItem(new ItemCost(itemData, cost));
 
-        return foundItems.occupiedCell;
+        return foundItems.cornerCell;
     }
     public bool AddItem(ItemObject item)
     {
@@ -300,8 +304,14 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
     #endregion
 
-       #region ICellOccupier
+    #region ICellOccupier
 
+    public void GetOccupiedCells()
+    {
+        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, sizeX, sizeY, out List<Cell> occupiedCells);
+        this.occupiedCells = occupiedCells;
+    }
     public void OnOccupy()
     {
         foreach (Cell cell in occupiedCells)
