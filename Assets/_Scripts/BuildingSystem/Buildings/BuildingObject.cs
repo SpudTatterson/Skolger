@@ -20,7 +20,9 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     // add method for deconstructing
     public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, List<Cell> occupiedCells, Transform parent = null)
     {
-        GameObject buildingVisual = Instantiate(buildingData.buildingPrefab, position, Quaternion.identity, parent);
+        GameObject buildingVisual = PrefabUtility.InstantiatePrefab(buildingData.buildingPrefab) as GameObject;
+        buildingVisual.transform.position = position;
+        buildingVisual.transform.parent = parent;
 
         BuildingObject building = buildingVisual.AddComponent<BuildingObject>();
         building.Initialize(buildingData, occupiedCells);

@@ -148,8 +148,8 @@ public class GridPaintingTool : EditorWindow, IBrushTool
 
     private void OnEnable()
     {
-        if (instance == null) instance = GetWindow<GridPaintingTool>();
         SceneView.duringSceneGui += OnSceneGUI;
+        if (instance == null) instance = GetWindow<GridPaintingTool>();
         BrushToolManager.RegisterTool(instance);
     }
 
