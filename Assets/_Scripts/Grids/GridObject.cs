@@ -14,7 +14,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     [SerializeField, ReadOnly] float cellSize;
     [SerializeField, ReadOnly] float cellHeight;
     [SerializeField, ReadOnly] Material material;
-    [SerializeField, ReadOnly] int groundLayer = 7;
+    int groundLayer = 7;
     bool startEmpty;
 
     [Header("Cells")]
@@ -44,6 +44,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         this.cellSize = worldSettings.cellSize;
         this.cellHeight = worldSettings.cellHeight;
         this.material = worldSettings.material;
+        this.groundLayer = worldSettings.groundLayer;
         this.startEmpty = startEmpty;
 
         GenerateGrid();
@@ -59,8 +60,8 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         cells = new Cell[width, height];
     }
 
-    [ContextMenu("ResetGrid")]
-    void ResetGrid()
+    [Button, ContextMenu("ResetGrid")]
+    public void ResetGrid()
     {
         InitializeCells();
         if (visualGridChunks.Count == 0)
@@ -78,7 +79,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         visualGridChunks.Clear();
         Debug.Log("Old Grid Deleted");
     }
-    [ContextMenu("UpdatedGridVisual")]
+    [Button, ContextMenu("UpdatedGridVisual")]
     public void UpdateVisualGrid()
     {
         // Clear existing visual grid
@@ -92,7 +93,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
-    [ContextMenu("GenerateGrid")] //allows calling function from editor 
+    [Button, ContextMenu("GenerateGrid")] //allows calling function from editor 
     public void GenerateGrid()
     {
         ResetGrid();
@@ -116,7 +117,6 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         Cell cell = new Cell(x, y, !startEmpty, GetWorldPosition(x, y), this);
         cells[x, y] = cell;
         flatCells.Add(cell);
-        EditorUtility.SetDirty(this);
     }
 
     void CreateVisualGrid()
@@ -139,7 +139,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     {
         GameObject gridVisual = new GameObject("GridChunk_" + startX + "_" + startY)
         {
-            layer = groundLayer
+            layer = groundLayer,
         };
         gridVisual.transform.SetParent(transform);
         MeshFilter meshFilter = gridVisual.AddComponent<MeshFilter>();
@@ -230,7 +230,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
                 // Define UVs for the cube using texture atlas
                 int textureIndex = (int)cell.cellType; // You'll need to define how to get the texture index for each cell
-                Vector2[] cubeUVs = GetUVsForCellAtlas(0);
+                Vector2[] cubeUVs = GetUVsForCellAtlas((int)cell.cellType);
 
                 // Assign UVs with offset
                 for (int i = 0; i < cubeUVs.Length; i++)
@@ -321,10 +321,20 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         return null; // or handle out-of-bounds case
     }
 
-    public void ChangeCellVisibility(Cell cell, bool visible)
+    public void ChangeCellsVisibility(List<Cell> cells, bool visible)
     {
-        Undo.RecordObject(this, $"Changed visibility on {cell}");
-        cells[cell.x, cell.y].isVisible = visible;
+        foreach (Cell cell in cells)
+        {
+            this.cells[cell.x, cell.y].isVisible = visible;
+        }
+        EditorUtility.SetDirty(this);
+    }
+    public void ChangeCellsType(List<Cell> cells, CellType type)
+    {
+        foreach (Cell cell in cells)
+        {
+            this.cells[cell.x, cell.y].cellType = type;
+        }
         EditorUtility.SetDirty(this);
     }
 

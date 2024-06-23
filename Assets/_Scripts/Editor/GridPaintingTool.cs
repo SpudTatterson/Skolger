@@ -2,25 +2,28 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor.ShortcutManagement;
-using Unity.VisualScripting;
+using NaughtyAttributes.Editor;
+using NaughtyAttributes;
 
-public class GridBuilderTool : EditorWindow, IBrushTool
+public class GridPaintingTool : EditorWindow, IBrushTool
 {
     GridManager gridManager;
     LayerManager layerManager;
     GridObject activeGridObject;
+
     public bool isPainting { get; private set; }
-    bool isRaising;
-    bool isLowering;
+
+    CellType cellType;
     float brushSize = 1f;
-    static GridBuilderTool instance;
 
-    private List<Cell> selectedCells = new List<Cell>();
+    List<Cell> selectedCells = new List<Cell>();
 
-    [MenuItem("Tools/Grid/Grid Builder Tool")]
+    private static GridPaintingTool instance;
+
+    [MenuItem("Tools/Grid/Grid Painting Tool")]
     public static void ShowWindow()
     {
-        instance = GetWindow<GridBuilderTool>("Grid Builder Tool");
+        instance = GetWindow<GridPaintingTool>("Grid Painting Tool");
     }
     void Awake()
     {
@@ -30,17 +33,51 @@ public class GridBuilderTool : EditorWindow, IBrushTool
 
     private void OnGUI()
     {
-        GUILayout.Label("Grid Builder Tool", EditorStyles.boldLabel);
+        GUILayout.Label("Grid Painting Tool", EditorStyles.boldLabel);
 
         brushSize = EditorGUILayout.FloatField("Brush Size", brushSize);
+
+        cellType = (CellType)EditorGUILayout.EnumPopup(cellType);
 
         if (GUILayout.Button("Start Painting"))
         {
             StartPainting();
         }
-        GUILayout.Label("To lower hold Alt");
 
     }
+
+    [Shortcut("GridTools/StartGridPainting", KeyCode.D, ShortcutModifiers.Alt)]
+    static void StartPaintingShortcut()
+    {
+        GridPaintingTool window = GetWindow<GridPaintingTool>();
+        window.StartPainting();
+    }
+
+    #region IBrushTool
+
+    void StartPainting()
+    {
+        BrushToolManager.DisableAllBrushTools();
+        isPainting = true;
+    }
+    public void StopPainting()
+    {
+        isPainting = false;
+    }
+
+    public void IncreaseBrushSize()
+    {
+        brushSize += 1f;
+        instance.Repaint();
+    }
+
+    public void DecreaseBrushSize()
+    {
+        brushSize = Mathf.Max(1f, brushSize - 1f); // Prevent brush size from going below 1
+        instance.Repaint();
+    }
+
+    #endregion
 
     private void OnSceneGUI(SceneView sceneView)
     {
@@ -50,28 +87,16 @@ public class GridBuilderTool : EditorWindow, IBrushTool
         {
             Event e = Event.current;
             HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-            
+
             if (e.type == EventType.MouseDown && e.button == 1)
             {
                 isPainting = false;
             }
-
-            if (e.type == EventType.KeyDown && e.keyCode == KeyCode.LeftAlt)
-            {
-                isRaising = false;
-                isLowering = true;
-            }
-            else if (e.type == EventType.KeyUp && e.keyCode == KeyCode.LeftAlt)
-            {
-                isRaising = true;
-                isLowering = false;
-            }
-
             Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerManager.GroundLayerMask))
             {
                 Vector3 hitPoint = hit.point;
-                Handles.color = isLowering ? Color.red : Color.green;
+                Handles.color = Color.blue;
                 Handles.DrawWireDisc(hitPoint, Vector3.up, brushSize);
 
                 if ((e.type == EventType.MouseDrag || e.type == EventType.MouseDown) && e.button == 0)
@@ -80,7 +105,7 @@ public class GridBuilderTool : EditorWindow, IBrushTool
                     e.Use();
                 }
                 if (e.type == EventType.MouseUp && e.button == 0)
-                    ApplyVisibilityChanges();
+                    ApplyTextureChanges();
             }
 
             SceneView.RepaintAll();
@@ -91,10 +116,7 @@ public class GridBuilderTool : EditorWindow, IBrushTool
     {
         if (activeGridObject == null)
         {
-            if (isRaising)
-                activeGridObject = gridManager.GetGridFromPosition(center + new Vector3(0, gridManager.worldSettings.cellHeight, 0));
-            else
-                activeGridObject = gridManager.GetGridFromPosition(center);
+            activeGridObject = gridManager.GetGridFromPosition(center);
         }
 
         for (int x = 0; x < gridManager.worldSettings.gridXSize; x++)
@@ -115,55 +137,18 @@ public class GridBuilderTool : EditorWindow, IBrushTool
         }
     }
 
-    private void ApplyVisibilityChanges()
+    private void ApplyTextureChanges()
     {
-        bool visibility = isRaising;
-
-        activeGridObject.ChangeCellsVisibility(selectedCells, visibility);
+        activeGridObject.ChangeCellsType(selectedCells, cellType);
 
         activeGridObject.UpdateVisualGrid();
         selectedCells.Clear();
         activeGridObject = null;
     }
 
-    #region IBrushTool
-
-    [Shortcut("GridTools/StartGridBuilding", KeyCode.F, ShortcutModifiers.Alt)]
-    static void StartPaintingShortcut()
-    {
-        GridBuilderTool window = GetWindow<GridBuilderTool>();
-        window.StartPainting();
-    }
-
-    void StartPainting()
-    {
-        BrushToolManager.DisableAllBrushTools();
-        isPainting = true;
-        isLowering = false;
-        isRaising = true;
-    }
-    public void StopPainting()
-    {
-        isPainting = false;
-    }
-
-    public void IncreaseBrushSize()
-    {
-        brushSize += 1f;
-        this.Repaint();
-    }
-
-    public void DecreaseBrushSize()
-    {
-        brushSize = Mathf.Max(1f, brushSize - 1f); // Prevent brush size from going below 1
-        this.Repaint();
-    }
-
-    #endregion
-
     private void OnEnable()
     {
-        if (instance == null) instance = GetWindow<GridBuilderTool>();
+        if (instance == null) instance = GetWindow<GridPaintingTool>();
         SceneView.duringSceneGui += OnSceneGUI;
         BrushToolManager.RegisterTool(instance);
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -10,7 +11,7 @@ public class GridManager : MonoBehaviour
     public List<GridObject> grids { get; private set; }
     [SerializeField] GameObject gridsParent;
 
-    public WorldSettings worldSettings;
+    [Expandable] public WorldSettings worldSettings;
 
     // get these values from a scriptable object 
 
@@ -29,7 +30,7 @@ public class GridManager : MonoBehaviour
     }
     public GridObject GetGridFromPosition(Vector3 position)
     {
-        if (grids == null || grids.Count == 0)  
+        if (grids == null || grids.Count == 0)
             grids = FindObjectsOfType<GridObject>().ToList();
 
         foreach (GridObject grid in grids)
