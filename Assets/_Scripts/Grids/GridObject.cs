@@ -389,7 +389,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             return cells[x, y];
     }
 
-    public static (Vector2Int size, Cell cornerCell) GetGridSizeFrom2Cells(Cell cell1, Cell cell2)
+    public static (Vector2Int size, Cell cornerCell) GetGridBoxFrom2Cells(Cell cell1, Cell cell2)
     {
         int xMin = Mathf.Min(cell1.x, cell2.x);
         int yMin = Mathf.Min(cell1.y, cell2.y);
@@ -401,6 +401,31 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
         return (size, cornerCell);
     }
+
+    public static (Vector2Int size, Cell cornerCell) GetGridLineFrom2Cells(Cell cell1, Cell cell2)
+    {
+        int xMin = Mathf.Min(cell1.x, cell2.x);
+        int yMin = Mathf.Min(cell1.y, cell2.y);
+        int xMax = Mathf.Max(cell1.x, cell2.x);
+        int yMax = Mathf.Max(cell1.y, cell2.y);
+
+        int width = xMax - xMin + 1;
+        int height = yMax - yMin + 1;
+
+        if (width >= height) // Horizontal line is longer or equal
+        {
+            Vector2Int size = new Vector2Int(width, 1);
+            Cell cornerCell = cell1.grid.GetCellFromIndex(xMin, cell1.y);
+            return (size, cornerCell);
+        }
+        else // Vertical line is longer
+        {
+            Vector2Int size = new Vector2Int(1, height);
+            Cell cornerCell = cell1.grid.GetCellFromIndex(cell1.x, yMin);
+            return (size, cornerCell);
+        }
+    }
+
     #endregion
 
     #region serialization 
