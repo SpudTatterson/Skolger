@@ -50,7 +50,7 @@ public class GridBuilderTool : EditorWindow, IBrushTool
         {
             Event e = Event.current;
             HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-            
+
             if (e.type == EventType.MouseDown && e.button == 1)
             {
                 isPainting = false;
@@ -150,21 +150,21 @@ public class GridBuilderTool : EditorWindow, IBrushTool
     public void IncreaseBrushSize()
     {
         brushSize += 1f;
-        this.Repaint();
+        instance.Repaint();
     }
 
     public void DecreaseBrushSize()
     {
         brushSize = Mathf.Max(1f, brushSize - 1f); // Prevent brush size from going below 1
-        this.Repaint();
+        instance.Repaint();
     }
 
     #endregion
 
     private void OnEnable()
     {
-        if (instance == null) instance = GetWindow<GridBuilderTool>();
         SceneView.duringSceneGui += OnSceneGUI;
+        if (instance == null) instance = GetWindow<GridBuilderTool>();
         BrushToolManager.RegisterTool(instance);
     }
 
