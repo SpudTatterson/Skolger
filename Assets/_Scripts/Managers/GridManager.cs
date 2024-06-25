@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
+using UnityEditor;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -35,7 +36,12 @@ public class GridManager : MonoBehaviour
 
         foreach (GridObject grid in grids)
         {
-            if (Mathf.Round(grid.transform.position.y) == Mathf.Round(position.y))
+            // Calculate the Y range for the grid
+            float gridMinY = grid.transform.position.y;
+            float gridMaxY = gridMinY + worldSettings.cellHeight;
+
+            // Check if the position is within the grid's Y range
+            if (position.y >= gridMinY && position.y < gridMaxY)
                 return grid;
         }
         return null;
@@ -45,6 +51,24 @@ public class GridManager : MonoBehaviour
         if (GetGridFromPosition(position) == null) return null;
         return GetGridFromPosition(position).GetCellFromPosition(position);
 
+    }
+    [ContextMenu("GenerateWorld"), Button]
+    public void GenerateWorld()
+    {
+        DestroyOldWorld();
+        grids.Add(GridObject.MakeInstance(worldSettings, false, gridsParent.transform.position, gridsParent.transform, "FloorGrid"));
+
+        for (int i = 0; i < worldSettings.belowGroundLayers; i++)
+        {
+            Vector3 position = gridsParent.transform.position - Vector3.up * worldSettings.cellHeight * (i + 1);
+            grids.Add(GridObject.MakeInstance(worldSettings, false, position, gridsParent.transform, $"Underground Grid Layer #{i}"));
+        }
+        for (int i = 0; i < worldSettings.aboveGroundLayers; i++)
+        {
+            Vector3 position = gridsParent.transform.position + Vector3.up * worldSettings.cellHeight * (i + 1);
+            grids.Add(GridObject.MakeInstance(worldSettings, true, position, gridsParent.transform, $"Aboveground Grid Layer #{i}"));
+        }
+        EditorUtility.SetDirty(this);
     }
     [Button]
     public void RecalculateCellUsage()
@@ -60,24 +84,15 @@ public class GridManager : MonoBehaviour
             occupier.OnOccupy();
         }
     }
-    [ContextMenu("GenerateWorld"), Button]
-    public void GenerateWorld()
-    {
-        DestroyOldWorld();
-        GridObject.MakeInstance(worldSettings, false, gridsParent.transform.position, gridsParent.transform, "FloorGrid");
 
-        for (int i = 0; i < worldSettings.belowGroundLayers; i++)
+    [Button]
+    public void SaveAllGridMeshesToFile()
+    {
+        foreach (GridObject grid in grids)
         {
-            Vector3 position = gridsParent.transform.position - Vector3.up * worldSettings.cellHeight * (i + 1);
-            GridObject.MakeInstance(worldSettings, false, position, gridsParent.transform, $"Underground Grid Layer #{i}");
-        }
-        for (int i = 0; i < worldSettings.aboveGroundLayers; i++)
-        {
-            Vector3 position = gridsParent.transform.position + Vector3.up * worldSettings.cellHeight * (i + 1);
-            GridObject.MakeInstance(worldSettings, true, position, gridsParent.transform, $"Aboveground Grid Layer #{i}");
+            grid.SaveAllChunkMeshesToFile();
         }
     }
-
     private void DestroyOldWorld()
     {
         grids = gridsParent.GetComponentsInChildren<GridObject>().ToList();

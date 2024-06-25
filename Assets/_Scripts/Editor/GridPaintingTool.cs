@@ -34,6 +34,10 @@ public class GridPaintingTool : EditorWindow, IBrushTool
     private void OnGUI()
     {
         GUILayout.Label("Grid Painting Tool", EditorStyles.boldLabel);
+        if(GUILayout.Button("Save All Grid Meshes"))
+        {
+            gridManager.SaveAllGridMeshesToFile();
+        }
 
         brushSize = EditorGUILayout.FloatField("Brush Size", brushSize);
 
@@ -67,7 +71,7 @@ public class GridPaintingTool : EditorWindow, IBrushTool
 
     public void IncreaseBrushSize()
     {
-        brushSize += 1f;
+        brushSize += 1f;    
         instance.Repaint();
     }
 
@@ -79,7 +83,7 @@ public class GridPaintingTool : EditorWindow, IBrushTool
 
     #endregion
 
-    private void OnSceneGUI(SceneView sceneView)
+    void OnSceneGUI(SceneView sceneView)
     {
         if (gridManager == null) return;
 
@@ -112,7 +116,7 @@ public class GridPaintingTool : EditorWindow, IBrushTool
         }
     }
 
-    private void SelectCells(Vector3 center)
+    void SelectCells(Vector3 center)
     {
         if (activeGridObject == null)
         {
@@ -137,7 +141,7 @@ public class GridPaintingTool : EditorWindow, IBrushTool
         }
     }
 
-    private void ApplyTextureChanges()
+    void ApplyTextureChanges()
     {
         activeGridObject.ChangeCellsType(selectedCells, cellType);
 
@@ -146,14 +150,14 @@ public class GridPaintingTool : EditorWindow, IBrushTool
         activeGridObject = null;
     }
 
-    private void OnEnable()
+    void OnBecameVisible()
     {
         SceneView.duringSceneGui += OnSceneGUI;
-        if (instance == null) instance = GetWindow<GridPaintingTool>();
+        if (instance == null) instance = this;
         BrushToolManager.RegisterTool(instance);
     }
 
-    private void OnDisable()
+    void OnBecameInvisible()
     {
         SceneView.duringSceneGui -= OnSceneGUI;
         BrushToolManager.UnregisterTool(instance);

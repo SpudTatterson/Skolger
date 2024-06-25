@@ -2,9 +2,6 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor.ShortcutManagement;
-using Unity.VisualScripting;
-using UnityEngine.UI;
-using System;
 
 public class GridBuilderTool : EditorWindow, IBrushTool
 {
@@ -38,8 +35,13 @@ public class GridBuilderTool : EditorWindow, IBrushTool
     List<Texture> buildingIcons = new List<Texture>();
     List<BuildingData> buildingDatas = new List<BuildingData>();
     Vector2 buildingScrollPos;
-
     bool isPlacing = false;
+    float initialMouseDownTime = 0;
+    float timeToInitDrag = 0.1f;
+    Cell firstCell;
+    Cell cornerCell;
+    Cell lastCell;
+
 
     [MenuItem("Tools/Grid/Grid Builder Tool")]
     public static void ShowWindow()
@@ -82,6 +84,11 @@ public class GridBuilderTool : EditorWindow, IBrushTool
 
     void DrawBuildingPlacerToolGUI()
     {
+        if (GUILayout.Button("Recalculate Cell Usage"))
+        {
+            gridManager.RecalculateCellUsage();
+        }
+
         DrawDragAndDropArea();
 
         if (buildingDatas.Count > 0)
@@ -90,10 +97,6 @@ public class GridBuilderTool : EditorWindow, IBrushTool
             {
                 BrushToolManager.DisableAllBrushTools();
                 isPlacing = !isPlacing;
-            }
-            if(GUILayout.Button("Recalculate Cell Usage"))
-            {
-                gridManager.RecalculateCellUsage();
             }
 
             // Begin the scroll view
@@ -143,7 +146,6 @@ public class GridBuilderTool : EditorWindow, IBrushTool
                             {
                                 buildingDatas.Add(buildingData);
                                 buildingIcons.Add(buildingData.icon);
-                                Debug.Log("test");
                             }
                         }
                     }
@@ -179,12 +181,50 @@ public class GridBuilderTool : EditorWindow, IBrushTool
                 // Adjust the grid point to account for the building size
                 Vector3 size = AdjustSizeAndGridPoint(ref gridPoint);
                 Handles.DrawWireCube(gridPoint, size);
+                if (cornerCell != null && lastCell != null)
+                    Handles.DrawLine(cornerCell.position, lastCell.position);
 
                 if (!cellFree) return;
 
-                if ((e.type == EventType.MouseDown || e.type == EventType.MouseDown) && e.button == 0)
+                if (e.type == EventType.MouseDown && e.button == 0)
                 {
-                    PlaceBuilding(cell, buildingDatas[selectedBuilding]);
+                    // PlaceBuilding(cell, buildingDatas[selectedBuilding]);
+                    initialMouseDownTime = (float)EditorApplication.timeSinceStartup;
+                    firstCell = cell;
+                    e.Use();
+                }
+                else if ((e.type == EventType.MouseDrag) && e.button == 0)
+                {
+                    (Vector2Int cellAmount, Cell cornerCell) = GridObject.GetGridLineFrom2Cells(firstCell, cell);
+
+                    this.cornerCell = cornerCell;
+                    if (cellAmount.x == 1)
+                        lastCell = cornerCell.grid.GetCellFromIndex(cornerCell.x, cornerCell.y + cellAmount.y);
+                    else
+                        lastCell = cornerCell.grid.GetCellFromIndex(cornerCell.x + cellAmount.x, cornerCell.y);
+
+                    e.Use();
+                }
+                else if ((e.type == EventType.MouseUp) && e.button == 0)
+                {
+                    if (initialMouseDownTime + timeToInitDrag >= (float)EditorApplication.timeSinceStartup)
+                    {
+                        PlaceBuilding(cell, buildingDatas[selectedBuilding]);
+                    }
+                    else
+                    {
+                        (Vector2Int cellAmount, Cell CornerCell) = GridObject.GetGridLineFrom2Cells(firstCell, cell);
+                        activeGridObject.TryGetCells((Vector2Int)CornerCell, cellAmount.x, cellAmount.y, out List<Cell> cells);
+
+                        foreach (Cell c in cells)
+                        {
+                            if (c.IsFreeAndExists())
+                                PlaceBuilding(c, buildingDatas[selectedBuilding]);
+                        }
+                    }
+                    firstCell = null;
+                    lastCell = null;
+                    cornerCell = null;
                     e.Use();
                 }
 
@@ -225,9 +265,14 @@ public class GridBuilderTool : EditorWindow, IBrushTool
 
     void DrawWorldSculptingToolGUI()
     {
+        if (GUILayout.Button("Save All Grid Meshes"))
+        {
+            gridManager.SaveAllGridMeshesToFile();
+        }
+
         brushSize = EditorGUILayout.FloatField("Brush Size", brushSize);
 
-        if (GUILayout.Button("Start Painting"))
+        if (GUILayout.Button("Start Sculpting"))
         {
             StartPainting();
         }
@@ -295,7 +340,7 @@ public class GridBuilderTool : EditorWindow, IBrushTool
         }
     }
 
-    private void SelectCells(Vector3 center)
+    void SelectCells(Vector3 center)
     {
         if (activeGridObject == null)
         {
@@ -323,7 +368,7 @@ public class GridBuilderTool : EditorWindow, IBrushTool
         }
     }
 
-    private void ApplyVisibilityChanges()
+    void ApplyVisibilityChanges()
     {
         bool visibility = isRaising;
 
@@ -357,14 +402,14 @@ public class GridBuilderTool : EditorWindow, IBrushTool
 
     #endregion
 
-    private void OnEnable()
+    void OnBecameVisible()
     {
         SceneView.duringSceneGui += OnSceneGUI;
-        if (instance == null) instance = GetWindow<GridBuilderTool>();
+        if (instance == null) instance = this;
         BrushToolManager.RegisterTool(instance);
     }
 
-    private void OnDisable()
+    void OnBecameInvisible()
     {
         SceneView.duringSceneGui -= OnSceneGUI;
         BrushToolManager.UnregisterTool(instance);

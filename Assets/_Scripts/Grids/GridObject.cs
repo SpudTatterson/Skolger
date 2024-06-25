@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditor;
 using NaughtyAttributes;
 using Unity.AI.Navigation;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
@@ -159,13 +160,18 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         int triIndex = 0;
 
         bool meshEmpty = true;
+        bool hasInvisibleCell = false;
 
         for (int x = 0; x < chunkWidth; x++)
         {
             for (int y = 0; y < chunkHeight; y++)
             {
                 Cell cell = cells[startX + x, startY + y];
-                if (cell == null || !cell.isVisible) continue;
+                if (cell == null || !cell.isVisible)
+                {
+                    hasInvisibleCell = true;
+                    continue;
+                }
 
                 meshEmpty = false;
 
@@ -248,11 +254,14 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         mesh.triangles = triangles;
         mesh.uv = uv;
         mesh.RecalculateNormals();
+        mesh.name = gridVisual.name;
 
         if (!meshEmpty)
         {
             meshFilter.mesh = mesh;
-            gridVisual.AddComponent<MeshCollider>();
+
+            MeshCollider mc = gridVisual.AddComponent<MeshCollider>();
+            if(!hasInvisibleCell) mc.convex = true;
         }
 
         visualGridChunks.Add(gridVisual);
@@ -298,6 +307,63 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         new Vector2(u + uvSize, v + uvSize)
         };
     }
+    [Button]
+    public void SaveAllChunkMeshesToFile()
+    {
+        List<MeshFilter> chunksMF = GetComponentsInChildren<MeshFilter>().ToList();
+        foreach (var mf in chunksMF)
+        {
+            if (mf.sharedMesh == null) continue;
+            Mesh mesh = SaveMeshToFile(mf.gameObject, mf.sharedMesh);
+            mf.sharedMesh = mesh;
+            mf.GetComponent<MeshCollider>().sharedMesh = mesh;
+        }
+    }
+    Mesh SaveMeshToFile(GameObject visualGO, Mesh mesh)
+    {
+        if (mesh != null)
+        {
+            // Get the active scene's path and ensure the directory exists
+            string scenePath = SceneManager.GetActiveScene().path.Replace(".unity", "");
+            string directoryPath = $"{scenePath}/Meshes/{gameObject.name}";
+
+            if (!System.IO.Directory.Exists(directoryPath))
+            {
+                System.IO.Directory.CreateDirectory(directoryPath);
+            }
+
+            // Save the mesh to the file
+            string path = $"{directoryPath}/{visualGO.name}.asset";
+
+            // Check if the asset already exists
+            Mesh existingMesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (existingMesh != null)
+            {
+                if (existingMesh != mesh)
+                {
+                    // Assign new mesh data to existing mesh asset
+                    existingMesh.Clear();
+                    existingMesh.vertices = mesh.vertices;
+                    existingMesh.triangles = mesh.triangles;
+                    existingMesh.uv = mesh.uv;
+                    existingMesh.normals = mesh.normals;
+                    existingMesh.RecalculateBounds();
+                    AssetDatabase.SaveAssets();
+                    Debug.Log("Updated mesh at " + path);
+                }
+            }
+            else
+            {
+                AssetDatabase.CreateAsset(mesh, path);
+                Debug.Log("Saved mesh to " + path);
+                existingMesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            }
+
+            return existingMesh;
+        }
+        AssetDatabase.SaveAssets();
+        return null;
+    }
 
     #endregion
 
@@ -339,7 +405,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     }
     public void ResetCellUse()
     {
-        foreach(Cell cell in cells)
+        foreach (Cell cell in cells)
         {
             cell.SetUseAndWalkable(false, true);
         }
