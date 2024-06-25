@@ -9,25 +9,38 @@ public class Cell
     public int x, y; // index
     public GridObject grid; // the grid the cell belongs to
     public Vector3 position; // position in the world
-    public bool Walkable = true; // for Path Finding 
+    public bool walkable = true; // for Path Finding 
     public bool inUse = false; // does this cell have a building, tree, item etc on it
-    public Cell(int x, int y, Vector3 position, GridObject grid)
+    public bool isVisible = true;
+    public CellType cellType;
+
+    public Cell(int x, int y, bool isVisible, Vector3 position, GridObject grid)
     {
         this.x = x;
         this.y = y;
+        this.isVisible = isVisible;
         this.position = position;
         this.grid = grid;
+        cellType = CellType.Grass;
         this.id = x + "/" + y + " " + "Cell";
     }
-    public bool IsFreeForBuilding()
+    public bool IsFreeAndExists()
     {
-        return !inUse;
+        if (!inUse && isVisible)
+            return true;
+        else
+            return false;
+    }
+    public void SetUseAndWalkable(bool inUse, bool walkable)
+    {
+        this.inUse = inUse;
+        this.walkable = walkable;
     }
     public static bool AreCellsFree(List<Cell> cells)
     {
         foreach (Cell cell in cells)
         {
-            bool isFree = cell.IsFreeForBuilding();
+            bool isFree = cell.IsFreeAndExists();
             if (!isFree) return false;
         }
         return true;
@@ -54,7 +67,7 @@ public class Cell
             Vector2Int current = toExplore.Dequeue();
             Cell currentCell = grid.GetCellFromIndex(current.x, current.y);
 
-            if (currentCell != null && currentCell.IsFreeForBuilding())
+            if (currentCell != null && currentCell.IsFreeAndExists())
             {
                 return currentCell;
             }
@@ -75,11 +88,32 @@ public class Cell
             }
         }
 
-        Debug.Log("No empty cell found");
+        Debug.Log("No empty cell found on grid \n trying to find empty cell on grid below");
+        GetCellBelow().GetClosestEmptyCell();
         return null; // No free cell found
+    }
+    public Cell GetCellAbove()
+    {
+        return GridManager.instance.GetCellFromPosition(position + new Vector3(0, GridManager.instance.worldSettings.cellHeight, 0));
+    }
+    public Cell GetCellBelow()
+    {
+        return GridManager.instance.GetCellFromPosition(position - new Vector3(0, GridManager.instance.worldSettings.cellHeight, 0));
     }
     public override string ToString()
     {
         return id;
     }
+    public static explicit operator Vector2Int(Cell cell)
+    {
+        return new Vector2Int(cell.x, cell.y);
+    }
+}
+
+public enum CellType
+{
+    Grass,
+    Rock,
+    Water,
+    Dirt
 }

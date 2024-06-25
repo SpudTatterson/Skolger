@@ -9,6 +9,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     List<ItemCost> costs = new List<ItemCost>();
     SerializableDictionary<ItemData, int> fulfilledCosts = new SerializableDictionary<ItemData, int>();
     List<Cell> occupiedCells = new List<Cell>();
+    public Cell cornerCell { get; private set; }
     bool allowed = true;
     // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
@@ -182,12 +183,19 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     #region ICellOccupier
 
+    public void GetOccupiedCells()
+    {
+        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells);
+        this.occupiedCells = occupiedCells;
+    }
+
     public void OnOccupy()
     {
         foreach (Cell cell in occupiedCells)
         {
             cell.inUse = buildingData.takesFullCell;
-            cell.Walkable = buildingData.walkable;
+            cell.walkable = buildingData.walkable;
         }
     }
 
@@ -196,7 +204,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         foreach (Cell cell in occupiedCells)
         {
             cell.inUse = false;
-            cell.Walkable = true;
+            cell.walkable = true;
         }
     }
 

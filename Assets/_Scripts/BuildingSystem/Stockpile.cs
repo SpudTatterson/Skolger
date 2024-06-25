@@ -11,10 +11,11 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     [SerializeField] SerializableDictionary<ItemData, int> totalItems = new SerializableDictionary<ItemData, int>();
     List<Cell> emptyCells = new List<Cell>();
     List<Cell> occupiedCells = new List<Cell>();
+    public Cell cornerCell { get; private set; }
     GameObject visual;
 
 
-    public void Initialize(int sizeX, int sizeY, List<Cell> occupiedCells, Vector3 cellPosition, float cellSize = 1)
+    public void Initialize(int sizeX, int sizeY, Cell cornerCell, Vector3 cellPosition)
     {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -22,11 +23,15 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         emptyCells.Clear();
         visualItems.Clear();
 
+        this.cornerCell = cornerCell;
+        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, sizeX, sizeY, out List<Cell> occupiedCells);
+
         foreach (Cell cell in occupiedCells)
         {
             AddCell(cell);
         }
 
+        float cellSize = GridManager.instance.worldSettings.cellSize;
         // Calculate the position of the bottom-left corner of the cell
         Vector3 cornerPosition = cellPosition - new Vector3(cellSize / 2, 0, cellSize / 2);
 
@@ -67,7 +72,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     {
         ItemObject foundItems = FindAndMergeItem(new ItemCost(itemData, cost));
 
-        return foundItems.occupiedCell;
+        return foundItems.cornerCell;
     }
     public bool AddItem(ItemObject item)
     {
@@ -245,7 +250,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     {
         foreach (Cell cell in cellsToAdd)
         {
-            if (!occupiedCells.Contains(cell) && cell.IsFreeForBuilding())
+            if (!occupiedCells.Contains(cell) && cell.IsFreeAndExists())
             {
                 AddCell(cell);
             }
@@ -299,8 +304,14 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
     #endregion
 
-       #region ICellOccupier
+    #region ICellOccupier
 
+    public void GetOccupiedCells()
+    {
+        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, sizeX, sizeY, out List<Cell> occupiedCells);
+        this.occupiedCells = occupiedCells;
+    }
     public void OnOccupy()
     {
         foreach (Cell cell in occupiedCells)

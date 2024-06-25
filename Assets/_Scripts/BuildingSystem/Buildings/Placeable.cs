@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlaceableData : ScriptableObject
 {
     public string placeableName;
+    public Texture icon;
     public int xSize = 1;
     public int ySize = 1;
     public bool takesFullCell;

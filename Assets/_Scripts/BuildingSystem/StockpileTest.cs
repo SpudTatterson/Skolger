@@ -44,7 +44,7 @@ public class StockpileTest : MonoBehaviour
 
             if (previousCell == null || currentCell != previousCell)
             {
-                var (size, cornerCell) = GridObject.GetGridSizeFrom2Cells(firstCell, currentCell);
+                var (size, cornerCell) = GridObject.GetGridBoxFrom2Cells(firstCell, currentCell);
                 Destroy(tempGrid);
                 Vector3 cornerPos = cornerCell.position - new Vector3(0.5f, -0.01f, 0.5f);
                 tempGrid = MeshUtility.CreateGridMesh(size.x, size.y, cornerPos, "StockpileTempVisual", MaterialManager.instance.stockpileMaterial);
@@ -57,11 +57,11 @@ public class StockpileTest : MonoBehaviour
         {
             GridObject grid = hit.transform.GetComponentInParent<GridObject>();
             Cell cell = grid.GetCellFromPosition(hit.point);
-            var (size, cornerCell) = GridObject.GetGridSizeFrom2Cells(firstCell, cell);
+            var (size, cornerCell) = GridObject.GetGridBoxFrom2Cells(firstCell, cell);
             if (!grid.TryGetCells(new Vector2Int(cornerCell.x, cornerCell.y), size.x, size.y, out List<Cell> allCells)) return; // if failed to get cells abort
             foreach (Cell c in allCells)
             {
-                if (c.IsFreeForBuilding())
+                if (c.IsFreeAndExists())
                     cells.Add(c);
             }
 
@@ -85,11 +85,11 @@ public class StockpileTest : MonoBehaviour
     {
         GameObject stockpileGO = new GameObject("Stockpile");
         Stockpile stockpile = stockpileGO.AddComponent<Stockpile>();
-        stockpile.Initialize(size.x, size.y, cells, cornerCell.position);
+        stockpile.Initialize(size.x, size.y, cornerCell, cornerCell.position);
         foreach (Cell c in cells)
         {
             c.inUse = true;
-            c.Walkable = true;
+            c.walkable = true;
         }
     }
 

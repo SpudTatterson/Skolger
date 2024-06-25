@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class LayerManager : MonoBehaviour
 {
     public static LayerManager instance;
 
-    public int draggableLayer = 6;
-    public int groundLayer = 7;
-    public int itemLayer = 8;
+    [Layer] public int draggableLayer = 6;
+    [Layer] public int groundLayer = 7;
+    [Layer] public int itemLayer = 8;
 
     public LayerMask GroundLayerMask;
     public LayerMask ItemLayerMask;
@@ -17,7 +18,7 @@ public class LayerManager : MonoBehaviour
 
     void Awake()
     {
-        if(instance == null)
+        if (instance == null)
             instance = this;
         else
         {
