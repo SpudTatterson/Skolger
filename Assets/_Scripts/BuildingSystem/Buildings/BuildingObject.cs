@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 {
-    public BuildingData buildingData { get; private set; }
+    [field: SerializeField, ReadOnly, Expandable] public BuildingData buildingData { get; private set; }
     List<Cell> occupiedCells;
-    [field: SerializeField] public Cell cornerCell { get; private set; }
+    [field: SerializeField, ReadOnly] public Cell cornerCell { get; private set; }
 
     public void Initialize(BuildingData buildingData, List<Cell> occupiedCells)
     {
@@ -25,6 +25,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         buildingVisual.transform.parent = parent;
 
         BuildingObject building = buildingVisual.AddComponent<BuildingObject>();
+        EditorUtility.SetDirty(building);
         building.Initialize(buildingData, occupiedCells);
 
         return building;
@@ -83,7 +84,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     #endregion
 
     #region ICellOccupier
-    
+
     public void GetOccupiedCells()
     {
         cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
