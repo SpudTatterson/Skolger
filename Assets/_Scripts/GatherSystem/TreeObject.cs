@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
-    [SerializeField] float baseGatherTime = 5f;
+    [SerializeField] float baseGatherTime = 5f; 
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
     float timeHarvesting = 0f;
