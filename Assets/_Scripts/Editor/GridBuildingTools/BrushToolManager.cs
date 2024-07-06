@@ -31,7 +31,6 @@ public static class BrushToolManager
             if (tool.isPainting)
             {
                 tool.IncreaseBrushSize();
-
             }
         }
     }
