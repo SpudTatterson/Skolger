@@ -332,7 +332,7 @@ public class SelectionManager : MonoBehaviour
         if (currentSelected[0] is Stockpile)
         {
             Stockpile stockpile = currentSelected[0] as Stockpile;
-            StockpileTest.instance.GrowStockpile(stockpile);
+            StockpilePlacer.instance.GrowStockpile(stockpile);
         }
     }
     public void TryToShrinkZone()
@@ -340,7 +340,7 @@ public class SelectionManager : MonoBehaviour
         if (currentSelected[0] is Stockpile)
         {
             Stockpile stockpile = currentSelected[0] as Stockpile;
-            StockpileTest.instance.ShrinkStockpile(stockpile);
+            StockpilePlacer.instance.ShrinkStockpile(stockpile);
         }
     }
     public void TryToSelectOtherItemInCell()

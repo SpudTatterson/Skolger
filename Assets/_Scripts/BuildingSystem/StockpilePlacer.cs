@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StockpileTest : MonoBehaviour
+public class StockpilePlacer : MonoBehaviour
 {
-    public static StockpileTest instance {get; private set;}
+    public static StockpilePlacer instance {get; private set;}
     public List<Cell> cells;
 
     Cell firstCell = null;
