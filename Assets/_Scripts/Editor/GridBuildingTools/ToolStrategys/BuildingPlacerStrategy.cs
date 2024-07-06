@@ -204,6 +204,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
         Undo.RegisterCompleteObjectUndo(cell.grid, $"Created {buildingDatas[selectedBuilding].name}");
 
         BuildingObject placed = BuildingObject.MakeInstance(buildingData, cell.position, cells);
+        
         Undo.RegisterCreatedObjectUndo(placed.gameObject, $"Created {buildingDatas[selectedBuilding].name}");
     }
 }
