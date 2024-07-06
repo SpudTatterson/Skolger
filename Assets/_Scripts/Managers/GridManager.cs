@@ -93,6 +93,14 @@ public class GridManager : MonoBehaviour
             grid.SaveAllChunkMeshesToFile();
         }
     }
+    [Button]
+    public void LoadAllGridMeshesFromFile()
+    {
+        foreach(GridObject grid in grids)
+        {
+            grid.LoadChunksFromFile();
+        }
+    }
     private void DestroyOldWorld()
     {
         grids = gridsParent.GetComponentsInChildren<GridObject>().ToList();

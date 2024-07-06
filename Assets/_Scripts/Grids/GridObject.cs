@@ -65,6 +65,12 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     public void ResetGrid()
     {
         InitializeCells();
+        ResetVisualGrid();
+        Debug.Log("Old Grid Deleted");
+    }
+
+    void ResetVisualGrid()
+    {
         if (visualGridChunks.Count == 0)
         {
             List<MeshFilter> meshFilters = GetComponentsInChildren<MeshFilter>().ToList();
@@ -78,14 +84,12 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             DestroyImmediate(chunk);
         }
         visualGridChunks.Clear();
-        Debug.Log("Old Grid Deleted");
     }
+
     [Button, ContextMenu("UpdatedGridVisual")]
     public void UpdateVisualGrid()
     {
-        // Clear existing visual grid
-        visualGridChunks.ForEach(chunk => DestroyImmediate(chunk));
-        visualGridChunks.Clear();
+        ResetVisualGrid();
 
         // Recreate visual grid based on cell visibility
         CreateVisualGrid();
@@ -261,7 +265,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             meshFilter.mesh = mesh;
 
             MeshCollider mc = gridVisual.AddComponent<MeshCollider>();
-            if(!hasInvisibleCell) mc.convex = true;
+            if (!hasInvisibleCell) mc.convex = true;
         }
 
         visualGridChunks.Add(gridVisual);
@@ -319,24 +323,26 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             mf.GetComponent<MeshCollider>().sharedMesh = mesh;
         }
     }
+    [Button]
+    public void LoadChunksFromFile()
+    {
+        List<MeshFilter> chunksMF = GetComponentsInChildren<MeshFilter>().ToList();
+        foreach (var mf in chunksMF)
+        {
+            Mesh mesh = LoadMeshFromFile(mf.gameObject, out _);
+            mf.sharedMesh = mesh;
+            if (mf.TryGetComponent(out MeshCollider collider))
+                collider.sharedMesh = mesh;
+
+        }
+    }
+
     Mesh SaveMeshToFile(GameObject visualGO, Mesh mesh)
     {
         if (mesh != null)
         {
-            // Get the active scene's path and ensure the directory exists
-            string scenePath = SceneManager.GetActiveScene().path.Replace(".unity", "");
-            string directoryPath = $"{scenePath}/Meshes/{gameObject.name}";
 
-            if (!System.IO.Directory.Exists(directoryPath))
-            {
-                System.IO.Directory.CreateDirectory(directoryPath);
-            }
-
-            // Save the mesh to the file
-            string path = $"{directoryPath}/{visualGO.name}.asset";
-
-            // Check if the asset already exists
-            Mesh existingMesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            Mesh existingMesh = LoadMeshFromFile(visualGO, out string path);
             if (existingMesh != null)
             {
                 if (existingMesh != mesh)
@@ -363,6 +369,21 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         }
         AssetDatabase.SaveAssets();
         return null;
+    }
+    Mesh LoadMeshFromFile(GameObject visualGO, out string path)
+    {
+        // Get the active scene's path and ensure the directory exists
+        string scenePath = SceneManager.GetActiveScene().path.Replace(".unity", "");
+        string directoryPath = $"{scenePath}/Meshes/{gameObject.name}";
+
+        if (!System.IO.Directory.Exists(directoryPath))
+        {
+            System.IO.Directory.CreateDirectory(directoryPath);
+        }
+
+        path = $"{directoryPath}/{visualGO.name}.asset";
+
+        return AssetDatabase.LoadAssetAtPath<Mesh>(path);
     }
 
     #endregion
