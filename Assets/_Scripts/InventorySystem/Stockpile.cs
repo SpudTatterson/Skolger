@@ -54,7 +54,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         return false;
     }
 
-    public void AddItem(Cell cell, ItemObject item)
+    public void AddItem(Cell cell, IItem item)
     {
         if (cells.ContainsKey(cell) && cells[cell] == null)
         {
@@ -74,7 +74,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
         return foundItems.cornerCell;
     }
-    public bool AddItem(ItemObject item)
+    public bool AddItem(IItem item)
     {
         if (HasItem(item.itemData) && item.itemData.stackSize != 1)
         {
@@ -116,32 +116,49 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     }
 
 
-    public ItemObject TakeItem(ItemData itemData, int amount, Vector3 position = default, Transform parent = null)
+    public InventoryItem TakeItem(ItemData itemData, int amount, Vector3 position = default, Transform parent = null)
     {
         List<ItemObject> matchingItems = FindItems(itemData);
         int requiredAmount = amount;
 
-        List<ItemObject> items = new List<ItemObject>();
+        List<ItemObject> itemsToReturn = new List<ItemObject>();
         foreach (ItemObject item in matchingItems)
         {
             if (item.amount == requiredAmount)
             {
                 RemoveItem(item);
-                return item;
+                return item.PickUp();
             }
             else if (item.amount > requiredAmount)
             {
                 ItemObject newItem = item.SplitItem(requiredAmount, position, parent);
                 InventoryManager.instance.RemoveAmountOfItem(item.itemData, requiredAmount);
                 totalItems[item.itemData] -= requiredAmount;
-                return newItem;
+                return newItem.PickUp();
             }
             else if (item.amount < requiredAmount)
             {
                 requiredAmount -= item.amount;
-                AddItem(item);
+                itemsToReturn.Add(item);
+                InventoryManager.instance.RemoveAmountOfItem(item.itemData, item.amount);
+                totalItems[item.itemData] -= item.amount;
+            }
+        }
+        // Create a combined item from the items we are taking
+        if (requiredAmount == 0)
+        {
+            foreach (ItemObject item in itemsToReturn)
+            {
                 RemoveItem(item);
             }
+            return new InventoryItem(itemData, amount);
+        }
+
+        // If we couldn't fulfill the request, put the items back
+        foreach (ItemObject item in itemsToReturn)
+        {
+            InventoryManager.instance.AddItem(item.itemData, item.amount);
+            totalItems[item.itemData] += item.amount;
         }
         return null;
     }

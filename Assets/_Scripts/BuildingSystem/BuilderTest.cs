@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class BuilderTest : MonoBehaviour
 {
     List<IConstructable> constructionQueue = new List<IConstructable>();
-    ItemObject heldItems;
+    InventoryItem heldItems;
     ItemCost costToGet;
     bool hauling;
     Coroutine currentHaul;

@@ -46,12 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e92273d58dd8b94ca9736543ee85275, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
+  <itemData>k__BackingField: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e,
+    type: 2}
   initialAmount: 60
   doManualInitialized: 1
   inStockpile: 0
-  selectionType: 0
   allowedOnInit: 0
+  <amount>k__BackingField: 0
 --- !u!65 &1508360504847823949
 BoxCollider:
   m_ObjectHideFlags: 0

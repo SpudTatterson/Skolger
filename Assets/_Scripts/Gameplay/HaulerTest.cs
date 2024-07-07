@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class HaulerTest : MonoBehaviour
+public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
 {
     List<ItemObject> itemsToHaul = new List<ItemObject>();
-    ItemObject heldItem;
+    [SerializeField, ReadOnly] InventoryItem heldItem;
     bool hauling = false;
     NavMeshAgent agent;
 
@@ -39,40 +41,40 @@ public class HaulerTest : MonoBehaviour
         {
             yield return null;
         }
-        heldItem = item;
-        if(heldItem == null) yield break;
-        heldItem.gameObject.SetActive(false);
+        RemoveFromHaulQueue(item);
+        AddItem(item.PickUp());
+        if (heldItem == null) yield break;
 
         agent.SetDestination(cell.position);
         while (!ReachedDestinationOrGaveUp())
         {
             yield return null;
         }
-        RemoveFromHaulQueue(item);
-        if (stockpile.AddItem(item))
+        if (stockpile.AddItem(heldItem))
         {
-            Destroy(item.gameObject);
             heldItem = null;
         }
         else
         {
             Cell newCell = GridManager.instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell();
-            item.transform.position = newCell.position;
+            heldItem.DropItem(newCell.position);
             newCell.inUse = true;
         }
-            
+
 
         hauling = false;
     }
 
     public void AddToHaulQueue(ItemObject itemObject)
     {
+        Debug.Log("test");
         if (!itemsToHaul.Contains(itemObject))
             itemsToHaul.Add(itemObject);
     }
     public void RemoveFromHaulQueue(ItemObject itemObject)
     {
         itemsToHaul.Remove(itemObject);
+        Debug.Log(itemsToHaul.Count);
     }
     public bool ReachedDestinationOrGaveUp()
     {
@@ -89,5 +91,39 @@ public class HaulerTest : MonoBehaviour
         }
 
         return false;
+    }
+
+    public bool HasItem(ItemData itemData, int amount)
+    {
+        if (itemData == heldItem.itemData && amount <= heldItem.amount) return true;
+        return false;
+    }
+
+    public InventoryItem TakeItem(ItemData itemData, int amount)
+    {
+        if (HasItem(itemData, amount))
+        {
+            heldItem.UpdateAmount(-amount);
+            return new InventoryItem(itemData, amount);
+        }
+        return null;
+    }
+
+    public bool AddItem(InventoryItem item)
+    {
+        if (heldItem != null)
+        {
+            item.OnDestroy += HandleItemDestruction;
+            heldItem = item;
+            return true;
+        }
+        Debug.Log("no space");
+        return false;
+    }
+
+    void HandleItemDestruction(InventoryItem item)
+    {
+        item.OnDestroy -= HandleItemDestruction;
+        heldItem = null;
     }
 }

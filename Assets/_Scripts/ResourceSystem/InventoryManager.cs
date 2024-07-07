@@ -70,11 +70,10 @@ public class InventoryManager : MonoBehaviour
         }
         return true;
     }
-    public ItemObject TakeItem(ItemCost ItemCost)
+    public InventoryItem TakeItem(ItemCost ItemCost)
     {
         Stockpile stockpile = GetStockpileWithItem(ItemCost.item, ItemCost.cost);
-        ItemObject itemToTake = stockpile.TakeItem(ItemCost.item, ItemCost.cost);
-        return itemToTake;
+        return stockpile.TakeItem(ItemCost.item, ItemCost.cost);
        
     }
     // public List<ItemObject> TakeItems(List<ItemCost> ItemCosts)

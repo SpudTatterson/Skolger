@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 using NaughtyAttributes;
 
-public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
+public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOccupier
 {
-    [Header("Settings")]
-    [Expandable] public ItemData itemData;
+    [field: Header("Settings")]
+    [field: SerializeField, Expandable] public ItemData itemData { get; set; }
     [SerializeField] int initialAmount;
     int stackSize;
     [SerializeField] bool doManualInitialized = false;
@@ -28,6 +28,22 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
     {
         if (doManualInitialized)
             Initialize(itemData, initialAmount, allowedOnInit);
+    }
+
+    public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
+    {
+        GameObject visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
+
+        visualGO.AddComponent<BoxCollider>();
+
+        ItemObject item = visualGO.AddComponent<ItemObject>();
+        item.Initialize(itemData, amount, allowed, visualGO, inStockpile, stockpile);
+        item.transform.position = position;
+
+        visualGO.transform.parent = parent;
+        visualGO.layer = LayerManager.instance.itemLayer;
+
+        return item;
     }
 
     public void Initialize(ItemData itemData, int amount, bool allowed = true, GameObject visualGO = null, bool inStockpile = false, Stockpile stockpile = null)
@@ -61,14 +77,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
             this.amount = newAmount;
             if (this.amount == 0)
             {
-                if (inStockpile)
-                    currentStockpile.RemoveItem(this);
-                else
-                {
-                    Debug.Log("destroying object");
-                    Destroy(this.gameObject);
-                }
-
+                Destroy(this.gameObject);
             }
             if (this.amount < 0) Debug.LogWarning("item amount less then 0 something went wrong" + transform.name);
             return true;
@@ -78,7 +87,6 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
 
     public ItemObject SplitItem(int amount, Vector3 position, Transform parent = null)
     {
-        // remove needed amount into new time and keep the rest return new item
         if (amount > this.amount)
         {
             Debug.Log("tried taking amount larger then amount in item, split failed");
@@ -90,7 +98,7 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
 
         return newItem;
     }
-    public int MergeItem(ItemObject item)
+    public int MergeItem(IItem item)
     {
         // take amount into this item and return excess
         int maxIntake = stackSize - amount;
@@ -101,35 +109,27 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
 
         return takeAmount;
     }
-    public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
+
+    public InventoryItem PickUp()
     {
-        GameObject visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
-
-        visualGO.AddComponent<BoxCollider>();
-
-        ItemObject item = visualGO.AddComponent<ItemObject>();
-        item.Initialize(itemData, amount, allowed, visualGO, inStockpile, stockpile);
-        item.transform.position = position;
-
-        visualGO.transform.parent = parent;
-        visualGO.layer = LayerManager.instance.itemLayer;
-
+        InventoryItem item = new InventoryItem(itemData, amount);
+        Destroy(gameObject);
         return item;
     }
-
 
     public bool CheckIfInStockpile(out Stockpile stockpile)
     {
         stockpile = currentStockpile;
         return inStockpile;
     }
+
     public void RemoveFromStockpile()
     {
         if (!inStockpile) return;
 
         inStockpile = false;
         currentStockpile = null;
-        transform.parent = null;
+        transform.SetParent(null);
         OnAllow();
 
         InventoryManager.instance.RemoveAmountOfItem(itemData, amount);
@@ -207,12 +207,17 @@ public class ItemObject : MonoBehaviour, ISelectable, IAllowable, ICellOccupier
         {
             OnRelease();
         }
+
     }
     void OnEnable()
     {
         GetOccupiedCells();
         OnOccupy();
     }
-
+    void OnDestroy()
+    {
+        if (inStockpile)
+            currentStockpile.RemoveItem(this);
+    }
 
 }
