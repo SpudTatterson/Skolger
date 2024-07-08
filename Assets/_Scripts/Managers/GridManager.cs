@@ -37,7 +37,7 @@ public class GridManager : MonoBehaviour
         foreach (GridObject grid in grids)
         {
             // Calculate the Y range for the grid
-            float gridMinY = grid.transform.position.y;
+            float gridMinY = grid.transform.position.y - worldSettings.cellHeight / 2;
             float gridMaxY = gridMinY + worldSettings.cellHeight;
 
             // Check if the position is within the grid's Y range
