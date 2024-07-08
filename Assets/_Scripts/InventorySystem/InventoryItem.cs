@@ -42,4 +42,10 @@ public class InventoryItem : IItem
     {
         OnDestroy.Invoke(this);
     }
+
+    public bool NullCheck()
+    {
+        return itemData == null;
+    }
+
 }
