@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BuilderTest : MonoBehaviour
+public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
 {
     List<IConstructable> constructionQueue = new List<IConstructable>();
-    InventoryItem heldItems;
+    [SerializeField, ReadOnly] InventoryItem heldItem;
     ItemCost costToGet;
     bool hauling;
     Coroutine currentHaul;
@@ -49,8 +50,6 @@ public class BuilderTest : MonoBehaviour
             agent.SetDestination(itemPosition);
             while (!ReachedDestinationOrGaveUp())
             {
-                // go to stockpile item
-                //transform.Translate(VectorUtility.GetDirection(transform.position, itemPosition) * speed * Time.deltaTime);
                 yield return null;
             }
             if ((UnityEngine.Object)constructable == null)
@@ -59,20 +58,18 @@ public class BuilderTest : MonoBehaviour
                 hauling = false;
                 yield break;
             }
-            heldItems = InventoryManager.instance.TakeItem(costToGet);// take item
+            PutItemIn(InventoryManager.instance.TakeItem(costToGet));// take item
             Vector3 constructablePosition = constructable.GetPosition(); // get constructable position
             agent.SetDestination(constructablePosition);
             while (!ReachedDestinationOrGaveUp())
             {
-                // go to constructable
-                // transform.Translate(VectorUtility.GetDirection(transform.position, constructablePosition) * speed * Time.deltaTime);
                 yield return null;
             }
 
-            constructable.AddItem(heldItems); // add taken item
+            constructable.AddItem(TakeItemOut(costToGet.item, costToGet.cost)); // add taken item
 
             hauling = false;
-            heldItems = null;
+            heldItem = null;
 
         }
         else
@@ -108,5 +105,36 @@ public class BuilderTest : MonoBehaviour
         }
 
         return false;
+    }
+
+    public bool HasItem(ItemData itemData, int amount)
+    {
+        if (heldItem != null && itemData == heldItem.itemData && amount <= heldItem.amount) return true;
+        return false;
+    }
+    public bool HasSpace()
+    {
+        return heldItem.NullCheck();
+    }
+    public void PutItemIn(InventoryItem item)
+    {
+        item.OnDestroy += HandleItemDestruction;
+        heldItem = item;
+
+    }
+    public InventoryItem TakeItemOut(ItemData itemData, int amount)
+    {
+        if (HasItem(itemData, amount))
+        {
+            heldItem.UpdateAmount(-amount);
+            return new InventoryItem(itemData, amount);
+        }
+        return null;
+    }
+
+    void HandleItemDestruction(InventoryItem item)
+    {
+        item.OnDestroy -= HandleItemDestruction;
+        heldItem = null;
     }
 }

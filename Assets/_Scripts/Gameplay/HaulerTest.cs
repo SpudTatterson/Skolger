@@ -42,8 +42,14 @@ public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
             yield return null;
         }
         RemoveFromHaulQueue(item);
-        AddItem(item.PickUp());
-        if (heldItem == null) yield break;
+        if (HasSpace())
+            PutItemIn(item.PickUp());
+        if (heldItem.NullCheck())
+        {
+            Debug.LogWarning("Picked up null item");
+            hauling = false;
+            yield break;
+        }
 
         agent.SetDestination(cell.position);
         while (!ReachedDestinationOrGaveUp())
@@ -67,14 +73,12 @@ public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
 
     public void AddToHaulQueue(ItemObject itemObject)
     {
-        Debug.Log("test");
         if (!itemsToHaul.Contains(itemObject))
             itemsToHaul.Add(itemObject);
     }
     public void RemoveFromHaulQueue(ItemObject itemObject)
     {
         itemsToHaul.Remove(itemObject);
-        Debug.Log(itemsToHaul.Count);
     }
     public bool ReachedDestinationOrGaveUp()
     {
@@ -98,8 +102,12 @@ public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
         if (itemData == heldItem.itemData && amount <= heldItem.amount) return true;
         return false;
     }
+    public bool HasSpace()
+    {
+        return heldItem.NullCheck();
+    }
 
-    public InventoryItem TakeItem(ItemData itemData, int amount)
+    public InventoryItem TakeItemOut(ItemData itemData, int amount)
     {
         if (HasItem(itemData, amount))
         {
@@ -109,16 +117,10 @@ public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
         return null;
     }
 
-    public bool AddItem(InventoryItem item)
+    public void PutItemIn(InventoryItem item)
     {
-        if (heldItem != null)
-        {
-            item.OnDestroy += HandleItemDestruction;
-            heldItem = item;
-            return true;
-        }
-        Debug.Log("no space");
-        return false;
+        item.OnDestroy += HandleItemDestruction;
+        heldItem = item;
     }
 
     void HandleItemDestruction(InventoryItem item)
