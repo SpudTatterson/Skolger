@@ -91,8 +91,6 @@ public class InventoryManager : MonoBehaviour
     // }
     public Vector3 GetItemLocation(ItemData itemData, int cost)
     {
-        Debug.Log(GetStockpileWithItem(itemData, cost) == null);
-        Debug.Log(GetStockpileWithItem(itemData, cost).GetItemCell(itemData, cost) == null) ;
         Cell cell = GetStockpileWithItem(itemData, cost).GetItemCell(itemData, cost);
         return cell.position;
     }

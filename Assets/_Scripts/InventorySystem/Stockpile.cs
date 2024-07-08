@@ -194,7 +194,6 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             if (pair.Value != null && pair.Value.itemData == itemCost.item && costToFulfil >= 0)
             {
                 foundItems.Add(pair.Value);
-                Debug.Log(costToFulfil);
                 costToFulfil -= pair.Value.amount;
             }
         }
