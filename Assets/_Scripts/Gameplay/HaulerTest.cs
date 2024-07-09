@@ -104,7 +104,8 @@ public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
     }
     public bool HasSpace()
     {
-        return heldItem.NullCheck();
+        if(heldItem == null || heldItem.NullCheck()) return true;
+        else return false;
     }
 
     public InventoryItem TakeItemOut(ItemData itemData, int amount)

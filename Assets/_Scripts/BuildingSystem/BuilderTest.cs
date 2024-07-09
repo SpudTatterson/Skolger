@@ -114,7 +114,8 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
     }
     public bool HasSpace()
     {
-        return heldItem.NullCheck();
+        if (heldItem == null || heldItem.NullCheck()) return true;
+        else return false;
     }
     public void PutItemIn(InventoryItem item)
     {
