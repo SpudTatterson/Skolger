@@ -33,6 +33,7 @@ public class GridBuilderTool : EditorWindow
     }
     void OnEnable()
     {
+        SceneView.duringSceneGui += OnSceneGUI;
         instance = this;
         gridManager = FindAnyObjectByType<GridManager>();
         layerManager = FindAnyObjectByType<LayerManager>();
@@ -47,6 +48,7 @@ public class GridBuilderTool : EditorWindow
     }
     void OnDisable()
     {
+        SceneView.duringSceneGui -= OnSceneGUI;
         BrushToolManager.UnregisterTool(spreaderStrategy);
         BrushToolManager.UnregisterTool(paintingStrategy);
         BrushToolManager.UnregisterTool(sculptingStrategy);
@@ -104,16 +106,6 @@ public class GridBuilderTool : EditorWindow
 
     #endregion
 
-
-    void OnBecameVisible()
-    {
-        SceneView.duringSceneGui += OnSceneGUI;
-    }
-
-    void OnBecameInvisible()
-    {
-        SceneView.duringSceneGui -= OnSceneGUI;
-    }
     void OnDestroy()
     {
         instance = null;

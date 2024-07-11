@@ -67,9 +67,11 @@ public class BuildingPlacerStrategy : IGridToolStrategy
             Event e = Event.current;
             HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
-            if (e.type == EventType.MouseDown && e.button == 1)
+            if (e.type == EventType.MouseDown && e.button == 2)
             {
                 isPlacing = false;
+                e.Use();
+                return;
             }
 
             Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
