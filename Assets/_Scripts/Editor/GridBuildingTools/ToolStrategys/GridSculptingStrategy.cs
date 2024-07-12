@@ -44,9 +44,11 @@ public class GridSculptingStrategy : IGridToolStrategy, IBrushTool
             Event e = Event.current;
             HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
-            if (e.type == EventType.MouseDown && e.button == 1)
+            if (e.type == EventType.MouseDown && e.button == 2)
             {
                 isPainting = false;
+                e.Use();
+                return;
             }
 
             if (e.type == EventType.KeyDown && e.keyCode == KeyCode.LeftAlt)
