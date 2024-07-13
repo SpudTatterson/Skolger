@@ -32,7 +32,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     #region Construction
 
-    public void AddItem(ItemObject itemObject)
+    public void AddItem(IItem itemObject)
     {
         fulfilledCosts[itemObject.itemData] += itemObject.amount;
         costs.RemoveAt(0);
