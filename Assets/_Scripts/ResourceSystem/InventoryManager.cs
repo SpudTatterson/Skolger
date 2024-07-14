@@ -70,11 +70,10 @@ public class InventoryManager : MonoBehaviour
         }
         return true;
     }
-    public ItemObject TakeItem(ItemCost ItemCost)
+    public InventoryItem TakeItem(ItemCost ItemCost)
     {
         Stockpile stockpile = GetStockpileWithItem(ItemCost.item, ItemCost.cost);
-        ItemObject itemToTake = stockpile.TakeItem(ItemCost.item, ItemCost.cost);
-        return itemToTake;
+        return stockpile.TakeItem(ItemCost.item, ItemCost.cost);
        
     }
     // public List<ItemObject> TakeItems(List<ItemCost> ItemCosts)
@@ -92,8 +91,6 @@ public class InventoryManager : MonoBehaviour
     // }
     public Vector3 GetItemLocation(ItemData itemData, int cost)
     {
-        Debug.Log(GetStockpileWithItem(itemData, cost) == null);
-        Debug.Log(GetStockpileWithItem(itemData, cost).GetItemCell(itemData, cost) == null) ;
         Cell cell = GetStockpileWithItem(itemData, cost).GetItemCell(itemData, cost);
         return cell.position;
     }
