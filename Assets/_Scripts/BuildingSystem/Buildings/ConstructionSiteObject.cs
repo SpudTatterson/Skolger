@@ -13,11 +13,11 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     bool allowed = true;
     // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
-    public void Initialize(BuildingData buildingData, List<Cell> occupiedCells)
+    public void Initialize(BuildingData buildingData)
     {
         this.buildingData = buildingData;
-        this.occupiedCells = occupiedCells;
 
+        GetOccupiedCells();
         OnOccupy();
 
         foreach (ItemCost cost in this.buildingData.costs)
@@ -76,6 +76,8 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         {
             int stackSize = cost.Key.stackSize;
             Cell cell;
+            if (cost.Value == 0) continue;
+
             if (cost.Value > stackSize)
             {
                 int costToDisperse = cost.Value;
@@ -94,39 +96,21 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
                 cell = occupiedCells[0].GetClosestEmptyCell();
                 ItemObject.MakeInstance(cost.Key, cost.Value, cell.position);
             }
-            Destroy(this.gameObject);
         }
+        Destroy(this.gameObject);
     }
 
     #endregion
 
     public static ConstructionSiteObject MakeInstance(BuildingData buildingData, Cell cell, bool tempObject = false, Transform parent = null)
     {
-        GameObject buildingGO = Instantiate(buildingData.buildingVisualUnplaced, cell.position, Quaternion.identity, parent);
-
-        List<Cell> cells = new List<Cell>();
-        if (!tempObject)
-        {
-
-            if (cell.grid.TryGetCells(new Vector2Int(cell.x, cell.y), buildingData.xSize, buildingData.ySize, out cells)
-         && Cell.AreCellsFree(cells))
-            {
-                foreach (Cell c in cells)
-                {
-
-                }
-            }
-            else
-            {
-                Destroy(buildingGO);
-                Debug.Log("destroying");
-                return null;
-            }
-        }
+        GameObject buildingGO = Instantiate(buildingData.unplacedVisual, cell.position, Quaternion.identity, parent);
 
         ConstructionSiteObject building = buildingGO.AddComponent<ConstructionSiteObject>();
-        building.Initialize(buildingData, cells);
-
+        if (!tempObject)
+        {
+            building.Initialize(buildingData);
+        }
 
         return building;
     }

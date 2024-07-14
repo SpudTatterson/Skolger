@@ -55,6 +55,7 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
             if ((UnityEngine.Object)constructable == null)
             {
                 constructionQueue.Remove(constructable);
+                costToGet = null;
                 hauling = false;
                 yield break;
             }
@@ -70,6 +71,7 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
 
             hauling = false;
             heldItem = null;
+            costToGet = null;
 
         }
         else
