@@ -10,7 +10,7 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager instance { get; private set; }
     public List<GridObject> grids { get; private set; }
-    [SerializeField] GameObject gridsParent;
+    [SerializeField, Required("Please attach the grids empty parent to generate the world map")] GameObject gridsParent;
 
     [Expandable] public WorldSettings worldSettings;
 
