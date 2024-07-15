@@ -8,13 +8,10 @@ using Tree = BehaviorTree.Tree;
 public class AxeManBT : Tree
 {
     [Header("Task Prioreties")]
-    [SerializeField] private int patrolTask;
+    [SerializeField] private int wanderTask;
     [SerializeField] private int huntTask;
 
-    [Header("Tasks Settings")]
-    [Header("Patrol Settings")]
-    [SerializeField] private float maxWaitTime = 5f;
-    [SerializeField] private float waypointRange = 10f;
+    [SerializeField] private WanderSettingsSO wanderSettings;
 
     [Header("Hunt Settings")]
     [SerializeField] private float detectionRadius = 5f;
@@ -22,18 +19,10 @@ public class AxeManBT : Tree
 
     private NavMeshAgent agent;
 
-    protected override Node SetupTree()
+    private void OnDrawGizmosSelected()
     {
-        Node checkEnemySequence = CreateCheckEnemySequence();
-        Node patrolTask = CreatePatrolTask();
-
-        Node root = new Selector(new List<Node> 
-        {
-            checkEnemySequence,
-            patrolTask
-        });
-
-        return root;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 
     private void Awake()
@@ -41,7 +30,21 @@ public class AxeManBT : Tree
         agent = GetComponent<NavMeshAgent>();
     }
 
-    private Node CreateCheckEnemySequence()
+    protected override Node SetupTree()
+    {
+        Node huntTask = CreateHuntTask();
+        Node wanderTask = CreateWanderTask();
+
+        Node root = new Selector(new List<Node> 
+        {
+            huntTask,
+            wanderTask
+        });
+
+        return root;
+    }
+
+    private Node CreateHuntTask()
     {
         return new Sequence(new List<Node>
         {
@@ -53,11 +56,11 @@ public class AxeManBT : Tree
         };
     }
 
-    private Node CreatePatrolTask()
+    private Node CreateWanderTask()
     {
-        return new TaskPatrol(agent, maxWaitTime, waypointRange)
+        return new TaskWander(agent, wanderSettings)
         {
-            priority = patrolTask
-        };
+            priority = wanderTask
+        };            
     }
 }

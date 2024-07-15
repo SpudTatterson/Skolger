@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6362940514632658868}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Axe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 5652165009737173883}
   - component: {fileID: 7619601668385284410}
   - component: {fileID: 2026607015789717948}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Left_Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7066836573992658297}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Hands
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,7 +160,7 @@ GameObject:
   - component: {fileID: 1313152170515286025}
   - component: {fileID: 5784240630951161590}
   - component: {fileID: 9214184690210184026}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 5830979642389446344}
   - component: {fileID: 4570762073854871655}
   - component: {fileID: 3062283488517807970}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 1043794717692147959}
   - component: {fileID: 5326223665516876164}
   - component: {fileID: 2672850365856081130}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: Blade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -453,7 +453,7 @@ GameObject:
   - component: {fileID: 4321025539063519546}
   - component: {fileID: 1453160288428367504}
   - component: {fileID: 5252036777493080048}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 7241436583113714958}
   - component: {fileID: 501641857233479520}
   - component: {fileID: 1347535265214664170}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Right_hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -620,12 +620,9 @@ GameObject:
   - component: {fileID: 5135809212574892693}
   - component: {fileID: 759624335515284479}
   - component: {fileID: 7846410238038295623}
-  - component: {fileID: 5171634078369806407}
-  - component: {fileID: 8738568912304288179}
-  - component: {fileID: 1922291094802416066}
-  - component: {fileID: 3501737635658904282}
+  - component: {fileID: 3623516126689024637}
   m_Layer: 9
-  m_Name: Viking
+  m_Name: Axeman_Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -707,7 +704,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 20000
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -716,7 +713,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5171634078369806407
+--- !u!114 &3623516126689024637
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -725,46 +722,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8217019701658514860}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cef53d855ccf0b46bcf004b27c4a52a, type: 3}
+  m_Script: {fileID: 11500000, guid: d7f64da2bfea9a548b93cbd3fecfb95b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goapSetBehaviour: {fileID: 0}
-  <DistanceMultiplier>k__BackingField: 1
---- !u!114 &8738568912304288179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8217019701658514860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9119c68daf7b2d1499fcf06c9466bcc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MinMoveDistance: 0.25
---- !u!114 &1922291094802416066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8217019701658514860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a224b2a7f34fd564daf61eeae21a8df0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3501737635658904282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8217019701658514860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 416744de245266340bf75e1a8983a98b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GoapRunner: {fileID: 0}
+  wanderTask: 2
+  huntTask: 1
+  maxWaitTime: 2
+  waypointRange: 10
+  randomWander: 1
+  centerPoint: {fileID: 0}
+  detectionRadius: 5
+  targetLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024

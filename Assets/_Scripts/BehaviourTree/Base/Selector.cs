@@ -10,7 +10,7 @@ namespace BehaviorTree
 
         public override NodeState Evaluate()
         {
-            foreach (Node node in children.OrderByDescending(c => c.priority))
+            foreach (Node node in children.OrderBy(c => c.priority))
             {
                 switch (node.Evaluate())
                 {

@@ -15,7 +15,13 @@ public class TaskGoToTarget : Node
     {
         Transform target = (Transform)GetData("Target");
 
-        if (Vector3.Distance(agent.transform.position, target.position) > 5f)
+        if (Vector3.Distance(agent.transform.position, target.position) > 5)
+        {
+            agent.ResetPath();
+            ClearData("Target");
+        }
+
+        if (Vector3.Distance(agent.transform.position, target.position) <= 5)
         {
             agent.SetDestination(target.position);
         }
