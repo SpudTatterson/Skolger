@@ -164,7 +164,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     {
         allowed = true;
         if (!inStockpile)
-            FindObjectOfType<HaulerTest>().AddToHaulQueue(this);
+            TaskManager.Instance.AddToHaulQueue(this);
 
     }
 
@@ -172,7 +172,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     {
         allowed = false;
         if (!inStockpile)
-            FindObjectOfType<HaulerTest>().RemoveFromHaulQueue(this);
+            TaskManager.Instance.RemoveFromHaulQueue(this);
         //remove from haul queue
         // visually show that item is disallowed with billboard or something similar
     }
