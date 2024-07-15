@@ -36,6 +36,7 @@ public class ColonistBT : Tree
         return root;
     }
 
+
     private Node CreateWanderTask()
     {
         return new TaskWander(agent, wanderSettings)
@@ -49,7 +50,8 @@ public class ColonistBT : Tree
         return new Sequence(new List<Node>
         {
             new CheckForHaulable(),
-            new TaskGoToTarget(agent)
+            new TaskGoToTarget(agent),
+            new CheckInPickupRange()
         })
         {
             priority = 1

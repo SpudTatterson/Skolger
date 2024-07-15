@@ -10,7 +10,15 @@ public class CheckForHaulable : Node
         if (haulable != null) 
         {
             parent.parent.SetData("Target", haulable);
-            Debug.Log("Target Set");
+
+            state = NodeState.SUCCESS;
+            return state;
+        }
+
+        var data = parent.parent.GetData("Target");
+
+        if(data != null)
+        {
             state = NodeState.SUCCESS;
             return state;
         }

@@ -21,14 +21,20 @@ public class TaskGoToTarget : Node
 
             if (ReachedDestinationOrGaveUp())
             {
+                Debug.Log("Succeeded");
+
                 state = NodeState.SUCCESS;
                 return state;
             }
+
+            Debug.Log("Did not reach destination");
+            state = NodeState.FAILURE;
+            return state;
         }
 
+        Debug.Log("Did not find a destination");
         state = NodeState.FAILURE;
         return state;
-
     }
 
     public bool ReachedDestinationOrGaveUp()
