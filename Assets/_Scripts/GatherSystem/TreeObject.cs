@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
+public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
-    [SerializeField] float baseGatherTime = 5f;
+    [SerializeField] float baseGatherTime = 5f; 
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
     float timeHarvesting = 0f;
-    List<Cell> potentialDropPoints = new List<Cell>();
-    Cell occupiedCell;
+    public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
     bool setForHarvesting = false;
     Harvester harvester;
@@ -20,32 +19,11 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
         {
             int amount = Random.Range(drop.minDropAmount, drop.maxDropAmount);
             if (amount == 0) continue;
-            ItemObject.MakeInstance(drop.itemData, amount, potentialDropPoints[0].position);
-            potentialDropPoints.RemoveAt(0);
+            Cell dropCell = cornerCell.GetClosestEmptyCell();
+            ItemObject.MakeInstance(drop.itemData, amount, dropCell.position);
         }
         harvester.RemoveFromHarvestQueue(this);
         Destroy(this.gameObject);
-    }
-    void Start()
-    {
-        if (occupiedCell == null)
-            Init();
-
-
-    }
-    public void Init()
-    {
-        // get occupied cell somehow
-        RaycastHit gridHit;
-        Physics.Raycast(transform.position + new Vector3(0, 1, 0), Vector3.down, out gridHit, 3f, LayerManager.instance.GroundLayerMask);
-        Debug.Log(gridHit.transform.name);
-        GridObject grid = gridHit.transform.GetComponentInParent<GridObject>();
-        occupiedCell = grid.GetCellFromPosition(gridHit.point);
-        occupiedCell.inUse = true;
-        occupiedCell.Walkable = false;
-        //add method to gridManager to get all cells adjacent to this cell
-        grid.TryGetCells(new Vector2Int(occupiedCell.x, occupiedCell.y), 2, 2, out potentialDropPoints);
-        //add them to potential cells
     }
 
     public IEnumerator StartHarvesting()
@@ -91,11 +69,11 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
     {
         return selectionType;
     }
-
-    public GameObject GetGameObject()
+    public ISelectionStrategy GetSelectionStrategy()
     {
-        return gameObject;
+        return new HarvestableSelectionStrategy();
     }
+
 
     public string GetMultipleSelectionString(out int amount)
     {
@@ -107,5 +85,35 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
     public bool HasActiveCancelableAction()
     {
         return setForHarvesting;
+    }
+
+    #region ICellOccupier
+
+    public void GetOccupiedCells()
+    {
+        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+    }
+    public void OnOccupy()
+    {
+        if (cornerCell == null) cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell.inUse = true;
+        cornerCell.walkable = false;
+    }
+
+    public void OnRelease()
+    {
+        cornerCell.inUse = false;
+        cornerCell.walkable = true;
+    }
+
+    #endregion
+
+    void OnEnable()
+    {
+        OnOccupy();
+    }
+    void OnDisable()
+    {
+        OnRelease();
     }
 }

@@ -3,13 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
+    public bool isSelecting = true;
     public static SelectionManager instance { get; private set; }
     List<ISelectable> currentSelected = new List<ISelectable>();
     SelectionType selectionType;
     ISelectionStrategy selectionStrategy;
+    [SerializeField] List<SelectionType> specialSelectionTypes;
+    [SerializeField] float dragDelay = 0.1f;
+
+    Vector3 mouseStartPos;
+    Vector3 mouseEndPos;
+    float mouseDownTime;
+    SelectionAction selectionAction;
+    enum SelectionAction
+    {
+        Default,
+        Add,
+        Remove
+    }
     void Awake()
     {
         if (instance == null)
@@ -22,25 +37,82 @@ public class SelectionManager : MonoBehaviour
     }
     void Update()
     {
+        if (!isSelecting) return;
+
+        HandleSelectionAction();
+
         HandleDeselectionInput();
 
-        HandleSelection();
+        HandleSelectionInput();
     }
 
     #region Selection Logic
 
-    void HandleSelection()
+    void HandleSelectionInput()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
-        hit.transform.TryGetComponent(out ISelectable selectable) &&
-        Input.GetKeyDown(KeyCode.Mouse0) && !currentSelected.Contains(selectable))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())// started clicking
         {
-            selectable.OnSelect();
-            SetSelectionType(selectable.GetSelectionType());
-            UIManager.instance.selectionPanel.SetActive(true);
-            Debug.Log("selected " + currentSelected.Count);
+            mouseStartPos = Input.mousePosition;
+            mouseDownTime = Time.time;
         }
+        else if (Input.GetKeyUp(KeyCode.Mouse0) && mouseDownTime + dragDelay > Time.time)//not dragging player only clicked
+        {
+            List<ISelectable> selectables = new List<ISelectable>();
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
+            hit.transform.TryGetComponent(out ISelectable selectable))
+            {
+                selectables.Add(selectable);
+            }
+            mouseStartPos = Vector3.zero;
+            mouseEndPos = Vector3.zero;
+            mouseDownTime = 0;
+            Select(selectables);
+        }
+        else if (mouseDownTime + dragDelay > Time.time)
+            return;
+        else if (Input.GetKey(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)// started dragging
+        {
+            mouseEndPos = Input.mousePosition;
+            //UIManager.instance.ResizeSelectionBox(mouseStartPos, mouseEndPos);
+            Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
+            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents);
+            ExtendedDebug.DrawBox(center, halfExtents * 2, Quaternion.identity);
+
+
+            //on hover
+        }
+        else if (Input.GetKeyUp(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)// stopped dragging
+        {
+            mouseEndPos = Input.mousePosition;
+            UIManager.instance.selectionBoxImage.gameObject.SetActive(false);
+            Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask,
+             out Vector3 center);
+            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents * 0.95f);
+
+            Select(selectables);
+
+            mouseStartPos = Vector3.zero;
+            mouseEndPos = Vector3.zero;
+            mouseDownTime = 0;
+        }
+    }
+
+    void HandleSelectionAction()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            selectionAction = SelectionAction.Add;
+            return;
+        }
+        else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        {
+            selectionAction = SelectionAction.Remove;
+            return;
+        }
+        else
+            selectionAction = SelectionAction.Default;
+
     }
 
     void HandleDeselectionInput()
@@ -49,6 +121,98 @@ public class SelectionManager : MonoBehaviour
         {
             DeselectAll();
         }
+    }
+
+    void Select(List<ISelectable> selectables)
+    {
+        if (selectionAction == SelectionAction.Add)
+        {
+            foreach (var selectable in selectables)
+            {
+                if (!currentSelected.Contains(selectable))
+                {
+                    selectable.OnSelect();
+                    SetSelectionType(selectable.GetSelectionType());
+                }
+            }
+        }
+        else if (selectionAction == SelectionAction.Remove)
+        {
+            foreach (var selectable in selectables)
+            {
+                if (currentSelected.Contains(selectable))
+                {
+                    selectable.OnDeselect();
+                }
+            }
+            if (currentSelected.Count != 0)
+            {
+                foreach (var selectable in currentSelected)
+                {
+                    SetSelectionType(selectable.GetSelectionType());
+                }
+            }
+            else
+                DeselectAll();
+            return;
+        }
+        else if (selectionAction == SelectionAction.Default)
+        {
+            if (selectables.Count > 0 && currentSelected.Count > 0 && selectables[0] == currentSelected[0])
+            {
+                TryToSelectOtherItemInCell();
+            }
+            else
+            {
+                currentSelected.Clear();
+
+                foreach (var selectable in selectables)
+                {
+                    bool doBreak = false;
+                    if (CheckForSpecialSelectionCase(selectable, out SelectionType type))
+                    {
+                        if (type == SelectionType.Stockpile)
+                        {
+                            if (selectable == selectables[0] && selectables.Count == 1)
+                                doBreak = true;
+                            else
+                                continue;
+
+                        }
+                    }
+                    if (!currentSelected.Contains(selectable))
+                    {
+                        selectable.OnSelect();
+                        SetSelectionType(selectable.GetSelectionType());
+                    }
+                    if (doBreak) break;
+                }
+            }
+        }
+
+        if (selectables.Count > 0)
+        {
+            UIManager.instance.selectionPanel.SetActive(true);
+        }
+        else
+        {
+            DeselectAll();
+        }
+
+    }
+
+    bool CheckForSpecialSelectionCase(ISelectable selectable, out SelectionType selectionType)
+    {
+        foreach (SelectionType type in specialSelectionTypes)
+        {
+            if (selectable.GetSelectionType() == type)
+            {
+                selectionType = type;
+                return true;
+            }
+        }
+        selectionType = default;
+        return false;
     }
 
     #endregion
@@ -64,31 +228,13 @@ public class SelectionManager : MonoBehaviour
         else
         {
             var selectable = currentSelected[0];
-            switch (selectable.GetSelectionType())
-            {
-                case SelectionType.Item:
-                    SetSelectionStrategy(new ItemSelectionStrategy());
-                    break;
-                case SelectionType.Constructable:
-                    SetSelectionStrategy(new ConstructableSelectionStrategy());
-                    break;
-                case SelectionType.Harvestable:
-                    SetSelectionStrategy(new HarvestableSelectionStrategy());
-                    break;
-                case SelectionType.Colonist:
-                    SetSelectionStrategy(new ColonistSelectionStrategy());
-                    break;
-                case SelectionType.Building:
-                    SetSelectionStrategy(new BuildingSelectionStrategy());
-                    break;
-            }
+            SetSelectionStrategy(selectable.GetSelectionStrategy());
         }
         selectionStrategy.ApplySelection(currentSelected);
     }
     void SetSelectionStrategy(ISelectionStrategy selectionStrategy)
     {
-        if (this.selectionStrategy != null)
-            this.selectionStrategy.CleanUp();
+        this.selectionStrategy?.CleanUp();
         this.selectionStrategy = selectionStrategy;
     }
     public void AddToCurrentSelected(ISelectable selectable)
@@ -111,6 +257,13 @@ public class SelectionManager : MonoBehaviour
             UIManager.instance.EnableCancelButton();
         }
     }
+    public void CheckForAllowableSelection()
+    {
+        if (currentSelected[0] is IAllowable)
+        {
+            UIManager.instance.EnableAllowDisallowButton((currentSelected[0] as IAllowable).IsAllowed());
+        }
+    }
 
     #endregion
 
@@ -120,7 +273,7 @@ public class SelectionManager : MonoBehaviour
     {
         foreach (ISelectable selectable in currentSelected)
         {
-            selectable.GetGameObject().GetComponent<IHarvestable>().AddToHarvestQueue();
+            (selectable as IHarvestable).AddToHarvestQueue();
         }
         UIManager.instance.EnableCancelButton();
     }
@@ -129,7 +282,7 @@ public class SelectionManager : MonoBehaviour
     {
         foreach (ISelectable selectable in currentSelected)
         {
-            selectable.GetGameObject().GetComponent<IAllowable>().OnAllow();
+            (selectable as IAllowable).OnAllow();
         }
         UIManager.instance.EnableAllowDisallowButton(true);
     }
@@ -137,7 +290,7 @@ public class SelectionManager : MonoBehaviour
     {
         foreach (ISelectable selectable in currentSelected)
         {
-            selectable.GetGameObject().GetComponent<IAllowable>().OnDisallow();
+            (selectable as IAllowable).OnDisallow();
         }
         UIManager.instance.EnableAllowDisallowButton(false);
     }
@@ -146,18 +299,66 @@ public class SelectionManager : MonoBehaviour
     {
         foreach (ISelectable selectable in currentSelected)
         {
-            GameObject GO = selectable.GetGameObject();
-            if (GO.TryGetComponent(out IHarvestable harvestable))
+            if (selectable is IHarvestable)
             {
-                harvestable.RemoveFromHarvestQueue();
-                UIManager.instance.EnableHarvestableButtons();
+                (selectable as IHarvestable).RemoveFromHarvestQueue();
+                selectable.GetSelectionStrategy().EnableButtons();
             }
-            if (GO.TryGetComponent(out IConstructable constructable))
+            if (selectable is IConstructable)
             {
-                constructable.CancelConstruction();
-                bool allowed = GO.GetComponent<IAllowable>().IsAllowed();
-                UIManager.instance.EnableConstructableButtons(allowed);
+                (selectable as IConstructable).CancelConstruction();
+                selectable.GetSelectionStrategy().EnableButtons();
             }
+        }
+    }
+    public void TryToDeconstruct()
+    {
+        foreach (ISelectable selectable in currentSelected)
+        {
+
+            if (selectable is BuildingObject)
+            {
+                (selectable as BuildingObject).Deconstruct();
+            }
+            if (selectable is Stockpile)
+            {
+                (selectable as Stockpile).DestroyStockpile();
+            }
+        }
+    }
+
+    public void TryToGrowZone()
+    {
+        if (currentSelected[0] is Stockpile)
+        {
+            Stockpile stockpile = currentSelected[0] as Stockpile;
+            StockpilePlacer.instance.GrowStockpile(stockpile);
+        }
+    }
+    public void TryToShrinkZone()
+    {
+        if (currentSelected[0] is Stockpile)
+        {
+            Stockpile stockpile = currentSelected[0] as Stockpile;
+            StockpilePlacer.instance.ShrinkStockpile(stockpile);
+        }
+    }
+    public void TryToSelectOtherItemInCell()
+    {
+        ISelectable selectable = currentSelected[0];
+        Cell cell = GridManager.instance.GetCellFromPosition((selectable as MonoBehaviour).transform.position);
+        Vector3 corner1 = cell.position - new Vector3(1f / 2, 0, 1f / 2);
+        Vector3 corner2 = cell.position + new Vector3(1f / 2, 0, 1f / 2);
+        Vector3 halfSize = new Vector3(Mathf.Abs(corner1.x - corner2.x), 3f, Mathf.Abs(corner1.z - corner2.z) / 2f);
+
+        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(cell.position, halfSize * 0.95f);
+        selectables.Remove(selectable);
+
+        if (selectables.Count != 0)
+        {
+            currentSelected.Clear();
+            selectables[0].OnSelect();
+            SetSelectionType(selectables[0].GetSelectionType());
         }
     }
 
@@ -172,8 +373,8 @@ public class SelectionManager : MonoBehaviour
         {
             selectable.OnDeselect();
         }
-        if (this.selectionStrategy != null)
-            this.selectionStrategy.CleanUp();
+        selectionStrategy?.CleanUp();
+
         currentSelected.Clear();
         UIManager.instance.SetAllSelectionUIInactive();
         UIManager.instance.selectionPanel.SetActive(false);
