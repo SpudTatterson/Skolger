@@ -25,10 +25,12 @@ public class ColonistBT : Tree
     protected override Node SetupTree()
     {
         Node wanderTask = CreateWanderTask();
+        Node haulTask = CreateHaulTask();
 
         Node root = new Selector(new List<Node>
         {
-            wanderTask
+            wanderTask,
+            haulTask
         });
 
         return root;
@@ -39,6 +41,18 @@ public class ColonistBT : Tree
         return new TaskWander(agent, wanderSettings)
         {
             priority = wanderSettings.priority
+        };
+    }
+
+    private Node CreateHaulTask()
+    {
+        return new Sequence(new List<Node>
+        {
+            new CheckForHaulable(),
+            new TaskGoToTarget(agent)
+        })
+        {
+            priority = 1
         };
     }
 }

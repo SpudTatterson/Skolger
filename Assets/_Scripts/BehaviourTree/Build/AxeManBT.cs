@@ -49,7 +49,7 @@ public class AxeManBT : Tree
         return new Sequence(new List<Node>
         {
             new CheckEnemyInRange(agent.transform, detectionRadius, targetLayerMask),
-            new TaskGoToTarget(agent)
+            new TaskFollowTarget(agent)
         })
         {
             priority = huntTask
