@@ -727,10 +727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wanderTask: 2
   huntTask: 1
-  maxWaitTime: 2
-  waypointRange: 10
-  randomWander: 1
-  centerPoint: {fileID: 0}
+  wanderSettings: {fileID: 11400000, guid: 6c7d17bae72058e4899b0b4acfc1b604, type: 2}
   detectionRadius: 5
   targetLayerMask:
     serializedVersion: 2

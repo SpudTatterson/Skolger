@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91ca7403961157d4ca8469048b001333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wanderSettingsSO: {fileID: 11400000, guid: 71d4f7e94f42ee749a766b9be2ceec9b, type: 2}
+  wanderSettings: {fileID: 11400000, guid: 6c7d17bae72058e4899b0b4acfc1b604, type: 2}
 --- !u!1 &3639081120247255979
 GameObject:
   m_ObjectHideFlags: 0
