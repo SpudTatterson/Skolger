@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3350276427243490880}
+  - component: {fileID: 5118616145373962099}
   - component: {fileID: 9153664454649759732}
   - component: {fileID: 2176899014970851094}
   - component: {fileID: 7981274547399356321}
   - component: {fileID: 4444768308068659478}
   - component: {fileID: 8654645700902479148}
   - component: {fileID: 547942696602740720}
-  - component: {fileID: 5118616145373962099}
   - component: {fileID: 7793368260817705079}
   - component: {fileID: 7281736121582617657}
   m_Layer: 0
@@ -40,6 +40,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5118616145373962099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6069251704015072993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869cd2cdb0a7a484aa8564a453a4be97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridsParent: {fileID: 0}
+  worldSettings: {fileID: 0}
 --- !u!114 &9153664454649759732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,7 +67,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cells: []
-  size: {x: 3, y: 3}
 --- !u!114 &2176899014970851094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,18 +148,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingData: {fileID: 0}
---- !u!114 &5118616145373962099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6069251704015072993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 869cd2cdb0a7a484aa8564a453a4be97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7793368260817705079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,6 +160,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 910379aae6ef79444919a9a50c43c834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSelecting: 1
+  specialSelectionTypes: 
+  dragDelay: 0.1
 --- !u!114 &7281736121582617657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,9 +178,17 @@ MonoBehaviour:
   selectionPanel: {fileID: 0}
   harvestableSelection: {fileID: 0}
   itemSelection: {fileID: 0}
+  constructableSelection: {fileID: 0}
+  buildingSelection: {fileID: 0}
+  stockpileSelection: {fileID: 0}
   multipleSelection: {fileID: 0}
   multipleSelectionContent: {fileID: 0}
   defaultTextAsset: {fileID: 0}
+  selectionBoxImage: {fileID: 0}
   harvestButton: {fileID: 0}
   allowButton: {fileID: 0}
+  disallowButton: {fileID: 0}
   cancelButton: {fileID: 0}
+  deconstructButton: {fileID: 0}
+  growZoneButton: {fileID: 0}
+  shrinkZoneButton: {fileID: 0}

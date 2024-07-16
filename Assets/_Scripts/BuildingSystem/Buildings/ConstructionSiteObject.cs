@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable, IAllowable
+public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable, IAllowable, ICellOccupier
 {
     public BuildingData buildingData { get; private set; }
     List<ItemCost> costs = new List<ItemCost>();
     SerializableDictionary<ItemData, int> fulfilledCosts = new SerializableDictionary<ItemData, int>();
     List<Cell> occupiedCells = new List<Cell>();
+    public Cell cornerCell { get; private set; }
     bool allowed = true;
     // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
@@ -16,6 +17,8 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         this.buildingData = buildingData;
         this.occupiedCells = occupiedCells;
+
+        OnOccupy();
 
         foreach (ItemCost cost in this.buildingData.costs)
         {
@@ -29,7 +32,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     #region Construction
 
-    public void AddItem(ItemObject itemObject)
+    public void AddItem(IItem itemObject)
     {
         fulfilledCosts[itemObject.itemData] += itemObject.amount;
         costs.RemoveAt(0);
@@ -63,17 +66,12 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     public void ConstructBuilding()
     {
+        Destroy(gameObject);
         BuildingObject.MakeInstance(buildingData, this.transform.position, occupiedCells);
-        Destroy(this);
-        Destroy(this.gameObject);
     }
     [ContextMenu("CancelConstruction")]
     public void CancelConstruction()
     {
-        foreach (Cell c in occupiedCells)
-        {
-            c.inUse = false;
-        }
         foreach (KeyValuePair<ItemData, int> cost in fulfilledCosts)
         {
             int stackSize = cost.Key.stackSize;
@@ -86,18 +84,15 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
                     cell = occupiedCells[0].GetClosestEmptyCell();
 
                     ItemObject.MakeInstance(cost.Key, stackSize, cell.position);
-                    cell.inUse = true;
                     costToDisperse -= stackSize;
                 }
                 cell = occupiedCells[0].GetClosestEmptyCell();
                 ItemObject.MakeInstance(cost.Key, costToDisperse, cell.position);
-                cell.inUse = true;
             }
             else
             {
                 cell = occupiedCells[0].GetClosestEmptyCell();
                 ItemObject.MakeInstance(cost.Key, cost.Value, cell.position);
-                cell.inUse = true;
             }
             Destroy(this.gameObject);
         }
@@ -118,8 +113,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
             {
                 foreach (Cell c in cells)
                 {
-                    c.inUse = true;
-                    Debug.Log(c.ToString() + " in use");
+
                 }
             }
             else
@@ -168,16 +162,14 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         allowed = true;
         // add to construction queue
-        BuilderTest hauler = FindObjectOfType<BuilderTest>();
-        hauler.AddConstructable(this);
+        TaskManager.Instance.AddToConstructionQueue(this);
     }
 
     public void OnDisallow()
     {
         allowed = false;
         // remove from construction queue
-        BuilderTest hauler = FindObjectOfType<BuilderTest>();
-        hauler.RemoveConstructable(this);
+        TaskManager.Instance.RemoveFromConstructionQueue(this);
         // visually show that this is disallowed 
     }
     public bool IsAllowed()
@@ -185,6 +177,43 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         return allowed;
     }
 
+    #endregion
+
+    #region ICellOccupier
+
+    public void GetOccupiedCells()
+    {
+        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells);
+        this.occupiedCells = occupiedCells;
+    }
+
+    public void OnOccupy()
+    {
+        foreach (Cell cell in occupiedCells)
+        {
+            cell.inUse = buildingData.takesFullCell;
+            cell.walkable = buildingData.walkable;
+        }
+    }
+
+    public void OnRelease()
+    {
+        foreach (Cell cell in occupiedCells)
+        {
+            cell.inUse = false;
+            cell.walkable = true;
+        }
+    }
 
     #endregion
+
+    void OnEnable()
+    {
+        OnOccupy();
+    }
+    void OnDisable()
+    {
+        OnRelease();
+    }
 }

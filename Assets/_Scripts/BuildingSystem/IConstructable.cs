@@ -6,7 +6,7 @@ public interface IConstructable
 {
     ItemCost GetNextCost();
     List<ItemCost> GetAllCosts();
-    void AddItem(ItemObject item);
+    void AddItem(IItem item);
 
     void CheckIfCanConstruct();
     void ConstructBuilding();

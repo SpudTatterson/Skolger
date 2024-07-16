@@ -2,47 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
+public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
     [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
     float timeHarvesting = 0f;
-    Cell occupiedCell;
+    public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
     bool setForHarvesting = false;
-    Harvester harvester;
     SelectionType selectionType = SelectionType.Harvestable;
     public void Harvest()
     {
-        occupiedCell.inUse = false;
-        occupiedCell.Walkable = true;
         foreach (ItemDrop drop in drops)
         {
             int amount = Random.Range(drop.minDropAmount, drop.maxDropAmount);
             if (amount == 0) continue;
-            Cell dropCell = occupiedCell.GetClosestEmptyCell();
+            Cell dropCell = cornerCell.GetClosestEmptyCell();
             ItemObject.MakeInstance(drop.itemData, amount, dropCell.position);
-            dropCell.inUse = true;
         }
-        harvester.RemoveFromHarvestQueue(this);
+        TaskManager.Instance.RemoveFromHarvestQueue(this);
         Destroy(this.gameObject);
-    }
-    void Start()
-    {
-        if (occupiedCell == null)
-            Init();
-
-
-    }
-    public void Init()
-    {
-        RaycastHit gridHit;
-        Physics.Raycast(transform.position + new Vector3(0, 1, 0), Vector3.down, out gridHit, 3f, LayerManager.instance.GroundLayerMask);
-        Debug.Log(gridHit.transform.name);
-        occupiedCell = GridManager.instance.GetCellFromPosition(gridHit.point);
-        occupiedCell.inUse = true;
-        occupiedCell.Walkable = false;
     }
 
     public IEnumerator StartHarvesting()
@@ -68,14 +48,13 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
     {
         if (!setForHarvesting)
         {
-            harvester = FindObjectOfType<Harvester>();
-            harvester.AddToHarvestQueue(this);
+            TaskManager.Instance.AddToHarvestQueue(this);
         }
         setForHarvesting = true;
     }
     public void RemoveFromHarvestQueue()
     {
-        harvester.RemoveFromHarvestQueue(this);
+        TaskManager.Instance.RemoveFromHarvestQueue(this);
         beingHarvested = false;
         setForHarvesting = false;
     }
@@ -104,5 +83,35 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable
     public bool HasActiveCancelableAction()
     {
         return setForHarvesting;
+    }
+
+    #region ICellOccupier
+
+    public void GetOccupiedCells()
+    {
+        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+    }
+    public void OnOccupy()
+    {
+        if (cornerCell == null) cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell.inUse = true;
+        cornerCell.walkable = false;
+    }
+
+    public void OnRelease()
+    {
+        cornerCell.inUse = false;
+        cornerCell.walkable = true;
+    }
+
+    #endregion
+
+    void OnEnable()
+    {
+        OnOccupy();
+    }
+    void OnDisable()
+    {
+        OnRelease();
     }
 }
