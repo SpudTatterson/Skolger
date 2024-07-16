@@ -146,16 +146,14 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         allowed = true;
         // add to construction queue
-        BuilderTest hauler = FindObjectOfType<BuilderTest>();
-        hauler.AddConstructable(this);
+        TaskManager.Instance.AddToConstructionQueue(this);
     }
 
     public void OnDisallow()
     {
         allowed = false;
         // remove from construction queue
-        BuilderTest hauler = FindObjectOfType<BuilderTest>();
-        hauler.RemoveConstructable(this);
+        TaskManager.Instance.RemoveFromConstructionQueue(this);
         // visually show that this is disallowed 
     }
     public bool IsAllowed()

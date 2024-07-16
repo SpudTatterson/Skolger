@@ -15,7 +15,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     GameObject visual;
 
 
-    public void Initialize(int sizeX, int sizeY, Cell cornerCell, Vector3 cellPosition)
+    public void Initialize(int sizeX, int sizeY, Cell cornerCell)
     {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -28,12 +28,14 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
         foreach (Cell cell in occupiedCells)
         {
-            AddCell(cell);
+            if (cell.IsFreeAndExists())
+                AddCell(cell);
+
         }
 
         float cellSize = GridManager.instance.worldSettings.cellSize;
         // Calculate the position of the bottom-left corner of the cell
-        Vector3 cornerPosition = cellPosition - new Vector3(cellSize / 2, 0, cellSize / 2);
+        Vector3 cornerPosition = cornerCell.position - new Vector3(cellSize / 2, 0, cellSize / 2);
 
         // Adjust position slightly below the ground for better visual separation
         transform.position = cornerPosition + new Vector3(0, 0.01f, 0);
@@ -41,7 +43,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         InventoryManager.instance.stockpiles.Add(this);
 
         // Create the grid mesh
-        visual = MeshUtility.CreateGridMesh(occupiedCells, transform.position, "Stockpile", MaterialManager.instance.stockpileMaterial, transform, 1);
+        visual = MeshUtility.CreateGridMesh(this.occupiedCells, transform.position, "Stockpile", MaterialManager.instance.stockpileMaterial, transform, 1);
     }
     public bool GetEmptyCell(out Cell cell)
     {
@@ -275,7 +277,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         MeshUtility.UpdateGridMesh(occupiedCells, visual.GetComponent<MeshFilter>());
     }
 
-    private void RemoveCell(Cell cell)
+    void RemoveCell(Cell cell)
     {
         occupiedCells.Remove(cell);
         if (cells[cell] != null)
@@ -287,7 +289,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         emptyCells.Remove(cell);
 
     }
-    private void AddCell(Cell cell)
+    void AddCell(Cell cell)
     {
         occupiedCells.Add(cell);
         cells.Add(cell, null);
