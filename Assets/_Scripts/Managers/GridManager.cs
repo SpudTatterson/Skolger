@@ -26,13 +26,12 @@ public class GridManager : MonoBehaviour
             Destroy(this);
         }
 
-        grids = gridsParent.GetComponentsInChildren<GridObject>().ToList();
-
+        GetGridsIfMissing();
+        RecalculateCellUsage();
     }
     public GridObject GetGridFromPosition(Vector3 position)
     {
-        if (grids == null || grids.Count == 0)
-            grids = FindObjectsOfType<GridObject>().ToList();
+        GetGridsIfMissing();
 
         foreach (GridObject grid in grids)
         {
@@ -46,6 +45,13 @@ public class GridManager : MonoBehaviour
         }
         return null;
     }
+
+    void GetGridsIfMissing()
+    {
+        if (grids == null || grids.Count == 0)
+            grids = gridsParent.GetComponentsInChildren<GridObject>().ToList();
+    }
+
     public Cell GetCellFromPosition(Vector3 position)
     {
         if (GetGridFromPosition(position) == null) return null;
@@ -73,6 +79,7 @@ public class GridManager : MonoBehaviour
     [Button]
     public void RecalculateCellUsage()
     {
+        GetGridsIfMissing();
         foreach (GridObject grid in grids)
         {
             grid.ResetCellUse();
@@ -88,6 +95,7 @@ public class GridManager : MonoBehaviour
     [Button]
     public void SaveAllGridMeshesToFile()
     {
+        GetGridsIfMissing();
         foreach (GridObject grid in grids)
         {
             grid.SaveAllChunkMeshesToFile();
@@ -96,7 +104,8 @@ public class GridManager : MonoBehaviour
     [Button]
     public void LoadAllGridMeshesFromFile()
     {
-        foreach(GridObject grid in grids)
+        GetGridsIfMissing();
+        foreach (GridObject grid in grids)
         {
             grid.LoadChunksFromFile();
         }

@@ -85,7 +85,7 @@ public class StockpilePlacer : MonoBehaviour
     {
         GameObject stockpileGO = new GameObject("Stockpile");
         Stockpile stockpile = stockpileGO.AddComponent<Stockpile>();
-        stockpile.Initialize(size.x, size.y, cornerCell, cornerCell.position);
+        stockpile.Initialize(size.x, size.y, cornerCell);
         foreach (Cell c in cells)
         {
             c.inUse = true;
