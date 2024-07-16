@@ -33,7 +33,11 @@ public class TaskManager : MonoBehaviour
     public IHarvestable PullHarvestableFromQueue()
     {
         if (harvestQueue.Count > 0)
-            return harvestQueue[0];
+        {
+            IHarvestable harvestable = harvestQueue[0];
+            harvestQueue.RemoveAt(0);
+            return harvestable;
+        }
         return null;
     }
 
@@ -49,7 +53,11 @@ public class TaskManager : MonoBehaviour
     public IConstructable PullConstructableFromQueue()
     {
         if (constructionQueue.Count > 0)
-            return constructionQueue[0];
+        {
+            IConstructable constructable = constructionQueue[0];
+            constructionQueue.RemoveAt(0);
+            return constructable;
+        }
         return null;
     }
 

@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
-    [SerializeField] float baseGatherTime = 5f; 
+    [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
     float timeHarvesting = 0f;
     public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
     bool setForHarvesting = false;
-    Harvester harvester;
     SelectionType selectionType = SelectionType.Harvestable;
     public void Harvest()
     {
@@ -22,7 +21,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
             Cell dropCell = cornerCell.GetClosestEmptyCell();
             ItemObject.MakeInstance(drop.itemData, amount, dropCell.position);
         }
-        harvester.RemoveFromHarvestQueue(this);
+        TaskManager.Instance.RemoveFromHarvestQueue(this);
         Destroy(this.gameObject);
     }
 
@@ -49,14 +48,13 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     {
         if (!setForHarvesting)
         {
-            harvester = FindObjectOfType<Harvester>();
-            harvester.AddToHarvestQueue(this);
+            TaskManager.Instance.AddToHarvestQueue(this);
         }
         setForHarvesting = true;
     }
     public void RemoveFromHarvestQueue()
     {
-        harvester.RemoveFromHarvestQueue(this);
+        TaskManager.Instance.RemoveFromHarvestQueue(this);
         beingHarvested = false;
         setForHarvesting = false;
     }

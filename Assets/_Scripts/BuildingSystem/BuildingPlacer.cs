@@ -35,8 +35,7 @@ public class BuildingPlacer : MonoBehaviour
                     placedBuildings.Add(building.gameObject);
 
                     //hauler testing
-                    BuilderTest hauler = FindObjectOfType<BuilderTest>();
-                    hauler.AddConstructable(building);
+                    TaskManager.Instance.AddToConstructionQueue(building);
                 }
             }
         }
