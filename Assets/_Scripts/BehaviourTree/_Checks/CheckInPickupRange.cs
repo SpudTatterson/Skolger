@@ -7,7 +7,7 @@ public class CheckInPickupRange : Node
 
     public override NodeState Evaluate()
     {
-        parent.parent.ClearData("Target");
+        //parent.parent.ClearData("Target");
 
         state = NodeState.SUCCESS;
         return state;

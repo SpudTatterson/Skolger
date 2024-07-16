@@ -10,22 +10,20 @@ public class CheckEnemyInRange : Node
     public CheckEnemyInRange(Transform transform, float detectionRadius, LayerMask targetLayerMask)
     {
         this.transform = transform;
-
         this.detectionRadius = detectionRadius;
-
         this.targetLayerMask = targetLayerMask;
     }
 
     public override NodeState Evaluate()
     {
-        object t = GetData("Target");
+        object t = GetData("FollowTarget");
         if (t == null)
         {
             Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius, targetLayerMask);
 
             if(colliders.Length > 0)
             {
-                parent.parent.SetData("Target", colliders[0].transform);
+                parent.parent.SetData("FollowTarget", colliders[0].transform);
 
                 state = NodeState.SUCCESS;
                 return state;

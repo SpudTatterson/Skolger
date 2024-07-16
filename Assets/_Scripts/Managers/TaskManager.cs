@@ -58,7 +58,7 @@ public class TaskManager : MonoBehaviour
     {
         if (!haulQueue.Contains(itemObject))
             haulQueue.Add(itemObject);
-        Debug.Log("test");
+        //Debug.Log("test");
     }
     public void RemoveFromHaulQueue(ItemObject itemObject)
     {

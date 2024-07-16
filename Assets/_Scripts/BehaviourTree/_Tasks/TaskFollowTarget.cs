@@ -13,15 +13,15 @@ public class TaskFollowTarget : Node
 
     public override NodeState Evaluate()
     {
-        Transform target = (Transform)GetData("Target");
+        Transform target = (Transform)GetData("FollowTarget");
 
-        if (Vector3.Distance(agent.transform.position, target.position) > 50)
+        if (Vector3.Distance(agent.transform.position, target.position) > 5)
         {
             agent.ResetPath();
-            ClearData("Target");
+            ClearData("FollowTarget");
         }
 
-        if (Vector3.Distance(agent.transform.position, target.position) <= 50)
+        if (Vector3.Distance(agent.transform.position, target.position) <= 5)
         {
             agent.SetDestination(target.position);
         }
