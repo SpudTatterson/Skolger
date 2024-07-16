@@ -18,12 +18,20 @@ public class ColonistBT : Tree
     protected override Node SetupTree()
     {
         Node wanderTask = CreateWanderTask();
-        Node haulTask = CreateHaulTask();
+        Node pickUpItem = CreatePickUpItemTask();
 
         Node root = new Selector(new List<Node>
         {
+            // Basic AI tasks that the player can not access ingame
+            // and the priorities are set from the start.
+
             wanderTask,
-            haulTask
+
+            // ----------------------------------------------------
+            // AI tasks that the player will have access ingame
+            // the priorities can change in runtime.
+            
+            pickUpItem
         });
 
         return root;
@@ -38,13 +46,13 @@ public class ColonistBT : Tree
         };
     }
 
-    private Node CreateHaulTask()
+    private Node CreatePickUpItemTask()
     {
         return new Sequence(new List<Node>
         {
-            new CheckHaulableInReach(agent),
+            new CheckIsAbleToHaul(agent),
             new TaskGoToTarget(agent),
-            new CheckInPickupRange()
+            new TaskPickUpItem()
         })
         {
             priority = 1
