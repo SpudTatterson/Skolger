@@ -49,7 +49,7 @@ public class ColonistBT : Tree
     {
         return new Sequence(new List<Node>
         {
-            new CheckForHaulable(),
+            new CheckForHaulable(agent),
             new TaskGoToTarget(agent),
             new CheckInPickupRange()
         })
