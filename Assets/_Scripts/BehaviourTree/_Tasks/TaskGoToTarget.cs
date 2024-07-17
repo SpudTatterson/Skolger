@@ -30,7 +30,7 @@ public class TaskGoToTarget : Node
             return state;
         }
 
-        agent.SetDestination((Vector3)target);    
+        agent.SetDestination((Vector3)target);
 
         state = NodeState.RUNNING;
         return state;

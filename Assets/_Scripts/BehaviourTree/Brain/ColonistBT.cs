@@ -52,8 +52,8 @@ public class ColonistBT : Tree
     {
         return new Sequence(new List<Node>
         {
+            new CheckForStockpile(agent),
             new CheckIsAbleToHaul(agent),
-            new CheckForStockpile(),
             new TaskGoToTarget(agent),
             new TaskPickUpItem(agent)
         })
@@ -67,7 +67,9 @@ public class ColonistBT : Tree
         return new Sequence(new List<Node>
         {
             new CheckItemInInventory(),
-            new TaskGoToStockpile(agent)
+            new CheckForStockpile(agent),
+            new TaskGoToTarget(agent),
+            new TaskPutInStockpile(agent)
         })
         {
             priority = colonistSettings.priorityHaulToStockpile

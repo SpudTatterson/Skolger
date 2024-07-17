@@ -2,11 +2,11 @@ using BehaviorTree;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class TaskGoToStockpile : Node
+public class TaskPutInStockpile : Node
 {
     private NavMeshAgent agent;
 
-    public TaskGoToStockpile(NavMeshAgent agent) 
+    public TaskPutInStockpile(NavMeshAgent agent) 
     {
         this.agent = agent;
     }
@@ -14,7 +14,6 @@ public class TaskGoToStockpile : Node
     public override NodeState Evaluate()
     {
         InventoryItem inventoryItem = (InventoryItem)GetData("InventoryItem");
-        Cell cell = (Cell)GetData("Cell");
         Stockpile stockpile = (Stockpile)GetData("Stockpile");
 
         if (inventoryItem == null)
@@ -22,8 +21,6 @@ public class TaskGoToStockpile : Node
             state = NodeState.FAILURE;
             return state;
         }
-
-        agent.SetDestination(cell.position);
 
         if (!ReachedDestinationOrGaveUp())
         {
@@ -35,6 +32,7 @@ public class TaskGoToStockpile : Node
         
         ClearData("InventoryItem");
         ClearData("Cell");
+        ClearData("Target");
         ClearData("Stockpile");
 
         state = NodeState.SUCCESS;
