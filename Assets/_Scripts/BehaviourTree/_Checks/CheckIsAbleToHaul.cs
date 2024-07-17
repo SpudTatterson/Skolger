@@ -13,9 +13,9 @@ public class CheckIsAbleToHaul : Node
 
     public override NodeState Evaluate()
     {
-        var InventoryItem = parent.parent.GetData("InventoryItem");
+        var inventoryItem = parent.parent.GetData("InventoryItem");
 
-        if (InventoryItem != null)
+        if (inventoryItem != null)
         {
             state = NodeState.FAILURE;
             return state;

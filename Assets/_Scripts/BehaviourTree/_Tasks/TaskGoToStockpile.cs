@@ -1,0 +1,59 @@
+using BehaviorTree;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class TaskGoToStockpile : Node
+{
+    private NavMeshAgent agent;
+
+    public TaskGoToStockpile(NavMeshAgent agent) 
+    {
+        this.agent = agent;
+    }
+
+    public override NodeState Evaluate()
+    {
+        ItemObject inventoryItem = (ItemObject)GetData("InventoryItem");
+        Cell cell = (Cell)GetData("cell");
+
+        if (inventoryItem == null)
+        {
+            state = NodeState.FAILURE;
+            return state;
+        }
+
+        agent.SetDestination(cell.position);
+
+        if (!ReachedDestinationOrGaveUp())
+        {
+            state = NodeState.FAILURE;
+            return state;            
+        }
+
+        inventoryItem.gameObject.SetActive(true);
+        inventoryItem.transform.position = cell.position;
+        ClearData("InventoryItem");
+        ClearData("cell");
+        Debug.Log("Reached cell in the stockpile");
+
+        state = NodeState.SUCCESS;
+        return state;
+    }
+
+    public bool ReachedDestinationOrGaveUp()
+    {
+
+        if (!agent.pathPending)
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+}

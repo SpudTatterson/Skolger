@@ -6,17 +6,17 @@ using UnityEngine.AI;
 
 public class TaskWander : Node
 {
-    private WanderSettingsSO wanderSettings;
+    private ColonistSettingsSO colonistSettings;
 
     private float currentWaitTime;
 
     private NavMeshAgent agent;
 
-    public TaskWander(NavMeshAgent agent, WanderSettingsSO wanderSettings)
+    public TaskWander(NavMeshAgent agent, ColonistSettingsSO colonistSettings)
     {
         this.agent = agent;
-        this.wanderSettings = wanderSettings;
-        currentWaitTime = Random.Range(0f, wanderSettings.maxWaitTime);
+        this.colonistSettings = colonistSettings;
+        currentWaitTime = Random.Range(0f, colonistSettings.maxWaitTime);
     }
 
     public override NodeState Evaluate()
@@ -26,10 +26,10 @@ public class TaskWander : Node
             currentWaitTime += Time.deltaTime;
         }
 
-        if (currentWaitTime >= wanderSettings.maxWaitTime)
+        if (currentWaitTime >= colonistSettings.maxWaitTime)
         {
             SetRandomDestination();
-            currentWaitTime = Random.Range(0f, wanderSettings.maxWaitTime / 2);
+            currentWaitTime = Random.Range(0f, colonistSettings.maxWaitTime / 2);
         }
 
         state = NodeState.RUNNING;
@@ -38,11 +38,11 @@ public class TaskWander : Node
 
     private void SetRandomDestination()
     {
-        Vector3 randomDirection = Random.insideUnitSphere * wanderSettings.waypointRange;
+        Vector3 randomDirection = Random.insideUnitSphere * colonistSettings.waypointRange;
         randomDirection += agent.transform.position;
         
         NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomDirection, out hit, wanderSettings.waypointRange, 1))
+        if (NavMesh.SamplePosition(randomDirection, out hit, colonistSettings.waypointRange, 1))
         {
             Vector3 finalPosition = hit.position;
             agent.SetDestination(finalPosition);

@@ -6,7 +6,7 @@ using Tree = BehaviorTree.Tree;
 
 public class ColonistBT : Tree
 {
-    [SerializeField] private WanderSettingsSO wanderSettings;
+    [SerializeField] private ColonistSettingsSO colonistSettings;
 
     private NavMeshAgent agent;
 
@@ -19,6 +19,7 @@ public class ColonistBT : Tree
     {
         Node wanderTask = CreateWanderTask();
         Node pickUpItem = CreatePickUpItemTask();
+        Node haulToStockpile = CreateHaulToStockpile();
 
         Node root = new Selector(new List<Node>
         {
@@ -26,6 +27,7 @@ public class ColonistBT : Tree
             // and the priorities are set from the start.
 
             wanderTask,
+            haulToStockpile,
 
             // ----------------------------------------------------
             // AI tasks that the player will have access ingame
@@ -40,9 +42,9 @@ public class ColonistBT : Tree
 
     private Node CreateWanderTask()
     {
-        return new TaskWander(agent, wanderSettings)
+        return new TaskWander(agent, colonistSettings)
         {
-            priority = wanderSettings.priority
+            priority = colonistSettings.priorityWander
         };
     }
 
@@ -51,11 +53,24 @@ public class ColonistBT : Tree
         return new Sequence(new List<Node>
         {
             new CheckIsAbleToHaul(agent),
+            new CheckForStockpile(),
             new TaskGoToTarget(agent),
             new TaskPickUpItem()
         })
         {
-            priority = 1
+            priority = colonistSettings.priorityPickUpItem
+        };
+    }
+
+    private Node CreateHaulToStockpile()
+    {
+        return new Sequence(new List<Node>
+        {
+            new CheckItemInInventory(),
+            new TaskGoToStockpile(agent)
+        })
+        {
+            priority = colonistSettings.priorityHaulToStockpile
         };
     }
 }

@@ -11,7 +11,7 @@ public class AxeManBT : Tree
     [SerializeField] private int wanderTask;
     [SerializeField] private int huntTask;
 
-    [SerializeField] private WanderSettingsSO wanderSettings;
+    [SerializeField] private ColonistSettingsSO colonistSettings;
 
     [Header("Hunt Settings")]
     [SerializeField] private float detectionRadius = 5f;
@@ -58,7 +58,7 @@ public class AxeManBT : Tree
 
     private Node CreateWanderTask()
     {
-        return new TaskWander(agent, wanderSettings)
+        return new TaskWander(agent, colonistSettings)
         {
             priority = wanderTask
         };            

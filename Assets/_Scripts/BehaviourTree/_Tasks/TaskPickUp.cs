@@ -8,10 +8,11 @@ public class TaskPickUpItem : Node
 
     public override NodeState Evaluate()
     {
-        var item = GetData("Target");
+        ItemObject item = (ItemObject)GetData("Target");
 
         if(item != null)
         {
+            item.gameObject.SetActive(false);
             Debug.Log("Item picked up");
             parent.parent.SetData("InventoryItem", item);
             ClearData("Target");
