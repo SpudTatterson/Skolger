@@ -23,7 +23,7 @@ public class CheckIsAbleToHaul : Node
 
         var hasTarget = GetData("Target");
 
-        if(hasTarget != null)
+        if(hasTarget != null && hasTarget is MonoBehaviour)
         {
             state = NodeState.SUCCESS;
             return state;

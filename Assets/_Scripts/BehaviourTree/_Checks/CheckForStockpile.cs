@@ -19,15 +19,22 @@ public class CheckForStockpile : Node
         
         if (cell == null)
         {
+            object hasStockpile = GetData("Stockpile");
+
             if (inventoryItem != null)
             {
                 inventoryItem.DropItem(agent.transform.position);
                 agent.ResetPath();
 
-                ClearData("Target");
                 ClearData("InventoryItem");
-                ClearData("Cell");
+            }
+
+            if (hasStockpile != null)
+            {
+                agent.ResetPath();
+
                 ClearData("Stockpile");
+                ClearData("Cell");
             }
 
             state = NodeState.FAILURE;
