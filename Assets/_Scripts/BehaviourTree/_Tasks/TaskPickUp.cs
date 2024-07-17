@@ -12,9 +12,9 @@ public class TaskPickUpItem : Node
 
         if(item != null)
         {
-            item.gameObject.SetActive(false);
-            Debug.Log("Item picked up");
-            parent.parent.SetData("InventoryItem", item);
+            InventoryItem inventoryItem = item.PickUp();
+
+            parent.parent.SetData("InventoryItem", inventoryItem);
             ClearData("Target");
             
             state = NodeState.SUCCESS;
@@ -24,4 +24,5 @@ public class TaskPickUpItem : Node
         state = NodeState.FAILURE;
         return state;
     }
+
 }

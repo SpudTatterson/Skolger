@@ -13,8 +13,9 @@ public class TaskGoToStockpile : Node
 
     public override NodeState Evaluate()
     {
-        ItemObject inventoryItem = (ItemObject)GetData("InventoryItem");
-        Cell cell = (Cell)GetData("cell");
+        InventoryItem inventoryItem = (InventoryItem)GetData("InventoryItem");
+        Cell cell = (Cell)GetData("Cell");
+        Stockpile stockpile = (Stockpile)GetData("Stockpile");
 
         if (inventoryItem == null)
         {
@@ -30,10 +31,11 @@ public class TaskGoToStockpile : Node
             return state;            
         }
 
-        inventoryItem.gameObject.SetActive(true);
-        inventoryItem.transform.position = cell.position;
+        stockpile.AddItem(inventoryItem);
+        
         ClearData("InventoryItem");
-        ClearData("cell");
+        ClearData("Cell");
+        ClearData("Stockpile");
         Debug.Log("Reached cell in the stockpile");
 
         state = NodeState.SUCCESS;

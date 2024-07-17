@@ -8,7 +8,7 @@ public class CheckForStockpile : Node
 
     public override NodeState Evaluate()
     {
-        InventoryManager.instance.GetStockpileWithEmptySpace(out Cell cell);
+        Stockpile stockpile = InventoryManager.instance.GetStockpileWithEmptySpace(out Cell cell);
         
         if(cell == null)
         {
@@ -16,7 +16,8 @@ public class CheckForStockpile : Node
             return state;
         }
 
-        parent.parent.SetData("cell", cell);
+        parent.parent.SetData("Cell", cell);
+        parent.parent.SetData("Stockpile", stockpile);
 
         state = NodeState.SUCCESS;
         return state;
