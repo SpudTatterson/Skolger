@@ -55,7 +55,7 @@ public class ColonistBT : Tree
             new CheckIsAbleToHaul(agent),
             new CheckForStockpile(),
             new TaskGoToTarget(agent),
-            new TaskPickUpItem()
+            new TaskPickUpItem(agent)
         })
         {
             priority = colonistSettings.priorityPickUpItem

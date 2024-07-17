@@ -1,4 +1,5 @@
 using BehaviorTree;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,40 +14,25 @@ public class TaskGoToTarget : Node
 
     public override NodeState Evaluate()
     {
-        Transform target = ((MonoBehaviour)GetData("Target")).transform;
-
-        if (target != null)
+        object target = GetData("Target");
+        
+        if (target is MonoBehaviour monoBehaviour)
         {
-            agent.SetDestination(target.position);
-
-            if (ReachedDestinationOrGaveUp())
-            {
-                state = NodeState.SUCCESS;
-                return state;
-            }          
-
+            target = monoBehaviour.transform.position;
+        }
+        else if (target is Cell cell)
+        {
+            target = cell.position;
+        }
+        else
+        {
             state = NodeState.FAILURE;
             return state;
         }
 
-        state = NodeState.FAILURE;
+        agent.SetDestination((Vector3)target);    
+
+        state = NodeState.RUNNING;
         return state;
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

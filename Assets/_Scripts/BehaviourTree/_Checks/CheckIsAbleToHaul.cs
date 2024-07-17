@@ -13,7 +13,7 @@ public class CheckIsAbleToHaul : Node
 
     public override NodeState Evaluate()
     {
-        var inventoryItem = parent.parent.GetData("InventoryItem");
+        var inventoryItem = GetData("InventoryItem");
 
         if (inventoryItem != null)
         {
@@ -21,7 +21,7 @@ public class CheckIsAbleToHaul : Node
             return state;
         }
 
-        var hasTarget = parent.parent.GetData("Target");
+        var hasTarget = GetData("Target");
 
         if(hasTarget != null)
         {

@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class TaskPickUpItem : Node
 {
-    public TaskPickUpItem() {}
+    private NavMeshAgent agent;
+
+    public TaskPickUpItem(NavMeshAgent agent) 
+    {
+        this.agent = agent;
+    }
 
     public override NodeState Evaluate()
     {
         ItemObject item = (ItemObject)GetData("Target");
 
-        if(item != null)
+        if(item != null && ReachedDestinationOrGaveUp())
         {
             InventoryItem inventoryItem = item.PickUp();
 
@@ -23,6 +28,23 @@ public class TaskPickUpItem : Node
 
         state = NodeState.FAILURE;
         return state;
+    }
+    
+    public bool ReachedDestinationOrGaveUp()
+    {
+
+        if (!agent.pathPending)
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }

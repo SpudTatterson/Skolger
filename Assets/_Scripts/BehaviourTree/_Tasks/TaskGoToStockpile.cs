@@ -36,7 +36,6 @@ public class TaskGoToStockpile : Node
         ClearData("InventoryItem");
         ClearData("Cell");
         ClearData("Stockpile");
-        Debug.Log("Reached cell in the stockpile");
 
         state = NodeState.SUCCESS;
         return state;
