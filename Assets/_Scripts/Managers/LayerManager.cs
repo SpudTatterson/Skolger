@@ -14,6 +14,7 @@ public class LayerManager : MonoBehaviour
     public LayerMask GroundLayerMask;
     public LayerMask ItemLayerMask;
     public LayerMask SelectableLayerMask;
+    public LayerMask buildableLayerMask;
 
 
     void Awake()
