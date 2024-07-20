@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable, IAllowable, ICellOccupier
 {
-    public BuildingData buildingData { get; private set; }
+    [SerializeField, Label("Building Data"), Expandable] BuildingData data;
+    [field: SerializeField, ReadOnly, Expandable] public BuildingData buildingData { get; private set; }
     List<ItemCost> costs = new List<ItemCost>();
     SerializableDictionary<ItemData, int> fulfilledCosts = new SerializableDictionary<ItemData, int>();
     List<Cell> occupiedCells = new List<Cell>();
@@ -28,6 +30,28 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
             else
                 fulfilledCosts.Add(cost.item, 0);
         }
+    }
+
+    public static ConstructionSiteObject MakeInstance(BuildingData buildingData, Cell cell, Transform parent = null, bool temp = false)
+    {
+        GameObject buildingGO = Instantiate(buildingData.unplacedVisual, cell.position, Quaternion.identity, parent);
+
+        if (!buildingGO.TryGetComponent(out ConstructionSiteObject building))
+        {
+            building = buildingGO.AddComponent<ConstructionSiteObject>();
+        }
+
+        if (!temp)
+            building.Initialize(buildingData);
+
+
+        return building;
+    }
+
+    void Start()
+    {
+        if (data != null)
+            Initialize(data);
     }
 
     #region Construction
@@ -67,7 +91,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     public void ConstructBuilding()
     {
         Destroy(gameObject);
-        BuildingObject.MakeInstance(buildingData, this.transform.position, occupiedCells);
+        BuildingObject.MakeInstance(buildingData, this.transform.position);
     }
     [ContextMenu("CancelConstruction")]
     public void CancelConstruction()
@@ -101,19 +125,6 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     }
 
     #endregion
-
-    public static ConstructionSiteObject MakeInstance(BuildingData buildingData, Cell cell, bool tempObject = false, Transform parent = null)
-    {
-        GameObject buildingGO = Instantiate(buildingData.unplacedVisual, cell.position, Quaternion.identity, parent);
-
-        ConstructionSiteObject building = buildingGO.AddComponent<ConstructionSiteObject>();
-        if (!tempObject)
-        {
-            building.Initialize(buildingData);
-        }
-
-        return building;
-    }
 
     #region Selection
 
@@ -176,7 +187,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         foreach (Cell cell in occupiedCells)
         {
-            cell.inUse = buildingData.takesFullCell;
+            cell.inUse = buildingData.usesCell;
             cell.walkable = buildingData.walkable;
         }
     }
