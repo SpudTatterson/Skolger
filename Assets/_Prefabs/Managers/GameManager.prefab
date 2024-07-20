@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 547942696602740720}
   - component: {fileID: 7793368260817705079}
   - component: {fileID: 7281736121582617657}
+  - component: {fileID: 7794366429827392130}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -147,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67c2ff150e26c5043bd5793388430180, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingData: {fileID: 0}
+  buildingData: {fileID: 11400000, guid: 0e2251b8e30245249a2d66a652554d23, type: 2}
 --- !u!114 &7793368260817705079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,3 +193,16 @@ MonoBehaviour:
   deconstructButton: {fileID: 0}
   growZoneButton: {fileID: 0}
   shrinkZoneButton: {fileID: 0}
+--- !u!114 &7794366429827392130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6069251704015072993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 829559cc3e026aa4f9d8b08763359610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodeNameText: 

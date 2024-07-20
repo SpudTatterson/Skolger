@@ -162,6 +162,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
     public void OnAllow()
     {
+        //Debug.Log("allowed");
         allowed = true;
         if (!inStockpile)
             TaskManager.Instance.AddToHaulQueue(this);

@@ -14,8 +14,8 @@ TagManager:
   - Dragable
   - Ground
   - Items
-  - Human
-  - 
+  - Enemy
+  - Colonist
   - 
   - 
   - 

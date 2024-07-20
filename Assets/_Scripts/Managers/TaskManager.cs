@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TaskManager : MonoBehaviour
@@ -65,6 +66,7 @@ public class TaskManager : MonoBehaviour
     {
         if (!haulQueue.Contains(itemObject))
             haulQueue.Add(itemObject);
+        //Debug.Log("test");
     }
     public void RemoveFromHaulQueue(ItemObject itemObject)
     {
@@ -78,6 +80,30 @@ public class TaskManager : MonoBehaviour
             haulQueue.RemoveAt(0);
             return item;
         }
+        return null;
+    }
+    public ItemObject PullItemFromQueue(Transform transform)
+    {
+        if (haulQueue.Count > 0)
+        {
+            float distance = Mathf.Infinity;
+            int index = 0;
+
+            for (int i = 0; i <haulQueue.Count; i++)
+            {
+                float agentDistance = Vector3.Distance(haulQueue[i].transform.position, transform.position);
+                if(distance > agentDistance)
+                {
+                    distance = agentDistance;
+                    index = i;
+                }
+            }
+
+            ItemObject item = haulQueue[index];
+            haulQueue.RemoveAt(index);            
+            return item;
+        }
+
         return null;
     }
 }

@@ -40,7 +40,7 @@ public class InventoryItem : IItem
 
     public void Destroy()
     {
-        OnDestroy.Invoke(this);
+        OnDestroy?.Invoke(this);
     }
 
     public bool NullCheck()
