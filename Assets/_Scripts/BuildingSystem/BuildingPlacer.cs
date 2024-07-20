@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,13 +8,12 @@ public class BuildingPlacer : MonoBehaviour
     [SerializeField] BuildingData buildingData;
     [SerializeField] float timeForDragStart = 0.1f;
     bool placing;
-    PlacementType placementType;
     float dragTime = 0;
     GameObject tempGO;
     List<GameObject> tempObjects = new List<GameObject>();
     Cell firstCell;
     Cell lastCell;
-    List<GameObject> placedBuildings = new List<GameObject>();
+    [SerializeField, ReadOnly] List<GameObject> placedBuildings = new List<GameObject>();
     void Update()
     {
         if (Canceling())
@@ -26,14 +23,14 @@ public class BuildingPlacer : MonoBehaviour
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100f, LayerManager.instance.GroundLayerMask))
+            if (Physics.Raycast(ray, out hit, 100f, LayerManager.instance.buildableLayerMask))
             {
                 Cell hitCell = GridManager.instance.GetCellFromPosition(hit.point);
 
                 if (tempGO == null)
                     InitializeNewPlacement(hitCell);
-
-                tempGO.transform.position = hitCell.position;
+                if (lastCell != hitCell)
+                    tempGO.transform.position = hitCell.position;
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
@@ -43,20 +40,14 @@ public class BuildingPlacer : MonoBehaviour
                 {
                     dragTime += Time.deltaTime;
 
-                    if (lastCell != hitCell)
+                    if (lastCell != hitCell && lastCell != null)
                     {
-                        (Vector2Int cellAmount, Cell cornerCell) = GridObject.GetGridLineFrom2Cells(firstCell, hitCell);
-
-                        hitCell.grid.TryGetCells((Vector2Int)cornerCell, cellAmount.x, cellAmount.y, out List<Cell> cells);
-
-                        foreach (GameObject gameObject in tempObjects)
-                        {
-                            Destroy(gameObject);
-                        }
-                        tempObjects.Clear();
+                        List<Cell> cells = buildingData.PlacementStrategy.GetCells(firstCell, hitCell);
+                        Debug.Log("test");
+                        DestroyAllTemps();
                         foreach (Cell cell in cells)
                         {
-                            tempObjects.Add(ConstructionSiteObject.MakeInstance(buildingData, cell, true).gameObject);
+                            tempObjects.Add(GenerateTempBuilding(cell));
                         }
                     }
                     lastCell = hitCell;
@@ -64,18 +55,14 @@ public class BuildingPlacer : MonoBehaviour
                 else if (Input.GetKeyUp(KeyCode.Mouse0) && !hitCell.inUse && dragTime < timeForDragStart)
                 {
                     PlaceBuilding(hitCell);
-                    SelectionManager.instance.isSelecting = true;
                 }
                 else if (Input.GetKeyUp(KeyCode.Mouse0) && dragTime > timeForDragStart)
                 {
-                    (Vector2Int cellAmount, Cell cornerCell) = GridObject.GetGridLineFrom2Cells(firstCell, hitCell);
-
-                    hitCell.grid.TryGetCells((Vector2Int)cornerCell, cellAmount.x, cellAmount.y, out List<Cell> cells);
+                    List<Cell> cells = buildingData.PlacementStrategy.GetCells(firstCell, hitCell);
                     foreach (Cell cell in cells)
                     {
                         PlaceBuilding(cell);
                     }
-                    SelectionManager.instance.isSelecting = true;
                 }
 
 
@@ -85,42 +72,57 @@ public class BuildingPlacer : MonoBehaviour
 
     void PlaceBuilding(Cell cell)
     {
-        if (!cell.IsFreeAndExists()) return;
-        ConstructionSiteObject building = ConstructionSiteObject.MakeInstance(buildingData, cell);
-        placedBuildings.Add(building.gameObject);
+        if (cell.IsFree())
+        {
+            ConstructionSiteObject constructionSite = ConstructionSiteObject.MakeInstance(buildingData, cell);
 
-        //hauler testing
-        BuilderTest hauler = FindObjectOfType<BuilderTest>();
-        hauler.AddConstructable(building);
+            placedBuildings.Add(constructionSite.gameObject);
+
+            TaskManager.Instance.AddToConstructionQueue(constructionSite);
+        }
+
+        DestroyAllTemps();
+    }
+
+    void DestroyAllTemps()
+    {
         foreach (GameObject gameObject in tempObjects)
         {
             Destroy(gameObject);
         }
         tempObjects.Clear();
-        Destroy(tempGO);
     }
 
-    private void InitializeNewPlacement(Cell hitCell)
+    void InitializeNewPlacement(Cell hitCell)
     {
-        tempGO = ConstructionSiteObject.MakeInstance(buildingData, hitCell, true).gameObject;
+        tempGO = GenerateTempBuilding(hitCell);
         SelectionManager.instance.isSelecting = false;
+    }
+
+    GameObject GenerateTempBuilding(Cell hitCell)
+    {
+        GameObject temp = ConstructionSiteObject.MakeInstance(buildingData, hitCell, temp: true).gameObject;
+        temp.layer = 0;
+        return temp;
     }
 
     public void SetNewBuilding(BuildingData buildingData)
     {
         this.buildingData = buildingData;
-        placementType = buildingData.placementType;
         placing = true;
     }
     public void CancelPlacement()
     {
         placing = false;
         buildingData = null;
+        DestroyAllTemps();
         Destroy(tempGO);
+        firstCell = null;
+        lastCell = null;
         SelectionManager.instance.isSelecting = true;
     }
     bool Canceling()
     {
-        return Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyUp(KeyCode.Mouse1);
+        return Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1);
     }
 }
