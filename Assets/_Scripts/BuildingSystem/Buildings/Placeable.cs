@@ -1,8 +1,7 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class PlaceableData : ScriptableObject
 {
@@ -13,9 +12,40 @@ public class PlaceableData : ScriptableObject
 
     [BoxGroup("Settings")] public int xSize = 1;
     [BoxGroup("Settings")] public int ySize = 1;
-    [BoxGroup("Settings")] public bool takesFullCell;
+    [BoxGroup("Settings")] public bool usesCell;
+    [BoxGroup("Settings"), Tooltip("Does this placeable visually take the whole cell")] public bool takesFullCell;
     [BoxGroup("Settings")] public bool walkable;
-    [BoxGroup("Settings")] public PlacementType placementType = PlacementType.Single;
+    [BoxGroup("Settings"), SerializeField] PlacementType placementType;
+    IPlacementStrategy placementStrategy;
+
+    public IPlacementStrategy PlacementStrategy
+    {
+        get
+        {
+            if (placementStrategy == null)
+            {
+                placementStrategy = GetPlacementStrategy();
+            }
+            return placementStrategy;
+        }
+    }
+
+    IPlacementStrategy GetPlacementStrategy()
+    {
+        switch (placementType)
+        {
+            case PlacementType.Line:
+                return new LinePlacementStrategy();
+                
+            case PlacementType.Single:
+                return new SinglePlacementStrategy();
+                
+            case PlacementType.Square:
+                return new SquarePlacementStrategy();
+                
+        }
+        throw new NullReferenceException("No placement strategy found for selection type");
+    }
 }
 
 public enum PlacementType
