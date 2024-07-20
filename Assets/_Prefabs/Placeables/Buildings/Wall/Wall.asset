@@ -20,9 +20,10 @@ MonoBehaviour:
     cost: 20
   xSize: 1
   ySize: 1
+  usesCell: 1
   takesFullCell: 1
   walkable: 0
-  placementType: 1
+  placementType: 2
   unplacedVisual: {fileID: 1839267279458126658, guid: a2d8939da06ad3e4596e250e802f0940,
     type: 3}
   buildingPrefab: {fileID: 4236940828671363148, guid: 9579109fa2578594483f406e63ee5c02,

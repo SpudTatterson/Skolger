@@ -91,6 +91,9 @@ MonoBehaviour:
   SelectableLayerMask:
     serializedVersion: 2
     m_Bits: 257
+  buildableLayerMask:
+    serializedVersion: 2
+    m_Bits: 2176
 --- !u!114 &7981274547399356321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingData: {fileID: 0}
+  timeForDragStart: 0.1
+  placedBuildings: []
 --- !u!114 &7793368260817705079
 MonoBehaviour:
   m_ObjectHideFlags: 0
