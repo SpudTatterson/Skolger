@@ -1,15 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
 {
-    List<IConstructable> constructionQueue = new List<IConstructable>();
     [SerializeField, ReadOnly] InventoryItem heldItem;
     ItemCost costToGet;
+    IConstructable constructable;
     bool hauling;
     Coroutine currentHaul;
     NavMeshAgent agent;
@@ -22,13 +23,19 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
     // Update is called once per frame
     void Update()
     {
-
-        if (constructionQueue.Count > 0 && !hauling)
+        if (!hauling && constructable == null)
         {
-            if ((UnityEngine.Object)constructionQueue[0] == null)
-                constructionQueue.Remove(constructionQueue[0]);
-            else
-                currentHaul = StartCoroutine(HaulItem(constructionQueue[0]));
+            constructable = TaskManager.Instance.PullConstructableFromQueue();
+        }
+        if (!hauling && constructable != null)
+        {
+            currentHaul = StartCoroutine(HaulItem(constructable));
+        }
+        if (hauling && constructable.SetForCancellation)
+        {
+            StopCoroutine(currentHaul);
+            constructable = null;
+            hauling = false;
         }
     }
 
@@ -37,7 +44,6 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
         costToGet = constructable.GetNextCost();
         if (costToGet == null)
         {
-            constructionQueue.Remove(constructable);
             hauling = false;
             yield break;
         }
@@ -54,7 +60,7 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
             }
             if ((UnityEngine.Object)constructable == null)
             {
-                constructionQueue.Remove(constructable);
+                costToGet = null;
                 hauling = false;
                 yield break;
             }
@@ -70,6 +76,8 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
 
             hauling = false;
             heldItem = null;
+            costToGet = null;
+            this.constructable = null;
 
         }
         else
@@ -78,16 +86,6 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
             hauling = false;
             Debug.Log("cant find enough items");
         }
-    }
-
-    public void AddConstructable(IConstructable constructable)
-    {
-        if (!constructionQueue.Contains(constructable))
-            constructionQueue.Add(constructable);
-    }
-    public void RemoveConstructable(IConstructable constructable)
-    {
-        constructionQueue.Remove(constructable);
     }
 
     public bool ReachedDestinationOrGaveUp()

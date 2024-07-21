@@ -12,16 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c2d85c210dbb24f966b0c6d0546203, type: 3}
   m_Name: Wall
   m_EditorClassIdentifier: 
-  placeableName: Wall
   icon: {fileID: 2800000, guid: 27cdc5036ee7fb245ab9207a17d58602, type: 3}
-  xSize: 1
-  ySize: 1
-  takesFullCell: 1
-  walkable: 0
+  placeableName: Wall
+  description: A wooden wall
   costs:
   - item: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
     cost: 20
-  buildingVisualUnplaced: {fileID: 1839267279458126658, guid: a2d8939da06ad3e4596e250e802f0940,
+  xSize: 1
+  ySize: 1
+  usesCell: 1
+  takesFullCell: 1
+  walkable: 0
+  placementType: 1
+  unplacedVisual: {fileID: 1839267279458126658, guid: a2d8939da06ad3e4596e250e802f0940,
     type: 3}
   buildingPrefab: {fileID: 4236940828671363148, guid: 9579109fa2578594483f406e63ee5c02,
     type: 3}
