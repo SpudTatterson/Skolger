@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IConstructable 
+public interface IConstructable
 {
     ItemCost GetNextCost();
     List<ItemCost> GetAllCosts();
@@ -11,6 +11,7 @@ public interface IConstructable
     void CheckIfCanConstruct();
     void ConstructBuilding();
     Vector3 GetPosition();
-    
+
     void CancelConstruction();
+    bool SetForCancellation { get; }
 }
