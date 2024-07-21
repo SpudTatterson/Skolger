@@ -26,7 +26,15 @@ public class Cell
     }
     public bool IsFreeAndExists()
     {
-        if (!inUse && isVisible)
+        if (IsFree() && isVisible)
+            return true;
+        else
+            return false;
+    }
+    public bool IsFree()
+    {
+        bool isCellAboveVisible = GetCellAbove().isVisible;
+        if (!inUse && !isCellAboveVisible)
             return true;
         else
             return false;
