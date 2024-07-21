@@ -140,9 +140,9 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             else if (item.amount < requiredAmount)
             {
                 requiredAmount -= item.amount;
-                itemsToReturn.Add(item);
-                InventoryManager.instance.RemoveAmountOfItem(item.itemData, item.amount);
-                totalItems[item.itemData] -= item.amount;
+                itemsToReturn.Add(item);    
+                InventoryManager.instance.RemoveAmountOfItem(item.itemData, item.amount);   
+                totalItems[item.itemData] -= item.amount;   
             }
         }
         // Create a combined item from the items we are taking
