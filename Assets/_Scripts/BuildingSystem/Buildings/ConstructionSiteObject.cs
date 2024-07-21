@@ -67,7 +67,6 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
         itemObject.UpdateAmount(itemObject.amount);
 
-        CheckIfCanConstruct();
     }
     public ItemCost GetNextCost()
     {
@@ -84,12 +83,13 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         return cornerCell;
     }
 
-    public void CheckIfCanConstruct()
+    public bool CheckIfCostsFulfilled()
     {
         if (costs.Count == 0)
         {
-            ConstructBuilding();
+            return true;
         }
+        return false;
     }
 
     public void ConstructBuilding()
