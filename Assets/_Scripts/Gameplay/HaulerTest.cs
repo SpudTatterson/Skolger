@@ -7,8 +7,8 @@ using UnityEngine.AI;
 
 public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
 {
-    List<ItemObject> itemsToHaul = new List<ItemObject>();
     [SerializeField, ReadOnly] InventoryItem heldItem;
+    ItemObject itemToHaul;
     bool hauling = false;
     NavMeshAgent agent;
 
@@ -18,10 +18,11 @@ public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
     }
     void Update()
     {
-        if (itemsToHaul.Count != 0 && !hauling)
+        if (!hauling && itemToHaul == null)
         {
-            Debug.Log("started Hauling");
-            StartCoroutine(HaulItem(itemsToHaul[0]));
+            itemToHaul = TaskManager.Instance.PullItemFromQueue();
+            if (itemToHaul != null)
+                StartCoroutine(HaulItem(itemToHaul));
         }
     }
 
@@ -41,7 +42,6 @@ public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
         {
             yield return null;
         }
-        RemoveFromHaulQueue(item);
         if (HasSpace())
             PutItemIn(item.PickUp());
         if (heldItem.NullCheck())
@@ -69,17 +69,9 @@ public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
 
 
         hauling = false;
+        itemToHaul = null;
     }
 
-    public void AddToHaulQueue(ItemObject itemObject)
-    {
-        if (!itemsToHaul.Contains(itemObject))
-            itemsToHaul.Add(itemObject);
-    }
-    public void RemoveFromHaulQueue(ItemObject itemObject)
-    {
-        itemsToHaul.Remove(itemObject);
-    }
     public bool ReachedDestinationOrGaveUp()
     {
 
@@ -104,7 +96,7 @@ public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
     }
     public bool HasSpace()
     {
-        if(heldItem == null || heldItem.NullCheck()) return true;
+        if (heldItem == null || heldItem.NullCheck()) return true;
         else return false;
     }
 
