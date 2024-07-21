@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 111866a9cd7a1574b82adc11434b365f, type: 3}
   m_Name: ColonistSettings
   m_EditorClassIdentifier: 
-  priorityWander: 1
-  priorityPickUpItem: 5
-  priorityHaulToStockpile: 6
+  taskWander: 0
+  taskHaul: 1
+  taskConstruction: 2
   maxWaitTime: 2
   waypointRange: 10
