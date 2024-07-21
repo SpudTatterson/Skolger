@@ -134,8 +134,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             else if (item.amount > requiredAmount)
             {
                 ItemObject newItem = item.SplitItem(requiredAmount, position, parent);
-                InventoryManager.instance.RemoveAmountOfItem(item.itemData, requiredAmount);
-                totalItems[item.itemData] -= requiredAmount;
+                RemoveItem(newItem);
                 return newItem.PickUp();
             }
             else if (item.amount < requiredAmount)
