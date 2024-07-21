@@ -120,8 +120,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
                     }
                     else
                     {
-                        (Vector2Int cellAmount, Cell CornerCell) = GridObject.GetGridLineFrom2Cells(firstCell, cell);
-                        activeGridObject.TryGetCells((Vector2Int)CornerCell, cellAmount.x, cellAmount.y, out List<Cell> cells);
+                        List<Cell> cells = buildingDatas[selectedBuilding].PlacementStrategy.GetCells(firstCell, cell);
 
                         foreach (Cell c in cells)
                         {
@@ -201,11 +200,9 @@ public class BuildingPlacerStrategy : IGridToolStrategy
 
     void PlaceBuilding(Cell cell, BuildingData buildingData)
     {
-        activeGridObject.TryGetCells((Vector2Int)cell, buildingData.xSize, buildingData.ySize, out List<Cell> cells);
-
         Undo.RegisterCompleteObjectUndo(cell.grid, $"Created {buildingDatas[selectedBuilding].name}");
 
-        BuildingObject placed = BuildingObject.MakeInstance(buildingData, cell.position, cells);
+        BuildingObject placed = BuildingObject.MakeInstance(buildingData, cell.position);
         
         Undo.RegisterCreatedObjectUndo(placed.gameObject, $"Created {buildingDatas[selectedBuilding].name}");
     }

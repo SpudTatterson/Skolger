@@ -61,6 +61,7 @@ public class GridManager : MonoBehaviour
     [ContextMenu("GenerateWorld"), Button]
     public void GenerateWorld()
     {
+        EditorUtility.SetDirty(this);
         DestroyOldWorld();
         grids.Add(GridObject.MakeInstance(worldSettings, false, gridsParent.transform.position, gridsParent.transform, "FloorGrid"));
 
@@ -74,7 +75,6 @@ public class GridManager : MonoBehaviour
             Vector3 position = gridsParent.transform.position + Vector3.up * worldSettings.cellHeight * (i + 1);
             grids.Add(GridObject.MakeInstance(worldSettings, true, position, gridsParent.transform, $"Aboveground Grid Layer #{i}"));
         }
-        EditorUtility.SetDirty(this);
     }
     [Button]
     public void RecalculateCellUsage()

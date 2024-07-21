@@ -410,19 +410,19 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
     public void ChangeCellsVisibility(List<Cell> cells, bool visible)
     {
+        EditorUtility.SetDirty(this);
         foreach (Cell cell in cells)
         {
             this.cells[cell.x, cell.y].isVisible = visible;
         }
-        EditorUtility.SetDirty(this);
     }
     public void ChangeCellsType(List<Cell> cells, CellType type)
     {
+        EditorUtility.SetDirty(this);
         foreach (Cell cell in cells)
         {
             this.cells[cell.x, cell.y].cellType = type;
         }
-        EditorUtility.SetDirty(this);
     }
     public void ResetCellUse()
     {

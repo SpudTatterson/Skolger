@@ -6,19 +6,20 @@ using UnityEngine;
 
 public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 {
+    [SerializeField, Label("Building Data"), Expandable] BuildingData data;
     [field: SerializeField, ReadOnly, Expandable] public BuildingData buildingData { get; private set; }
     List<Cell> occupiedCells;
     [field: SerializeField, ReadOnly] public Cell cornerCell { get; private set; }
 
-    public void Initialize(BuildingData buildingData, List<Cell> occupiedCells)
+    public void Initialize(BuildingData buildingData)
     {
         this.buildingData = buildingData;
-        this.occupiedCells = occupiedCells;
+        GetOccupiedCells();
 
         OnOccupy();
     }
-    // add method for deconstructing
-    public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, List<Cell> occupiedCells, Transform parent = null)
+    
+    public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, Transform parent = null)
     {
         GameObject buildingVisual = PrefabUtility.InstantiatePrefab(buildingData.buildingPrefab) as GameObject;
         buildingVisual.transform.position = position;
@@ -26,10 +27,11 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 
         BuildingObject building = buildingVisual.AddComponent<BuildingObject>();
         EditorUtility.SetDirty(building);
-        building.Initialize(buildingData, occupiedCells);
+        building.Initialize(buildingData);
 
         return building;
     }
+
     public void Deconstruct()
     {
         foreach (ItemCost cost in buildingData.costs)
@@ -95,7 +97,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     {
         foreach (Cell cell in occupiedCells)
         {
-            cell.inUse = buildingData.takesFullCell;
+            cell.inUse = buildingData.usesCell;
             cell.walkable = buildingData.walkable;
         }
     }
