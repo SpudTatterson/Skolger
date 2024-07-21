@@ -34,7 +34,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     public static ConstructionSiteObject MakeInstance(BuildingData buildingData, Cell cell, Transform parent = null, bool temp = false)
     {
-        GameObject buildingGO = Instantiate(buildingData.unplacedVisual, cell.position, Quaternion.identity, parent);
+        GameObject buildingGO = PoolManager.Instance.GetObject(buildingData.unplacedVisual, cell.position, parent);
 
         if (!buildingGO.TryGetComponent(out ConstructionSiteObject building))
         {
@@ -90,7 +90,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     public void ConstructBuilding()
     {
-        Destroy(gameObject);
+        PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
         BuildingObject.MakeInstance(buildingData, this.transform.position);
     }
     [ContextMenu("CancelConstruction")]
@@ -121,7 +121,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
                 ItemObject.MakeInstance(cost.Key, cost.Value, cell.position);
             }
         }
-        Destroy(this.gameObject);
+        PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
     }
 
     #endregion
@@ -178,7 +178,10 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     public void GetOccupiedCells()
     {
-        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+        if (GridManager.instance == null)
+            GridManager.InitializeSingleton();
+
+        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells);
         this.occupiedCells = occupiedCells;
     }

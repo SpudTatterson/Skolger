@@ -326,7 +326,10 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
     public void GetOccupiedCells()
     {
-        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+        if (GridManager.instance == null)
+            GridManager.InitializeSingleton();
+
+        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells((Vector2Int)cornerCell, sizeX, sizeY, out List<Cell> occupiedCells);
         this.occupiedCells = occupiedCells;
     }

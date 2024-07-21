@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TaskManager : MonoBehaviour
 {
     public static TaskManager Instance { get; private set; }
 
-    List<IHarvestable> harvestQueue = new List<IHarvestable>();
-    List<IConstructable> constructionQueue = new List<IConstructable>();
-    List<ItemObject> haulQueue = new List<ItemObject>();
-    // Start is called before the first frame update
+    HashSet<IHarvestable> harvestQueue = new HashSet<IHarvestable>();
+    HashSet<IConstructable> constructionQueue = new HashSet<IConstructable>();
+    HashSet<ItemObject> haulQueue = new HashSet<ItemObject>();
+
     void Awake()
     {
         if (Instance == null)
@@ -23,8 +24,7 @@ public class TaskManager : MonoBehaviour
 
     public void AddToHarvestQueue(IHarvestable harvestable)
     {
-        if (!harvestQueue.Contains(harvestable))
-            harvestQueue.Add(harvestable);
+        harvestQueue.Add(harvestable);
     }
     public void RemoveFromHarvestQueue(IHarvestable harvestable)
     {
@@ -34,8 +34,10 @@ public class TaskManager : MonoBehaviour
     {
         if (harvestQueue.Count > 0)
         {
-            IHarvestable harvestable = harvestQueue[0];
-            harvestQueue.RemoveAt(0);
+            var enumerator = harvestQueue.GetEnumerator();
+            enumerator.MoveNext();
+            IHarvestable harvestable = enumerator.Current;
+            harvestQueue.Remove(harvestable);
             return harvestable;
         }
         return null;
@@ -43,8 +45,7 @@ public class TaskManager : MonoBehaviour
 
     public void AddToConstructionQueue(IConstructable constructable)
     {
-        if (!constructionQueue.Contains(constructable))
-            constructionQueue.Add(constructable);
+        constructionQueue.Add(constructable);
     }
     public void RemoveFromConstructionQueue(IConstructable constructable)
     {
@@ -54,8 +55,10 @@ public class TaskManager : MonoBehaviour
     {
         if (constructionQueue.Count > 0)
         {
-            IConstructable constructable = constructionQueue[0];
-            constructionQueue.RemoveAt(0);
+            var enumerator = constructionQueue.GetEnumerator();
+            enumerator.MoveNext();
+            IConstructable constructable = enumerator.Current;
+            constructionQueue.Remove(constructable);
             return constructable;
         }
         return null;
@@ -63,8 +66,7 @@ public class TaskManager : MonoBehaviour
 
     public void AddToHaulQueue(ItemObject itemObject)
     {
-        if (!haulQueue.Contains(itemObject))
-            haulQueue.Add(itemObject);
+        haulQueue.Add(itemObject);
     }
     public void RemoveFromHaulQueue(ItemObject itemObject)
     {
@@ -74,9 +76,36 @@ public class TaskManager : MonoBehaviour
     {
         if (haulQueue.Count > 0)
         {
-            ItemObject item = haulQueue[0];
-            haulQueue.RemoveAt(0);
+            var enumerator = haulQueue.GetEnumerator();
+            enumerator.MoveNext();
+            ItemObject item = enumerator.Current;
+            haulQueue.Remove(item);
             return item;
+        }
+        return null;
+    }
+    public ItemObject PullItemFromQueue(Transform transform)
+    {
+        if (haulQueue.Count > 0)
+        {
+            ItemObject closestItem = null;
+            float closestDistance = Mathf.Infinity;
+
+            foreach (var item in haulQueue)
+            {
+                float distance = Vector3.Distance(item.transform.position, transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestItem = item;
+                }
+            }
+
+            if (closestItem != null)
+            {
+                haulQueue.Remove(closestItem);
+                return closestItem;
+            }
         }
         return null;
     }
