@@ -18,7 +18,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 
         OnOccupy();
     }
-    
+
     public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, Transform parent = null)
     {
         GameObject buildingVisual = PrefabUtility.InstantiatePrefab(buildingData.buildingPrefab) as GameObject;
@@ -89,7 +89,10 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 
     public void GetOccupiedCells()
     {
-        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+        if (GridManager.instance == null)
+            GridManager.InitializeSingleton();
+
+        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells);
         this.occupiedCells = occupiedCells;
     }

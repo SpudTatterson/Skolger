@@ -178,7 +178,10 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     public void GetOccupiedCells()
     {
-        cornerCell = FindObjectOfType<GridManager>().GetCellFromPosition(transform.position);
+        if (GridManager.instance == null)
+            GridManager.InitializeSingleton();
+
+        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells);
         this.occupiedCells = occupiedCells;
     }
