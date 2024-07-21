@@ -22,12 +22,11 @@ public class TaskTakeItemFromStockpile : Node
             var constructable = (IConstructable)GetData("Constructable");
             parent.parent.SetData("Target", constructable.GetPosition());
 
-            Debug.Log(constructable.GetPosition());
             state = NodeState.SUCCESS;
             return state;
         }
 
-        state = NodeState.FAILURE;
+        state = NodeState.RUNNING;
         return state;
     }
 

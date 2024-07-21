@@ -15,23 +15,22 @@ public class ColonistBT : Tree
         agent = GetComponent<NavMeshAgent>();
     }
 
-     protected override Node SetupTree()
+    protected override Node SetupTree()
     {
-        Node Task_wander = CreateTaskWander();
-        Node Task_hauling = CreateTaskHaul();
-
-        Node collectFromStockpileTask = CreateCollectFromStockpile();
-        Node buildTask = CreateConstructionTask();
+        Node Task_Wander = CreateTaskWander();
+        Node Task_Hauling = CreateTaskHaul();
+        Node Task_Constructing = CreateTaskConstruct();
 
         Node root = new Selector(new List<Node>
         {
             // Basic AI tasks that the player can not access in game
             // and the priorities are set from the start.
-            Task_wander,
+            Task_Wander,
             // ----------------------------------------------------
             // AI tasks that the player will have access in game
             // the priorities can change in runtime.
-            Task_hauling,
+            Task_Hauling,
+            Task_Constructing
             // ----------------------------------------------------
         });
 
@@ -85,9 +84,9 @@ public class ColonistBT : Tree
     #endregion
 
     #region Construction Task
-    private Node CreateCollectFromStockpile()
+    private Node CreateTaskConstruct()
     {
-        return new Sequence(new List<Node>
+        Node getItemsFromStockpile = new Sequence(new List<Node>
         {
             new CheckForConstructable(),
             new CheckForConstructableCost(),
@@ -96,20 +95,26 @@ public class ColonistBT : Tree
             new TaskTakeItemFromStockpile(agent),
         })
         {
-            priority = 1000
+            priority = 0
         };
-    }
 
-    private Node CreateConstructionTask()
-    {
-        return new Sequence(new List<Node>
+        Node placeItemsInConstruction = new Sequence(new List<Node>
         {
             new CheckItemInInventory(),
             new TaskGoToTarget(agent),
             new TaskPutItemInConstructable(agent)
         })
         {
-            priority = 1001
+            priority = 1
+        };
+
+        return new Selector(new List<Node>
+        {
+            getItemsFromStockpile,
+            placeItemsInConstruction
+        })
+        {
+            priority = colonistSettings.taskConstruction
         };
     }
     #endregion

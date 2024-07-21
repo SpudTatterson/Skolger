@@ -10,6 +10,7 @@ public class ColonistSettingsSO : ScriptableObject
     [Space]
     public int taskWander;
     public int taskHaul;
+    public int taskConstruction;
 
     [Header("Wander settings")]
     [Space]
