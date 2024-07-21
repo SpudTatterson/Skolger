@@ -8,9 +8,9 @@ public class ColonistSettingsSO : ScriptableObject
     [Header("Priority settings")]
     [Header("Higher is more important")]
     [Space]
-    public int priorityWander;
-    public int priorityPickUpItem;
-    [ReadOnly] public int priorityHaulToStockpile;
+    public int taskWander;
+    public int taskHaul;
+    public int taskConstruction;
 
     [Header("Wander settings")]
     [Space]
@@ -19,10 +19,6 @@ public class ColonistSettingsSO : ScriptableObject
 
     private void OnValidate() 
     {
-        if (priorityWander < 0) priorityWander = 0;
-        if (priorityPickUpItem < 0) priorityPickUpItem = 0;
-        if (priorityHaulToStockpile < 0) priorityHaulToStockpile = 0;
-
-        priorityHaulToStockpile = priorityPickUpItem + 1;
+        if (taskWander < 0) taskWander = 0;
     }
 }

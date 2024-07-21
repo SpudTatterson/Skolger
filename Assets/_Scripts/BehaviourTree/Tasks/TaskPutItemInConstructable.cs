@@ -22,11 +22,11 @@ public class TaskPutItemInConstructable : Node
             ClearData("Target");
         }
 
-        state = NodeState.FAILURE;
+        state = NodeState.RUNNING;
         return state;
     }
 
-        public bool ReachedDestinationOrGaveUp()
+    public bool ReachedDestinationOrGaveUp()
     {
 
         if (!agent.pathPending)

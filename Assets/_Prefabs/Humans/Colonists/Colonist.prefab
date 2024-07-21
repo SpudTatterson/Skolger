@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 35430064873682575}
   - component: {fileID: 3844427474084027021}
   - component: {fileID: 3129767780018028186}
-  - component: {fileID: 216805867965818681}
+  - component: {fileID: 632459686976707505}
   m_Layer: 10
   m_Name: Colonist
   m_TagString: Untagged
@@ -187,7 +187,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &216805867965818681
+--- !u!114 &632459686976707505
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3488476873385593109}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91ca7403961157d4ca8469048b001333, type: 3}
+  m_Script: {fileID: 11500000, guid: f4b9fd3f0716e28418bc169d082e57ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   colonistSettings: {fileID: 11400000, guid: 6c7d17bae72058e4899b0b4acfc1b604, type: 2}

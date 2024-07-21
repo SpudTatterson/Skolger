@@ -7,7 +7,7 @@ public class TaskGoToTarget : Node
 {
     private NavMeshAgent agent;
 
-    public TaskGoToTarget(NavMeshAgent agent) 
+    public TaskGoToTarget(NavMeshAgent agent)
     {
         this.agent = agent;
     }
@@ -15,7 +15,7 @@ public class TaskGoToTarget : Node
     public override NodeState Evaluate()
     {
         object target = GetData("Target");
-        
+
         if (target is MonoBehaviour monoBehaviour)
         {
             target = monoBehaviour.transform.position;
@@ -23,10 +23,6 @@ public class TaskGoToTarget : Node
         else if (target is Cell cell)
         {
             target = cell.position;
-        }
-        else if (target is Vector3 vector3)
-        {
-            target = vector3;
         }
         else
         {
