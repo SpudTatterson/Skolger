@@ -36,8 +36,8 @@ public class MultipleSelectionStrategy : ISelectionStrategy
         foreach (KeyValuePair<string, int> pair in selectedNamesAndAmounts)
         {
 
-            TextMeshProUGUI text = MonoBehaviour.Instantiate(UIManager.instance.defaultTextAsset, scrollViewContent);
-            text.text = $"{pair.Key} x {pair.Value}";
+            TextMeshProUGUI text = PoolManager.Instance.GetObject(UIManager.instance.defaultTextAsset.gameObject, parent: scrollViewContent).GetComponent<TextMeshProUGUI>();
+            text.text = $"{pair.Value} x {pair.Key}";
             multipleSelectionTexts.Add(text);
         }
 
@@ -55,7 +55,7 @@ public class MultipleSelectionStrategy : ISelectionStrategy
     {
         foreach (TextMeshProUGUI text in multipleSelectionTexts)
         {
-            MonoBehaviour.Destroy(text.gameObject);
+            PoolManager.Instance.ReturnObject(UIManager.instance.defaultTextAsset.gameObject, text.gameObject);
         }
         multipleSelectionTexts.Clear();
     }
