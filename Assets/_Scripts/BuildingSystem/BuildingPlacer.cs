@@ -43,8 +43,7 @@ public class BuildingPlacer : MonoBehaviour
                     if (lastCell != hitCell && lastCell != null)
                     {
                         List<Cell> cells = buildingData.PlacementStrategy.GetCells(firstCell, hitCell);
-                        Debug.Log("test");
-                        DestroyAllTemps();
+                        ReturnAllTemps();
                         foreach (Cell cell in cells)
                         {
                             tempObjects.Add(GenerateTempBuilding(cell));
@@ -72,6 +71,8 @@ public class BuildingPlacer : MonoBehaviour
 
     void PlaceBuilding(Cell cell)
     {
+        ReturnAllTemps();
+
         if (cell.IsFree())
         {
             ConstructionSiteObject constructionSite = ConstructionSiteObject.MakeInstance(buildingData, cell);
@@ -80,15 +81,13 @@ public class BuildingPlacer : MonoBehaviour
 
             TaskManager.Instance.AddToConstructionQueue(constructionSite);
         }
-
-        DestroyAllTemps();
     }
 
-    void DestroyAllTemps()
+    void ReturnAllTemps()
     {
         foreach (GameObject gameObject in tempObjects)
         {
-            PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
+            ReturnTemp(gameObject);
         }
         tempObjects.Clear();
     }
@@ -98,7 +97,11 @@ public class BuildingPlacer : MonoBehaviour
         tempGO = GenerateTempBuilding(hitCell);
         SelectionManager.instance.isSelecting = false;
     }
-
+    void ReturnTemp(GameObject temp)
+    {
+        temp.layer =  buildingData.unplacedVisual.layer;
+        PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, temp);
+    }
     GameObject GenerateTempBuilding(Cell hitCell)
     {
         GameObject temp = ConstructionSiteObject.MakeInstance(buildingData, hitCell, temp: true).gameObject;
@@ -114,8 +117,8 @@ public class BuildingPlacer : MonoBehaviour
     public void CancelPlacement()
     {
         placing = false;
-        DestroyAllTemps();
-        PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, tempGO);
+        ReturnAllTemps();
+        ReturnTemp(tempGO);
         tempGO = null;
         firstCell = null;
         lastCell = null;

@@ -13,6 +13,8 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     List<Cell> occupiedCells = new List<Cell>();
     public Cell cornerCell { get; private set; }
     bool allowed = true;
+    [SerializeField, Tooltip("Should be set to true if manually placed in world")]bool manualInit = false;
+    public bool SetForCancellation { get; private set; }
     // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
     public void Initialize(BuildingData buildingData)
@@ -22,6 +24,8 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         GetOccupiedCells();
         OnOccupy();
 
+        costs.Clear();
+        fulfilledCosts.Clear();
         foreach (ItemCost cost in this.buildingData.costs)
         {
             costs.Add(cost);
@@ -50,7 +54,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     void Start()
     {
-        if (data != null)
+        if (manualInit)
             Initialize(data);
     }
 
@@ -90,12 +94,15 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     public void ConstructBuilding()
     {
+        Debug.Log("test");
         PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
         BuildingObject.MakeInstance(buildingData, this.transform.position);
     }
     [ContextMenu("CancelConstruction")]
     public void CancelConstruction()
     {
+        TaskManager.Instance.RemoveFromConstructionQueue(this);
+        SetForCancellation = true;
         foreach (KeyValuePair<ItemData, int> cost in fulfilledCosts)
         {
             int stackSize = cost.Key.stackSize;
