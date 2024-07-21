@@ -76,7 +76,6 @@ public class SelectionManager : MonoBehaviour
             mouseEndPos = Input.mousePosition;
             //UIManager.instance.ResizeSelectionBox(mouseStartPos, mouseEndPos);
             Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
-            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents);
             ExtendedDebug.DrawBox(center, halfExtents * 2, Quaternion.identity);
 
 
@@ -125,6 +124,16 @@ public class SelectionManager : MonoBehaviour
 
     void Select(List<ISelectable> selectables)
     {
+        if (selectables.Count > 0)
+        {
+            UIManager.instance.selectionPanel.SetActive(true);
+        }
+        else
+        {
+            DeselectAll();
+            return;
+        }
+
         if (selectionAction == SelectionAction.Add)
         {
             foreach (var selectable in selectables)
@@ -132,9 +141,9 @@ public class SelectionManager : MonoBehaviour
                 if (!currentSelected.Contains(selectable))
                 {
                     selectable.OnSelect();
-                    SetSelectionType(selectable.GetSelectionType());
                 }
             }
+            SetSelectionType(selectables[0].GetSelectionType());
         }
         else if (selectionAction == SelectionAction.Remove)
         {
@@ -147,10 +156,7 @@ public class SelectionManager : MonoBehaviour
             }
             if (currentSelected.Count != 0)
             {
-                foreach (var selectable in currentSelected)
-                {
-                    SetSelectionType(selectable.GetSelectionType());
-                }
+                SetSelectionType(currentSelected[0].GetSelectionType());
             }
             else
                 DeselectAll();
@@ -180,24 +186,16 @@ public class SelectionManager : MonoBehaviour
 
                         }
                     }
-                    if (!currentSelected.Contains(selectable))
-                    {
-                        selectable.OnSelect();
-                        SetSelectionType(selectable.GetSelectionType());
-                    }
+
+                    selectable.OnSelect();
+
                     if (doBreak) break;
                 }
+                SetSelectionType(selectables[0].GetSelectionType());
             }
         }
 
-        if (selectables.Count > 0)
-        {
-            UIManager.instance.selectionPanel.SetActive(true);
-        }
-        else
-        {
-            DeselectAll();
-        }
+
 
     }
 

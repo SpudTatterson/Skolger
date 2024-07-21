@@ -16,7 +16,7 @@ public class BuildingPlacer : MonoBehaviour
     [SerializeField, ReadOnly] List<GameObject> placedBuildings = new List<GameObject>();
     void Update()
     {
-        if (Canceling())
+        if (Canceling() && placing)
             CancelPlacement();
         if (placing && buildingData != null && !EventSystem.current.IsPointerOverGameObject())
         {
@@ -88,7 +88,7 @@ public class BuildingPlacer : MonoBehaviour
     {
         foreach (GameObject gameObject in tempObjects)
         {
-            Destroy(gameObject);
+            PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
         }
         tempObjects.Clear();
     }
@@ -114,11 +114,12 @@ public class BuildingPlacer : MonoBehaviour
     public void CancelPlacement()
     {
         placing = false;
-        buildingData = null;
         DestroyAllTemps();
-        Destroy(tempGO);
+        PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, tempGO);
+        tempGO = null;
         firstCell = null;
         lastCell = null;
+        buildingData = null;
         SelectionManager.instance.isSelecting = true;
     }
     bool Canceling()

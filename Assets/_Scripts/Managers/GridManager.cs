@@ -29,6 +29,10 @@ public class GridManager : MonoBehaviour
         GetGridsIfMissing();
         RecalculateCellUsage();
     }
+    public static void InitializeSingleton()
+    {
+        instance = FindObjectOfType<GridManager>();
+    }
     public GridObject GetGridFromPosition(Vector3 position)
     {
         GetGridsIfMissing();
