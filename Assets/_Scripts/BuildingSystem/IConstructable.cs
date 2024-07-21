@@ -10,7 +10,7 @@ public interface IConstructable
 
     void CheckIfCanConstruct();
     void ConstructBuilding();
-    Vector3 GetPosition();
+    Cell GetPosition();
     
     void CancelConstruction();
 }

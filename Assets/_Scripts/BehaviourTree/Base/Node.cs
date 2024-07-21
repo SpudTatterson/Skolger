@@ -10,7 +10,7 @@ namespace BehaviorTree
         FAILURE
     }
 
-    public class Node
+    public abstract class Node
     {
         protected NodeState state;
 
@@ -40,7 +40,7 @@ namespace BehaviorTree
             children.Add(node);
         }
 
-        public virtual NodeState Evaluate() => NodeState.FAILURE;
+        public abstract NodeState Evaluate();
 
         public void SetData(string key, object value)
         {

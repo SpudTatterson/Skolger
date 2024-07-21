@@ -18,22 +18,26 @@ public class ColonistBT : Tree
     protected override Node SetupTree()
     {
         Node wanderTask = CreateWanderTask();
-        Node pickUpItem = CreatePickUpItemTask();
-        Node haulToStockpile = CreateHaulToStockpile();
+        Node pickUpItemTask = CreatePickUpItemTask();
+        Node haulToStockpileTask = CreateHaulToStockpile();
+        Node collectFromStockpileTask = CreateCollectFromStockpile();
+        Node buildTask = CreateConstructionTask();
 
         Node root = new Selector(new List<Node>
         {
-            // Basic AI tasks that the player can not access ingame
+            // Basic AI tasks that the player can not access in game
             // and the priorities are set from the start.
 
             wanderTask,
-            haulToStockpile,
+            haulToStockpileTask,
 
             // ----------------------------------------------------
-            // AI tasks that the player will have access ingame
+            // AI tasks that the player will have access in game
             // the priorities can change in runtime.
             
-            pickUpItem
+            collectFromStockpileTask,
+            pickUpItemTask,
+            buildTask
         });
 
         return root;
@@ -73,6 +77,34 @@ public class ColonistBT : Tree
         })
         {
             priority = colonistSettings.priorityHaulToStockpile
+        };
+    }
+
+    private Node CreateCollectFromStockpile()
+    {
+        return new Sequence(new List<Node>
+        {
+            new CheckForConstructable(),
+            new CheckForConstructableCost(),
+            new CheckHasItem(),
+            new TaskGoToTarget(agent),
+            new TaskTakeItemFromStockpile(),
+        })
+        {
+            priority = 1000
+        };
+    }
+
+    private Node CreateConstructionTask()
+    {
+        return new Sequence(new List<Node>
+        {
+            new CheckItemInInventory(),
+            new TaskGoToTarget(agent),
+            new TaskPutItemInConstructable(agent)
+        })
+        {
+            priority = 1001
         };
     }
 }

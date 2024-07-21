@@ -51,9 +51,9 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         return costs;
     }
-    public Vector3 GetPosition()
+    public Cell GetPosition()
     {
-        return transform.position;
+        return cornerCell;
     }
 
     public void CheckIfCanConstruct()

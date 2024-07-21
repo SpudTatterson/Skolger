@@ -46,8 +46,8 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
 
         if (InventoryManager.instance.HasItem(costToGet))
         {
-            Vector3 itemPosition = InventoryManager.instance.GetItemLocation(costToGet.item, costToGet.cost);
-            agent.SetDestination(itemPosition);
+            Cell itemPosition = InventoryManager.instance.GetItemLocation(costToGet.item, costToGet.cost);
+            agent.SetDestination(itemPosition.position);
             while (!ReachedDestinationOrGaveUp())
             {
                 yield return null;
@@ -59,8 +59,8 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
                 yield break;
             }
             PutItemIn(InventoryManager.instance.TakeItem(costToGet));// take item
-            Vector3 constructablePosition = constructable.GetPosition(); // get constructable position
-            agent.SetDestination(constructablePosition);
+            Cell constructablePosition = constructable.GetPosition(); // get constructable position
+            agent.SetDestination(constructablePosition.position);
             while (!ReachedDestinationOrGaveUp())
             {
                 yield return null;
