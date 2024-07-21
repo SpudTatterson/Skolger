@@ -6,10 +6,16 @@ public class CheckForConstructable : Node
     public override NodeState Evaluate()
     {
         var hasConstructable = GetData("Constructable");
+        var hasInventoryItem = GetData("InventoryItem");
+
+        if (hasInventoryItem != null)
+        {
+            state = NodeState.FAILURE;
+            return state;
+        }
 
         if (hasConstructable != null)
         {
-
             state = NodeState.SUCCESS;
             return state;
         }

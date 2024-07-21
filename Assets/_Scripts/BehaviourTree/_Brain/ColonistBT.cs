@@ -88,7 +88,7 @@ public class ColonistBT : Tree
             new CheckForConstructableCost(),
             new CheckHasItem(),
             new TaskGoToTarget(agent),
-            new TaskTakeItemFromStockpile(),
+            new TaskTakeItemFromStockpile(agent),
         })
         {
             priority = 1000

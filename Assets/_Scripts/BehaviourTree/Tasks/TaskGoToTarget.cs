@@ -24,6 +24,10 @@ public class TaskGoToTarget : Node
         {
             target = cell.position;
         }
+        else if (target is Vector3 vector3)
+        {
+            target = vector3;
+        }
         else
         {
             state = NodeState.FAILURE;
@@ -32,7 +36,6 @@ public class TaskGoToTarget : Node
 
         agent.SetDestination((Vector3)target);
 
-        Debug.Log(target);
         state = NodeState.RUNNING;
         return state;
     }

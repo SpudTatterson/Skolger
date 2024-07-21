@@ -17,6 +17,7 @@ public class CheckIsAbleToHaul : Node
 
         if (inventoryItem != null)
         {
+            Debug.Log("failed first");
             state = NodeState.FAILURE;
             return state;
         }
@@ -25,6 +26,7 @@ public class CheckIsAbleToHaul : Node
 
         if(hasTarget != null && hasTarget is MonoBehaviour)
         {
+                    Debug.Log("Able To haul");
             state = NodeState.SUCCESS;
             return state;
         }
@@ -35,10 +37,12 @@ public class CheckIsAbleToHaul : Node
         {
             parent.parent.SetData("Target", haulable);
 
+        Debug.Log("Able To haul");
             state = NodeState.SUCCESS;
             return state;
         }
 
+Debug.Log("failed last");
         state = NodeState.FAILURE;
         return state;
     }
