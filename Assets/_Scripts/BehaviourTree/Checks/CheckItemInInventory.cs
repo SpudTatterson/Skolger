@@ -8,8 +8,6 @@ public class CheckItemInInventory : Node
     public override NodeState Evaluate()
     {
         var inventoryItem = GetData("InventoryItem");
-
-        Debug.Log(inventoryItem?.ToString() + " " + nameof(parent));
         
         if(inventoryItem == null)
         {
