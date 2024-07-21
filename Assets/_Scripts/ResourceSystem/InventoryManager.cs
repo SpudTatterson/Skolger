@@ -73,6 +73,7 @@ public class InventoryManager : MonoBehaviour
     public InventoryItem TakeItem(ItemCost ItemCost)
     {
         Stockpile stockpile = GetStockpileWithItem(ItemCost.item, ItemCost.cost);
+        Debug.Log(ItemCost.cost);
         return stockpile.TakeItem(ItemCost.item, ItemCost.cost);
        
     }
