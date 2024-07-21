@@ -15,11 +15,11 @@ public class ColonistBT : Tree
         agent = GetComponent<NavMeshAgent>();
     }
 
-    protected override Node SetupTree()
+     protected override Node SetupTree()
     {
-        Node wanderTask = CreateWanderTask();
-        Node pickUpItemTask = CreatePickUpItemTask();
-        Node haulToStockpileTask = CreateHaulToStockpile();
+        Node Task_wander = CreateTaskWander();
+        Node Task_hauling = CreateTaskHaul();
+
         Node collectFromStockpileTask = CreateCollectFromStockpile();
         Node buildTask = CreateConstructionTask();
 
@@ -27,34 +27,31 @@ public class ColonistBT : Tree
         {
             // Basic AI tasks that the player can not access in game
             // and the priorities are set from the start.
-
-            wanderTask,
-            haulToStockpileTask,
-
+            Task_wander,
             // ----------------------------------------------------
             // AI tasks that the player will have access in game
             // the priorities can change in runtime.
-            
-            collectFromStockpileTask,
-            pickUpItemTask,
-            buildTask
+            Task_hauling,
+            // ----------------------------------------------------
         });
 
         return root;
     }
 
-
-    private Node CreateWanderTask()
+    #region Wandering Task
+    private Node CreateTaskWander()
     {
         return new TaskWander(agent, colonistSettings)
         {
-            priority = colonistSettings.priorityWander
+            priority = colonistSettings.taskWander
         };
     }
+    #endregion
 
-    private Node CreatePickUpItemTask()
+    #region Hauling Task
+    private Node CreateTaskHaul()
     {
-        return new Sequence(new List<Node>
+        Node pickUpItemSequence = new Sequence(new List<Node>
         {
             new CheckForStockpile(agent),
             new CheckIsAbleToHaul(agent),
@@ -62,13 +59,10 @@ public class ColonistBT : Tree
             new TaskPickUpItem(agent)
         })
         {
-            priority = colonistSettings.priorityPickUpItem
+            priority = 0
         };
-    }
 
-    private Node CreateHaulToStockpile()
-    {
-        return new Sequence(new List<Node>
+        Node haulToStockpileSequence = new Sequence(new List<Node>
         {
             new CheckItemInInventory(),
             new CheckForStockpile(agent),
@@ -76,10 +70,21 @@ public class ColonistBT : Tree
             new TaskPutInStockpile(agent)
         })
         {
-            priority = colonistSettings.priorityHaulToStockpile
+            priority = 1
+        };
+
+        return new Selector(new List<Node>
+        {
+            pickUpItemSequence,
+            haulToStockpileSequence
+        })
+        {
+            priority = colonistSettings.taskHaul
         };
     }
+    #endregion
 
+    #region Construction Task
     private Node CreateCollectFromStockpile()
     {
         return new Sequence(new List<Node>
@@ -107,4 +112,5 @@ public class ColonistBT : Tree
             priority = 1001
         };
     }
+    #endregion
 }

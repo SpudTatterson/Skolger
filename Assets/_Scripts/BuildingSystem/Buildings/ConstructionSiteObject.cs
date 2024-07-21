@@ -94,7 +94,6 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     public void ConstructBuilding()
     {
-        Debug.Log("test");
         PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
         BuildingObject.MakeInstance(buildingData, this.transform.position);
     }
