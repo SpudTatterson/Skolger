@@ -7,6 +7,7 @@ public interface IHarvestable
     public IEnumerator StartHarvesting();
 
     public bool IsBeingHarvested();
+    public bool FinishedHarvesting();
 
     public List<ItemDrop> GetItemDrops();
 
