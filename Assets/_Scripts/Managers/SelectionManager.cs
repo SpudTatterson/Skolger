@@ -14,6 +14,7 @@ public class SelectionManager : MonoBehaviour
     ISelectionStrategy selectionStrategy;
     [SerializeField] List<SelectionType> specialSelectionTypes;
     [SerializeField] float dragDelay = 0.1f;
+    GameObject tempSelectionGrid;
 
     Vector3 mouseStartPos;
     Vector3 mouseEndPos;
@@ -73,11 +74,15 @@ public class SelectionManager : MonoBehaviour
             return;
         else if (Input.GetKey(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)// started dragging
         {
+            Destroy(tempSelectionGrid);
             mouseEndPos = Input.mousePosition;
             //UIManager.instance.ResizeSelectionBox(mouseStartPos, mouseEndPos);
             Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
             ExtendedDebug.DrawBox(center, halfExtents * 2, Quaternion.identity);
-
+            Cell firstCell = GridManager.instance.GetCellFromPosition(VectorUtility.ScreeToWorldPosition(mouseStartPos, LayerManager.instance.GroundLayerMask));
+            Cell lastCell = GridManager.instance.GetCellFromPosition(VectorUtility.ScreeToWorldPosition(mouseEndPos, LayerManager.instance.GroundLayerMask));
+            List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
+            tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.instance.SelectionMaterial);
 
             //on hover
         }
@@ -94,6 +99,7 @@ public class SelectionManager : MonoBehaviour
             mouseStartPos = Vector3.zero;
             mouseEndPos = Vector3.zero;
             mouseDownTime = 0;
+            Destroy(tempSelectionGrid);
         }
     }
 
