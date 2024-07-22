@@ -25,5 +25,10 @@ public class ColonistSettingsSO : ScriptableObject
     private void OnValidate() 
     {
         if (taskWander < 0) taskWander = 0;
+        if (taskEat < 0) taskEat = 11;
+
+        if (taskHaul < 1) taskHaul = 1;
+        if (taskConstruction < 1) taskConstruction = 1;
+        if (taskHarvest < 1) taskHarvest = 1;
     }
 }
