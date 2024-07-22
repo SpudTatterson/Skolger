@@ -16,7 +16,7 @@ public class TaskHarvest : Node
     {
         IHarvestable harvestable = (IHarvestable)GetData("Harvestable");
 
-        if (harvestable != null && !harvestable.IsBeingHarvested() && ReachedDestinationOrGaveUp())
+        if (harvestable != null && !harvestable.IsBeingHarvested() && !harvestable.FinishedHarvesting() && ReachedDestinationOrGaveUp())
         {
             TaskManager.Instance.StartCoroutine(harvestable.StartHarvesting());
 
@@ -24,23 +24,24 @@ public class TaskHarvest : Node
             return state;
         }
 
+        if (harvestable.FinishedHarvesting())
+        {
+            Debug.Log("Im here");
+            MonoBehaviour.Destroy(((MonoBehaviour)harvestable).gameObject);
+            ClearData("Harvestable");
+            ClearData("Target");
+
+            state = NodeState.SUCCESS;
+            return state;
+        }
+
         if (harvestable.IsBeingHarvested())
         {
-            if (harvestable.FinishedHarvesting())
-            {
-                Debug.Log("Im here");
-                MonoBehaviour.Destroy(((MonoBehaviour)harvestable).gameObject);
-                ClearData("Harvestable");
-                ClearData("Target");
-
-                state = NodeState.SUCCESS;
-                return state;
-            }
             state = NodeState.RUNNING;
             return state;
         }
 
-        state = NodeState.FAILURE;
+        state = NodeState.RUNNING;
         return state;
     }
 
