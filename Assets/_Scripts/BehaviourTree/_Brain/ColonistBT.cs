@@ -118,4 +118,17 @@ public class ColonistBT : Tree
         };
     }
     #endregion
+
+    #region Harvest Task
+    private Node CreateTaskHarvest()
+    {
+        return new Sequence(new List<Node>
+        {
+            new CheckForHarvestable(),
+        })
+        {
+            priority = colonistSettings.taskHarvest
+        };
+    }
+    #endregion
 }
