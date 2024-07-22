@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Aviv/DemoScene.unity
-    guid: d0ab494fad8c9ec429c5bb8e90c14467
+    path: Assets/Scenes/Alex/AI_Test 1.unity
+    guid: bbb1b4b37e065f846b62658d3ddf21c6
   m_configObjects: {}
