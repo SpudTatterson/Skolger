@@ -127,6 +127,7 @@ public class ColonistBT : Tree
         return new Sequence(new List<Node>
         {
             new CheckForHarvestable(),
+            new TaskDropInventoryItem(agent),
             new TaskGoToTarget(agent),
             new TaskHarvest(agent)
         })
