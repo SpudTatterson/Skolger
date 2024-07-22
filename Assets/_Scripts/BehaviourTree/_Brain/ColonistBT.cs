@@ -9,15 +9,19 @@ public class ColonistBT : Tree
     [SerializeField] private ColonistSettingsSO colonistSettings;
 
     private NavMeshAgent agent;
+    private ColonistData colonistData;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        colonistData = GetComponent<ColonistData>();
     }
 
     protected override Node SetupTree()
     {
         Node Task_Wander = CreateTaskWander();
+        Node Task_Eat = CreateTaskEat();
+
         Node Task_Hauling = CreateTaskHaul();
         Node Task_Constructing = CreateTaskConstruct();
         Node Task_Harvesting = CreateTaskHarvest();
@@ -26,6 +30,7 @@ public class ColonistBT : Tree
         {
             // Basic AI tasks that the player can not access in game
             // and the priorities are set from the start.
+            Task_Eat,
             Task_Wander,
             // ----------------------------------------------------
             // AI tasks that the player will have access in game
@@ -38,6 +43,23 @@ public class ColonistBT : Tree
 
         return root;
     }
+
+    #region Eating Task
+    private Node CreateTaskEat()
+    {
+        return new Sequence(new List<Node>
+        {
+            new CheckIfHungry(colonistData),
+            new TaskDropInventoryItem(agent),
+            new CheckForEatable(),
+            new TaskGoToTarget(agent),
+            new TaskEat(colonistData)
+        })
+        {
+            priority = colonistSettings.taskEat
+        };
+    }
+    #endregion
 
     #region Wandering Task
     private Node CreateTaskWander()

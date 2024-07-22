@@ -9,6 +9,8 @@ public class ColonistSettingsSO : ScriptableObject
     [Header("Higher is more important")]
     [Space]
     public int taskWander;
+    public int taskEat;
+
     public int taskHaul;
     public int taskConstruction;
     public int taskHarvest;
