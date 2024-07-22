@@ -8,9 +8,9 @@ public interface IConstructable
     List<ItemCost> GetAllCosts();
     void AddItem(IItem item);
 
-    void CheckIfCanConstruct();
+    bool CheckIfCostsFulfilled();
     void ConstructBuilding();
-    Vector3 GetPosition();
+    Cell GetPosition();
 
     void CancelConstruction();
     bool SetForCancellation { get; }

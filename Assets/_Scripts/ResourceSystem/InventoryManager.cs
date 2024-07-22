@@ -90,10 +90,10 @@ public class InventoryManager : MonoBehaviour
     //     }
     //     return itemToTake;
     // }
-    public Vector3 GetItemLocation(ItemData itemData, int cost)
+    public Cell GetItemLocation(ItemData itemData, int cost)
     {
         Cell cell = GetStockpileWithItem(itemData, cost).GetItemCell(itemData, cost);
-        return cell.position;
+        return cell;
     }
     public void RemoveAmountOfItem(ItemData item, int amount)
     {
