@@ -32,7 +32,7 @@ public class TaskManager : MonoBehaviour
     }
     public IHarvestable PullHarvestableFromQueue()
     {
-        if (harvestQueue.Count > 0)
+        if (CheckIfHarvestTaskExists())
         {
             var enumerator = harvestQueue.GetEnumerator();
             enumerator.MoveNext();
@@ -41,6 +41,10 @@ public class TaskManager : MonoBehaviour
             return harvestable;
         }
         return null;
+    }
+    public bool CheckIfHarvestTaskExists()
+    {
+        return harvestQueue.Count > 0;
     }
 
     public void AddToConstructionQueue(IConstructable constructable)
