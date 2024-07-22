@@ -10,6 +10,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     float timeHarvesting = 0f;
     public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
+    bool finishedHarvesting = false;
     bool setForHarvesting = false;
     SelectionType selectionType = SelectionType.Harvestable;
     public void Harvest()
@@ -22,6 +23,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
             ItemObject.MakeInstance(drop.itemData, amount, dropCell.position);
         }
         TaskManager.Instance.RemoveFromHarvestQueue(this);
+        finishedHarvesting = true;
         Destroy(this.gameObject);
     }
 
@@ -43,6 +45,10 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     public bool IsBeingHarvested()
     {
         return beingHarvested;
+    }
+    public bool FinishedHarvesting()
+    {
+        return finishedHarvesting;
     }
     public void AddToHarvestQueue()
     {
