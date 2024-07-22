@@ -20,6 +20,7 @@ public class ColonistBT : Tree
         Node Task_Wander = CreateTaskWander();
         Node Task_Hauling = CreateTaskHaul();
         Node Task_Constructing = CreateTaskConstruct();
+        Node Task_Harvesting = CreateTaskHarvest();
 
         Node root = new Selector(new List<Node>
         {
@@ -30,7 +31,8 @@ public class ColonistBT : Tree
             // AI tasks that the player will have access in game
             // the priorities can change in runtime.
             Task_Hauling,
-            Task_Constructing
+            Task_Constructing,
+            Task_Harvesting
             // ----------------------------------------------------
         });
 
@@ -125,6 +127,8 @@ public class ColonistBT : Tree
         return new Sequence(new List<Node>
         {
             new CheckForHarvestable(),
+            new TaskGoToTarget(agent),
+            new TaskHarvest()
         })
         {
             priority = colonistSettings.taskHarvest
