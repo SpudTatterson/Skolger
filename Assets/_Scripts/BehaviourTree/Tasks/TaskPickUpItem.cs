@@ -19,7 +19,7 @@ public class TaskPickUpItem : Node
         {
             InventoryItem inventoryItem = item.PickUp();
 
-            parent.parent.SetData("InventoryItem", inventoryItem);
+            parent.parent.parent.SetData("InventoryItem", inventoryItem);
             ClearData("Target");
             
             state = NodeState.SUCCESS;

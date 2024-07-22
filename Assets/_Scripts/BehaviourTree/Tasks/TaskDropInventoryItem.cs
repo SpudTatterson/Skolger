@@ -1,5 +1,4 @@
 using BehaviorTree;
-using UnityEngine;
 using UnityEngine.AI;
 
 public class TaskDropInventoryItem : Node
@@ -13,12 +12,12 @@ public class TaskDropInventoryItem : Node
 
     public override NodeState Evaluate()
     {
-
-        InventoryItem inventoryItem = (InventoryItem)GetData("InventoryItem");
+        var inventoryItem = (InventoryItem)GetData("InventoryItem");
 
         if (inventoryItem != null)
         {
             inventoryItem.DropItem(agent.transform.position);
+            ClearData("InventoryItem");
         }
 
         state = NodeState.SUCCESS;
