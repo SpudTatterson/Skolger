@@ -128,7 +128,7 @@ public class ColonistBT : Tree
         {
             new CheckForHarvestable(),
             new TaskGoToTarget(agent),
-            new TaskHarvest()
+            new TaskHarvest(agent)
         })
         {
             priority = colonistSettings.taskHarvest

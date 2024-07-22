@@ -1,17 +1,24 @@
+using System.Threading.Tasks;
 using BehaviorTree;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TaskHarvest : Node
 {
+    NavMeshAgent agent;
+
+    public TaskHarvest(NavMeshAgent agent)
+    {
+        this.agent = agent;
+    }
+
     public override NodeState Evaluate()
     {
         IHarvestable harvestable = (IHarvestable)GetData("Harvestable");
 
-        if (harvestable != null && !harvestable.IsBeingHarvested())
+        if (harvestable != null && !harvestable.IsBeingHarvested() && ReachedDestinationOrGaveUp())
         {
-            harvestable.StartHarvesting();
-            Debug.Log("Started harvesting");
+            TaskManager.Instance.StartCoroutine(harvestable.StartHarvesting());
 
             state = NodeState.RUNNING;
             return state;
@@ -19,14 +26,38 @@ public class TaskHarvest : Node
 
         if (harvestable.IsBeingHarvested())
         {
-            Debug.Log("Being harvested");
+            if (harvestable.FinishedHarvesting())
+            {
+                Debug.Log("Im here");
+                MonoBehaviour.Destroy(((MonoBehaviour)harvestable).gameObject);
+                ClearData("Harvestable");
+                ClearData("Target");
 
-            
+                state = NodeState.SUCCESS;
+                return state;
+            }
             state = NodeState.RUNNING;
             return state;
         }
 
         state = NodeState.FAILURE;
         return state;
+    }
+
+    public bool ReachedDestinationOrGaveUp()
+    {
+
+        if (!agent.pathPending)
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

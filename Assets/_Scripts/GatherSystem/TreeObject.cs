@@ -24,7 +24,6 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
         }
         TaskManager.Instance.RemoveFromHarvestQueue(this);
         finishedHarvesting = true;
-        Destroy(this.gameObject);
     }
 
     public IEnumerator StartHarvesting()

@@ -15,5 +15,6 @@ MonoBehaviour:
   taskWander: 0
   taskHaul: 1
   taskConstruction: 2
+  taskHarvest: 3
   maxWaitTime: 2
   waypointRange: 10

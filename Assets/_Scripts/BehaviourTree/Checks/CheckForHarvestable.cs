@@ -9,8 +9,6 @@ public class CheckForHarvestable : Node
 
         if (hasHarvestable != null)
         {
-            Debug.Log("Already has harvestable");
-
             state = NodeState.SUCCESS;
             return state;
         }
@@ -21,7 +19,6 @@ public class CheckForHarvestable : Node
         {
             parent.parent.SetData("Harvestable", harvestable);
             parent.parent.SetData("Target", harvestable);
-            Debug.Log("Harvestable target set");
 
             state = NodeState.SUCCESS;
             return state;
