@@ -29,6 +29,7 @@ public class GridManager : MonoBehaviour
         GetGridsIfMissing();
         RecalculateCellUsage();
     }
+    [Button]
     public static void InitializeSingleton()
     {
         instance = FindObjectOfType<GridManager>();
