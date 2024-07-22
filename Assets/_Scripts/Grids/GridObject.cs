@@ -104,7 +104,9 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         ResetGrid();
 
         flatCells = new List<Cell>();
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
 
         for (int x = 0; x < cells.GetLength(0); x++)
         {
@@ -354,20 +356,27 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
                     existingMesh.uv = mesh.uv;
                     existingMesh.normals = mesh.normals;
                     existingMesh.RecalculateBounds();
+#if UNITY_EDITOR
                     AssetDatabase.SaveAssets();
+#endif
                     Debug.Log("Updated mesh at " + path);
                 }
             }
             else
             {
+#if UNITY_EDITOR
                 AssetDatabase.CreateAsset(mesh, path);
+
                 Debug.Log("Saved mesh to " + path);
                 existingMesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+#endif
             }
 
             return existingMesh;
         }
+#if UNITY_EDITOR
         AssetDatabase.SaveAssets();
+#endif
         return null;
     }
     Mesh LoadMeshFromFile(GameObject visualGO, out string path)
@@ -383,7 +392,11 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
         path = $"{directoryPath}/{visualGO.name}.asset";
 
+#if UNITY_EDITOR
         return AssetDatabase.LoadAssetAtPath<Mesh>(path);
+#else
+        return null;
+#endif
     }
 
     #endregion
@@ -410,7 +423,9 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
     public void ChangeCellsVisibility(List<Cell> cells, bool visible)
     {
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
         foreach (Cell cell in cells)
         {
             this.cells[cell.x, cell.y].isVisible = visible;
@@ -418,7 +433,9 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     }
     public void ChangeCellsType(List<Cell> cells, CellType type)
     {
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
         foreach (Cell cell in cells)
         {
             this.cells[cell.x, cell.y].cellType = type;

@@ -66,7 +66,9 @@ public class GridManager : MonoBehaviour
     [ContextMenu("GenerateWorld"), Button]
     public void GenerateWorld()
     {
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
         DestroyOldWorld();
         grids.Add(GridObject.MakeInstance(worldSettings, false, gridsParent.transform.position, gridsParent.transform, "FloorGrid"));
 
