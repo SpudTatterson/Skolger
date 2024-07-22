@@ -31,7 +31,7 @@ public class ColonistBT : Tree
         {
             // Basic AI tasks that the player can not access in game
             // and the priorities are set from the start.
-            // Task_Eat,
+            Task_Eat,
             Task_Wander,
             // ----------------------------------------------------
             // AI tasks that the player will have access in game
@@ -55,7 +55,7 @@ public class ColonistBT : Tree
             new TaskDropInventoryItem(agent),
             new CheckForEatable(),
             new TaskGoToTarget(agent),
-            new TaskEat(colonistData)
+            new TaskEat(agent, colonistData)
         })
         {
             priority = colonistSettings.taskEat

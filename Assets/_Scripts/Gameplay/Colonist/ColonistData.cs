@@ -11,6 +11,7 @@ public class ColonistData : MonoBehaviour, IHungerable
     {
         HungerLevel += edible.FoodValue;
         Mathf.Clamp(HungerLevel, 0, Max_Belly_Capacity);
+        Destroy(((MonoBehaviour)edible).gameObject);
     }
 
     public void GetHungry(float hunger)
