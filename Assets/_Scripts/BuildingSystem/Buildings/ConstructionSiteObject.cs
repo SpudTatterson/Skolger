@@ -67,7 +67,6 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
         itemObject.UpdateAmount(itemObject.amount);
 
-        CheckIfCanConstruct();
     }
     public ItemCost GetNextCost()
     {
@@ -79,22 +78,22 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         return costs;
     }
-    public Vector3 GetPosition()
+    public Cell GetPosition()
     {
-        return transform.position;
+        return cornerCell;
     }
 
-    public void CheckIfCanConstruct()
+    public bool CheckIfCostsFulfilled()
     {
         if (costs.Count == 0)
         {
-            ConstructBuilding();
+            return true;
         }
+        return false;
     }
 
     public void ConstructBuilding()
     {
-        Debug.Log("test");
         PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
         BuildingObject.MakeInstance(buildingData, this.transform.position);
     }

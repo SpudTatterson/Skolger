@@ -32,7 +32,7 @@ public class TaskManager : MonoBehaviour
     }
     public IHarvestable PullHarvestableFromQueue()
     {
-        if (harvestQueue.Count > 0)
+        if (CheckIfHarvestTaskExists())
         {
             var enumerator = harvestQueue.GetEnumerator();
             enumerator.MoveNext();
@@ -41,6 +41,10 @@ public class TaskManager : MonoBehaviour
             return harvestable;
         }
         return null;
+    }
+    public bool CheckIfHarvestTaskExists()
+    {
+        return harvestQueue.Count > 0;
     }
 
     public void AddToConstructionQueue(IConstructable constructable)
@@ -53,7 +57,7 @@ public class TaskManager : MonoBehaviour
     }
     public IConstructable PullConstructableFromQueue()
     {
-        if (constructionQueue.Count > 0)
+        if (CheckIfConstructableTaskExists())
         {
             var enumerator = constructionQueue.GetEnumerator();
             enumerator.MoveNext();
@@ -62,6 +66,10 @@ public class TaskManager : MonoBehaviour
             return constructable;
         }
         return null;
+    }
+    public bool CheckIfConstructableTaskExists()
+    {
+        return constructionQueue.Count > 0;
     }
 
     public void AddToHaulQueue(ItemObject itemObject)
@@ -86,7 +94,7 @@ public class TaskManager : MonoBehaviour
     }
     public ItemObject PullItemFromQueue(Transform transform)
     {
-        if (haulQueue.Count > 0)
+        if (CheckIfHaulTaskExists())
         {
             ItemObject closestItem = null;
             float closestDistance = Mathf.Infinity;
@@ -108,5 +116,9 @@ public class TaskManager : MonoBehaviour
             }
         }
         return null;
+    }
+    public bool CheckIfHaulTaskExists()
+    {
+        return haulQueue.Count > 0;
     }
 }
