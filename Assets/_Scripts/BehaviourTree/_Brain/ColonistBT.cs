@@ -17,6 +17,7 @@ public class ColonistBT : Tree
         colonistData = GetComponent<ColonistData>();
     }
 
+    #region Behaviour Tree Setup
     protected override Node SetupTree()
     {
         Node Task_Wander = CreateTaskWander();
@@ -30,7 +31,7 @@ public class ColonistBT : Tree
         {
             // Basic AI tasks that the player can not access in game
             // and the priorities are set from the start.
-            Task_Eat,
+            // Task_Eat,
             Task_Wander,
             // ----------------------------------------------------
             // AI tasks that the player will have access in game
@@ -43,6 +44,7 @@ public class ColonistBT : Tree
 
         return root;
     }
+    #endregion
 
     #region Eating Task
     private Node CreateTaskEat()
