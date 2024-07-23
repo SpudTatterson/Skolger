@@ -17,7 +17,9 @@ public class TaskEat : Node
     {
         if (ReachedDestinationOrGaveUp())
         {
-            IEdible edible = (IEdible)GetData("Food");
+            EdibleData edibleData = (EdibleData)GetData("FoodData");
+            Stockpile stockpile = (Stockpile)GetData("Stockpile");
+            IEdible edible = (EdibleInventoryItem)InventoryManager.instance.TakeItem(new ItemCost(edibleData, 1), stockpile);
             colonistData.Eat(edible);
 
             ClearData("Target");

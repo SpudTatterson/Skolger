@@ -5,17 +5,20 @@ public class CheckForEatable : Node
 {
     public override NodeState Evaluate()
     {
-        //arab time
-        MonoBehaviour eatable = MonoBehaviour.FindObjectOfType<FoodTest>();
 
-        if(eatable != null)
+        if (InventoryManager.instance.TryFindFoodInStockpiles(out EdibleData edible, out Stockpile stockpile, out Cell itemPosition))
         {
             Debug.Log("Found Eatable");
-            parent.parent.SetData("Food", eatable);
-            parent.parent.SetData("Target", eatable);
+            parent.parent.SetData("FoodData", edible);
+            parent.parent.SetData("Stockpile", stockpile);
+            parent.parent.SetData("Target", itemPosition);
 
             state = NodeState.SUCCESS;
             return state;
+        }
+        else
+        {
+            Debug.Log("Cant find food AHHH");
         }
 
         state = NodeState.FAILURE;

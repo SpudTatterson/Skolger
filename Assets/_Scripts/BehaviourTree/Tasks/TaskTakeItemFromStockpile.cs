@@ -17,7 +17,8 @@ public class TaskTakeItemFromStockpile : Node
 
         if (cost != null && ReachedDestinationOrGaveUp())
         {
-            var item = InventoryManager.instance.TakeItem(cost);
+            Stockpile stockpile = (Stockpile)GetData("Stockpile");
+            var item = InventoryManager.instance.TakeItem(cost, stockpile);
             parent.parent.SetData("InventoryItem", item);
             var constructable = (IConstructable)GetData("Constructable");
             parent.parent.SetData("Target", constructable.GetPosition());
