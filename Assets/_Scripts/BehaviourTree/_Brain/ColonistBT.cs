@@ -52,8 +52,8 @@ public class ColonistBT : Tree
         return new Sequence(new List<Node>
         {
             new CheckIfHungry(colonistData),
-            new TaskDropInventoryItem(agent),
             new CheckForEatable(),
+            new TaskDropInventoryItem(agent),
             new TaskGoToTarget(agent),
             new TaskEat(agent, colonistData)
         })
