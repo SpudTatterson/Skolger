@@ -13,14 +13,15 @@ public class TaskTakeItemFromStockpile : Node
 
     public override NodeState Evaluate()
     {
-        var cost = (ItemCost)GetData("Cost");
+        var cost = (ItemCost)GetData(DataName.Cost);
 
         if (cost != null && ReachedDestinationOrGaveUp())
         {
-            var item = InventoryManager.instance.TakeItem(cost);
-            parent.parent.SetData("InventoryItem", item);
-            var constructable = (IConstructable)GetData("Constructable");
-            parent.parent.SetData("Target", constructable.GetPosition());
+            Stockpile stockpile = (Stockpile)GetData(DataName.Stockpile);
+            var item = InventoryManager.instance.TakeItem(cost, stockpile);
+            SetDataOnRoot(DataName.InventoryItem, item);
+            var constructable = (IConstructable)GetData(DataName.Constructable);
+            SetDataOnRoot(DataName.Target, constructable.GetPosition());
 
             state = NodeState.SUCCESS;
             return state;
@@ -30,7 +31,7 @@ public class TaskTakeItemFromStockpile : Node
         return state;
     }
 
-        public bool ReachedDestinationOrGaveUp()
+    public bool ReachedDestinationOrGaveUp()
     {
 
         if (!agent.pathPending)

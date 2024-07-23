@@ -16,7 +16,7 @@ public class ConstructableSelectionMenu : MonoBehaviour
         {
             costsVisual[i].gameObject.SetActive(true);
             costsVisual[i].text.text = $"{costs[i].cost}";
-            costsVisual[i].image = costs[i].item.icon;
+            costsVisual[i].image.sprite = costs[i].item.icon;
         }
     }
 }

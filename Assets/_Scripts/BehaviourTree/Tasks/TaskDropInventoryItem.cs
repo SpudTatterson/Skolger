@@ -12,12 +12,12 @@ public class TaskDropInventoryItem : Node
 
     public override NodeState Evaluate()
     {
-        var inventoryItem = (InventoryItem)GetData("InventoryItem");
+        var inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
 
         if (inventoryItem != null)
         {
             inventoryItem.DropItem(agent.transform.position);
-            ClearData("InventoryItem");
+            ClearData(DataName.InventoryItem);
         }
 
         state = NodeState.SUCCESS;

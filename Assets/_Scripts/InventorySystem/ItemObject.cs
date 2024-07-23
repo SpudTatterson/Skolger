@@ -112,8 +112,13 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
     public InventoryItem PickUp()
     {
-        InventoryItem item = new InventoryItem(itemData, amount);
         Destroy(gameObject);
+        if (itemData.itemType == ItemType.Edible)
+        {
+            EdibleInventoryItem edibleItem = new EdibleInventoryItem((EdibleData)itemData, amount);
+            return edibleItem;
+        }
+        InventoryItem item = new InventoryItem(itemData, amount);
         return item;
     }
 

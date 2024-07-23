@@ -16,9 +16,9 @@ namespace BehaviorTree
 
         public Node parent;
         protected List<Node> children = new List<Node>();
-        public int priority {get; set; }
+        public int priority { get; set; }
 
-        private Dictionary<string, object> dataContext = new Dictionary<string, object>();
+        private Dictionary<DataName, object> dataContext = new Dictionary<DataName, object>();
 
         public Node()
         {
@@ -28,7 +28,7 @@ namespace BehaviorTree
 
         public Node(List<Node> children)
         {
-            foreach(Node child in children)
+            foreach (Node child in children)
             {
                 Attach(child);
             }
@@ -42,12 +42,28 @@ namespace BehaviorTree
 
         public abstract NodeState Evaluate();
 
-        public void SetData(string key, object value)
+        public void SetData(DataName key, object value)
         {
             dataContext[key] = value;
         }
 
-        public object GetData(string key)
+        public Node GetRootNode()
+        {
+            Node root = this;
+            while (root.parent != null)
+            {
+                root = root.parent;
+            }
+            return root;
+        }
+
+        public void SetDataOnRoot(DataName key, object value)
+        {
+            Node root = GetRootNode();
+            root.SetData(key, value);
+        }
+
+        public object GetData(DataName key)
         {
             object value = null;
             if (dataContext.TryGetValue(key, out value))
@@ -68,7 +84,7 @@ namespace BehaviorTree
             return null;
         }
 
-        public bool ClearData(string key)
+        public bool ClearData(DataName key)
         {
             if (dataContext.ContainsKey(key))
             {
@@ -80,7 +96,7 @@ namespace BehaviorTree
             while (node != null)
             {
                 bool cleared = node.ClearData(key);
-                if(cleared)
+                if (cleared)
                 {
                     return true;
                 }

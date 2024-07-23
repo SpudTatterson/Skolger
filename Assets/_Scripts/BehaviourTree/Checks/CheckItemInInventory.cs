@@ -7,7 +7,7 @@ public class CheckItemInInventory : Node
 
     public override NodeState Evaluate()
     {
-        var inventoryItem = GetData("InventoryItem");
+        var inventoryItem = GetData(DataName.InventoryItem);
         
         if(inventoryItem == null)
         {

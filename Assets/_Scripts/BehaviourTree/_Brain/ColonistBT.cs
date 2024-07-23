@@ -52,8 +52,8 @@ public class ColonistBT : Tree
         return new Sequence(new List<Node>
         {
             new CheckIfHungry(colonistData),
-            new TaskDropInventoryItem(agent),
             new CheckForEatable(),
+            new TaskDropInventoryItem(agent),
             new TaskGoToTarget(agent),
             new TaskEat(agent, colonistData)
         })
@@ -112,6 +112,13 @@ public class ColonistBT : Tree
     #region Construction Task
     private Node CreateTaskConstruct()
     {
+        List<DataName> requiredKeys = new List<DataName>
+        {
+            DataName.Constructable,
+            DataName.InventoryItem,
+            DataName.Cost
+        };
+
         Node getItemsFromStockpile = new Sequence(new List<Node>
         {
             new CheckForConstructable(),
@@ -126,6 +133,7 @@ public class ColonistBT : Tree
 
         Node placeItemsInConstruction = new Sequence(new List<Node>
         {
+            new CheckForCorrectData(requiredKeys),
             new CheckItemInInventory(),
             new TaskGoToTarget(agent),
             new TaskPutItemInConstructable(agent)

@@ -52,7 +52,7 @@ public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
 
         if (InventoryManager.instance.HasItem(costToGet))
         {
-            Cell itemPosition = InventoryManager.instance.GetItemLocation(costToGet.item, costToGet.cost);
+            Cell itemPosition = InventoryManager.instance.GetItemLocation(costToGet.item, costToGet.cost, out _);
             agent.SetDestination(itemPosition.position);
             while (!ReachedDestinationOrGaveUp())
             {

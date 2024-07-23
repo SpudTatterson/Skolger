@@ -12,20 +12,24 @@ public class TaskPutItemInConstructable : Node
 
     public override NodeState Evaluate()
     {
-        var constructable = (IConstructable)GetData("Constructable");
-        var item = (InventoryItem)GetData("InventoryItem");
+        var constructable = (IConstructable)GetData(DataName.Constructable);
+        var item = (InventoryItem)GetData(DataName.InventoryItem);
 
         if (constructable != null && ReachedDestinationOrGaveUp())
         {
             constructable.AddItem(item);
-            ClearData("InventoryItem");
-            ClearData("Target");
+            ClearData(DataName.InventoryItem);
+            ClearData(DataName.Target);
+            ClearData(DataName.Cost);
 
             if(constructable.CheckIfCostsFulfilled())
             {
                 constructable.ConstructBuilding();
-                ClearData("Constructable");
+                ClearData(DataName.Constructable);
             }
+
+            state = NodeState.RUNNING;
+            return state;
         }
 
         state = NodeState.RUNNING;

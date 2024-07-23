@@ -13,7 +13,7 @@ public class CheckIsAbleToHaul : Node
 
     public override NodeState Evaluate()
     {
-        var inventoryItem = GetData("InventoryItem");
+        var inventoryItem = GetData(DataName.InventoryItem);
 
         if (inventoryItem != null)
         {
@@ -21,7 +21,7 @@ public class CheckIsAbleToHaul : Node
             return state;
         }
 
-        var hasTarget = GetData("Target");
+        var hasTarget = GetData(DataName.Target);
 
         if(hasTarget != null && hasTarget is MonoBehaviour)
         {
@@ -33,7 +33,7 @@ public class CheckIsAbleToHaul : Node
 
         if (haulable != null) 
         {
-            parent.parent.SetData("Target", haulable);
+            SetDataOnRoot(DataName.Target, haulable);
 
             state = NodeState.SUCCESS;
             return state;
