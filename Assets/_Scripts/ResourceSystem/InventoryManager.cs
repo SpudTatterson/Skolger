@@ -116,9 +116,9 @@ public class InventoryManager : MonoBehaviour
     }
 
     // Method to get item location
-    public Cell GetItemLocation(ItemData itemData, int cost)
+    public Cell GetItemLocation(ItemData itemData, int cost, out Stockpile stockpile)
     {
-        Stockpile stockpile = GetStockpileWithItem(itemData, cost);
+        stockpile = GetStockpileWithItem(itemData, cost);
         if (stockpile == null)
         {
             Debug.LogWarning("Item not found in stockpiles.");
