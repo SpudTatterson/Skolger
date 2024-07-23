@@ -16,14 +16,14 @@ public class CheckEnemyInRange : Node
 
     public override NodeState Evaluate()
     {
-        object t = GetData("FollowTarget");
+        object t = GetData(DataName.FollowTarget);
         if (t == null)
         {
             Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius, targetLayerMask);
 
             if(colliders.Length > 0)
             {
-                parent.parent.SetData("FollowTarget", colliders[0].transform);
+                SetDataOnRoot(DataName.FollowTarget, colliders[0].transform);
 
                 state = NodeState.SUCCESS;
                 return state;

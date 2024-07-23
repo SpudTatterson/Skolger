@@ -18,7 +18,7 @@ namespace BehaviorTree
         protected List<Node> children = new List<Node>();
         public int priority { get; set; }
 
-        private Dictionary<string, object> dataContext = new Dictionary<string, object>();
+        private Dictionary<DataName, object> dataContext = new Dictionary<DataName, object>();
 
         public Node()
         {
@@ -42,10 +42,8 @@ namespace BehaviorTree
 
         public abstract NodeState Evaluate();
 
-        public void SetData(string key, object value)
+        public void SetData(DataName key, object value)
         {
-            if (key == "Target")
-                Debug.Log(value.ToString());
             dataContext[key] = value;
         }
 
@@ -59,13 +57,13 @@ namespace BehaviorTree
             return root;
         }
 
-        public void SetDataOnRoot(string key, object value)
+        public void SetDataOnRoot(DataName key, object value)
         {
             Node root = GetRootNode();
             root.SetData(key, value);
         }
 
-        public object GetData(string key)
+        public object GetData(DataName key)
         {
             object value = null;
             if (dataContext.TryGetValue(key, out value))
@@ -86,7 +84,7 @@ namespace BehaviorTree
             return null;
         }
 
-        public bool ClearData(string key)
+        public bool ClearData(DataName key)
         {
             if (dataContext.ContainsKey(key))
             {

@@ -5,8 +5,8 @@ public class CheckForConstructable : Node
 {
     public override NodeState Evaluate()
     {
-        var hasConstructable = GetData("Constructable");
-        var hasInventoryItem = GetData("InventoryItem");
+        var hasConstructable = GetData(DataName.Constructable);
+        var hasInventoryItem = GetData(DataName.InventoryItem);
 
         if (hasInventoryItem != null)
         {
@@ -24,7 +24,7 @@ public class CheckForConstructable : Node
 
         if (constructable != null)
         {
-            parent.parent.SetData("Constructable", constructable);
+            SetDataOnRoot(DataName.Constructable, constructable);
 
             state = NodeState.SUCCESS;
             return state;

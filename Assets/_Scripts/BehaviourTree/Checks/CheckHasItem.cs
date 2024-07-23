@@ -5,15 +5,15 @@ public class CheckHasItem : Node
 {
     public override NodeState Evaluate()
     {
-        ItemCost itemCost = (ItemCost)GetData("Cost");
+        ItemCost itemCost = (ItemCost)GetData(DataName.Cost);
 
         if (itemCost != null)
         {
             if (InventoryManager.instance.HasItem(itemCost))
             {
                 Cell itemPosition = InventoryManager.instance.GetItemLocation(itemCost.item, itemCost.cost, out Stockpile stockpile);
-                parent.parent.SetData("Target", itemPosition);
-                parent.parent.SetData("Stockpile", stockpile);
+                SetDataOnRoot(DataName.Target, itemPosition);
+                SetDataOnRoot(DataName.Stockpile, stockpile);
 
                 state = NodeState.SUCCESS;
                 return state;

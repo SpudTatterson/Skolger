@@ -13,14 +13,14 @@ public class TaskPickUpItem : Node
 
     public override NodeState Evaluate()
     {
-        ItemObject item = (ItemObject)GetData("Target");
+        ItemObject item = (ItemObject)GetData(DataName.Target);
 
         if(item != null && ReachedDestinationOrGaveUp())
         {
             InventoryItem inventoryItem = item.PickUp();
 
-            parent.parent.parent.SetData("InventoryItem", inventoryItem);
-            ClearData("Target");
+            SetDataOnRoot(DataName.InventoryItem, inventoryItem);
+            ClearData(DataName.Target);
             
             state = NodeState.SUCCESS;
             return state;

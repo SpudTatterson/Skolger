@@ -14,7 +14,7 @@ public class TaskHarvest : Node
 
     public override NodeState Evaluate()
     {
-        IHarvestable harvestable = (IHarvestable)GetData("Harvestable");
+        IHarvestable harvestable = (IHarvestable)GetData(DataName.Harvestable);
 
         if (harvestable != null && !harvestable.IsBeingHarvested() && !harvestable.FinishedHarvesting() && ReachedDestinationOrGaveUp())
         {
@@ -28,8 +28,8 @@ public class TaskHarvest : Node
         {
             Debug.Log("Im here");
             MonoBehaviour.Destroy(((MonoBehaviour)harvestable).gameObject);
-            ClearData("Harvestable");
-            ClearData("Target");
+            ClearData(DataName.Harvestable);
+            ClearData(DataName.Target);
 
             state = NodeState.SUCCESS;
             return state;

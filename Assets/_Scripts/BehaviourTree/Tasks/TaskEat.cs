@@ -17,12 +17,12 @@ public class TaskEat : Node
     {
         if (ReachedDestinationOrGaveUp())
         {
-            EdibleData edibleData = (EdibleData)GetData("FoodData");
-            Stockpile stockpile = (Stockpile)GetData("Stockpile");
+            EdibleData edibleData = (EdibleData)GetData(DataName.FoodData);
+            Stockpile stockpile = (Stockpile)GetData(DataName.Stockpile);
             IEdible edible = (EdibleInventoryItem)InventoryManager.instance.TakeItem(new ItemCost(edibleData, 1), stockpile);
             colonistData.Eat(edible);
 
-            ClearData("Target");
+            ClearData(DataName.Target);
             state = NodeState.SUCCESS;
             return state;
         }

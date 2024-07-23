@@ -112,11 +112,11 @@ public class ColonistBT : Tree
     #region Construction Task
     private Node CreateTaskConstruct()
     {
-        List<string> requiredKeys = new List<string>
+        List<DataName> requiredKeys = new List<DataName>
         {
-            "Constructable",
-            "InventoryItem",
-            "Cost"
+            DataName.Constructable,
+            DataName.InventoryItem,
+            DataName.Cost
         };
 
         Node getItemsFromStockpile = new Sequence(new List<Node>
