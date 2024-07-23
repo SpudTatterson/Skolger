@@ -1,22 +1,24 @@
+using NaughtyAttributes;
 using UnityEngine;
 
 public class ColonistData : MonoBehaviour, IHungerable
 {
     const float Max_Belly_Capacity = 100f;
-    [field:SerializeField]public float HungerThreshold { get; private set; } = 40;
-    [field:SerializeField]public float HungerLevel { get; private set; } = 50;
-    [field:SerializeField]public float HungerGainSpeed {get; private set; } = 1;
+    [field: SerializeField] public float HungerThreshold { get; private set; } = 40; // The amount of hungry at which the colonist will drop everything and go eat
+    [field: SerializeField, ReadOnly] public float HungerLevel { get; private set; } = 50; // How hungry the colonist current is
+    [field: SerializeField] public float HungerGainSpeed { get; private set; } = 1; // Hunger gain per second
 
     public void Eat(IEdible edible)
     {
         HungerLevel += edible.FoodValue;
-        Mathf.Clamp(HungerLevel, 0, Max_Belly_Capacity);
+        HungerLevel = Mathf.Clamp(HungerLevel, 0, Max_Belly_Capacity);
+        //Destroy(((MonoBehaviour)edible).gameObject);
     }
 
     public void GetHungry(float hunger)
     {
         HungerLevel -= HungerGainSpeed * hunger;
-        Mathf.Clamp(HungerLevel, 0 , Max_Belly_Capacity);
+        HungerLevel = Mathf.Clamp(HungerLevel, 0, Max_Belly_Capacity);
     }
 
     public bool IsHungry()
