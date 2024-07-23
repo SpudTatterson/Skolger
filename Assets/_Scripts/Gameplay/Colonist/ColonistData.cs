@@ -7,6 +7,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     [field: SerializeField] public float HungerThreshold { get; private set; } = 40; // The amount of hungry at which the colonist will drop everything and go eat
     [field: SerializeField, ReadOnly] public float HungerLevel { get; private set; } = 50; // How hungry the colonist current is
     [field: SerializeField] public float HungerGainSpeed { get; private set; } = 1; // Hunger gain per second
+    InventoryItem heldItem;
 
     public void Eat(IEdible edible)
     {
