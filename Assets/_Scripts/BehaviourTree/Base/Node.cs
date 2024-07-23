@@ -49,6 +49,22 @@ namespace BehaviorTree
             dataContext[key] = value;
         }
 
+        public Node GetRootNode()
+        {
+            Node root = this;
+            while (root.parent != null)
+            {
+                root = root.parent;
+            }
+            return root;
+        }
+
+        public void SetDataOnRoot(string key, object value)
+        {
+            Node root = GetRootNode();
+            root.SetData(key, value);
+        }
+
         public object GetData(string key)
         {
             object value = null;

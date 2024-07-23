@@ -20,12 +20,16 @@ public class TaskPutItemInConstructable : Node
             constructable.AddItem(item);
             ClearData("InventoryItem");
             ClearData("Target");
+            ClearData("Cost");
 
             if(constructable.CheckIfCostsFulfilled())
             {
                 constructable.ConstructBuilding();
                 ClearData("Constructable");
             }
+
+            state = NodeState.RUNNING;
+            return state;
         }
 
         state = NodeState.RUNNING;

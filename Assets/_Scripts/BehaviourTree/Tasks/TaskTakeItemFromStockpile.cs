@@ -31,7 +31,7 @@ public class TaskTakeItemFromStockpile : Node
         return state;
     }
 
-        public bool ReachedDestinationOrGaveUp()
+    public bool ReachedDestinationOrGaveUp()
     {
 
         if (!agent.pathPending)

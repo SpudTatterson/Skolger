@@ -112,6 +112,13 @@ public class ColonistBT : Tree
     #region Construction Task
     private Node CreateTaskConstruct()
     {
+        List<string> requiredKeys = new List<string>
+        {
+            "Constructable",
+            "InventoryItem",
+            "Cost"
+        };
+
         Node getItemsFromStockpile = new Sequence(new List<Node>
         {
             new CheckForConstructable(),
@@ -126,6 +133,7 @@ public class ColonistBT : Tree
 
         Node placeItemsInConstruction = new Sequence(new List<Node>
         {
+            new CheckForCorrectData(requiredKeys),
             new CheckItemInInventory(),
             new TaskGoToTarget(agent),
             new TaskPutItemInConstructable(agent)

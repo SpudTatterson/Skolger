@@ -24,12 +24,12 @@ public class TaskPutInStockpile : Node
 
         if (!ReachedDestinationOrGaveUp())
         {
-            state = NodeState.FAILURE;
+            state = NodeState.RUNNING;
             return state;            
         }
 
         stockpile.AddItem(inventoryItem);
-        
+
         ClearData("InventoryItem");
         ClearData("Cell");
         ClearData("Target");
