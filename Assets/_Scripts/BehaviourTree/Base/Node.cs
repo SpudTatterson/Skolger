@@ -16,7 +16,7 @@ namespace BehaviorTree
 
         public Node parent;
         protected List<Node> children = new List<Node>();
-        public int priority {get; set; }
+        public int priority { get; set; }
 
         private Dictionary<string, object> dataContext = new Dictionary<string, object>();
 
@@ -28,7 +28,7 @@ namespace BehaviorTree
 
         public Node(List<Node> children)
         {
-            foreach(Node child in children)
+            foreach (Node child in children)
             {
                 Attach(child);
             }
@@ -44,6 +44,8 @@ namespace BehaviorTree
 
         public void SetData(string key, object value)
         {
+            if (key == "Target")
+                Debug.Log(value.ToString());
             dataContext[key] = value;
         }
 
@@ -80,7 +82,7 @@ namespace BehaviorTree
             while (node != null)
             {
                 bool cleared = node.ClearData(key);
-                if(cleared)
+                if (cleared)
                 {
                     return true;
                 }

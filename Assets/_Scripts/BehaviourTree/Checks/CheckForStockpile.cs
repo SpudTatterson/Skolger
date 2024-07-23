@@ -40,8 +40,8 @@ public class CheckForStockpile : Node
             state = NodeState.FAILURE;
             return state;
         }
-
-        if (inventoryItem != null)
+        var target = GetData("Target");
+        if (inventoryItem != null && target == null)
         {
             parent.parent.SetData("Target", cell);
         }

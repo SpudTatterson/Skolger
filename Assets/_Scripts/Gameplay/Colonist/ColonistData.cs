@@ -1,7 +1,7 @@
 using NaughtyAttributes;
 using UnityEngine;
 
-public class ColonistData : MonoBehaviour, IHungerable
+public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem>
 {
     const float Max_Belly_Capacity = 100f;
     [field: SerializeField] public float HungerThreshold { get; private set; } = 40; // The amount of hungry at which the colonist will drop everything and go eat
@@ -25,8 +25,40 @@ public class ColonistData : MonoBehaviour, IHungerable
     {
         if (HungerLevel < HungerThreshold) return true;
         return false;
-    }   
-    
+    }
+    public bool HasItem(ItemData itemData, int amount)
+    {
+        if (itemData == heldItem.itemData && amount <= heldItem.amount) return true;
+        return false;
+    }
+    public bool HasSpace()
+    {
+        if (heldItem == null || heldItem.NullCheck()) return true;
+        else return false;
+    }
+
+    public InventoryItem TakeItemOut(ItemData itemData, int amount)
+    {
+        if (HasItem(itemData, amount))
+        {
+            heldItem.UpdateAmount(-amount);
+            return new InventoryItem(itemData, amount);
+        }
+        return null;
+    }
+
+    public void PutItemIn(InventoryItem item)
+    {
+        item.OnDestroy += HandleItemDestruction;
+        heldItem = item;
+    }
+
+    void HandleItemDestruction(InventoryItem item)
+    {
+        item.OnDestroy -= HandleItemDestruction;
+        heldItem = null;
+    }
+
     void Update()
     {
         GetHungry(Time.deltaTime);
