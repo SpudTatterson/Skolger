@@ -49,19 +49,19 @@ public class InventoryManager : MonoBehaviour
         stockpile = null;
         itemPosition = null;
 
-        if (totalItems[ItemType.Edible] == null)
+        if (!totalItems.ContainsKey(ItemType.Edible) || totalItems[ItemType.Edible] == null)
             return false;
         else
         {
-            foreach(KeyValuePair<ItemData, int> foodItem in totalItems[ItemType.Edible])
+            foreach (KeyValuePair<ItemData, int> foodItem in totalItems[ItemType.Edible])
             {
-                if(foodItem.Value > 0)
+                if (foodItem.Value > 0)
                 {
                     edibleData = (EdibleData)foodItem.Key;
                     stockpile = GetStockpileWithItem(edibleData, foodItem.Value);
                     itemPosition = stockpile.GetItemCell(edibleData, foodItem.Value);
                     return true;
-                } 
+                }
             }
             return false;
         }
@@ -103,9 +103,10 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
-    public InventoryItem TakeItem(ItemCost itemCost)
+    public InventoryItem TakeItem(ItemCost itemCost, Stockpile stockpile = null)
     {
-        Stockpile stockpile = GetStockpileWithItem(itemCost.item, itemCost.cost);
+        if (stockpile == null)
+            stockpile = GetStockpileWithItem(itemCost.item, itemCost.cost);
         if (stockpile == null)
         {
             Debug.LogWarning("Item not found in stockpiles.");
