@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 3844427474084027021}
   - component: {fileID: 3129767780018028186}
   - component: {fileID: 632459686976707505}
+  - component: {fileID: 3700086828718647259}
   m_Layer: 10
   m_Name: Colonist
   m_TagString: Untagged
@@ -200,6 +201,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colonistSettings: {fileID: 11400000, guid: 6c7d17bae72058e4899b0b4acfc1b604, type: 2}
+--- !u!114 &3700086828718647259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3488476873385593109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f36f52c47566b3c45bbb59ff8154f985, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <HungerThreshold>k__BackingField: 40
+  <HungerLevel>k__BackingField: 50
+  <HungerGainSpeed>k__BackingField: 1
 --- !u!1 &3639081120247255979
 GameObject:
   m_ObjectHideFlags: 0

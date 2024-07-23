@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ColonistSettings
   m_EditorClassIdentifier: 
   taskWander: 0
+  taskEat: 11
   taskHaul: 1
   taskConstruction: 2
   taskHarvest: 3
