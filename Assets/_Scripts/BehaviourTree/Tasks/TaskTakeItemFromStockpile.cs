@@ -5,10 +5,12 @@ using UnityEngine.AI;
 public class TaskTakeItemFromStockpile : Node
 {
     NavMeshAgent agent;
+    ColonistData colonistData;
 
-    public TaskTakeItemFromStockpile(NavMeshAgent agent)
+    public TaskTakeItemFromStockpile(NavMeshAgent agent, ColonistData colonistData)
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
@@ -20,6 +22,7 @@ public class TaskTakeItemFromStockpile : Node
             Stockpile stockpile = (Stockpile)GetData(DataName.Stockpile);
             var item = InventoryManager.instance.TakeItem(cost, stockpile);
             SetDataOnRoot(DataName.InventoryItem, item);
+            colonistData.PutItemIn(item);
             var constructable = (IConstructable)GetData(DataName.Constructable);
             SetDataOnRoot(DataName.Target, constructable.GetPosition());
 

@@ -3,12 +3,17 @@ using UnityEngine;
 
 public class CheckForConstructable : Node
 {
+    ColonistData colonistData;
+    public CheckForConstructable(ColonistData colonistData)
+    {
+        this.colonistData = colonistData;
+    }
     public override NodeState Evaluate()
     {
         var hasConstructable = GetData(DataName.Constructable);
         var hasInventoryItem = GetData(DataName.InventoryItem);
 
-        if (hasInventoryItem != null)
+        if (hasInventoryItem != null || !colonistData.IsEmpty())
         {
             state = NodeState.FAILURE;
             return state;

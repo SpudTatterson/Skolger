@@ -4,10 +4,11 @@ using UnityEngine.AI;
 public class TaskPutItemInConstructable : Node
 {
     NavMeshAgent agent;
-
-    public TaskPutItemInConstructable(NavMeshAgent agent)
+    ColonistData colonistData;
+    public TaskPutItemInConstructable(NavMeshAgent agent, ColonistData colonistData)
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
@@ -17,7 +18,8 @@ public class TaskPutItemInConstructable : Node
 
         if (constructable != null && ReachedDestinationOrGaveUp())
         {
-            constructable.AddItem(item);
+            int itemIndex = (int)GetData(DataName.InventoryIndex);
+            constructable.AddItem(colonistData.TakeItemOut(itemIndex));
             ClearData(DataName.InventoryItem);
             ClearData(DataName.Target);
             ClearData(DataName.Cost);

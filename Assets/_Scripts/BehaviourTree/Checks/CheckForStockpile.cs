@@ -6,10 +6,12 @@ using UnityEngine.AI;
 public class CheckForStockpile : Node
 {
     private NavMeshAgent agent;
+    ColonistData colonistData;
 
-    public CheckForStockpile(NavMeshAgent agent)
+    public CheckForStockpile(NavMeshAgent agent, ColonistData colonistData)
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
@@ -21,9 +23,10 @@ public class CheckForStockpile : Node
         {
             object hasStockpile = GetData(DataName.Stockpile);
 
-            if (inventoryItem != null)
+            if (inventoryItem != null || !colonistData.IsEmpty())
             {
-                inventoryItem.DropItem(agent.transform.position);
+                int itemIndex  = (int)GetData(DataName.InventoryIndex);
+                colonistData.TakeItemOut(itemIndex).DropItem(agent.transform.position);
                 agent.ResetPath();
 
                 ClearData(DataName.InventoryItem);

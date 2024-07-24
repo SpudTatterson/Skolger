@@ -4,19 +4,22 @@ using UnityEngine.AI;
 public class TaskDropInventoryItem : Node
 {
     private NavMeshAgent agent;
-
-    public TaskDropInventoryItem(NavMeshAgent agent)
+    ColonistData colonistData;
+    public TaskDropInventoryItem(NavMeshAgent agent, ColonistData colonistData)
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
     {
         var inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
 
-        if (inventoryItem != null)
+        if (inventoryItem != null || !colonistData.IsEmpty())
         {
-            inventoryItem.DropItem(agent.transform.position);
+            //inventoryItem.DropItem(agent.transform.position);
+            int InventoryIndex = (int)GetData(DataName.InventoryIndex);
+            colonistData.TakeItemOut(InventoryIndex);
             ClearData(DataName.InventoryItem);
         }
 
