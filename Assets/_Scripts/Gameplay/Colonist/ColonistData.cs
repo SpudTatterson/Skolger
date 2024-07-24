@@ -94,7 +94,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     {
         item.OnDestroy += HandleItemDestruction;
         int invIndex = emptySlots.Dequeue();
-        item.currentInventorySlot = invIndex;
+        item.UpdateOccupiedInventorySlot(invIndex);
         Items[invIndex] = item;
     }
 
