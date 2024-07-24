@@ -5,7 +5,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class HaulerTest : MonoBehaviour, IContainer<InventoryItem>
+public class HaulerTest : MonoBehaviour//, IContainer<InventoryItem>
 {
     [SerializeField, ReadOnly] InventoryItem heldItem;
     ItemObject itemToHaul;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -7,8 +8,20 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     [field: SerializeField] public float HungerThreshold { get; private set; } = 40; // The amount of hungry at which the colonist will drop everything and go eat
     [field: SerializeField, ReadOnly] public float HungerLevel { get; private set; } = 50; // How hungry the colonist current is
     [field: SerializeField] public float HungerGainSpeed { get; private set; } = 1; // Hunger gain per second
-    InventoryItem heldItem;
 
+    [field: SerializeField] public InventoryItem[] Items { get; private set; }
+    public int InventorySlots { get; private set; } = 1;
+    Queue<int> emptySlots = new();
+
+
+    void Awake()
+    {
+        Items = new InventoryItem[InventorySlots];
+        for (int i = 0; i < Items.Length; i++)
+        {
+            emptySlots.Enqueue(i);
+        }
+    }
     public void Eat(IEdible edible)
     {
         HungerLevel += edible.FoodValue;
@@ -27,37 +40,69 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         if (HungerLevel < HungerThreshold) return true;
         return false;
     }
-    public bool HasItem(ItemData itemData, int amount)
+
+
+
+    public bool HasItem(ItemData itemData, int amount, out int? itemIndex)
     {
-        if (itemData == heldItem.itemData && amount <= heldItem.amount) return true;
+        for (int i = 0; i < Items.Length; i++)
+        {
+            if (itemData == Items[i].itemData && amount <= Items[i].amount)
+            {
+                itemIndex = i;
+                return true;
+            }
+        }
+        itemIndex = null;
         return false;
     }
+    public bool IsEmpty()
+    {
+        foreach (InventoryItem item in Items)
+        {
+            if (!InventoryItem.CheckIfItemIsNull(item)) return false;
+        }
+        return true;
+    }
+
+
+
     public bool HasSpace()
     {
-        if (heldItem == null || heldItem.NullCheck()) return true;
-        else return false;
+        if (emptySlots.Count > 0)
+            return true;
+        return false;
     }
 
     public InventoryItem TakeItemOut(ItemData itemData, int amount)
     {
-        if (HasItem(itemData, amount))
+        if (HasItem(itemData, amount, out int? itemIndex))
         {
-            heldItem.UpdateAmount(-amount);
+            Items[(int)itemIndex].UpdateAmount(-amount);
             return new InventoryItem(itemData, amount);
         }
         return null;
+    }
+    public InventoryItem TakeItemOut(int ItemIndex)
+    {
+        InventoryItem item = new InventoryItem(Items[ItemIndex]);
+        Items[ItemIndex].UpdateAmount(-Items[ItemIndex].amount);
+        return item;
     }
 
     public void PutItemIn(InventoryItem item)
     {
         item.OnDestroy += HandleItemDestruction;
-        heldItem = item;
+        int invIndex = emptySlots.Dequeue();
+        item.currentInventorySlot = invIndex;
+        Items[invIndex] = item;
     }
 
     void HandleItemDestruction(InventoryItem item)
     {
         item.OnDestroy -= HandleItemDestruction;
-        heldItem = null;
+        Items[item.currentInventorySlot] = null;
+        emptySlots.Enqueue(item.currentInventorySlot);
     }
 
     void Update()
