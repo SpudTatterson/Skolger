@@ -7,6 +7,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
+    [SerializeField] BillBoard billBoard;
     float timeHarvesting = 0f;
     public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
@@ -55,17 +56,29 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
         {
             TaskManager.Instance.AddToHarvestQueue(this);
         }
+        ShowBillboard();
         setForHarvesting = true;
     }
+
     public void RemoveFromHarvestQueue()
     {
         TaskManager.Instance.RemoveFromHarvestQueue(this);
+        DisableBillboard();
         beingHarvested = false;
         setForHarvesting = false;
     }
     public List<ItemDrop> GetItemDrops()
     {
         return drops;
+    }
+
+    void ShowBillboard()
+    {
+        billBoard?.gameObject.SetActive(true);
+    }
+    void DisableBillboard()
+    {
+        billBoard?.gameObject.SetActive(false);
     }
 
     public SelectionType GetSelectionType()
