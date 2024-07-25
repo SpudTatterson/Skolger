@@ -21,12 +21,19 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 
     public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, Transform parent = null)
     {
-        GameObject buildingVisual = PrefabUtility.InstantiatePrefab(buildingData.buildingPrefab) as GameObject;
+        GameObject buildingVisual;
+#if UNITY_EDITOR
+        buildingVisual = PrefabUtility.InstantiatePrefab(buildingData.buildingPrefab) as GameObject;
+#else
+        buildingVisual = GameObject.Instantiate(buildingData.buildingPrefab);
+#endif
         buildingVisual.transform.position = position;
         buildingVisual.transform.parent = parent;
 
         BuildingObject building = buildingVisual.AddComponent<BuildingObject>();
+#if UNITY_EDITOR
         EditorUtility.SetDirty(building);
+#endif
         building.Initialize(buildingData);
 
         return building;
