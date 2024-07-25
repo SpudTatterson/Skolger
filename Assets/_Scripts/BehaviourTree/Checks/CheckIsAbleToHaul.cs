@@ -36,7 +36,7 @@ public class CheckIsAbleToHaul : Node
 
         if (haulable != null) 
         {
-            SetDataOnRoot(DataName.Target, haulable);
+            parent.parent.SetData(DataName.Target, haulable);
 
             state = NodeState.SUCCESS;
             return state;
