@@ -21,10 +21,10 @@ public class TaskTakeItemFromStockpile : Node
         {
             Stockpile stockpile = (Stockpile)GetData(DataName.Stockpile);
             var item = InventoryManager.instance.TakeItem(cost, stockpile);
-            SetDataOnRoot(DataName.InventoryItem, item);
+            parent.parent.SetData(DataName.InventoryItem, item);
             colonistData.PutItemIn(item);
             var constructable = (IConstructable)GetData(DataName.Constructable);
-            SetDataOnRoot(DataName.Target, constructable.GetPosition());
+            parent.parent.SetData(DataName.Target, constructable.GetPosition());
 
             state = NodeState.SUCCESS;
             return state;

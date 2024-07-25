@@ -21,7 +21,7 @@ public class TaskPickUpItem : Node
         {
             InventoryItem inventoryItem = item.PickUp();
 
-            SetDataOnRoot(DataName.InventoryItem, inventoryItem);
+            parent.parent.SetData(DataName.InventoryItem, inventoryItem);
             ClearData(DataName.Target);
             colonistData.PutItemIn(inventoryItem);
             parent.parent.parent.SetData(DataName.InventoryIndex, inventoryItem.currentInventorySlot);

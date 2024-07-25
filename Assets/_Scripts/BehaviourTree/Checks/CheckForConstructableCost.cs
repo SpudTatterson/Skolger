@@ -10,7 +10,7 @@ public class CheckForConstructableCost : Node
 
         if (cost != null)
         {
-            SetDataOnRoot(DataName.Cost, cost);
+            parent.parent.SetData(DataName.Cost, cost);
 
             state = NodeState.SUCCESS;
             return state;
