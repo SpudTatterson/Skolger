@@ -6,48 +6,51 @@ using UnityEngine.AI;
 public class CheckForStockpile : Node
 {
     private NavMeshAgent agent;
+    ColonistData colonistData;
 
-    public CheckForStockpile(NavMeshAgent agent)
+    public CheckForStockpile(NavMeshAgent agent, ColonistData colonistData)
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
     {
         Stockpile stockpile = InventoryManager.instance.GetStockpileWithEmptySpace(out Cell cell);
-        InventoryItem inventoryItem = (InventoryItem)GetData("InventoryItem");
+        InventoryItem inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
         
         if (cell == null)
         {
-            object hasStockpile = GetData("Stockpile");
+            object hasStockpile = GetData(DataName.Stockpile);
 
-            if (inventoryItem != null)
+            if (inventoryItem != null || !colonistData.IsEmpty())
             {
-                inventoryItem.DropItem(agent.transform.position);
+                int itemIndex  = (int)GetData(DataName.InventoryIndex);
+                colonistData.TakeItemOut(itemIndex).DropItem(agent.transform.position);
                 agent.ResetPath();
 
-                ClearData("InventoryItem");
+                ClearData(DataName.InventoryItem);
             }
 
             if (hasStockpile != null)
             {
                 agent.ResetPath();
 
-                ClearData("Stockpile");
-                ClearData("Cell");
+                ClearData(DataName.Stockpile);
+                ClearData(DataName.Cell);
             }
 
             state = NodeState.FAILURE;
             return state;
         }
-
-        if (inventoryItem != null)
+        var target = GetData(DataName.Target);
+        if (inventoryItem != null && target == null)
         {
-            parent.parent.SetData("Target", cell);
+            SetDataOnRoot(DataName.Target, cell);
         }
 
-        parent.parent.SetData("Cell", cell);
-        parent.parent.SetData("Stockpile", stockpile);
+        SetDataOnRoot(DataName.Cell, cell);
+        SetDataOnRoot(DataName.Stockpile, stockpile);
 
         state = NodeState.SUCCESS;
         return state;

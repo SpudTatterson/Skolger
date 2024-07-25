@@ -17,7 +17,7 @@ public class HarvestableSelectionMenu : MonoBehaviour
         {
             dropsVisual[i].gameObject.SetActive(true);
             dropsVisual[i].text.text = $"{drops[i].minDropAmount} - {drops[i].maxDropAmount}";
-            dropsVisual[i].image = drops[i].itemData.icon;
+            dropsVisual[i].image.sprite = drops[i].itemData.icon;
         }
     }
 }

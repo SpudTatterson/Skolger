@@ -5,23 +5,26 @@ using UnityEngine.AI;
 public class CheckIsAbleToHaul : Node
 {
     private NavMeshAgent agent;
+    ColonistData colonistData;
 
-    public CheckIsAbleToHaul(NavMeshAgent agent)
+    public CheckIsAbleToHaul(NavMeshAgent agent, ColonistData colonistData)
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
     {
-        var inventoryItem = GetData("InventoryItem");
+        var inventoryItem = GetData(DataName.InventoryItem);
+        bool hasSpace = colonistData.HasSpace();
 
-        if (inventoryItem != null)
+        if (inventoryItem != null || !hasSpace)
         {
             state = NodeState.FAILURE;
             return state;
         }
 
-        var hasTarget = GetData("Target");
+        var hasTarget = GetData(DataName.Target);
 
         if(hasTarget != null && hasTarget is MonoBehaviour)
         {
@@ -33,7 +36,7 @@ public class CheckIsAbleToHaul : Node
 
         if (haulable != null) 
         {
-            parent.parent.SetData("Target", haulable);
+            SetDataOnRoot(DataName.Target, haulable);
 
             state = NodeState.SUCCESS;
             return state;

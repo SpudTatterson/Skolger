@@ -3,5 +3,6 @@ public enum ItemType
 {
     Material,
     Weapon,
-    Wearable
+    Wearable,
+    Edible,
 }

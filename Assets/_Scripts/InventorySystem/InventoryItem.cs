@@ -9,11 +9,19 @@ public class InventoryItem : IItem
     [field: SerializeField, Expandable] public ItemData itemData { get; private set; }
     [field: SerializeField, ReadOnly] public int amount { get; private set; }
 
+    public int currentInventorySlot { get; private set; }
+
     public event Action<InventoryItem> OnDestroy;
     public InventoryItem(ItemData itemData, int amount)
     {
         this.itemData = itemData;
         this.amount = amount;
+    }
+    public InventoryItem(InventoryItem itemToCopy)
+    {
+        itemData = itemToCopy.itemData;
+        amount = itemToCopy.amount;
+        
     }
 
     public bool UpdateAmount(int amount)
@@ -32,6 +40,10 @@ public class InventoryItem : IItem
         }
         return false;
     }
+    public void UpdateOccupiedInventorySlot(int InventoryIndex)
+    {
+        currentInventorySlot = InventoryIndex;
+    }
 
     public ItemObject DropItem(Vector3 position)
     {
@@ -48,4 +60,13 @@ public class InventoryItem : IItem
         return itemData == null;
     }
 
+    public static bool CheckIfItemIsNull(InventoryItem item)
+    {
+        return item == null || item.NullCheck();
+    }
+
+    public override string ToString()
+    {
+        return $"{itemData.itemName} {amount}";
+    }
 }

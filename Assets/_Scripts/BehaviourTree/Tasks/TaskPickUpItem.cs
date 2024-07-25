@@ -5,22 +5,26 @@ using UnityEngine;
 public class TaskPickUpItem : Node
 {
     private NavMeshAgent agent;
+    ColonistData colonistData;
 
-    public TaskPickUpItem(NavMeshAgent agent) 
+    public TaskPickUpItem(NavMeshAgent agent, ColonistData colonistData) 
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
     {
-        ItemObject item = (ItemObject)GetData("Target");
+        ItemObject item = (ItemObject)GetData(DataName.Target);
 
         if(item != null && ReachedDestinationOrGaveUp())
         {
             InventoryItem inventoryItem = item.PickUp();
 
-            parent.parent.parent.SetData("InventoryItem", inventoryItem);
-            ClearData("Target");
+            SetDataOnRoot(DataName.InventoryItem, inventoryItem);
+            ClearData(DataName.Target);
+            colonistData.PutItemIn(inventoryItem);
+            parent.parent.parent.SetData(DataName.InventoryIndex, inventoryItem.currentInventorySlot);
             
             state = NodeState.SUCCESS;
             return state;
