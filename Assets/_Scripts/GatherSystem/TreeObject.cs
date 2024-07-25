@@ -30,7 +30,6 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     {
         timeHarvesting = 0f;
         beingHarvested = true;
-        Debug.Log("started harvesting");
 
         while (timeHarvesting < baseGatherTime)
         {

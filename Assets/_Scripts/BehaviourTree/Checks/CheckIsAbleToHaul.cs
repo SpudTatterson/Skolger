@@ -15,10 +15,9 @@ public class CheckIsAbleToHaul : Node
 
     public override NodeState Evaluate()
     {
-        var inventoryItem = GetData(DataName.InventoryItem);
         bool hasSpace = colonistData.HasSpace();
 
-        if (inventoryItem != null || !hasSpace)
+        if (!hasSpace)
         {
             state = NodeState.FAILURE;
             return state;

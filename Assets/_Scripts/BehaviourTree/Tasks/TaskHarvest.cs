@@ -26,7 +26,6 @@ public class TaskHarvest : Node
 
         if (harvestable.FinishedHarvesting())
         {
-            Debug.Log("Im here");
             MonoBehaviour.Destroy(((MonoBehaviour)harvestable).gameObject);
             ClearData(DataName.Harvestable);
             ClearData(DataName.Target);
