@@ -100,6 +100,7 @@ namespace BehaviorTree
                 {
                     return true;
                 }
+                node = node.parent;
             }
             return false;
         }
