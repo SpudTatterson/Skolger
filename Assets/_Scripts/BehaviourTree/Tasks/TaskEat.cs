@@ -23,6 +23,8 @@ public class TaskEat : Node
             colonistData.Eat(edible);
 
             ClearData(DataName.Target);
+            ClearData(DataName.Stockpile);
+            ClearData(DataName.FoodData);
             state = NodeState.SUCCESS;
             return state;
         }

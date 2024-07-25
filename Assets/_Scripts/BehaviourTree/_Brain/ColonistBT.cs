@@ -53,7 +53,7 @@ public class ColonistBT : Tree
         {
             new CheckIfHungry(colonistData),
             new CheckForEatable(),
-            new TaskDropInventoryItem(agent),
+            new TaskDropInventoryItem(agent, colonistData),
             new TaskGoToTarget(agent),
             new TaskEat(agent, colonistData)
         })
@@ -78,10 +78,10 @@ public class ColonistBT : Tree
     {
         Node pickUpItemSequence = new Sequence(new List<Node>
         {
-            new CheckForStockpile(agent),
-            new CheckIsAbleToHaul(agent),
+            new CheckForStockpile(agent,colonistData),
+            new CheckIsAbleToHaul(agent, colonistData),
             new TaskGoToTarget(agent),
-            new TaskPickUpItem(agent)
+            new TaskPickUpItem(agent, colonistData)
         })
         {
             priority = 0
@@ -89,10 +89,10 @@ public class ColonistBT : Tree
 
         Node haulToStockpileSequence = new Sequence(new List<Node>
         {
-            new CheckItemInInventory(),
-            new CheckForStockpile(agent),
+            new CheckItemInInventory(colonistData),
+            new CheckForStockpile(agent,colonistData),
             new TaskGoToTarget(agent),
-            new TaskPutInStockpile(agent)
+            new TaskPutInStockpile(agent, colonistData)
         })
         {
             priority = 1
@@ -121,11 +121,11 @@ public class ColonistBT : Tree
 
         Node getItemsFromStockpile = new Sequence(new List<Node>
         {
-            new CheckForConstructable(),
+            new CheckForConstructable(colonistData),
             new CheckForConstructableCost(),
             new CheckHasItem(),
             new TaskGoToTarget(agent),
-            new TaskTakeItemFromStockpile(agent),
+            new TaskTakeItemFromStockpile(agent, colonistData),
         })
         {
             priority = 0
@@ -134,9 +134,10 @@ public class ColonistBT : Tree
         Node placeItemsInConstruction = new Sequence(new List<Node>
         {
             new CheckForCorrectData(requiredKeys),
-            new CheckItemInInventory(),
+            new CheckForCorrectItem(colonistData),
+            new CheckItemInInventory(colonistData),
             new TaskGoToTarget(agent),
-            new TaskPutItemInConstructable(agent)
+            new TaskPutItemInConstructable(agent, colonistData)
         })
         {
             priority = 1
@@ -159,7 +160,7 @@ public class ColonistBT : Tree
         return new Sequence(new List<Node>
         {
             new CheckForHarvestable(),
-            new TaskDropInventoryItem(agent),
+            new TaskDropInventoryItem(agent, colonistData),
             new TaskGoToTarget(agent),
             new TaskHarvest(agent)
         })

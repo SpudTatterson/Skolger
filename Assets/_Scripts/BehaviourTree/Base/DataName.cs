@@ -10,5 +10,6 @@ public enum DataName
     FoodData,
     Stockpile,
     Harvestable,
-    Cell
+    Cell,
+    InventoryIndex,
 }

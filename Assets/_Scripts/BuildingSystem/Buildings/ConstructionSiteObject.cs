@@ -13,7 +13,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     List<Cell> occupiedCells = new List<Cell>();
     public Cell cornerCell { get; private set; }
     bool allowed = true;
-    [SerializeField, Tooltip("Should be set to true if manually placed in world")]bool manualInit = false;
+    [SerializeField, Tooltip("Should be set to true if manually placed in world")] bool manualInit = false;
     public bool SetForCancellation { get; private set; }
     // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
@@ -60,13 +60,18 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     #region Construction
 
-    public void AddItem(IItem itemObject)
+    public void AddItem(InventoryItem item)
     {
-        fulfilledCosts[itemObject.itemData] += itemObject.amount;
+        fulfilledCosts[item.itemData] += costs[0].cost;
+
+        item.UpdateAmount(-costs[0].cost);
+
+        if (item != null && item.amount > 0)
+        {
+            item.DropItem(cornerCell.GetClosestEmptyCell().position);
+        }
+
         costs.RemoveAt(0);
-
-        itemObject.UpdateAmount(itemObject.amount);
-
     }
     public ItemCost GetNextCost()
     {

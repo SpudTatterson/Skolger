@@ -5,17 +5,20 @@ using UnityEngine.AI;
 public class CheckIsAbleToHaul : Node
 {
     private NavMeshAgent agent;
+    ColonistData colonistData;
 
-    public CheckIsAbleToHaul(NavMeshAgent agent)
+    public CheckIsAbleToHaul(NavMeshAgent agent, ColonistData colonistData)
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
     {
         var inventoryItem = GetData(DataName.InventoryItem);
+        bool hasSpace = colonistData.HasSpace();
 
-        if (inventoryItem != null)
+        if (inventoryItem != null || !hasSpace)
         {
             state = NodeState.FAILURE;
             return state;

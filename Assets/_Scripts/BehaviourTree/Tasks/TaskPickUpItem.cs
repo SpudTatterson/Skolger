@@ -5,10 +5,12 @@ using UnityEngine;
 public class TaskPickUpItem : Node
 {
     private NavMeshAgent agent;
+    ColonistData colonistData;
 
-    public TaskPickUpItem(NavMeshAgent agent) 
+    public TaskPickUpItem(NavMeshAgent agent, ColonistData colonistData) 
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
@@ -21,6 +23,8 @@ public class TaskPickUpItem : Node
 
             SetDataOnRoot(DataName.InventoryItem, inventoryItem);
             ClearData(DataName.Target);
+            colonistData.PutItemIn(inventoryItem);
+            parent.parent.parent.SetData(DataName.InventoryIndex, inventoryItem.currentInventorySlot);
             
             state = NodeState.SUCCESS;
             return state;

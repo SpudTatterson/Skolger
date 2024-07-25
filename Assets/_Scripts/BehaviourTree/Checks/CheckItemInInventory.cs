@@ -3,13 +3,16 @@ using UnityEngine;
 
 public class CheckItemInInventory : Node
 {
-    public CheckItemInInventory() {}
+    ColonistData colonistData;
+    public CheckItemInInventory(ColonistData colonistData)
+    {
+        this.colonistData = colonistData;
+    }
 
     public override NodeState Evaluate()
     {
         var inventoryItem = GetData(DataName.InventoryItem);
-        
-        if(inventoryItem == null)
+        if (inventoryItem == null || colonistData.IsEmpty())
         {
             state = NodeState.FAILURE;
             return state;

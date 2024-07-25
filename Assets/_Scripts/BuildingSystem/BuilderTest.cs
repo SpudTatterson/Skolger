@@ -6,7 +6,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BuilderTest : MonoBehaviour, IContainer<InventoryItem>
+public class BuilderTest : MonoBehaviour//, IContainer<InventoryItem>
 {
     [SerializeField, ReadOnly] InventoryItem heldItem;
     ItemCost costToGet;
