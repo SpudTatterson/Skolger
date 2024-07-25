@@ -43,14 +43,16 @@ public class CheckForStockpile : Node
             state = NodeState.FAILURE;
             return state;
         }
+
         var target = GetData(DataName.Target);
+
         if (inventoryItem != null && target == null)
         {
-            SetDataOnRoot(DataName.Target, cell);
+            parent.parent.SetData(DataName.Target, cell);
         }
 
-        SetDataOnRoot(DataName.Cell, cell);
-        SetDataOnRoot(DataName.Stockpile, stockpile);
+        parent.parent.SetData(DataName.Cell, cell);
+        parent.parent.SetData(DataName.Stockpile, stockpile);
 
         state = NodeState.SUCCESS;
         return state;

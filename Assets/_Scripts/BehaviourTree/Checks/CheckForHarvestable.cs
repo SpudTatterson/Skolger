@@ -17,8 +17,8 @@ public class CheckForHarvestable : Node
 
         if (harvestable != null)
         {
-            SetDataOnRoot(DataName.Harvestable, harvestable);
-            SetDataOnRoot(DataName.Target, harvestable);
+            parent.SetData(DataName.Harvestable, harvestable);
+            parent.SetData(DataName.Target, harvestable);
 
             state = NodeState.SUCCESS;
             return state;
