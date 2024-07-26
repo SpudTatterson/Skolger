@@ -13,3 +13,14 @@ public enum DataName
     Cell,
     InventoryIndex,
 }
+
+public enum TaskKey
+{
+    Eating,
+    GettingItemToHaul,
+    HaulingToStockpile,
+    Constructing,
+    ItemsToConstruct,
+    Wandering,
+    Harvesting
+}

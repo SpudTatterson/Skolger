@@ -31,7 +31,6 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI activityText;
 
-
     public static UIManager instance { get; private set; }
 
     void Awake()

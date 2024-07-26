@@ -13,8 +13,8 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public int InventorySlots { get; private set; } = 1;
     Queue<int> emptySlots = new();
 
-    [HideInInspector] public string colonistActivity;
-    [HideInInspector] public string colonistName;
+    [HideInInspector] public string colonistActivity { get; private set; }
+    [HideInInspector] public string colonistName { get; private set; }
 
     void Awake()
     {
@@ -168,4 +168,9 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
         return firstNames[firstName] + " " + lastNames[lastName];
     }
+
+    public void ChangeActivity(string activity)
+    {
+        colonistActivity = activity;
+    }   
 }
