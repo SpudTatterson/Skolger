@@ -6302,9 +6302,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
+      propertyPath: nameText
+      value: 
+      objectReference: {fileID: 4825816430964491103}
+    - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
       propertyPath: allowButton
       value: 
       objectReference: {fileID: 6330376643631005264}
+    - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
+      propertyPath: activityText
+      value: 
+      objectReference: {fileID: 3962172557357315878}
     - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
       propertyPath: cancelButton
@@ -6351,6 +6361,11 @@ PrefabInstance:
       propertyPath: buildingSelection
       value: 
       objectReference: {fileID: 1727817329873122130}
+    - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
+      propertyPath: colonistInfoPanel
+      value: 
+      objectReference: {fileID: 4960968523137316198}
     - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
       propertyPath: deconstructButton
