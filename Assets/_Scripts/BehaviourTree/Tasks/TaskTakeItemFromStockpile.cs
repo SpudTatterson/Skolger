@@ -5,22 +5,26 @@ using UnityEngine.AI;
 public class TaskTakeItemFromStockpile : Node
 {
     NavMeshAgent agent;
+    ColonistData colonistData;
 
-    public TaskTakeItemFromStockpile(NavMeshAgent agent)
+    public TaskTakeItemFromStockpile(NavMeshAgent agent, ColonistData colonistData)
     {
         this.agent = agent;
+        this.colonistData = colonistData;
     }
 
     public override NodeState Evaluate()
     {
-        var cost = (ItemCost)GetData("Cost");
+        var cost = (ItemCost)GetData(DataName.Cost);
 
         if (cost != null && ReachedDestinationOrGaveUp())
         {
-            var item = InventoryManager.instance.TakeItem(cost);
-            parent.parent.SetData("InventoryItem", item);
-            var constructable = (IConstructable)GetData("Constructable");
-            parent.parent.SetData("Target", constructable.GetPosition());
+            Stockpile stockpile = (Stockpile)GetData(DataName.Stockpile);
+            var item = InventoryManager.instance.TakeItem(cost, stockpile);
+            parent.parent.SetData(DataName.InventoryItem, item);
+            colonistData.PutItemIn(item);
+            var constructable = (IConstructable)GetData(DataName.Constructable);
+            parent.parent.SetData(DataName.Target, constructable.GetPosition());
 
             state = NodeState.SUCCESS;
             return state;
@@ -30,7 +34,7 @@ public class TaskTakeItemFromStockpile : Node
         return state;
     }
 
-        public bool ReachedDestinationOrGaveUp()
+    public bool ReachedDestinationOrGaveUp()
     {
 
         if (!agent.pathPending)

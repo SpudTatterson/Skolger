@@ -63,13 +63,18 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     #region Construction
 
-    public void AddItem(IItem itemObject)
+    public void AddItem(InventoryItem item)
     {
-        fulfilledCosts[itemObject.itemData] += itemObject.amount;
+        fulfilledCosts[item.itemData] += costs[0].cost;
+
+        item.UpdateAmount(-costs[0].cost);
+
+        if (item != null && item.amount > 0)
+        {
+            item.DropItem(cornerCell.GetClosestEmptyCell().position);
+        }
+
         costs.RemoveAt(0);
-
-        itemObject.UpdateAmount(itemObject.amount);
-
     }
     public ItemCost GetNextCost()
     {

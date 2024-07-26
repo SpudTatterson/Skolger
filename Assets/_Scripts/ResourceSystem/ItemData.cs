@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class ItemData : ScriptableObject 
 {
@@ -7,5 +6,5 @@ public abstract class ItemData : ScriptableObject
     public ItemType itemType;
     public int stackSize;
     public GameObject visual;
-    public Image icon;
+    public Sprite icon;
 }

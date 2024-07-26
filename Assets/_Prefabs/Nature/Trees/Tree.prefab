@@ -383,7 +383,7 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
     minDropAmount: 25
     maxDropAmount: 75
-  - itemData: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
+  - itemData: {fileID: 11400000, guid: 03d2c613c6619de4aae845d5acbe02aa, type: 2}
     minDropAmount: 5
     maxDropAmount: 10
   billBoard: {fileID: 1239856268853437866}

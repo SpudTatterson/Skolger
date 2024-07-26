@@ -5,7 +5,7 @@ public class CheckForHarvestable : Node
 {
     public override NodeState Evaluate()
     {
-        var hasHarvestable = GetData("Harvestable");
+        var hasHarvestable = GetData(DataName.Harvestable);
 
         if (hasHarvestable != null)
         {
@@ -17,8 +17,8 @@ public class CheckForHarvestable : Node
 
         if (harvestable != null)
         {
-            parent.parent.SetData("Harvestable", harvestable);
-            parent.parent.SetData("Target", harvestable);
+            parent.SetData(DataName.Harvestable, harvestable);
+            parent.SetData(DataName.Target, harvestable);
 
             state = NodeState.SUCCESS;
             return state;
