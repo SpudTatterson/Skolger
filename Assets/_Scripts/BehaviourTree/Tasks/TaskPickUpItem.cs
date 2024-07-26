@@ -30,7 +30,7 @@ public class TaskPickUpItem : Node
             return state;
         }
 
-        state = NodeState.FAILURE;
+        state = NodeState.RUNNING;
         return state;
     }
     

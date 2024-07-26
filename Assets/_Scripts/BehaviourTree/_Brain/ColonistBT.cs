@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using BehaviorTree;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,11 +11,13 @@ public class ColonistBT : Tree
 
     private NavMeshAgent agent;
     private ColonistData colonistData;
+    private Dictionary<TaskKey, string> taskDescriptions;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         colonistData = GetComponent<ColonistData>();
+        taskDescriptions = TaskDescriptions();
     }
 
     #region Behaviour Tree Setup
@@ -54,11 +57,11 @@ public class ColonistBT : Tree
             new CheckIfHungry(colonistData),
             new CheckForEatable(),
             new TaskDropInventoryItem(agent, colonistData),
-            new TaskGoToTarget(agent),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskKey.Eating]),
             new TaskEat(agent, colonistData)
         })
         {
-            priority = colonistSettings.taskEat
+            priority = colonistSettings.taskEat,
         };
     }
     #endregion
@@ -66,7 +69,7 @@ public class ColonistBT : Tree
     #region Wandering Task
     private Node CreateTaskWander()
     {
-        return new TaskWander(agent, colonistSettings)
+        return new TaskWander(agent, colonistSettings, colonistData, taskDescriptions[TaskKey.Wandering])
         {
             priority = colonistSettings.taskWander
         };
@@ -80,7 +83,7 @@ public class ColonistBT : Tree
         {
             new CheckForStockpile(agent,colonistData),
             new CheckIsAbleToHaul(agent, colonistData),
-            new TaskGoToTarget(agent),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskKey.GettingItemToHaul]),
             new TaskPickUpItem(agent, colonistData)
         })
         {
@@ -91,7 +94,7 @@ public class ColonistBT : Tree
         {
             new CheckItemInInventory(colonistData),
             new CheckForStockpile(agent,colonistData),
-            new TaskGoToTarget(agent),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskKey.HaulingToStockpile]),
             new TaskPutInStockpile(agent, colonistData)
         })
         {
@@ -124,7 +127,7 @@ public class ColonistBT : Tree
             new CheckForConstructable(colonistData),
             new CheckForConstructableCost(),
             new CheckHasItem(),
-            new TaskGoToTarget(agent),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskKey.ItemsToConstruct]),
             new TaskTakeItemFromStockpile(agent, colonistData),
         })
         {
@@ -136,7 +139,7 @@ public class ColonistBT : Tree
             new CheckForCorrectData(requiredKeys),
             new CheckForCorrectItem(colonistData),
             new CheckItemInInventory(colonistData),
-            new TaskGoToTarget(agent),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskKey.Constructing]),
             new TaskPutItemInConstructable(agent, colonistData)
         })
         {
@@ -161,12 +164,30 @@ public class ColonistBT : Tree
         {
             new CheckForHarvestable(),
             new TaskDropInventoryItem(agent, colonistData),
-            new TaskGoToTarget(agent),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskKey.Harvesting]),
             new TaskHarvest(agent)
         })
         {
             priority = colonistSettings.taskHarvest
         };
+    }
+    #endregion
+
+    #region Task Descriptions
+    private Dictionary<TaskKey, string> TaskDescriptions()
+    {
+        Dictionary<TaskKey, string> taskDescriptions = new Dictionary<TaskKey, string>
+        {
+            {TaskKey.Eating, "Going to eat"},
+            {TaskKey.Wandering, "Wandering"},
+            {TaskKey.GettingItemToHaul, "Finding items to haul"},
+            {TaskKey.HaulingToStockpile, "Hauling items to stockpile"},
+            {TaskKey.ItemsToConstruct, "Going to get items for construction"},
+            {TaskKey.Constructing, "Going to construct"},
+            {TaskKey.Harvesting, "Going to harvest"},
+        };
+
+        return taskDescriptions;
     }
     #endregion
 }

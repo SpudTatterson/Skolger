@@ -33,12 +33,10 @@ public class AxeManBT : Tree
     protected override Node SetupTree()
     {
         Node huntTask = CreateHuntTask();
-        Node wanderTask = CreateWanderTask();
 
         Node root = new Selector(new List<Node> 
         {
             huntTask,
-            wanderTask
         });
 
         return root;
@@ -54,13 +52,5 @@ public class AxeManBT : Tree
         {
             priority = huntTask
         };
-    }
-
-    private Node CreateWanderTask()
-    {
-        return new TaskWander(agent, colonistSettings)
-        {
-            priority = wanderTask
-        };            
     }
 }
