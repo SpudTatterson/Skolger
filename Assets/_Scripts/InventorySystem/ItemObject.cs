@@ -62,7 +62,6 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         currentStockpile = stockpile;
 
         forbiddenBillboard = GetComponentInChildren<BillBoard>();
-        Debug.Log(forbiddenBillboard.gameObject.name );
 
         if (allowed) OnAllow();
         else OnDisallow();
