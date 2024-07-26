@@ -27,10 +27,10 @@ public class UIManager : MonoBehaviour
     public GameObject shrinkZoneButton;
 
     [Header("Colonist Info Panel")]
-    private ColonistData currentColonist;
     public GameObject colonistInfoPanel;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI activityText;
+    private ColonistData currentColonist;
 
     public static UIManager instance { get; private set; }
 
