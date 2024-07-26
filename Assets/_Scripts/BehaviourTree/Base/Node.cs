@@ -17,6 +17,7 @@ namespace BehaviorTree
         public Node parent;
         protected List<Node> children = new List<Node>();
         public int priority { get; set; }
+        public bool flaggedRoot { get; set; }
 
         private Dictionary<DataName, object> dataContext = new Dictionary<DataName, object>();
 
@@ -24,6 +25,7 @@ namespace BehaviorTree
         {
             parent = null;
             priority = 0;
+            flaggedRoot = false;
         }
 
         public Node(List<Node> children)
@@ -57,9 +59,25 @@ namespace BehaviorTree
             return root;
         }
 
-        public void SetDataOnRoot(DataName key, object value)
+        public Node GetFlaggedRootNode()
         {
+            Node root = this;
+            while (root.parent != null && !flaggedRoot)
+            {
+                root = root.parent;
+            }
+            return root;
+        }
+
+        public void SetDataOnRoot(DataName key, object value)
+        {            
             Node root = GetRootNode();
+            root.SetData(key, value);
+        }
+
+        public void SetDataOnFlaggedRoot(DataName key, object value)
+        {            
+            Node root = GetFlaggedRootNode();
             root.SetData(key, value);
         }
 
