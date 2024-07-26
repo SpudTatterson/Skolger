@@ -80,7 +80,6 @@ public class UIManager : MonoBehaviour
 
     public void EnableCancelButton()
     {
-        SetAllActionButtonsInactive();
         cancelButton.SetActive(true);
     }
 
