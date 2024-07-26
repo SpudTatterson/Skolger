@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem>
 {
@@ -13,6 +15,21 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public int InventorySlots { get; private set; } = 1;
     Queue<int> emptySlots = new();
 
+    public event Action<string> OnActivityChanged;
+    private string _colonistActivity;
+    [HideInInspector] public string colonistName { get; private set; }
+    [HideInInspector] public string colonistActivity
+    {
+        get => _colonistActivity;
+        set
+        {
+            if(_colonistActivity != value)
+            {
+                _colonistActivity = value;
+                OnActivityChanged?.Invoke(_colonistActivity);
+            }
+        }
+    }
 
     void Awake()
     {
@@ -21,6 +38,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         {
             emptySlots.Enqueue(i);
         }
+        colonistName = SetRandomName();
     }
     public void Eat(IEdible edible)
     {
@@ -40,8 +58,6 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         if (HungerLevel < HungerThreshold) return true;
         return false;
     }
-
-
 
     public bool HasItem(ItemData itemData, int amount, out int? itemIndex)
     {
@@ -64,8 +80,6 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         }
         return true;
     }
-
-
 
     public bool HasSpace()
     {
@@ -109,4 +123,70 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     {
         GetHungry(Time.deltaTime);
     }
+
+    void OnMouseDown()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if(Physics.Raycast(ray, Mathf.Infinity ,~gameObject.layer))
+        {
+            DisplayInfo();
+        }
+    }
+
+    public void DisplayInfo()
+    {
+        UIManager.instance.ShowColonistPanel(colonistName, colonistActivity);
+        UIManager.instance.SetCurrentColonist(this);
+    }
+
+    string SetRandomName()
+    {
+        List<string> firstNames = new List<string>
+        {
+            "Erik",
+            "Bjorn",
+            "Sigrid",
+            "Leif",
+            "Astrid",
+            "Olaf",
+            "Freya",
+            "Ivar",
+            "Gunnar",
+            "Helga",
+            "Ragnhild",
+            "Sven",
+            "Ingrid",
+            "Harald",
+            "Thyra"
+        };
+
+        List<string> lastNames = new List<string>
+        {
+            "Halden",
+            "Strand",
+            "Berg",
+            "Fjord",
+            "Alfheim",
+            "Hamar",
+            "Kjell",
+            "Vik",
+            "Skog",
+            "Ragnar",
+            "Dal",
+            "Stav",
+            "Voll",
+            "Ask",
+            "Grove",
+        };
+
+        int firstName = Random.Range(0, firstNames.Count);
+        int lastName = Random.Range(0, lastNames.Count);
+
+        return firstNames[firstName] + " " + lastNames[lastName];
+    }
+
+    public void ChangeActivity(string activity)
+    {
+        colonistActivity = activity;
+    }   
 }

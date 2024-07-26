@@ -26,8 +26,35 @@ public class UIManager : MonoBehaviour
     public GameObject growZoneButton;
     public GameObject shrinkZoneButton;
 
+    [Header("Colonist Info Panel")]
+    public GameObject colonistInfoPanel;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI activityText;
+    private ColonistData currentColonist;
 
     public static UIManager instance { get; private set; }
+
+    public void SetCurrentColonist(ColonistData colonist)
+    {
+        if (currentColonist != null)
+        {
+            currentColonist.OnActivityChanged -= UpdateActivityDisplay;
+        }
+
+        currentColonist = colonist;
+        currentColonist.OnActivityChanged += UpdateActivityDisplay;
+
+        UpdateActivityDisplay(currentColonist.colonistActivity);
+    }
+
+    private void UpdateActivityDisplay(string activity)
+    {
+        activityText.text = activity;
+        if (!colonistInfoPanel.activeSelf)
+        {
+            colonistInfoPanel.SetActive(true);
+        }
+    }
 
     void Awake()
     {
@@ -35,9 +62,11 @@ public class UIManager : MonoBehaviour
             instance = this;
         else
             Debug.Log("More then 1 UIManager Exists");
+
+            colonistInfoPanel.SetActive(false);
     }
 
-#region SelectionUI
+    #region SelectionUI
     public void SetAllSelectionUIInactive()
     {
         itemSelection.gameObject.SetActive(false);
@@ -68,7 +97,6 @@ public class UIManager : MonoBehaviour
         selectionBoxImage.anchoredPosition = mouseStart + new Vector3(width/2, height/2);
         selectionBoxImage.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
     }
-
     #endregion
 
     #region SelectionUIButtons
@@ -83,9 +111,19 @@ public class UIManager : MonoBehaviour
         SetAllActionButtonsInactive();
         cancelButton.SetActive(true);
     }
-
-
     #endregion
 
+    #region  Colonist Info Panel
+    public void ShowColonistPanel(string name, string activity)
+    {
+        nameText.text = name;
+        activityText.text = activity;
+        colonistInfoPanel.SetActive(true);
+    }
 
+    public void HideColonistPanel()
+    {
+        colonistInfoPanel.SetActive(false);
+    }
+    #endregion
 }

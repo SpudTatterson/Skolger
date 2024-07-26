@@ -7,15 +7,17 @@ using UnityEngine.AI;
 public class TaskWander : Node
 {
     private ColonistSettingsSO colonistSettings;
-
     private float currentWaitTime;
-
     private NavMeshAgent agent;
+    private string taskDescription;
+    private ColonistData colonistData;
 
-    public TaskWander(NavMeshAgent agent, ColonistSettingsSO colonistSettings)
+    public TaskWander(NavMeshAgent agent, ColonistSettingsSO colonistSettings, ColonistData colonistData, string taskDescription)
     {
         this.agent = agent;
         this.colonistSettings = colonistSettings;
+        this.colonistData = colonistData;
+        this.taskDescription = taskDescription;
         currentWaitTime = Random.Range(0f, colonistSettings.maxWaitTime);
     }
 
@@ -31,6 +33,7 @@ public class TaskWander : Node
             SetRandomDestination();
             currentWaitTime = Random.Range(0f, colonistSettings.maxWaitTime / 2);
         }
+        colonistData.ChangeActivity(taskDescription);
 
         state = NodeState.RUNNING;
         return state;
