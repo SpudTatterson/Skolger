@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem>
 {
@@ -13,8 +15,21 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public int InventorySlots { get; private set; } = 1;
     Queue<int> emptySlots = new();
 
-    [HideInInspector] public string colonistActivity { get; private set; }
+    public event Action<string> OnActivityChanged;
+    private string _colonistActivity;
     [HideInInspector] public string colonistName { get; private set; }
+    [HideInInspector] public string colonistActivity
+    {
+        get => _colonistActivity;
+        set
+        {
+            if(_colonistActivity != value)
+            {
+                _colonistActivity = value;
+                OnActivityChanged?.Invoke(_colonistActivity);
+            }
+        }
+    }
 
     void Awake()
     {
@@ -121,6 +136,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public void DisplayInfo()
     {
         UIManager.instance.ShowColonistPanel(colonistName, colonistActivity);
+        UIManager.instance.SetCurrentColonist(this);
     }
 
     string SetRandomName()

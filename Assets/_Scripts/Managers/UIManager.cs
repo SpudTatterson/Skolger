@@ -27,11 +27,34 @@ public class UIManager : MonoBehaviour
     public GameObject shrinkZoneButton;
 
     [Header("Colonist Info Panel")]
+    private ColonistData currentColonist;
     public GameObject colonistInfoPanel;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI activityText;
 
     public static UIManager instance { get; private set; }
+
+    public void SetCurrentColonist(ColonistData colonist)
+    {
+        if (currentColonist != null)
+        {
+            currentColonist.OnActivityChanged -= UpdateActivityDisplay;
+        }
+
+        currentColonist = colonist;
+        currentColonist.OnActivityChanged += UpdateActivityDisplay;
+
+        UpdateActivityDisplay(currentColonist.colonistActivity);
+    }
+
+    private void UpdateActivityDisplay(string activity)
+    {
+        activityText.text = activity;
+        if (!colonistInfoPanel.activeSelf)
+        {
+            colonistInfoPanel.SetActive(true);
+        }
+    }
 
     void Awake()
     {
