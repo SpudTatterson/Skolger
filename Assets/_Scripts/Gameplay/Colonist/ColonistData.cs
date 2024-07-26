@@ -13,6 +13,8 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public int InventorySlots { get; private set; } = 1;
     Queue<int> emptySlots = new();
 
+    [HideInInspector] public string colonistActivity;
+    [HideInInspector] public string colonistName;
 
     void Awake()
     {
@@ -21,6 +23,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         {
             emptySlots.Enqueue(i);
         }
+        colonistName = SetRandomName();
     }
     public void Eat(IEdible edible)
     {
@@ -40,8 +43,6 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         if (HungerLevel < HungerThreshold) return true;
         return false;
     }
-
-
 
     public bool HasItem(ItemData itemData, int amount, out int? itemIndex)
     {
@@ -64,8 +65,6 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         }
         return true;
     }
-
-
 
     public bool HasSpace()
     {
@@ -108,5 +107,65 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     void Update()
     {
         GetHungry(Time.deltaTime);
+    }
+
+    void OnMouseDown()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if(Physics.Raycast(ray, Mathf.Infinity ,~gameObject.layer))
+        {
+            DisplayInfo();
+        }
+    }
+
+    public void DisplayInfo()
+    {
+        UIManager.instance.ShowColonistPanel(colonistName, colonistActivity);
+    }
+
+    string SetRandomName()
+    {
+        List<string> firstNames = new List<string>
+        {
+            "Erik",
+            "Bjorn",
+            "Sigrid",
+            "Leif",
+            "Astrid",
+            "Olaf",
+            "Freya",
+            "Ivar",
+            "Gunnar",
+            "Helga",
+            "Ragnhild",
+            "Sven",
+            "Ingrid",
+            "Harald",
+            "Thyra"
+        };
+
+        List<string> lastNames = new List<string>
+        {
+            "Halden",
+            "Strand",
+            "Berg",
+            "Fjord",
+            "Alfheim",
+            "Hamar",
+            "Kjell",
+            "Vik",
+            "Skog",
+            "Ragnar",
+            "Dal",
+            "Stav",
+            "Voll",
+            "Ask",
+            "Grove",
+        };
+
+        int firstName = Random.Range(0, firstNames.Count);
+        int lastName = Random.Range(0, lastNames.Count);
+
+        return firstNames[firstName] + " " + lastNames[lastName];
     }
 }
