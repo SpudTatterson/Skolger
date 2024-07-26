@@ -61,7 +61,7 @@ public class ColonistBT : Tree
             new TaskEat(agent, colonistData)
         })
         {
-            priority = colonistSettings.taskEat
+            priority = colonistSettings.taskEat,
         };
     }
     #endregion
@@ -178,9 +178,9 @@ public class ColonistBT : Tree
     {
         Dictionary<TaskKey, string> taskDescriptions = new Dictionary<TaskKey, string>
         {
-            {TaskKey.Eating, "Going to eat food"},
+            {TaskKey.Eating, "Going to eat"},
             {TaskKey.Wandering, "Wandering"},
-            {TaskKey.GettingItemToHaul, "Getting items to haul"},
+            {TaskKey.GettingItemToHaul, "Finding items to haul"},
             {TaskKey.HaulingToStockpile, "Hauling items to stockpile"},
             {TaskKey.ItemsToConstruct, "Going to get items for construction"},
             {TaskKey.Constructing, "Going to construct"},
