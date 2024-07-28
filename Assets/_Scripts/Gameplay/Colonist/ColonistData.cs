@@ -19,6 +19,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     private string _colonistActivity;
     [HideInInspector] public string colonistName { get; private set; }
     [HideInInspector]
+
     public string colonistActivity
     {
         get => _colonistActivity;

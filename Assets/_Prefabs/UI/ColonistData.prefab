@@ -240,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1220af114b3dbba44a93c0ec0428d2f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colonist: {fileID: 0}
   colonistFace: {fileID: 7836171332509807042}
   colonistName: {fileID: 7195289893435901106}
   activity: {fileID: 4962058726352985938}
