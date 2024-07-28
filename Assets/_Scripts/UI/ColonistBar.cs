@@ -2,7 +2,7 @@ using Microsoft.Unity.VisualStudio.Editor;
 using TMPro;
 using UnityEngine;
 
-public class ColonistBoard : MonoBehaviour
+public class ColonistBar : MonoBehaviour
 {
     private ColonistData colonist;
     [SerializeField] GameObject colonistFace;
@@ -18,11 +18,6 @@ public class ColonistBoard : MonoBehaviour
         {
             this.colonist.OnActivityChanged += UpdateActivity;
         }
-    }
-
-    public void UpdateData(string activity)
-    {
-        this.activity.text = activity;
     }
 
     private void UpdateActivity(string activity)

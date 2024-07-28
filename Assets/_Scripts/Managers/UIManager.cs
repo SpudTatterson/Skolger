@@ -95,14 +95,14 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region  Colonist Info Panel
-    public void ShowColonistPanel(string name, string activity)
+    public void ShowColonistWindow(string name, string activity)
     {
         nameText.text = name;
         activityText.text = activity;
         colonistInfoPanel.SetActive(true);
     }
 
-    public void HideColonistPanel()
+    public void HideColonistWindow()
     {
         colonistInfoPanel.SetActive(false);
     }
@@ -129,10 +129,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void AddColonistInfoToBar(string name, ColonistData colonist)
+    public void AddColonistToBoard(string name, ColonistData colonist)
     {
         var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsBoard.transform);
-        var data = colonistsDataBar.GetComponent<ColonistBoard>();
+        var data = colonistsDataBar.GetComponent<ColonistBar>();
         data.SetDataOnCreation(name, colonist);
     }
     #endregion

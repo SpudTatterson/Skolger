@@ -32,7 +32,6 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         }
     }
 
-
     void Awake()
     {
         Items = new InventoryItem[InventorySlots];
@@ -45,7 +44,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     void Start()
     {
-        UIManager.instance.AddColonistInfoToBar(colonistName, this);
+        UIManager.instance.AddColonistToBoard(colonistName, this);
     }
 
     public void Eat(IEdible edible)
@@ -143,7 +142,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     public void DisplayInfo()
     {
-        UIManager.instance.ShowColonistPanel(colonistName, colonistActivity);
+        UIManager.instance.ShowColonistWindow(colonistName, colonistActivity);
         UIManager.instance.SetCurrentColonist(this);
     }
 
