@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,11 +7,10 @@ public class SelectionManager : MonoBehaviour
     public bool isSelecting = true;
     public static SelectionManager instance { get; private set; }
     List<ISelectable> currentSelected = new List<ISelectable>();
-    SelectionType selectionType;
     ISelectionStrategy selectionStrategy;
     [SerializeField] List<SelectionType> specialSelectionTypes;
-    [SerializeField] float dragDelay = 0.1f;
 
+    [SerializeField] float dragDelay = 0.1f;
     Vector3 mouseStartPos;
     Vector3 mouseEndPos;
     float mouseDownTime;
@@ -25,6 +21,8 @@ public class SelectionManager : MonoBehaviour
         Add,
         Remove
     }
+
+    bool setToUpdate;
     void Awake()
     {
         if (instance == null)
@@ -44,6 +42,19 @@ public class SelectionManager : MonoBehaviour
         HandleDeselectionInput();
 
         HandleSelectionInput();
+
+        if (setToUpdate)
+        {
+            if (currentSelected.Count != 0)
+            {
+                SetSelectionType(currentSelected[0].GetSelectionType());
+                UIManager.instance.selectionPanel.SetActive(true);
+            }
+            else
+                StopSelecting();
+
+            setToUpdate = false;
+        }
     }
 
     #region Selection Logic
@@ -118,19 +129,15 @@ public class SelectionManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1))
         {
-            DeselectAll();
+            StopSelecting();
         }
     }
 
     void Select(List<ISelectable> selectables)
     {
-        if (selectables.Count > 0)
+        if (selectables.Count == 0)
         {
-            UIManager.instance.selectionPanel.SetActive(true);
-        }
-        else
-        {
-            DeselectAll();
+            StopSelecting();
             return;
         }
 
@@ -149,28 +156,19 @@ public class SelectionManager : MonoBehaviour
         {
             foreach (var selectable in selectables)
             {
-                if (currentSelected.Contains(selectable))
-                {
-                    selectable.OnDeselect();
-                }
+                selectable.OnDeselect();
             }
-            if (currentSelected.Count != 0)
-            {
-                SetSelectionType(currentSelected[0].GetSelectionType());
-            }
-            else
-                DeselectAll();
             return;
         }
         else if (selectionAction == SelectionAction.Default)
         {
-            if (selectables.Count > 0 && currentSelected.Count > 0 && selectables[0] == currentSelected[0])
+            if (selectables.Count == 1 && currentSelected.Count > 0 && selectables[0] == currentSelected[0])
             {
                 TryToSelectOtherItemInCell();
             }
             else
             {
-                currentSelected.Clear();
+                DeselectAll();
 
                 foreach (var selectable in selectables)
                 {
@@ -191,7 +189,7 @@ public class SelectionManager : MonoBehaviour
 
                     if (doBreak) break;
                 }
-                SetSelectionType(selectables[0].GetSelectionType());
+                UpdateSelection();
             }
         }
 
@@ -242,6 +240,10 @@ public class SelectionManager : MonoBehaviour
     public void RemoveFromCurrentSelected(ISelectable selectable)
     {
         currentSelected.Remove(selectable);
+    }
+    public void UpdateSelection()
+    {
+        setToUpdate = true;
     }
 
     #endregion
@@ -363,6 +365,14 @@ public class SelectionManager : MonoBehaviour
     #endregion
 
     #region Cleanup
+    void StopSelecting()
+    {
+        DeselectAll();
+
+        UIManager.instance.SetAllSelectionUIInactive();
+        UIManager.instance.selectionPanel.SetActive(false);
+    }
+
     void DeselectAll()
     {
         List<ISelectable> selectedCopy = new List<ISelectable>(currentSelected);
@@ -371,11 +381,9 @@ public class SelectionManager : MonoBehaviour
         {
             selectable.OnDeselect();
         }
-        selectionStrategy?.CleanUp();
-
         currentSelected.Clear();
-        UIManager.instance.SetAllSelectionUIInactive();
-        UIManager.instance.selectionPanel.SetActive(false);
+
+        selectionStrategy?.CleanUp();
     }
 
     #endregion
