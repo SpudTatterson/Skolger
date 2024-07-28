@@ -18,18 +18,20 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public event Action<string> OnActivityChanged;
     private string _colonistActivity;
     [HideInInspector] public string colonistName { get; private set; }
-    [HideInInspector] public string colonistActivity
+    [HideInInspector]
+    public string colonistActivity
     {
         get => _colonistActivity;
         set
         {
-            if(_colonistActivity != value)
+            if (_colonistActivity != value)
             {
                 _colonistActivity = value;
                 OnActivityChanged?.Invoke(_colonistActivity);
             }
         }
     }
+
 
     void Awake()
     {
@@ -40,6 +42,12 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         }
         colonistName = SetRandomName();
     }
+
+    void Start()
+    {
+        UIManager.instance.AddColonistInfoToBar(colonistName, this);
+    }
+
     public void Eat(IEdible edible)
     {
         HungerLevel += edible.FoodValue;
@@ -127,7 +135,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     void OnMouseDown()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if(Physics.Raycast(ray, Mathf.Infinity ,~gameObject.layer))
+        if (Physics.Raycast(ray, Mathf.Infinity, ~gameObject.layer))
         {
             DisplayInfo();
         }
@@ -188,5 +196,5 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public void ChangeActivity(string activity)
     {
         colonistActivity = activity;
-    }   
+    }
 }

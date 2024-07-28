@@ -30,31 +30,12 @@ public class UIManager : MonoBehaviour
     public GameObject colonistInfoPanel;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI activityText;
+    [Space]
+    public GameObject colonistsBoard;
+    public GameObject colonistDataPrefab;
     private ColonistData currentColonist;
 
     public static UIManager instance { get; private set; }
-
-    public void SetCurrentColonist(ColonistData colonist)
-    {
-        if (currentColonist != null)
-        {
-            currentColonist.OnActivityChanged -= UpdateActivityDisplay;
-        }
-
-        currentColonist = colonist;
-        currentColonist.OnActivityChanged += UpdateActivityDisplay;
-
-        UpdateActivityDisplay(currentColonist.colonistActivity);
-    }
-
-    private void UpdateActivityDisplay(string activity)
-    {
-        activityText.text = activity;
-        if (!colonistInfoPanel.activeSelf)
-        {
-            colonistInfoPanel.SetActive(true);
-        }
-    }
 
     void Awake()
     {
@@ -124,6 +105,35 @@ public class UIManager : MonoBehaviour
     public void HideColonistPanel()
     {
         colonistInfoPanel.SetActive(false);
+    }
+
+    public void SetCurrentColonist(ColonistData colonist)
+    {
+        if (currentColonist != null)
+        {
+            currentColonist.OnActivityChanged -= UpdateActivityDisplay;
+        }
+
+        currentColonist = colonist;
+        currentColonist.OnActivityChanged += UpdateActivityDisplay;
+
+        UpdateActivityDisplay(currentColonist.colonistActivity);
+    }
+
+    private void UpdateActivityDisplay(string activity)
+    {
+        activityText.text = activity;
+        if (!colonistInfoPanel.activeSelf)
+        {
+            colonistInfoPanel.SetActive(true);
+        }
+    }
+
+    public void AddColonistInfoToBar(string name, ColonistData colonist)
+    {
+        var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsBoard.transform);
+        var data = colonistsDataBar.GetComponent<ColonistBoard>();
+        data.SetDataOnCreation(name, colonist);
     }
     #endregion
 }
