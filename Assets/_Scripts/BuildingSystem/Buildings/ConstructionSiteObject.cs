@@ -45,7 +45,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         {
             outline = gameObject.AddComponent<Outline>();
         }
-        outline.enabled = false;
+        outline?.Disable();
 
     }
 
@@ -158,7 +158,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
 
-        outline.enabled = true;
+        outline?.Enable();
     }
     public void OnDeselect()
     {
@@ -166,8 +166,10 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         manager.RemoveFromCurrentSelected(this);
         manager.UpdateSelection();
 
-        outline.enabled = false;
+        outline?.Disable();
     }
+
+
 
     public SelectionType GetSelectionType()
     {

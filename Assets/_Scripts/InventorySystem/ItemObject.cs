@@ -155,7 +155,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
 
-        outline.enabled = true;
+        outline?.Enable();
     }
     public void OnDeselect()
     {
@@ -163,7 +163,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         manager.RemoveFromCurrentSelected(this);
         manager.UpdateSelection();
 
-        outline.enabled = false;
+        outline?.Disable();
     }
 
     public SelectionType GetSelectionType()

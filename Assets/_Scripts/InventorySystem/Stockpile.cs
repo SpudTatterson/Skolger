@@ -46,7 +46,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         // Create the grid mesh
         visual = MeshUtility.CreateGridMesh(this.occupiedCells, transform.position, "Stockpile", MaterialManager.instance.stockpileMaterial, transform, 1);
         outline = visual.AddComponent<Outline>();
-        outline.enabled = false;
+        outline?.Disable();
     }
     public bool GetEmptyCell(out Cell cell)
     {
@@ -307,7 +307,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
 
-        outline.enabled = true;
+        outline?.Enable();
     }
     public void OnDeselect()
     {
@@ -315,7 +315,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         manager.RemoveFromCurrentSelected(this);
         manager.UpdateSelection();
 
-        outline.enabled = false;
+        outline?.Disable();
     }
 
     public SelectionType GetSelectionType()

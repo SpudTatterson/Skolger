@@ -24,7 +24,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         {
             outline = gameObject.AddComponent<Outline>();
         }
-        outline.enabled = false;
+        outline?.Disable();
     }
 
     public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, Transform parent = null)
@@ -83,7 +83,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
 
-        outline.enabled = true;
+        outline?.Enable();
     }
     public void OnDeselect()
     {
@@ -91,7 +91,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         manager.RemoveFromCurrentSelected(this);
         manager.UpdateSelection();
 
-        outline.enabled = false;
+        outline?.Disable();
     }
 
     public SelectionType GetSelectionType()

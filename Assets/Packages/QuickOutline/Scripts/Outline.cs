@@ -176,7 +176,14 @@ public class Outline : MonoBehaviour
     Destroy(outlineMaskMaterial);
     Destroy(outlineFillMaterial);
   }
-
+  public void Enable()
+  {
+    this.enabled = true;
+  }
+  public void Disable()
+  {
+    this.enabled = false;
+  }
   void Bake()
   {
 

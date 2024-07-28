@@ -91,15 +91,15 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
 
-        outline.enabled = true;
+        outline?.Enable();
     }
     public void OnDeselect()
     {
         SelectionManager manager = SelectionManager.instance;
         manager.RemoveFromCurrentSelected(this);
         manager.UpdateSelection();
-        
-        outline.enabled = false;
+
+        outline?.Disable();
     }
     public SelectionType GetSelectionType()
     {
