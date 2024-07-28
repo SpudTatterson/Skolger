@@ -16,6 +16,8 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     [SerializeField, Tooltip("Should be set to true if manually placed in world")] bool manualInit = false;
     public bool SetForCancellation { get; private set; }
 
+    Outline outline;
+
     BillBoard forbiddenBillboard;
     // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
@@ -36,6 +38,15 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
             else
                 fulfilledCosts.Add(cost.item, 0);
         }
+
+        // get necessary components
+        forbiddenBillboard = GetComponentInChildren<BillBoard>(true);
+        if (!TryGetComponent(out outline))
+        {
+            outline = gameObject.AddComponent<Outline>();
+        }
+        outline.enabled = false;
+
     }
 
     public static ConstructionSiteObject MakeInstance(BuildingData buildingData, Cell cell, Transform parent = null, bool temp = false)
@@ -56,7 +67,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     void Start()
     {
-        forbiddenBillboard = GetComponentInChildren<BillBoard>(true);
+
         if (manualInit)
             Initialize(data);
     }
@@ -141,6 +152,22 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     #endregion
 
     #region Selection
+
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+
+        outline.enabled = true;
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        manager.UpdateSelection();
+
+        outline.enabled = false;
+    }
 
     public SelectionType GetSelectionType()
     {
@@ -238,5 +265,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     void OnDisable()
     {
         OnRelease();
+
+        OnDeselect();
     }
 }

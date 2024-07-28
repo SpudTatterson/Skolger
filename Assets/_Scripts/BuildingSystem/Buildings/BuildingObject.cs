@@ -11,12 +11,20 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     List<Cell> occupiedCells;
     [field: SerializeField, ReadOnly] public Cell cornerCell { get; private set; }
 
+    Outline outline;
+
     public void Initialize(BuildingData buildingData)
     {
         this.buildingData = buildingData;
         GetOccupiedCells();
 
         OnOccupy();
+
+        if (!TryGetComponent(out outline))
+        {
+            outline = gameObject.AddComponent<Outline>();
+        }
+        outline.enabled = false;
     }
 
     public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, Transform parent = null)
@@ -29,8 +37,8 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 #endif
         buildingVisual.transform.position = position;
         buildingVisual.transform.parent = parent;
-
-        BuildingObject building = buildingVisual.AddComponent<BuildingObject>();
+        if (!buildingVisual.TryGetComponent(out BuildingObject building))
+            building = buildingVisual.AddComponent<BuildingObject>();
 #if UNITY_EDITOR
         EditorUtility.SetDirty(building);
 #endif
@@ -69,6 +77,22 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     }
 
     #region ISelectable
+
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+
+        outline.enabled = true;
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        manager.UpdateSelection();
+
+        outline.enabled = false;
+    }
 
     public SelectionType GetSelectionType()
     {
@@ -123,4 +147,8 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 
     #endregion
 
+    void OnDisable()
+    {
+        OnDeselect();
+    }
 }

@@ -7,13 +7,20 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
-    [SerializeField] BillBoard billBoard;
+    BillBoard setForHarvestBillboard;
+    Outline outline;
     float timeHarvesting = 0f;
     public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
     bool finishedHarvesting = false;
     bool setForHarvesting = false;
     SelectionType selectionType = SelectionType.Harvestable;
+
+    void Awake()
+    {
+        setForHarvestBillboard = GetComponentInChildren<BillBoard>(true);
+        outline = GetComponentInChildren<Outline>(true);
+    }
     public void Harvest()
     {
         foreach (ItemDrop drop in drops)
@@ -73,13 +80,27 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
 
     void ShowBillboard()
     {
-        billBoard?.gameObject.SetActive(true);
+        setForHarvestBillboard?.gameObject.SetActive(true);
     }
     void DisableBillboard()
     {
-        billBoard?.gameObject.SetActive(false);
+        setForHarvestBillboard?.gameObject.SetActive(false);
     }
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
 
+        outline.enabled = true;
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        manager.UpdateSelection();
+        
+        outline.enabled = false;
+    }
     public SelectionType GetSelectionType()
     {
         return selectionType;
@@ -133,5 +154,6 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     void OnDisable()
     {
         OnRelease();
+        OnDeselect();
     }
 }

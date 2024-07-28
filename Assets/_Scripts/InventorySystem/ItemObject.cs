@@ -12,6 +12,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     [SerializeField] bool inStockpile = false;
     [SerializeField] bool allowedOnInit = true;
     BillBoard forbiddenBillboard;
+    Outline outline;
 
     [field: SerializeField, ReadOnly] public int amount { get; private set; }
 
@@ -61,7 +62,10 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
 
-        forbiddenBillboard = GetComponentInChildren<BillBoard>();
+        forbiddenBillboard = GetComponentInChildren<BillBoard>(true);
+        outline = GetComponentInChildren<Outline>(true);
+        if (outline == null)
+            outline = visualGO.AddComponent<Outline>();
 
         if (allowed) OnAllow();
         else OnDisallow();
@@ -146,6 +150,22 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
     #region Selection
 
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+
+        outline.enabled = true;
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        manager.UpdateSelection();
+
+        outline.enabled = false;
+    }
+
     public SelectionType GetSelectionType()
     {
         return SelectionType.Item;
@@ -223,7 +243,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         {
             OnRelease();
         }
-
+        OnDeselect();
     }
     void OnEnable()
     {
