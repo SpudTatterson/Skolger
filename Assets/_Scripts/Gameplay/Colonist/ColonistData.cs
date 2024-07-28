@@ -165,7 +165,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
             "Sven",
             "Ingrid",
             "Harald",
-            "Thyra"
+            "Ragnar"
         };
 
         List<string> lastNames = new List<string>
@@ -179,7 +179,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
             "Kjell",
             "Vik",
             "Skog",
-            "Ragnar",
+            "Lothbrok",
             "Dal",
             "Stav",
             "Voll",
