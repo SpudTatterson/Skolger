@@ -4,11 +4,11 @@ using UnityEngine;
 
 public static class ColonistUtility
 {
-    public static Sprite CaptureFace(GameObject objectToCapture, int width, int height)
+    public static Sprite CaptureFace(GameObject objectToCapture, float faceHeight, Vector3 offset, int width, int height)
     {
-        RenderTexture renderTexture = new RenderTexture(width, height, 24);
+        RenderTexture renderTexture = new RenderTexture(width, height, 32);
 
-        GameObject faceHeight = Object.Instantiate(new GameObject(), objectToCapture.transform);
+        GameObject facePosition = Object.Instantiate(new GameObject(), objectToCapture.transform);
         GameObject cameraObject = Object.Instantiate(new GameObject(), objectToCapture.transform);
         Camera captureCamera = cameraObject.AddComponent<Camera>();
 
@@ -19,9 +19,9 @@ public static class ColonistUtility
         captureCamera.backgroundColor = Color.clear;
         captureCamera.farClipPlane = 2.5f;
 
-        faceHeight.transform.position += new Vector3(0, 1.75f, 0);
-        captureCamera.transform.position += objectToCapture.transform.TransformDirection(new Vector3(0,1.75f,1.15f));
-        captureCamera.transform.LookAt(faceHeight.transform.position);
+        facePosition.transform.position += new Vector3(0, faceHeight, 0);
+        captureCamera.transform.position += objectToCapture.transform.TransformDirection(offset);
+        captureCamera.transform.LookAt(facePosition.transform.position);
 
         RenderTexture.active = renderTexture;
         captureCamera.Render();
@@ -35,7 +35,7 @@ public static class ColonistUtility
         RenderTexture.active = null;
         Object.Destroy(cameraObject);
         Object.Destroy(renderTexture);
-        Object.Destroy(faceHeight);
+        Object.Destroy(facePosition);
 
         return sprite;
     }
