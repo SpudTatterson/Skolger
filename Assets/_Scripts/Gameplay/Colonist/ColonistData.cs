@@ -15,11 +15,14 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public int InventorySlots { get; private set; } = 1;
     Queue<int> emptySlots = new();
 
+    public Sprite faceSprite;
+    public int width = 256;
+    public int height = 256;
+
     public event Action<string> OnActivityChanged;
     private string _colonistActivity;
     [HideInInspector] public string colonistName { get; private set; }
     [HideInInspector]
-
     public string colonistActivity
     {
         get => _colonistActivity;
@@ -45,6 +48,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     void Start()
     {
+        faceSprite = CaptureFace();
         UIManager.instance.AddColonistToBoard(colonistName, this);
     }
 
@@ -196,5 +200,41 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public void ChangeActivity(string activity)
     {
         colonistActivity = activity;
+    }
+
+    public Sprite CaptureFace()
+    {
+        RenderTexture renderTexture = new RenderTexture(width, height, 24);
+
+        GameObject faceHeight = Instantiate(new GameObject(), gameObject.transform);
+        GameObject cameraObject = Instantiate(new GameObject(), gameObject.transform);
+        Camera captureCamera = cameraObject.AddComponent<Camera>();
+
+        captureCamera.targetTexture = renderTexture;
+        captureCamera.orthographic = false;
+        captureCamera.fieldOfView = 60;
+        captureCamera.clearFlags = CameraClearFlags.SolidColor;
+        captureCamera.backgroundColor = Color.clear;
+        captureCamera.farClipPlane = 2.5f;
+
+        faceHeight.transform.position += new Vector3(0, 1.75f, 0);
+        captureCamera.transform.position += gameObject.transform.TransformDirection(new Vector3(0,1.75f,1.15f));
+        captureCamera.transform.LookAt(faceHeight.transform.position);
+
+        RenderTexture.active = renderTexture;
+        captureCamera.Render();
+
+        Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        texture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        texture.Apply();
+
+        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+        RenderTexture.active = null;
+        Destroy(cameraObject);
+        Destroy(renderTexture);
+        Destroy(faceHeight);
+
+        return sprite;
     }
 }

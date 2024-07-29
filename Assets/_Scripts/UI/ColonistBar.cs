@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using Microsoft.Unity.VisualStudio.Editor;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class ColonistBar : MonoBehaviour
 {
-    public ColonistData colonist;
-    [SerializeField] GameObject colonistFace;
+    private ColonistData colonist;
+    [SerializeField] UnityEngine.UI.Image colonistFace;
     [SerializeField] TextMeshProUGUI colonistName;
     [SerializeField] TextMeshProUGUI activity;
 
@@ -22,6 +23,7 @@ public class ColonistBar : MonoBehaviour
     {
         this.colonistName.text = colonistName;
         this.colonist = colonist;
+        colonistFace.sprite = colonist.faceSprite;
 
         if(this.colonist != null)
         {
