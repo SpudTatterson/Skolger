@@ -15,16 +15,16 @@ public class TaskTakeItemFromStockpile : Node
 
     public override NodeState Evaluate()
     {
-        var cost = (ItemCost)GetData(DataName.Cost);
+        var cost = (ItemCost)GetData(EDataName.Cost);
 
         if (cost != null && ColonistUtility.ReachedDestinationOrGaveUp(agent))
         {
-            Stockpile stockpile = (Stockpile)GetData(DataName.Stockpile);
+            Stockpile stockpile = (Stockpile)GetData(EDataName.Stockpile);
             var item = InventoryManager.instance.TakeItem(cost, stockpile);
-            parent.parent.SetData(DataName.InventoryItem, item);
+            parent.parent.SetData(EDataName.InventoryItem, item);
             colonistData.PutItemIn(item);
-            var constructable = (IConstructable)GetData(DataName.Constructable);
-            parent.parent.SetData(DataName.Target, constructable.GetPosition());
+            var constructable = (IConstructable)GetData(EDataName.Constructable);
+            parent.parent.SetData(EDataName.Target, constructable.GetPosition());
 
             state = NodeState.SUCCESS;
             return state;

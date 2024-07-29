@@ -16,8 +16,8 @@ public class TaskPutInStockpile : Node
 
     public override NodeState Evaluate()
     {
-        InventoryItem inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
-        Stockpile stockpile = (Stockpile)GetData(DataName.Stockpile);
+        InventoryItem inventoryItem = (InventoryItem)GetData(EDataName.InventoryItem);
+        Stockpile stockpile = (Stockpile)GetData(EDataName.Stockpile);
 
         if (inventoryItem == null)
         {
@@ -31,13 +31,13 @@ public class TaskPutInStockpile : Node
             return state;            
         }
 
-        int itemIndex = (int)GetData(DataName.InventoryIndex);
+        int itemIndex = (int)GetData(EDataName.InventoryIndex);
         InventoryItem item = colonistData.Items[itemIndex];
         stockpile.AddItem(colonistData.TakeItemOut(itemIndex));
-        ClearData(DataName.InventoryItem);
-        ClearData(DataName.Cell);
-        ClearData(DataName.Target);
-        ClearData(DataName.Stockpile);
+        ClearData(EDataName.InventoryItem);
+        ClearData(EDataName.Cell);
+        ClearData(EDataName.Target);
+        ClearData(EDataName.Stockpile);
         state = NodeState.SUCCESS;
         return state;
     }

@@ -5,7 +5,7 @@ public class CheckForEdible : Node
 {
     public override NodeState Evaluate()
     {
-        var food = GetData(DataName.FoodData);
+        var food = GetData(EDataName.FoodData);
         
         if(food != null)
         {
@@ -15,9 +15,9 @@ public class CheckForEdible : Node
         
         if (InventoryManager.instance.TryFindFoodInStockpiles(out EdibleData edible, out Stockpile stockpile, out Cell itemPosition))
         {
-            SetDataOnRoot(DataName.FoodData, edible);
-            SetDataOnRoot(DataName.Stockpile, stockpile);
-            SetDataOnRoot(DataName.Target, itemPosition);
+            SetDataOnRoot(EDataName.FoodData, edible);
+            SetDataOnRoot(EDataName.Stockpile, stockpile);
+            SetDataOnRoot(EDataName.Target, itemPosition);
 
             state = NodeState.SUCCESS;
             return state;

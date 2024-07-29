@@ -13,14 +13,14 @@ public class TaskDropInventoryItem : Node
 
     public override NodeState Evaluate()
     {
-        var inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
+        var inventoryItem = (InventoryItem)GetData(EDataName.InventoryItem);
 
         if (inventoryItem != null || !colonistData.IsEmpty())
         {
             //inventoryItem.DropItem(agent.transform.position);
-            int InventoryIndex = (int)GetData(DataName.InventoryIndex);
+            int InventoryIndex = (int)GetData(EDataName.InventoryIndex);
             colonistData.TakeItemOut(InventoryIndex).DropItem(GridManager.instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell().position);
-            ClearData(DataName.InventoryItem);
+            ClearData(EDataName.InventoryItem);
         }
 
         state = NodeState.SUCCESS;

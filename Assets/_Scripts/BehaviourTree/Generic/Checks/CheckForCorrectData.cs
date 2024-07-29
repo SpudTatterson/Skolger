@@ -3,16 +3,16 @@ using BehaviorTree;
 
 public class CheckForCorrectData : Node
 {
-    private List<DataName> dataName;
+    private List<EDataName> dataName;
 
-    public CheckForCorrectData(List<DataName> dataName)
+    public CheckForCorrectData(List<EDataName> dataName)
     {
         this.dataName = dataName;
     }
 
     public override NodeState Evaluate()
     {        
-        foreach(DataName data in dataName)
+        foreach(EDataName data in dataName)
         {
             var dataType = GetData(data);
 

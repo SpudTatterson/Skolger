@@ -13,21 +13,21 @@ public class TaskPutItemInConstructable : Node
 
     public override NodeState Evaluate()
     {
-        var constructable = (IConstructable)GetData(DataName.Constructable);
-        var item = (InventoryItem)GetData(DataName.InventoryItem);
+        var constructable = (IConstructable)GetData(EDataName.Constructable);
+        var item = (InventoryItem)GetData(EDataName.InventoryItem);
 
         if (constructable != null && ColonistUtility.ReachedDestinationOrGaveUp(agent))
         {
-            int itemIndex = (int)GetData(DataName.InventoryIndex);
+            int itemIndex = (int)GetData(EDataName.InventoryIndex);
             constructable.AddItem(colonistData.TakeItemOut(itemIndex));
-            ClearData(DataName.InventoryItem);
-            ClearData(DataName.Target);
-            ClearData(DataName.Cost);
+            ClearData(EDataName.InventoryItem);
+            ClearData(EDataName.Target);
+            ClearData(EDataName.Cost);
 
             if(constructable.CheckIfCostsFulfilled())
             {
                 constructable.ConstructBuilding();
-                ClearData(DataName.Constructable);
+                ClearData(EDataName.Constructable);
             }
 
             state = NodeState.RUNNING;

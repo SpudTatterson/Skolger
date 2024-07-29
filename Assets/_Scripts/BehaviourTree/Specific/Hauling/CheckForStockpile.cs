@@ -17,42 +17,42 @@ public class CheckForStockpile : Node
     public override NodeState Evaluate()
     {
         Stockpile stockpile = InventoryManager.instance.GetStockpileWithEmptySpace(out Cell cell);
-        InventoryItem inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
+        InventoryItem inventoryItem = (InventoryItem)GetData(EDataName.InventoryItem);
         
         if (cell == null)
         {
-            object hasStockpile = GetData(DataName.Stockpile);
+            object hasStockpile = GetData(EDataName.Stockpile);
 
             if (inventoryItem != null || !colonistData.IsEmpty())
             {
-                int itemIndex  = (int)GetData(DataName.InventoryIndex);
+                int itemIndex  = (int)GetData(EDataName.InventoryIndex);
                 colonistData.TakeItemOut(itemIndex).DropItem(agent.transform.position);
                 agent.ResetPath();
 
-                ClearData(DataName.InventoryItem);
+                ClearData(EDataName.InventoryItem);
             }
 
             if (hasStockpile != null)
             {
                 agent.ResetPath();
 
-                ClearData(DataName.Stockpile);
-                ClearData(DataName.Cell);
+                ClearData(EDataName.Stockpile);
+                ClearData(EDataName.Cell);
             }
 
             state = NodeState.FAILURE;
             return state;
         }
 
-        var target = GetData(DataName.Target);
+        var target = GetData(EDataName.Target);
 
         if (inventoryItem != null && target == null)
         {
-            parent.parent.SetData(DataName.Target, cell);
+            parent.parent.SetData(EDataName.Target, cell);
         }
 
-        parent.parent.SetData(DataName.Cell, cell);
-        parent.parent.SetData(DataName.Stockpile, stockpile);
+        parent.parent.SetData(EDataName.Cell, cell);
+        parent.parent.SetData(EDataName.Stockpile, stockpile);
 
         state = NodeState.SUCCESS;
         return state;

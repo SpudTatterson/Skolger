@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum DataName
+public enum EDataName
 {
     Target,
     FollowTarget,
@@ -14,7 +14,7 @@ public enum DataName
     InventoryIndex
 }
 
-public enum TaskDescription
+public enum ETaskDescription
 {
     Eating,
     GettingItemToHaul,

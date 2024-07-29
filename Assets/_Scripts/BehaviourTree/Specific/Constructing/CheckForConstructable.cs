@@ -10,8 +10,8 @@ public class CheckForConstructable : Node
     }
     public override NodeState Evaluate()
     {
-        var hasConstructable = GetData(DataName.Constructable);
-        var hasInventoryItem = GetData(DataName.InventoryItem);
+        var hasConstructable = GetData(EDataName.Constructable);
+        var hasInventoryItem = GetData(EDataName.InventoryItem);
 
         if (hasInventoryItem != null || !colonistData.IsEmpty())
         {
@@ -29,7 +29,7 @@ public class CheckForConstructable : Node
 
         if (constructable != null)
         {
-            parent.parent.SetData(DataName.Constructable, constructable);
+            parent.parent.SetData(EDataName.Constructable, constructable);
 
             state = NodeState.SUCCESS;
             return state;

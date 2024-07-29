@@ -9,23 +9,23 @@ public class ColonistBT : Tree
 {
     [SerializeField] private ColonistSettingsSO colonistSettings;
 
-    public bool triggerRearrangement;
+    public bool treeRearrangement;
 
-    [Foldout("No access for the player")]
+    [BoxGroup("Initial set, player access locked")]
     [SerializeField] private int taskEat;
-    [Foldout("No access for the player")]
+    [BoxGroup("Initial set, player access locked")]
     [SerializeField] private int taskWander;
 
-    [Foldout("Player will be able to edit")]
+    [BoxGroup("Editable at runtime, player access available")]
     [SerializeField] private int taskHaul;
-    [Foldout("Player will be able to edit")]
+    [BoxGroup("Editable at runtime, player access available")]
     [SerializeField] private int taskConstruct;
-    [Foldout("Player will be able to edit")]
+    [BoxGroup("Editable at runtime, player access available")]
     [SerializeField] private int taskHarvest;
 
     private NavMeshAgent agent;
     private ColonistData colonistData;
-    private Dictionary<TaskDescription, string> taskDescriptions;
+    private Dictionary<ETaskDescription, string> taskDescriptions;
 
     private void Awake()
     {
@@ -36,10 +36,10 @@ public class ColonistBT : Tree
 
     void LateUpdate()
     {
-        if (triggerRearrangement)
+        if (treeRearrangement)
         {
             RearrangeTree();
-            triggerRearrangement = false;
+            treeRearrangement = false;
         }
     }
 
@@ -80,7 +80,7 @@ public class ColonistBT : Tree
             new CheckIfHungry(colonistData),
             new CheckForEdible(),
             new TaskDropInventoryItem(agent, colonistData),
-            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskDescription.Eating]),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.Eating]),
             new TaskEat(agent, colonistData)
         })
         {
@@ -92,7 +92,7 @@ public class ColonistBT : Tree
     #region Wandering Task
     private Node CreateTaskWander()
     {
-        return new TaskWander(agent, colonistSettings, colonistData, taskDescriptions[TaskDescription.Wandering])
+        return new TaskWander(agent, colonistSettings, colonistData, taskDescriptions[ETaskDescription.Wandering])
         {
             priority = taskWander
         };
@@ -106,7 +106,7 @@ public class ColonistBT : Tree
         {
             new CheckForStockpile(agent,colonistData),
             new CheckIsAbleToHaul(agent, colonistData),
-            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskDescription.GettingItemToHaul]),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.GettingItemToHaul]),
             new TaskPickUpItem(agent, colonistData)
         })
         {
@@ -117,7 +117,7 @@ public class ColonistBT : Tree
         {
             new CheckItemInInventory(colonistData),
             new CheckForStockpile(agent,colonistData),
-            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskDescription.HaulingToStockpile]),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.HaulingToStockpile]),
             new TaskPutInStockpile(agent, colonistData)
         })
         {
@@ -138,11 +138,11 @@ public class ColonistBT : Tree
     #region Construction Task
     private Node CreateTaskConstruct()
     {
-        List<DataName> requiredKeys = new List<DataName>
+        List<EDataName> requiredKeys = new List<EDataName>
         {
-            DataName.Constructable,
-            DataName.InventoryItem,
-            DataName.Cost
+            EDataName.Constructable,
+            EDataName.InventoryItem,
+            EDataName.Cost
         };
 
         Node getItemsFromStockpile = new Sequence(new List<Node>
@@ -150,7 +150,7 @@ public class ColonistBT : Tree
             new CheckForConstructable(colonistData),
             new CheckForConstructableCost(),
             new CheckHasConstructableItem(),
-            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskDescription.ItemsToConstruct]),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.ItemsToConstruct]),
             new TaskTakeItemFromStockpile(agent, colonistData),
         })
         {
@@ -162,7 +162,7 @@ public class ColonistBT : Tree
             new CheckForCorrectData(requiredKeys),
             new CheckForCorrectItem(colonistData),
             new CheckItemInInventory(colonistData),
-            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskDescription.Constructing]),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.Constructing]),
             new TaskPutItemInConstructable(agent, colonistData)
         })
         {
@@ -187,7 +187,7 @@ public class ColonistBT : Tree
         {
             new CheckForHarvestable(),
             new TaskDropInventoryItem(agent, colonistData),
-            new TaskGoToTarget(agent, colonistData, taskDescriptions[TaskDescription.Harvesting]),
+            new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.Harvesting]),
             new TaskHarvest(agent)
         })
         {
@@ -197,17 +197,17 @@ public class ColonistBT : Tree
     #endregion
 
     #region Task Descriptions
-    private Dictionary<TaskDescription, string> TaskDescriptions()
+    private Dictionary<ETaskDescription, string> TaskDescriptions()
     {
-        Dictionary<TaskDescription, string> taskDescriptions = new Dictionary<TaskDescription, string>
+        Dictionary<ETaskDescription, string> taskDescriptions = new Dictionary<ETaskDescription, string>
         {
-            {TaskDescription.Eating, "Going to eat"},
-            {TaskDescription.Wandering, "Wandering"},
-            {TaskDescription.GettingItemToHaul, "Finding items to haul"},
-            {TaskDescription.HaulingToStockpile, "Hauling items to stockpile"},
-            {TaskDescription.ItemsToConstruct, "Going to get items for construction"},
-            {TaskDescription.Constructing, "Going to construct"},
-            {TaskDescription.Harvesting, "Going to harvest"},
+            {ETaskDescription.Eating, "Going to eat"},
+            {ETaskDescription.Wandering, "Wandering"},
+            {ETaskDescription.GettingItemToHaul, "Finding items to haul"},
+            {ETaskDescription.HaulingToStockpile, "Hauling items to stockpile"},
+            {ETaskDescription.ItemsToConstruct, "Going to get items for construction"},
+            {ETaskDescription.Constructing, "Going to construct"},
+            {ETaskDescription.Harvesting, "Going to harvest"},
         };
 
         return taskDescriptions;

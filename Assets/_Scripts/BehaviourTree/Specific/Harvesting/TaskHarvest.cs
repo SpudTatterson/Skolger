@@ -14,7 +14,7 @@ public class TaskHarvest : Node
 
     public override NodeState Evaluate()
     {
-        IHarvestable harvestable = (IHarvestable)GetData(DataName.Harvestable);
+        IHarvestable harvestable = (IHarvestable)GetData(EDataName.Harvestable);
 
         if (harvestable != null && !harvestable.IsBeingHarvested() && !harvestable.FinishedHarvesting() && ColonistUtility.ReachedDestinationOrGaveUp(agent))
         {
@@ -24,8 +24,8 @@ public class TaskHarvest : Node
         if (harvestable.FinishedHarvesting())
         {
             MonoBehaviour.Destroy(((MonoBehaviour)harvestable).gameObject);
-            ClearData(DataName.Harvestable);
-            ClearData(DataName.Target);
+            ClearData(EDataName.Harvestable);
+            ClearData(EDataName.Target);
 
             state = NodeState.SUCCESS;
             return state;

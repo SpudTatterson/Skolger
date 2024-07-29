@@ -31,8 +31,10 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI activityText;
     [Space]
-    public GameObject colonistsBoard;
+    public GameObject colonistsInfoBoard;
+    public GameObject colonistTaskBoard;
     public GameObject colonistDataPrefab;
+    public GameObject colonistTaskPrefab;
     private ColonistData currentColonist;
 
     public static UIManager instance { get; private set; }
@@ -131,7 +133,7 @@ public class UIManager : MonoBehaviour
 
     public void AddColonistToBoard(string name, ColonistData colonist)
     {
-        var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsBoard.transform);
+        var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsInfoBoard.transform);
         var data = colonistsDataBar.GetComponent<ColonistBar>();
         data.SetDataOnCreation(name, colonist);
     }

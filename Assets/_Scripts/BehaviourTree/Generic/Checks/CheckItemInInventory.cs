@@ -11,7 +11,7 @@ public class CheckItemInInventory : Node
 
     public override NodeState Evaluate()
     {
-        var inventoryItem = GetData(DataName.InventoryItem);
+        var inventoryItem = GetData(EDataName.InventoryItem);
         if (inventoryItem == null || colonistData.IsEmpty())
         {
             state = NodeState.FAILURE;

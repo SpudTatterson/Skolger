@@ -15,16 +15,16 @@ public class TaskPickUpItem : Node
 
     public override NodeState Evaluate()
     {
-        ItemObject item = (ItemObject)GetData(DataName.Target);
+        ItemObject item = (ItemObject)GetData(EDataName.Target);
 
         if (item != null && ColonistUtility.ReachedDestinationOrGaveUp(agent))
         {
             InventoryItem inventoryItem = item.PickUp();
 
-            parent.parent.SetData(DataName.InventoryItem, inventoryItem);
-            ClearData(DataName.Target);
+            parent.parent.SetData(EDataName.InventoryItem, inventoryItem);
+            ClearData(EDataName.Target);
             colonistData.PutItemIn(inventoryItem);
-            parent.parent.parent.SetData(DataName.InventoryIndex, inventoryItem.currentInventorySlot);
+            parent.parent.parent.SetData(EDataName.InventoryIndex, inventoryItem.currentInventorySlot);
 
             state = NodeState.SUCCESS;
             return state;

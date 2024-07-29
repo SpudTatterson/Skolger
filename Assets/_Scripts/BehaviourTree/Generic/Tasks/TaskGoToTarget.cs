@@ -22,7 +22,7 @@ public class TaskGoToTarget : Node
 
     public override NodeState Evaluate()
     {
-        object target = GetData(DataName.Target);
+        object target = GetData(EDataName.Target);
 
         if (target is MonoBehaviour monoBehaviour)
         {

@@ -23,7 +23,7 @@ public class CheckIsAbleToHaul : Node
             return state;
         }
 
-        var hasTarget = GetData(DataName.Target);
+        var hasTarget = GetData(EDataName.Target);
 
         if(hasTarget != null && hasTarget is MonoBehaviour)
         {
@@ -35,7 +35,7 @@ public class CheckIsAbleToHaul : Node
 
         if (haulable != null) 
         {
-            parent.parent.SetData(DataName.Target, haulable);
+            parent.parent.SetData(EDataName.Target, haulable);
 
             state = NodeState.SUCCESS;
             return state;
