@@ -201,6 +201,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colonistSettings: {fileID: 11400000, guid: 6c7d17bae72058e4899b0b4acfc1b604, type: 2}
+  taskEat: 11
+  taskWander: 0
+  taskHaul: 1
+  taskConstruct: 2
+  taskHarvest: 3
 --- !u!114 &3700086828718647259
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,10 +11,10 @@ public enum DataName
     Stockpile,
     Harvestable,
     Cell,
-    InventoryIndex,
+    InventoryIndex
 }
 
-public enum TaskKey
+public enum TaskDescription
 {
     Eating,
     GettingItemToHaul,

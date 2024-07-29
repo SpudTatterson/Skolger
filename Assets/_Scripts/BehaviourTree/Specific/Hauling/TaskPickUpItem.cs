@@ -7,7 +7,7 @@ public class TaskPickUpItem : Node
     private NavMeshAgent agent;
     ColonistData colonistData;
 
-    public TaskPickUpItem(NavMeshAgent agent, ColonistData colonistData) 
+    public TaskPickUpItem(NavMeshAgent agent, ColonistData colonistData)
     {
         this.agent = agent;
         this.colonistData = colonistData;
@@ -17,7 +17,7 @@ public class TaskPickUpItem : Node
     {
         ItemObject item = (ItemObject)GetData(DataName.Target);
 
-        if(item != null && ReachedDestinationOrGaveUp())
+        if (item != null && ColonistUtility.ReachedDestinationOrGaveUp(agent))
         {
             InventoryItem inventoryItem = item.PickUp();
 
@@ -25,7 +25,7 @@ public class TaskPickUpItem : Node
             ClearData(DataName.Target);
             colonistData.PutItemIn(inventoryItem);
             parent.parent.parent.SetData(DataName.InventoryIndex, inventoryItem.currentInventorySlot);
-            
+
             state = NodeState.SUCCESS;
             return state;
         }
@@ -33,22 +33,4 @@ public class TaskPickUpItem : Node
         state = NodeState.RUNNING;
         return state;
     }
-    
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
 }

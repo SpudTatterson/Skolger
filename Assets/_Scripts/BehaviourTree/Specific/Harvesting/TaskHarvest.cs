@@ -16,12 +16,9 @@ public class TaskHarvest : Node
     {
         IHarvestable harvestable = (IHarvestable)GetData(DataName.Harvestable);
 
-        if (harvestable != null && !harvestable.IsBeingHarvested() && !harvestable.FinishedHarvesting() && ReachedDestinationOrGaveUp())
+        if (harvestable != null && !harvestable.IsBeingHarvested() && !harvestable.FinishedHarvesting() && ColonistUtility.ReachedDestinationOrGaveUp(agent))
         {
             TaskManager.Instance.StartCoroutine(harvestable.StartHarvesting());
-
-            state = NodeState.RUNNING;
-            return state;
         }
 
         if (harvestable.FinishedHarvesting())
@@ -34,30 +31,7 @@ public class TaskHarvest : Node
             return state;
         }
 
-        if (harvestable.IsBeingHarvested())
-        {
-            state = NodeState.RUNNING;
-            return state;
-        }
-
         state = NodeState.RUNNING;
         return state;
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }
