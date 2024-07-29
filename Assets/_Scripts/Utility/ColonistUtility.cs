@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class ColonistUtility
 {
-    public static Sprite CaptureFace(GameObject objectToCapture, float faceHeight, Vector3 offset, int width, int height)
+    public static Sprite CaptureFace(GameObject objectToCapture, float faceHeight, Vector3 offset, int width, int height, float renderDistance)
     {
         RenderTexture renderTexture = new RenderTexture(width, height, 32);
 
@@ -17,7 +17,7 @@ public static class ColonistUtility
         captureCamera.fieldOfView = 60;
         captureCamera.clearFlags = CameraClearFlags.SolidColor;
         captureCamera.backgroundColor = Color.clear;
-        captureCamera.farClipPlane = 2.5f;
+        captureCamera.farClipPlane = renderDistance;
 
         facePosition.transform.position += new Vector3(0, faceHeight, 0);
         captureCamera.transform.position += objectToCapture.transform.TransformDirection(offset);

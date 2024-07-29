@@ -51,7 +51,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     void Start()
     {
-        faceSprite = ColonistUtility.CaptureFace(gameObject, 1.75f, new Vector3(0,1.75f,1.15f), width, height);
+        faceSprite = ColonistUtility.CaptureFace(gameObject, 1.75f, new Vector3(0,1.75f,1.15f), width, height, 1.5f);
         UIManager.instance.AddColonistToBoard(colonistName, this);
     }
 
