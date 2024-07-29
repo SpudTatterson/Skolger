@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,6 +12,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     [field: SerializeField] public float HungerThreshold { get; private set; } = 40; // The amount of hungry at which the colonist will drop everything and go eat
     [field: SerializeField, ReadOnly] public float HungerLevel { get; private set; } = 50; // How hungry the colonist current is
     [field: SerializeField] public float HungerGainSpeed { get; private set; } = 1; // Hunger gain per second
+    public string HungerStatus { get; private set; }
 
     [field: SerializeField] public InventoryItem[] Items { get; private set; }
     public int InventorySlots { get; private set; } = 1;
@@ -21,8 +23,8 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public int height = 256;
 
     public event Action<string> OnActivityChanged;
-    private string _colonistActivity;
     [HideInInspector] public string colonistName { get; private set; }
+    private string _colonistActivity;
     [HideInInspector]
     public string colonistActivity
     {
@@ -64,6 +66,17 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     {
         HungerLevel -= HungerGainSpeed * hunger;
         HungerLevel = Mathf.Clamp(HungerLevel, 0, Max_Belly_Capacity);
+        HungerStatus = HungerStatusSetter();
+    }
+
+    string HungerStatusSetter()
+    {
+        if (HungerLevel <= 0)
+            return "starving";
+        else if (HungerLevel <= 40)
+            return "Hungry";
+        else
+            return "Full";
     }
 
     public bool IsHungry()
