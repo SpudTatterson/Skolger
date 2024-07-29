@@ -313,9 +313,9 @@ public class SelectionManager : MonoBehaviour
     }
     public void TryToDeconstruct()
     {
-        foreach (ISelectable selectable in currentSelected)
+        for (int i = 0; i < currentSelected.Count; i++)
         {
-
+            ISelectable selectable = currentSelected[i];
             if (selectable is BuildingObject)
             {
                 (selectable as BuildingObject).Deconstruct();
