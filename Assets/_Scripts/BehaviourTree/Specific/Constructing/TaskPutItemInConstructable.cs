@@ -16,7 +16,7 @@ public class TaskPutItemInConstructable : Node
         var constructable = (IConstructable)GetData(DataName.Constructable);
         var item = (InventoryItem)GetData(DataName.InventoryItem);
 
-        if (constructable != null && ReachedDestinationOrGaveUp())
+        if (constructable != null && ColonistUtility.ReachedDestinationOrGaveUp(agent))
         {
             int itemIndex = (int)GetData(DataName.InventoryIndex);
             constructable.AddItem(colonistData.TakeItemOut(itemIndex));
@@ -36,22 +36,5 @@ public class TaskPutItemInConstructable : Node
 
         state = NodeState.RUNNING;
         return state;
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

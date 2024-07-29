@@ -1,7 +1,7 @@
 using BehaviorTree;
 using UnityEngine;
 
-public class CheckHasItem : Node
+public class CheckHasConstructableItem : Node
 {
     public override NodeState Evaluate()
     {

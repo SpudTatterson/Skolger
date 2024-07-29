@@ -14,7 +14,7 @@ public enum DataName
     InventoryIndex,
 }
 
-public enum TaskKey
+public enum TaskDescription
 {
     Eating,
     GettingItemToHaul,

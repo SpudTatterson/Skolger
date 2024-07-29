@@ -25,11 +25,12 @@ public class TaskPutInStockpile : Node
             return state;
         }
 
-        if (!ReachedDestinationOrGaveUp())
+        if (!ColonistUtility.ReachedDestinationOrGaveUp(agent))
         {
             state = NodeState.RUNNING;
             return state;            
         }
+
         int itemIndex = (int)GetData(DataName.InventoryIndex);
         InventoryItem item = colonistData.Items[itemIndex];
         stockpile.AddItem(colonistData.TakeItemOut(itemIndex));
@@ -39,22 +40,5 @@ public class TaskPutInStockpile : Node
         ClearData(DataName.Stockpile);
         state = NodeState.SUCCESS;
         return state;
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }
