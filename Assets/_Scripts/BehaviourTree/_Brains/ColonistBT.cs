@@ -46,7 +46,6 @@ public class ColonistBT : Tree
     #region Behaviour Tree Setup
     protected override Node SetupTree()
     {
-        Debug.Log("Evaluating");
         Node Task_Wander = CreateTaskWander();
         Node Task_Eat = CreateTaskEat();
 
