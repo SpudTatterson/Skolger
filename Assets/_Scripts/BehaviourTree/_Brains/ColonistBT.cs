@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using BehaviorTree;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,7 +8,8 @@ using Tree = BehaviorTree.Tree;
 public class ColonistBT : Tree
 {
     [SerializeField] private ColonistSettingsSO colonistSettings;
-    private List<int> priorities = new List<int>();
+
+    public bool triggerRearrangement;
 
     [Foldout("No access for the player")]
     [SerializeField] private int taskEat;
@@ -34,9 +34,19 @@ public class ColonistBT : Tree
         taskDescriptions = TaskDescriptions();
     }
 
+    void LateUpdate()
+    {
+        if (triggerRearrangement)
+        {
+            RearrangeTree();
+            triggerRearrangement = false;
+        }
+    }
+
     #region Behaviour Tree Setup
     protected override Node SetupTree()
     {
+        Debug.Log("Evaluating");
         Node Task_Wander = CreateTaskWander();
         Node Task_Eat = CreateTaskEat();
 

@@ -11,7 +11,7 @@ public enum DataName
     Stockpile,
     Harvestable,
     Cell,
-    InventoryIndex,
+    InventoryIndex
 }
 
 public enum TaskDescription

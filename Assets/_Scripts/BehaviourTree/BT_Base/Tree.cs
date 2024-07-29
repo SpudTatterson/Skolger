@@ -15,8 +15,13 @@ namespace BehaviorTree
         {
             if (root != null)
             {
-                root.Evaluate();           
+                root.Evaluate();
             }
+        }
+
+        protected void RearrangeTree()
+        {
+            root = SetupTree();
         }
 
         protected abstract Node SetupTree();
