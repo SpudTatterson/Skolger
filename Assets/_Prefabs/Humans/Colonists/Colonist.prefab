@@ -216,6 +216,10 @@ MonoBehaviour:
   <HungerThreshold>k__BackingField: 40
   <HungerLevel>k__BackingField: 50
   <HungerGainSpeed>k__BackingField: 1
+  <Items>k__BackingField: []
+  faceSprite: {fileID: 0}
+  width: 256
+  height: 256
 --- !u!1 &3639081120247255979
 GameObject:
   m_ObjectHideFlags: 0
