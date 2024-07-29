@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public static class ColonistUtility
 {
@@ -38,5 +39,20 @@ public static class ColonistUtility
         Object.Destroy(facePosition);
 
         return sprite;
+    }
+
+    public static bool ReachedDestinationOrGaveUp(NavMeshAgent agent)
+    {
+        if (agent.pathPending) return false;
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
+        {
+            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
