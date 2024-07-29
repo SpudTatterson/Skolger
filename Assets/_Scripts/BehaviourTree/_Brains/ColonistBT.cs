@@ -3,11 +3,25 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using BehaviorTree;
 using UnityEngine;
 using UnityEngine.AI;
+using NaughtyAttributes;
 using Tree = BehaviorTree.Tree;
 
 public class ColonistBT : Tree
 {
     [SerializeField] private ColonistSettingsSO colonistSettings;
+    private List<int> priorities = new List<int>();
+
+    [Foldout("No access for the player")]
+    [SerializeField] private int taskEat;
+    [Foldout("No access for the player")]
+    [SerializeField] private int taskWander;
+
+    [Foldout("Player will be able to edit")]
+    [SerializeField] private int taskHaul;
+    [Foldout("Player will be able to edit")]
+    [SerializeField] private int taskConstruct;
+    [Foldout("Player will be able to edit")]
+    [SerializeField] private int taskHarvest;
 
     private NavMeshAgent agent;
     private ColonistData colonistData;
@@ -61,7 +75,7 @@ public class ColonistBT : Tree
             new TaskEat(agent, colonistData)
         })
         {
-            priority = colonistSettings.taskEat,
+            priority = taskEat,
         };
     }
     #endregion
@@ -71,7 +85,7 @@ public class ColonistBT : Tree
     {
         return new TaskWander(agent, colonistSettings, colonistData, taskDescriptions[TaskDescription.Wandering])
         {
-            priority = colonistSettings.taskWander
+            priority = taskWander
         };
     }
     #endregion
@@ -107,7 +121,7 @@ public class ColonistBT : Tree
             haulToStockpileSequence
         })
         {
-            priority = colonistSettings.taskHaul
+            priority = taskHaul
         };
     }
     #endregion
@@ -152,7 +166,7 @@ public class ColonistBT : Tree
             placeItemsInConstruction
         })
         {
-            priority = colonistSettings.taskConstruction
+            priority = taskConstruct
         };
     }
     #endregion
@@ -168,7 +182,7 @@ public class ColonistBT : Tree
             new TaskHarvest(agent)
         })
         {
-            priority = colonistSettings.taskHarvest
+            priority = taskHarvest
         };
     }
     #endregion
