@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
     public HarvestableSelectionMenu harvestableSelection;
     public ItemSelectionMenu itemSelection;
     public ConstructableSelectionMenu constructableSelection;
-    public BuildingSelectionMenu buildingSelection; 
+    public BuildingSelectionMenu buildingSelection;
     public StockpileSelectionMenu stockpileSelection;
     public GameObject multipleSelection;
     public Transform multipleSelectionContent;
@@ -26,6 +26,11 @@ public class UIManager : MonoBehaviour
     public GameObject growZoneButton;
     public GameObject shrinkZoneButton;
 
+    [Space(5f), Header("Inventory")]
+    public GameObject defaultInventoryUIPrefab;
+    public GameObject itemTypeGroupPrefab;
+    public Transform inventoryPanel;
+
 
     public static UIManager instance { get; private set; }
 
@@ -37,7 +42,7 @@ public class UIManager : MonoBehaviour
             Debug.Log("More then 1 UIManager Exists");
     }
 
-#region SelectionUI
+    #region SelectionUI
     public void SetAllSelectionUIInactive()
     {
         itemSelection.gameObject.SetActive(false);
@@ -59,13 +64,13 @@ public class UIManager : MonoBehaviour
     }
     public void ResizeSelectionBox(Vector3 mouseStart, Vector3 mouseEnd)
     {
-        if(!selectionBoxImage.gameObject.activeSelf)
+        if (!selectionBoxImage.gameObject.activeSelf)
             selectionBoxImage.gameObject.SetActive(true);
 
         float width = mouseEnd.x - mouseStart.x;
         float height = mouseEnd.y - mouseStart.y;
 
-        selectionBoxImage.anchoredPosition = mouseStart + new Vector3(width/2, height/2);
+        selectionBoxImage.anchoredPosition = mouseStart + new Vector3(width / 2, height / 2);
         selectionBoxImage.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
     }
 
