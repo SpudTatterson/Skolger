@@ -30,31 +30,12 @@ public class UIManager : MonoBehaviour
     public GameObject colonistInfoPanel;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI activityText;
+    [Space]
+    public GameObject colonistsBoard;
+    public GameObject colonistDataPrefab;
     private ColonistData currentColonist;
 
     public static UIManager instance { get; private set; }
-
-    public void SetCurrentColonist(ColonistData colonist)
-    {
-        if (currentColonist != null)
-        {
-            currentColonist.OnActivityChanged -= UpdateActivityDisplay;
-        }
-
-        currentColonist = colonist;
-        currentColonist.OnActivityChanged += UpdateActivityDisplay;
-
-        UpdateActivityDisplay(currentColonist.colonistActivity);
-    }
-
-    private void UpdateActivityDisplay(string activity)
-    {
-        activityText.text = activity;
-        if (!colonistInfoPanel.activeSelf)
-        {
-            colonistInfoPanel.SetActive(true);
-        }
-    }
 
     void Awake()
     {
@@ -114,16 +95,45 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region  Colonist Info Panel
-    public void ShowColonistPanel(string name, string activity)
+    public void ShowColonistWindow(string name, string activity)
     {
         nameText.text = name;
         activityText.text = activity;
         colonistInfoPanel.SetActive(true);
     }
 
-    public void HideColonistPanel()
+    public void HideColonistWindow()
     {
         colonistInfoPanel.SetActive(false);
+    }
+
+    public void SetCurrentColonist(ColonistData colonist)
+    {
+        if (currentColonist != null)
+        {
+            currentColonist.OnActivityChanged -= UpdateActivityDisplay;
+        }
+
+        currentColonist = colonist;
+        currentColonist.OnActivityChanged += UpdateActivityDisplay;
+
+        UpdateActivityDisplay(currentColonist.colonistActivity);
+    }
+
+    private void UpdateActivityDisplay(string activity)
+    {
+        activityText.text = activity;
+        if (!colonistInfoPanel.activeSelf)
+        {
+            colonistInfoPanel.SetActive(true);
+        }
+    }
+
+    public void AddColonistToBoard(string name, ColonistData colonist)
+    {
+        var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsBoard.transform);
+        var data = colonistsDataBar.GetComponent<ColonistBar>();
+        data.SetDataOnCreation(name, colonist);
     }
     #endregion
 }

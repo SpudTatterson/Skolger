@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem>
@@ -10,20 +12,26 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     [field: SerializeField] public float HungerThreshold { get; private set; } = 40; // The amount of hungry at which the colonist will drop everything and go eat
     [field: SerializeField, ReadOnly] public float HungerLevel { get; private set; } = 50; // How hungry the colonist current is
     [field: SerializeField] public float HungerGainSpeed { get; private set; } = 1; // Hunger gain per second
+    public string HungerStatus { get; private set; }
 
     [field: SerializeField] public InventoryItem[] Items { get; private set; }
     public int InventorySlots { get; private set; } = 1;
     Queue<int> emptySlots = new();
 
+    public Sprite faceSprite;
+    public int width = 256;
+    public int height = 256;
+
     public event Action<string> OnActivityChanged;
-    private string _colonistActivity;
     [HideInInspector] public string colonistName { get; private set; }
-    [HideInInspector] public string colonistActivity
+    private string _colonistActivity;
+    [HideInInspector]
+    public string colonistActivity
     {
         get => _colonistActivity;
         set
         {
-            if(_colonistActivity != value)
+            if (_colonistActivity != value)
             {
                 _colonistActivity = value;
                 OnActivityChanged?.Invoke(_colonistActivity);
@@ -40,6 +48,13 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         }
         colonistName = SetRandomName();
     }
+
+    void Start()
+    {
+        faceSprite = ColonistUtility.CaptureFace(gameObject, 1.75f, new Vector3(0,1.75f,1.15f), width, height, 1.5f);
+        UIManager.instance.AddColonistToBoard(colonistName, this);
+    }
+
     public void Eat(IEdible edible)
     {
         HungerLevel += edible.FoodValue;
@@ -51,6 +66,17 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     {
         HungerLevel -= HungerGainSpeed * hunger;
         HungerLevel = Mathf.Clamp(HungerLevel, 0, Max_Belly_Capacity);
+        HungerStatus = HungerStatusSetter();
+    }
+
+    string HungerStatusSetter()
+    {
+        if (HungerLevel <= 0)
+            return "starving";
+        else if (HungerLevel <= 40)
+            return "Hungry";
+        else
+            return "Full";
     }
 
     public bool IsHungry()
@@ -127,7 +153,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     void OnMouseDown()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if(Physics.Raycast(ray, Mathf.Infinity ,~gameObject.layer))
+        if (Physics.Raycast(ray, Mathf.Infinity, ~gameObject.layer))
         {
             DisplayInfo();
         }
@@ -135,7 +161,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     public void DisplayInfo()
     {
-        UIManager.instance.ShowColonistPanel(colonistName, colonistActivity);
+        UIManager.instance.ShowColonistWindow(colonistName, colonistActivity);
         UIManager.instance.SetCurrentColonist(this);
     }
 
@@ -157,7 +183,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
             "Sven",
             "Ingrid",
             "Harald",
-            "Thyra"
+            "Ragnar"
         };
 
         List<string> lastNames = new List<string>
@@ -171,7 +197,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
             "Kjell",
             "Vik",
             "Skog",
-            "Ragnar",
+            "Lothbrok",
             "Dal",
             "Stav",
             "Voll",
@@ -188,5 +214,5 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public void ChangeActivity(string activity)
     {
         colonistActivity = activity;
-    }   
+    }
 }
