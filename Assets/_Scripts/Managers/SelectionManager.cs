@@ -51,7 +51,7 @@ public class SelectionManager : MonoBehaviour
                 UIManager.instance.selectionPanel.SetActive(true);
             }
             else
-                StopSelecting();
+                ResetSelection();
 
             setToUpdate = false;
         }
@@ -61,51 +61,70 @@ public class SelectionManager : MonoBehaviour
 
     void HandleSelectionInput()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())// started clicking
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            mouseStartPos = Input.mousePosition;
-            mouseDownTime = Time.time;
+            StartSelection();
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse0) && mouseDownTime + dragDelay > Time.time)//not dragging player only clicked
+        else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            List<ISelectable> selectables = new List<ISelectable>();
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
-            hit.transform.TryGetComponent(out ISelectable selectable))
-            {
-                selectables.Add(selectable);
-            }
-            mouseStartPos = Vector3.zero;
-            mouseEndPos = Vector3.zero;
-            mouseDownTime = 0;
-            Select(selectables);
+            EndSelection();
         }
-        else if (mouseDownTime + dragDelay > Time.time)
-            return;
-        else if (Input.GetKey(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)// started dragging
+        else if (Input.GetKey(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)
         {
-            mouseEndPos = Input.mousePosition;
-            //UIManager.instance.ResizeSelectionBox(mouseStartPos, mouseEndPos);
-            Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
-            ExtendedDebug.DrawBox(center, halfExtents * 2, Quaternion.identity);
-
-
-            //on hover
+            DragSelection();
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)// stopped dragging
+    }
+
+    void StartSelection()
+    {
+        mouseStartPos = Input.mousePosition;
+        mouseDownTime = Time.time;
+    }
+
+    void EndSelection()
+    {
+        if (mouseDownTime + dragDelay > Time.time)
         {
-            mouseEndPos = Input.mousePosition;
-            UIManager.instance.selectionBoxImage.gameObject.SetActive(false);
-            Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask,
-             out Vector3 center);
-            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents * 0.95f);
-
-            Select(selectables);
-
-            mouseStartPos = Vector3.zero;
-            mouseEndPos = Vector3.zero;
-            mouseDownTime = 0;
+            ClickSelection();
         }
+        else if (mouseStartPos != Vector3.zero)
+        {
+            BoxSelection();
+        }
+        ResetMouseData();
+    }
+
+    void DragSelection()
+    {
+        mouseEndPos = Input.mousePosition;
+        Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
+        ExtendedDebug.DrawBox(center, halfExtents * 2, Quaternion.identity);
+    }
+
+    void ClickSelection()
+    {
+        List<ISelectable> selectables = new List<ISelectable>();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
+        hit.transform.TryGetComponent(out ISelectable selectable))
+        {
+            selectables.Add(selectable);
+        }
+        Select(selectables);
+    }
+
+    void BoxSelection()
+    {
+        Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
+        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents * 0.95f);
+        Select(selectables);
+    }
+
+    void ResetMouseData()
+    {
+        mouseStartPos = Vector3.zero;
+        mouseEndPos = Vector3.zero;
+        mouseDownTime = 0;
     }
 
     void HandleSelectionAction()
@@ -129,7 +148,7 @@ public class SelectionManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1))
         {
-            StopSelecting();
+            ResetSelection();
         }
     }
 
@@ -137,7 +156,7 @@ public class SelectionManager : MonoBehaviour
     {
         if (selectables.Count == 0)
         {
-            StopSelecting();
+            ResetSelection();
             return;
         }
 
@@ -365,7 +384,7 @@ public class SelectionManager : MonoBehaviour
     #endregion
 
     #region Cleanup
-    void StopSelecting()
+    void ResetSelection()
     {
         DeselectAll();
 
