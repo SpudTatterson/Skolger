@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,13 +15,7 @@ public class SelectionManager : MonoBehaviour
     Vector3 mouseStartPos;
     Vector3 mouseEndPos;
     float mouseDownTime;
-    SelectionAction selectionAction;
-    enum SelectionAction
-    {
-        Default,
-        Add,
-        Remove
-    }
+    [SerializeField] SelectionAction selectionAction;
 
     bool setToUpdate;
     void Awake()
@@ -129,16 +124,13 @@ public class SelectionManager : MonoBehaviour
 
     void HandleSelectionAction()
     {
+        if (selectionAction != SelectionAction.Default || selectionAction != SelectionAction.Add || selectionAction != SelectionAction.Remove)
+            return;
+
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-        {
             selectionAction = SelectionAction.Add;
-            return;
-        }
         else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
-        {
             selectionAction = SelectionAction.Remove;
-            return;
-        }
         else
             selectionAction = SelectionAction.Default;
 
@@ -173,47 +165,75 @@ public class SelectionManager : MonoBehaviour
         }
         else if (selectionAction == SelectionAction.Remove)
         {
-            foreach (var selectable in selectables)
-            {
-                selectable.OnDeselect();
-            }
-            return;
+            RemoveSelection(selectables);
         }
         else if (selectionAction == SelectionAction.Default)
         {
-            if (selectables.Count == 1 && currentSelected.Count > 0 && selectables[0] == currentSelected[0])
-            {
-                TryToSelectOtherItemInCell();
-            }
-            else
-            {
-                DeselectAll();
-
-                foreach (var selectable in selectables)
-                {
-                    bool doBreak = false;
-                    if (CheckForSpecialSelectionCase(selectable, out SelectionType type))
-                    {
-                        if (type == SelectionType.Stockpile)
-                        {
-                            if (selectable == selectables[0] && selectables.Count == 1)
-                                doBreak = true;
-                            else
-                                continue;
-
-                        }
-                    }
-
-                    selectable.OnSelect();
-
-                    if (doBreak) break;
-                }
-                UpdateSelection();
-            }
+            DefaultSelection(selectables);
+        }
+        else if (selectionAction == SelectionAction.Harvest)
+        {
+            SetSelectionForHarvest(selectables);
+        }
+        else if (selectionAction == SelectionAction.Allow)
+        {
+            SetSelectionAllowed(selectables);
+        }
+        else if (selectionAction == SelectionAction.Forbid)
+        {
+            SetSelectionForbidden(selectables);
+        }
+        else if (selectionAction == SelectionAction.Deconstruct)
+        {
+            SetSelectionForDestruction(selectables);
+        }
+        else if( selectionAction == SelectionAction.Cancel)
+        {
+            CancelSelection(selectables);
         }
 
 
+    }
 
+    private void DefaultSelection(List<ISelectable> selectables)
+    {
+        if (selectables.Count == 1 && currentSelected.Count > 0 && selectables[0] == currentSelected[0])
+        {
+            TryToSelectOtherItemInCell();
+        }
+        else
+        {
+            DeselectAll();
+
+            foreach (var selectable in selectables)
+            {
+                bool doBreak = false;
+                if (CheckForSpecialSelectionCase(selectable, out SelectionType type))
+                {
+                    if (type == SelectionType.Stockpile)
+                    {
+                        if (selectable == selectables[0] && selectables.Count == 1)
+                            doBreak = true;
+                        else
+                            continue;
+
+                    }
+                }
+
+                selectable.OnSelect();
+
+                if (doBreak) break;
+            }
+            UpdateSelection();
+        }
+    }
+
+    private static void RemoveSelection(List<ISelectable> selectables)
+    {
+        foreach (var selectable in selectables)
+        {
+            selectable.OnDeselect();
+        }
     }
 
     bool CheckForSpecialSelectionCase(ISelectable selectable, out SelectionType selectionType)
@@ -234,6 +254,10 @@ public class SelectionManager : MonoBehaviour
 
     #region Public methods
 
+    public void SetNewSelectionAction(SelectionAction selectionAction)
+    {
+        this.selectionAction = selectionAction;
+    }
     public void SetSelectionType(SelectionType selectionType)
     {
         if (currentSelected.Count > 1)
@@ -267,7 +291,7 @@ public class SelectionManager : MonoBehaviour
 
     #endregion
 
-    #region Buttons
+    #region Buttons Logic
 
     public void CheckForCancelableAction()
     {
@@ -290,33 +314,57 @@ public class SelectionManager : MonoBehaviour
 
     public void SetToHarvest()
     {
-        foreach (ISelectable selectable in currentSelected)
-        {
-            (selectable as IHarvestable).AddToHarvestQueue();
-        }
+        SetSelectionForHarvest(currentSelected);
         UIManager.instance.EnableCancelButton();
+    }
+
+    void SetSelectionForHarvest(List<ISelectable> selectables)
+    {
+        foreach (ISelectable selectable in selectables)
+        {
+            if (selectable is IHarvestable)
+                (selectable as IHarvestable).AddToHarvestQueue();
+        }
     }
 
     public void Allow()
     {
-        foreach (ISelectable selectable in currentSelected)
-        {
-            (selectable as IAllowable).OnAllow();
-        }
+        SetSelectionAllowed(currentSelected);
         UIManager.instance.EnableAllowDisallowButton(true);
     }
-    public void Disallow()
+
+    void SetSelectionAllowed(List<ISelectable> selectables)
     {
-        foreach (ISelectable selectable in currentSelected)
+        foreach (ISelectable selectable in selectables)
         {
-            (selectable as IAllowable).OnDisallow();
+            if (selectable is IAllowable)
+                (selectable as IAllowable).OnAllow();
         }
+    }
+
+    public void Forbid()
+    {
+        SetSelectionForbidden(currentSelected);
         UIManager.instance.EnableAllowDisallowButton(false);
+    }
+
+    void SetSelectionForbidden(List<ISelectable> selectables)
+    {
+        foreach (ISelectable selectable in selectables)
+        {
+            if (selectable is IAllowable)
+                (selectable as IAllowable).OnDisallow();
+        }
     }
 
     public void TryToCancelActions()
     {
-        foreach (ISelectable selectable in currentSelected)
+        CancelSelection(currentSelected);
+    }
+
+    void CancelSelection(List<ISelectable> selectables)
+    {
+        foreach (ISelectable selectable in selectables)
         {
             if (selectable is IHarvestable)
             {
@@ -330,11 +378,17 @@ public class SelectionManager : MonoBehaviour
             }
         }
     }
+
     public void TryToDeconstruct()
     {
-        for (int i = 0; i < currentSelected.Count; i++)
+        SetSelectionForDestruction(currentSelected);
+    }
+
+    void SetSelectionForDestruction(List<ISelectable> selectables)
+    {
+        for (int i = 0; i < selectables.Count; i++)
         {
-            ISelectable selectable = currentSelected[i];
+            ISelectable selectable = selectables[i];
             if (selectable is BuildingObject)
             {
                 (selectable as BuildingObject).Deconstruct();
@@ -386,6 +440,7 @@ public class SelectionManager : MonoBehaviour
     #region Cleanup
     void ResetSelection()
     {
+        selectionAction = SelectionAction.Default;
         DeselectAll();
 
         UIManager.instance.SetAllSelectionUIInactive();
