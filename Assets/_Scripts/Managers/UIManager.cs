@@ -26,6 +26,14 @@ public class UIManager : MonoBehaviour
     public GameObject growZoneButton;
     public GameObject shrinkZoneButton;
 
+    [Header("Colonist Info Panel")]
+    public GameObject colonistInfoPanel;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI activityText;
+    [Space]
+    public GameObject colonistsBoard;
+    public GameObject colonistDataPrefab;
+    private ColonistData currentColonist;
     [Space(5f), Header("Inventory")]
     public GameObject defaultInventoryUIPrefab;
     public GameObject itemTypeGroupPrefab;
@@ -40,6 +48,8 @@ public class UIManager : MonoBehaviour
             instance = this;
         else
             Debug.Log("More then 1 UIManager Exists");
+
+            colonistInfoPanel.SetActive(false);
     }
 
     #region SelectionUI
@@ -73,7 +83,6 @@ public class UIManager : MonoBehaviour
         selectionBoxImage.anchoredPosition = mouseStart + new Vector3(width / 2, height / 2);
         selectionBoxImage.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
     }
-
     #endregion
 
     #region SelectionUIButtons
@@ -87,9 +96,48 @@ public class UIManager : MonoBehaviour
     {
         cancelButton.SetActive(true);
     }
-
-
     #endregion
 
+    #region  Colonist Info Panel
+    public void ShowColonistWindow(string name, string activity)
+    {
+        nameText.text = name;
+        activityText.text = activity;
+        colonistInfoPanel.SetActive(true);
+    }
 
+    public void HideColonistWindow()
+    {
+        colonistInfoPanel.SetActive(false);
+    }
+
+    public void SetCurrentColonist(ColonistData colonist)
+    {
+        if (currentColonist != null)
+        {
+            currentColonist.OnActivityChanged -= UpdateActivityDisplay;
+        }
+
+        currentColonist = colonist;
+        currentColonist.OnActivityChanged += UpdateActivityDisplay;
+
+        UpdateActivityDisplay(currentColonist.colonistActivity);
+    }
+
+    private void UpdateActivityDisplay(string activity)
+    {
+        activityText.text = activity;
+        if (!colonistInfoPanel.activeSelf)
+        {
+            colonistInfoPanel.SetActive(true);
+        }
+    }
+
+    public void AddColonistToBoard(string name, ColonistData colonist)
+    {
+        var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsBoard.transform);
+        var data = colonistsDataBar.GetComponent<ColonistBar>();
+        data.SetDataOnCreation(name, colonist);
+    }
+    #endregion
 }
