@@ -19,12 +19,22 @@ public class TaskEat : Node
         {
             EdibleData edibleData = (EdibleData)GetData(DataName.FoodData);
             Stockpile stockpile = (Stockpile)GetData(DataName.Stockpile);
-            IEdible edible = (EdibleInventoryItem)InventoryManager.instance.TakeItem(new ItemCost(edibleData, 1), stockpile);
-            colonistData.Eat(edible);
 
             ClearData(DataName.Target);
             ClearData(DataName.Stockpile);
             ClearData(DataName.FoodData);
+
+            if (InventoryManager.instance.HasItem(new ItemCost(edibleData, 1)))
+            {
+                IEdible edible = (EdibleInventoryItem)InventoryManager.instance.TakeItem(new ItemCost(edibleData, 1), stockpile);
+                colonistData.Eat(edible);
+            }
+            else
+            {
+                state = NodeState.FAILURE;
+                return state;
+            }
+
             state = NodeState.SUCCESS;
             return state;
         }
