@@ -9,6 +9,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
     BillBoard setForHarvestBillboard;
     Outline outline;
+    FillBar fillBar;
     float timeHarvesting = 0f;
     public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
@@ -20,6 +21,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     {
         setForHarvestBillboard = GetComponentInChildren<BillBoard>(true);
         outline = GetComponentInChildren<Outline>(true);
+        fillBar = GetComponentInChildren<FillBar>(true);
     }
     public void Harvest()
     {
@@ -38,10 +40,12 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     {
         timeHarvesting = 0f;
         beingHarvested = true;
+        fillBar.UpdateMaxFillAmount(baseGatherTime); // multiply by any modifiers
 
         while (timeHarvesting < baseGatherTime)
         {
             timeHarvesting += Time.deltaTime;
+            fillBar.UpdateFillAmount(timeHarvesting);
             yield return null;
         }
 
