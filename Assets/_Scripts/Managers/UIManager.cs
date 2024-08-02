@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("Selection")]
     public GameObject selectionPanel;
+    public ColonistSelectionMenu colonistSelection;
     public HarvestableSelectionMenu harvestableSelection;
     public ItemSelectionMenu itemSelection;
     public ConstructableSelectionMenu constructableSelection;
@@ -34,6 +35,7 @@ public class UIManager : MonoBehaviour
     public GameObject colonistsBoard;
     public GameObject colonistDataPrefab;
     private ColonistData currentColonist;
+
     [Space(5f), Header("Inventory")]
     public GameObject defaultInventoryUIPrefab;
     public GameObject itemTypeGroupPrefab;
@@ -49,7 +51,7 @@ public class UIManager : MonoBehaviour
         else
             Debug.Log("More then 1 UIManager Exists");
 
-            colonistInfoPanel.SetActive(false);
+        colonistInfoPanel.SetActive(false);
     }
 
     #region SelectionUI
@@ -61,6 +63,7 @@ public class UIManager : MonoBehaviour
         constructableSelection.gameObject.SetActive(false);
         buildingSelection.gameObject.SetActive(false);
         stockpileSelection.gameObject.SetActive(false);
+        colonistSelection.gameObject.SetActive(false);
     }
     public void SetAllActionButtonsInactive()
     {
