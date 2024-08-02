@@ -12,6 +12,7 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] List<SelectionType> specialSelectionTypes;
 
     [SerializeField] float dragDelay = 0.1f;
+    GameObject tempSelectionGrid;
     Vector3 mouseStartPos;
     Vector3 mouseEndPos;
     float mouseDownTime;
@@ -66,6 +67,10 @@ public class SelectionManager : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)
         {
+            Cell firstCell = GridManager.instance.GetCellFromPosition(VectorUtility.ScreeToWorldPosition(mouseStartPos, LayerManager.instance.GroundLayerMask));
+            Cell lastCell = GridManager.instance.GetCellFromPosition(VectorUtility.ScreeToWorldPosition(mouseEndPos, LayerManager.instance.GroundLayerMask));
+            List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
+            tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.instance.SelectionMaterial);
             DragSelection();
         }
     }
