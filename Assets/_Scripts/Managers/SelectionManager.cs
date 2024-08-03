@@ -14,8 +14,10 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] float dragDelay = 0.1f;
     GameObject tempSelectionGrid;
     Vector3 mouseStartPos;
+    Vector3 worldMouseStartPos;
     Vector3 mouseEndPos;
     float mouseDownTime;
+    Cell LastCell;
     [SerializeField] SelectionAction selectionAction;
 
     bool setToUpdate;
@@ -67,17 +69,15 @@ public class SelectionManager : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)
         {
-            Cell firstCell = GridManager.instance.GetCellFromPosition(VectorUtility.ScreeToWorldPosition(mouseStartPos, LayerManager.instance.GroundLayerMask));
-            Cell lastCell = GridManager.instance.GetCellFromPosition(VectorUtility.ScreeToWorldPosition(mouseEndPos, LayerManager.instance.GroundLayerMask));
-            List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
-            tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.instance.SelectionMaterial);
             DragSelection();
+            VisualizeSelection();
         }
     }
 
     void StartSelection()
     {
         mouseStartPos = Input.mousePosition;
+        worldMouseStartPos = VectorUtility.ScreeToWorldPosition(mouseStartPos, LayerManager.instance.GroundLayerMask);
         mouseDownTime = Time.time;
     }
 
@@ -91,14 +91,31 @@ public class SelectionManager : MonoBehaviour
         {
             BoxSelection();
         }
-        ResetMouseData();
+        ResetDrag();
     }
 
     void DragSelection()
     {
         mouseEndPos = Input.mousePosition;
-        Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
-        ExtendedDebug.DrawBox(center, halfExtents * 2, Quaternion.identity);
+    }
+
+    void VisualizeSelection()
+    {
+        Cell firstCell = GridManager.instance.GetCellFromPosition(worldMouseStartPos);
+        Cell lastCell = GridManager.instance.GetCellFromPosition(VectorUtility.ScreeToWorldPosition(mouseEndPos, LayerManager.instance.GroundLayerMask));
+        if (this.LastCell != lastCell)
+        {
+            Destroy(tempSelectionGrid);
+            //Draw Selection in the world
+            List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
+            tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.instance.SelectionMaterial);
+
+            // Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
+            Box box = VectorUtility.CalculateBoxSize(firstCell.position, lastCell.position);
+
+            ExtendedDebug.DrawBox(box.center, box.halfExtents * 2, Quaternion.identity); // visualize in editor
+
+        }
     }
 
     void ClickSelection()
@@ -115,8 +132,9 @@ public class SelectionManager : MonoBehaviour
 
     void BoxSelection()
     {
-        Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
-        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(center, halfExtents * 0.95f);
+        Vector3 worldMouseEndPos = VectorUtility.ScreeToWorldPosition(mouseEndPos, LayerManager.instance.groundLayer);
+        Box box = VectorUtility.CalculateBoxSizeGridAligned(worldMouseStartPos, worldMouseEndPos, 1);
+        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents * 0.95f);
         Select(selectables);
     }
 
@@ -192,7 +210,7 @@ public class SelectionManager : MonoBehaviour
         {
             SetSelectionForDestruction(selectables);
         }
-        else if( selectionAction == SelectionAction.Cancel)
+        else if (selectionAction == SelectionAction.Cancel)
         {
             CancelSelection(selectables);
         }
@@ -447,6 +465,7 @@ public class SelectionManager : MonoBehaviour
     {
         selectionAction = SelectionAction.Default;
         DeselectAll();
+        ResetDrag();
 
         UIManager.instance.SetAllSelectionUIInactive();
         UIManager.instance.selectionPanel.SetActive(false);
@@ -463,6 +482,11 @@ public class SelectionManager : MonoBehaviour
         currentSelected.Clear();
 
         selectionStrategy?.CleanUp();
+    }
+    void ResetDrag()
+    {
+        ResetMouseData();
+        Destroy(tempSelectionGrid);
     }
 
     #endregion
