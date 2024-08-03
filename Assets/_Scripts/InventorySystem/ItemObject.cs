@@ -166,6 +166,15 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         outline?.Disable();
     }
 
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
     public SelectionType GetSelectionType()
     {
         return SelectionType.Item;

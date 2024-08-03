@@ -105,6 +105,15 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
 
         outline?.Disable();
     }
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
     public SelectionType GetSelectionType()
     {
         return selectionType;

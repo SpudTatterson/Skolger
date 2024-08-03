@@ -94,6 +94,16 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         outline?.Disable();
     }
 
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
+
     public SelectionType GetSelectionType()
     {
         return SelectionType.Building;

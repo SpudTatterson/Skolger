@@ -24,4 +24,7 @@ public interface ISelectable
 
     public void OnDeselect();
 
+    public void OnHover();
+    public void OnHoverEnd();
+
 }

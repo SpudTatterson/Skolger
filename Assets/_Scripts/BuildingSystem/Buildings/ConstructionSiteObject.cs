@@ -168,7 +168,15 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
         outline?.Disable();
     }
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
 
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
 
 
     public SelectionType GetSelectionType()

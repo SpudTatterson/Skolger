@@ -7026,7 +7026,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6229054242523557677}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.049816754
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7821,81 +7821,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!1 &8005137895835586705
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4380788546701172753}
-  - component: {fileID: 6542169093451247408}
-  - component: {fileID: 749464338323743021}
-  m_Layer: 5
-  m_Name: Colonist Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &4380788546701172753
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8005137895835586705}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6574192721581175529}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10, y: -10}
-  m_SizeDelta: {x: 128, y: 128}
-  m_Pivot: {x: 1, y: 1}
---- !u!222 &6542169093451247408
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8005137895835586705}
-  m_CullTransparentMesh: 1
---- !u!114 &749464338323743021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8005137895835586705}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &8072339305146197957
 GameObject:
   m_ObjectHideFlags: 0
@@ -9424,10 +9349,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2485947189685748014}
-    - targetCorrespondingSourceObject: {fileID: 6239798942371349522, guid: 0bb792cb659dacb42886b84a22da11da,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4380788546701172753}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 527045017294954706, guid: 0bb792cb659dacb42886b84a22da11da,
         type: 3}
@@ -9454,7 +9375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colonistName: {fileID: 5260090349168344965}
   activeTask: {fileID: 4897559044307517740}
-  colonistImage: {fileID: 749464338323743021}
+  colonistImage: {fileID: 6889872600701518988}
 --- !u!224 &6138483700200931164 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6382804637772843431, guid: 0bb792cb659dacb42886b84a22da11da,

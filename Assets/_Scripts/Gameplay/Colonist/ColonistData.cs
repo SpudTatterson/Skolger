@@ -261,5 +261,15 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         outline?.Disable();
     }
 
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
+
     #endregion
 }

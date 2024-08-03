@@ -20,6 +20,8 @@ public class SelectionManager : MonoBehaviour
     Cell LastCell;
     [SerializeField] SelectionAction selectionAction;
 
+    List<ISelectable> LastHovered = new List<ISelectable>();
+
     bool setToUpdate;
     void Awake()
     {
@@ -115,6 +117,14 @@ public class SelectionManager : MonoBehaviour
 
             ExtendedDebug.DrawBox(box.center, box.halfExtents * 2, Quaternion.identity); // visualize in editor
 
+            //Trigger OnHover
+            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents);
+            ResetHovered();
+            foreach (ISelectable selectable in selectables)
+            {
+                selectable.OnHover();
+                LastHovered.Add(selectable);
+            }
         }
     }
 
@@ -466,6 +476,7 @@ public class SelectionManager : MonoBehaviour
         selectionAction = SelectionAction.Default;
         DeselectAll();
         ResetDrag();
+        ResetHovered();
 
         UIManager.instance.SetAllSelectionUIInactive();
         UIManager.instance.selectionPanel.SetActive(false);
@@ -483,6 +494,16 @@ public class SelectionManager : MonoBehaviour
 
         selectionStrategy?.CleanUp();
     }
+
+    void ResetHovered()
+    {
+        for (int i = 0; i < LastHovered.Count; i++)
+        {
+            LastHovered[i].OnHoverEnd();
+        }
+        LastHovered.Clear();
+    }
+
     void ResetDrag()
     {
         ResetMouseData();

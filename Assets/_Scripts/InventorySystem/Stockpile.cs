@@ -317,6 +317,15 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
         outline?.Disable();
     }
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
 
     public SelectionType GetSelectionType()
     {
