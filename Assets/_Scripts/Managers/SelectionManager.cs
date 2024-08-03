@@ -13,9 +13,8 @@ public class SelectionManager : MonoBehaviour
 
     [SerializeField] float dragDelay = 0.1f;
     GameObject tempSelectionGrid;
-    Vector3 mouseStartPos;
     Vector3 worldMouseStartPos;
-    Vector3 mouseEndPos;
+    Vector3 worldMouseEndPos;
     float mouseDownTime;
     Cell LastCell;
     [SerializeField] SelectionAction selectionAction;
@@ -69,7 +68,7 @@ public class SelectionManager : MonoBehaviour
         {
             EndSelection();
         }
-        else if (Input.GetKey(KeyCode.Mouse0) && mouseStartPos != Vector3.zero)
+        else if (Input.GetKey(KeyCode.Mouse0) && worldMouseStartPos != Vector3.zero)
         {
             DragSelection();
             VisualizeSelection();
@@ -78,8 +77,7 @@ public class SelectionManager : MonoBehaviour
 
     void StartSelection()
     {
-        mouseStartPos = Input.mousePosition;
-        worldMouseStartPos = VectorUtility.ScreeToWorldPosition(mouseStartPos, LayerManager.instance.GroundLayerMask);
+        worldMouseStartPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.instance.GroundLayerMask);
         mouseDownTime = Time.time;
     }
 
@@ -89,7 +87,7 @@ public class SelectionManager : MonoBehaviour
         {
             ClickSelection();
         }
-        else if (mouseStartPos != Vector3.zero)
+        else if (worldMouseStartPos != Vector3.zero)
         {
             BoxSelection();
         }
@@ -98,13 +96,13 @@ public class SelectionManager : MonoBehaviour
 
     void DragSelection()
     {
-        mouseEndPos = Input.mousePosition;
+        worldMouseEndPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.instance.GroundLayerMask);
     }
 
     void VisualizeSelection()
     {
         Cell firstCell = GridManager.instance.GetCellFromPosition(worldMouseStartPos);
-        Cell lastCell = GridManager.instance.GetCellFromPosition(VectorUtility.ScreeToWorldPosition(mouseEndPos, LayerManager.instance.GroundLayerMask));
+        Cell lastCell = GridManager.instance.GetCellFromPosition(worldMouseEndPos);
         if (this.LastCell != lastCell)
         {
             Destroy(tempSelectionGrid);
@@ -142,7 +140,6 @@ public class SelectionManager : MonoBehaviour
 
     void BoxSelection()
     {
-        Vector3 worldMouseEndPos = VectorUtility.ScreeToWorldPosition(mouseEndPos, LayerManager.instance.groundLayer);
         Box box = VectorUtility.CalculateBoxSizeGridAligned(worldMouseStartPos, worldMouseEndPos, 1);
         List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents * 0.95f);
         Select(selectables);
@@ -150,8 +147,8 @@ public class SelectionManager : MonoBehaviour
 
     void ResetMouseData()
     {
-        mouseStartPos = Vector3.zero;
-        mouseEndPos = Vector3.zero;
+        worldMouseStartPos = Vector3.zero;
+        worldMouseEndPos = Vector3.zero;
         mouseDownTime = 0;
     }
 
