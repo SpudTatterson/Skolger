@@ -56,36 +56,44 @@ public class VectorUtility
         }
     }
 
-    public static Vector3 ScreenBoxToWorldBox(Vector3 mouseStartPos, Vector3 mouseEndPos, out Vector3 center)
+    public static Box ScreenBoxToWorldBox(Vector3 mouseStartPos, Vector3 mouseEndPos)
     {
         Vector3 firstCorner = ScreeToWorldPosition(mouseStartPos);
-        Debug.DrawLine(firstCorner, firstCorner + Vector3.up);
+
         Vector3 secondCorner = ScreeToWorldPosition(mouseEndPos);
-        Debug.DrawLine(secondCorner, secondCorner + Vector3.up);
 
-        center = (firstCorner + secondCorner) / 2;
-
-        Vector3 size = new Vector3(Mathf.Abs(firstCorner.x - secondCorner.x), 3f, Mathf.Abs(firstCorner.z - secondCorner.z));
-
-        return size / 2;
+        return CalculateBoxSize(firstCorner, secondCorner);
     }
 
-    public static Vector3 ScreenBoxToWorldBoxGridAligned(Vector3 mouseStartPos, Vector3 mouseEndPos, float cellSize, LayerMask layerMask, out Vector3 center)
+    public static Box ScreenBoxToWorldBoxGridAligned(Vector3 mouseStartPos, Vector3 mouseEndPos, float cellSize, LayerMask layerMask)
     {
         Vector3 firstCorner = ScreeToWorldPosition(mouseStartPos, layerMask);
-        Debug.DrawLine(firstCorner, firstCorner + Vector3.up);
         firstCorner = GridManager.instance.GetCellFromPosition(firstCorner).position - new Vector3(cellSize / 2, 0, cellSize / 2);
 
         Vector3 secondCorner = ScreeToWorldPosition(mouseEndPos, layerMask);
+        secondCorner = GridManager.instance.GetCellFromPosition(secondCorner).position + new Vector3(cellSize / 2, 0, cellSize / 2);
+
+        return CalculateBoxSize(firstCorner, secondCorner);
+    }
+
+    public static Box CalculateBoxSizeGridAligned(Vector3 firstCorner, Vector3 secondCorner, float cellSize)
+    {
+        Debug.DrawLine(firstCorner, firstCorner + Vector3.up);
+        firstCorner = GridManager.instance.GetCellFromPosition(firstCorner).position - new Vector3(cellSize / 2, 0, cellSize / 2);
+
         Debug.DrawLine(secondCorner, secondCorner + Vector3.up);
         secondCorner = GridManager.instance.GetCellFromPosition(secondCorner).position + new Vector3(cellSize / 2, 0, cellSize / 2);
 
-        center = (firstCorner + secondCorner) / 2;
+        return CalculateBoxSize(firstCorner, secondCorner);
+    }
+
+    public static Box CalculateBoxSize(Vector3 firstCorner, Vector3 secondCorner)
+    {
+        Vector3 center = (firstCorner + secondCorner) / 2;
 
         Vector3 size = new Vector3(Mathf.Abs(firstCorner.x - secondCorner.x), 3f, Mathf.Abs(firstCorner.z - secondCorner.z));
 
-        return size / 2;
+        return new Box(center, size / 2);
     }
 
 }
-
