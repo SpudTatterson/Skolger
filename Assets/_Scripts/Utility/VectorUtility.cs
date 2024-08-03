@@ -78,10 +78,8 @@ public class VectorUtility
 
     public static Box CalculateBoxSizeGridAligned(Vector3 firstCorner, Vector3 secondCorner, float cellSize)
     {
-        Debug.DrawLine(firstCorner, firstCorner + Vector3.up);
         firstCorner = GridManager.instance.GetCellFromPosition(firstCorner).position - new Vector3(cellSize / 2, 0, cellSize / 2);
 
-        Debug.DrawLine(secondCorner, secondCorner + Vector3.up);
         secondCorner = GridManager.instance.GetCellFromPosition(secondCorner).position + new Vector3(cellSize / 2, 0, cellSize / 2);
 
         return CalculateBoxSize(firstCorner, secondCorner);
@@ -89,9 +87,12 @@ public class VectorUtility
 
     public static Box CalculateBoxSize(Vector3 firstCorner, Vector3 secondCorner)
     {
-        Vector3 center = (firstCorner + secondCorner) / 2;
+        float cellHeight = GridManager.instance.worldSettings.cellHeight;
 
-        Vector3 size = new Vector3(Mathf.Abs(firstCorner.x - secondCorner.x), 3f, Mathf.Abs(firstCorner.z - secondCorner.z));
+        Vector3 center = (firstCorner + secondCorner) / 2;
+        center.y += cellHeight / 2;
+
+        Vector3 size = new Vector3(Mathf.Abs(firstCorner.x - secondCorner.x), cellHeight, Mathf.Abs(firstCorner.z - secondCorner.z));
 
         return new Box(center, size / 2);
     }
