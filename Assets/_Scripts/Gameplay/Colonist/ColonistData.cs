@@ -44,6 +44,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     [Header("Selection")]
     [SerializeField] Outline outline;
+    public bool IsSelected { get; private set; }
     void Awake()
     {
         Items = new InventoryItem[InventorySlots];
@@ -249,6 +250,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     {
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
+        IsSelected = true;
 
         outline?.Enable();
     }
@@ -256,9 +258,11 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     {
         SelectionManager manager = SelectionManager.instance;
         manager.RemoveFromCurrentSelected(this);
-        manager.UpdateSelection();
+        if (IsSelected)
+            manager.UpdateSelection();
 
         outline?.Disable();
+        IsSelected = false;
     }
 
     public void OnHover()
