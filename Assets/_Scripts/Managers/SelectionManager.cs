@@ -83,6 +83,7 @@ public class SelectionManager : MonoBehaviour
 
     void EndSelection()
     {
+        ResetHovered();
         if (mouseDownTime + dragDelay > Time.time)
         {
             ClickSelection();
@@ -101,6 +102,7 @@ public class SelectionManager : MonoBehaviour
 
     void VisualizeSelection()
     {
+        
         Cell firstCell = GridManager.instance.GetCellFromPosition(worldMouseStartPos);
         Cell lastCell = GridManager.instance.GetCellFromPosition(worldMouseEndPos);
         if (this.LastCell != lastCell)
@@ -123,6 +125,7 @@ public class SelectionManager : MonoBehaviour
                 selectable.OnHover();
                 LastHovered.Add(selectable);
             }
+            this.LastCell = lastCell;
         }
     }
 
@@ -154,16 +157,15 @@ public class SelectionManager : MonoBehaviour
 
     void HandleSelectionAction()
     {
-        if (selectionAction != SelectionAction.Default || selectionAction != SelectionAction.Add || selectionAction != SelectionAction.Remove)
-            return;
-
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-            selectionAction = SelectionAction.Add;
-        else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
-            selectionAction = SelectionAction.Remove;
-        else
-            selectionAction = SelectionAction.Default;
-
+        if (selectionAction == SelectionAction.Default || selectionAction == SelectionAction.Add || selectionAction == SelectionAction.Remove)
+        {
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                selectionAction = SelectionAction.Add;
+            else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+                selectionAction = SelectionAction.Remove;
+            else
+                selectionAction = SelectionAction.Default;
+        }
     }
 
     void HandleDeselectionInput()
