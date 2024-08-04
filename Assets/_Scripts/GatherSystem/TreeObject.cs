@@ -16,6 +16,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     bool finishedHarvesting = false;
     bool setForHarvesting = false;
     SelectionType selectionType = SelectionType.Harvestable;
+    public bool IsSelected { get; private set; }
 
     void Awake()
     {
@@ -94,6 +95,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     {
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
+        IsSelected = true;
 
         outline?.Enable();
     }
@@ -101,9 +103,11 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     {
         SelectionManager manager = SelectionManager.instance;
         manager.RemoveFromCurrentSelected(this);
-        manager.UpdateSelection();
+        if (IsSelected)
+            manager.UpdateSelection();
 
         outline?.Disable();
+        IsSelected = false;
     }
     public void OnHover()
     {
@@ -112,6 +116,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
 
     public void OnHoverEnd()
     {
+        if(!IsSelected)
         outline?.Disable();
     }
     public SelectionType GetSelectionType()

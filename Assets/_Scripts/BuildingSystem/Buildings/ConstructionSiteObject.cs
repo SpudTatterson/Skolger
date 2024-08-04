@@ -15,6 +15,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     bool allowed = true;
     [SerializeField, Tooltip("Should be set to true if manually placed in world")] bool manualInit = false;
     public bool SetForCancellation { get; private set; }
+    public bool IsSelected { get; private set; }
 
     Outline outline;
 
@@ -157,6 +158,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
+        IsSelected = true;
 
         outline?.Enable();
     }
@@ -164,9 +166,11 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         SelectionManager manager = SelectionManager.instance;
         manager.RemoveFromCurrentSelected(this);
-        manager.UpdateSelection();
+        if (IsSelected)
+            manager.UpdateSelection();
 
         outline?.Disable();
+        IsSelected = false;
     }
     public void OnHover()
     {

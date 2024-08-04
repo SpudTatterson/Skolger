@@ -14,6 +14,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     public Cell cornerCell { get; private set; }
     GameObject visual;
     Outline outline;
+    public bool IsSelected { get; private set; }
 
 
     public void Initialize(int sizeX, int sizeY, Cell cornerCell)
@@ -306,6 +307,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     {
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
+        IsSelected = true;
 
         outline?.Enable();
     }
@@ -313,9 +315,11 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     {
         SelectionManager manager = SelectionManager.instance;
         manager.RemoveFromCurrentSelected(this);
-        manager.UpdateSelection();
+        if (IsSelected)
+            manager.UpdateSelection();
 
         outline?.Disable();
+        IsSelected = false;
     }
     public void OnHover()
     {

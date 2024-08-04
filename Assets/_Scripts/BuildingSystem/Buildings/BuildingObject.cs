@@ -11,6 +11,8 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     List<Cell> occupiedCells;
     [field: SerializeField, ReadOnly] public Cell cornerCell { get; private set; }
 
+    public bool IsSelected { get; private set; }
+
     Outline outline;
 
     public void Initialize(BuildingData buildingData)
@@ -82,6 +84,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     {
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
+        IsSelected = true;
 
         outline?.Enable();
     }
@@ -89,9 +92,11 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     {
         SelectionManager manager = SelectionManager.instance;
         manager.RemoveFromCurrentSelected(this);
-        manager.UpdateSelection();
+        if (IsSelected)
+            manager.UpdateSelection();
 
         outline?.Disable();
+        IsSelected = false;
     }
 
     public void OnHover()

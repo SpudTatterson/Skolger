@@ -20,8 +20,9 @@ public interface ISelectable
     public string GetMultipleSelectionString(out int amount);
     bool HasActiveCancelableAction();
 
-    public void OnSelect();
+    public bool IsSelected { get; }
 
+    public void OnSelect();
     public void OnDeselect();
 
     public void OnHover();

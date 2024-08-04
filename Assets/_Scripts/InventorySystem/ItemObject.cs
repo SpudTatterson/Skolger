@@ -22,6 +22,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     public Cell cornerCell { get; private set; }
 
     public bool allowed { get; private set; }
+    public bool IsSelected { get; private set; }
 
 
 
@@ -154,6 +155,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     {
         SelectionManager manager = SelectionManager.instance;
         manager.AddToCurrentSelected(this);
+        IsSelected = true;
 
         outline?.Enable();
     }
@@ -161,9 +163,11 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     {
         SelectionManager manager = SelectionManager.instance;
         manager.RemoveFromCurrentSelected(this);
-        manager.UpdateSelection();
+        if (IsSelected)
+            manager.UpdateSelection();
 
         outline?.Disable();
+        IsSelected = false;
     }
 
     public void OnHover()
