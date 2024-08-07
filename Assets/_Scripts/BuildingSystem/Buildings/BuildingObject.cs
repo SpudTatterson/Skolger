@@ -30,7 +30,10 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         buildingVisual.transform.position = position;
         buildingVisual.transform.parent = parent;
 
-        BuildingObject building = buildingVisual.AddComponent<BuildingObject>();
+        if (!buildingVisual.TryGetComponent(out BuildingObject building))
+        {
+            building = buildingVisual.AddComponent<BuildingObject>();
+        }
 #if UNITY_EDITOR
         EditorUtility.SetDirty(building);
 #endif
