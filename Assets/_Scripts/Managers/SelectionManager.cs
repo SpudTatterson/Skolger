@@ -396,17 +396,16 @@ public class SelectionManager : MonoBehaviour
 
     void CancelSelection(List<ISelectable> selectables)
     {
-        foreach (ISelectable selectable in selectables)
+        for (int i = 0; i < selectables.Count; i++)
         {
+            ISelectable selectable = selectables[i];
             if (selectable is IHarvestable)
             {
                 (selectable as IHarvestable).RemoveFromHarvestQueue();
-                selectable.GetSelectionStrategy().EnableButtons();
             }
             if (selectable is IConstructable)
             {
                 (selectable as IConstructable).CancelConstruction();
-                selectable.GetSelectionStrategy().EnableButtons();
             }
         }
     }
