@@ -9895,6 +9895,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5528324977292098176}
     m_Modifications:
+    - target: {fileID: 2176899014970851094, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
+      propertyPath: buildableLayerMask.m_Bits
+      value: 6272
+      objectReference: {fileID: 0}
     - target: {fileID: 3350276427243490880, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
       propertyPath: m_LocalPosition.x
