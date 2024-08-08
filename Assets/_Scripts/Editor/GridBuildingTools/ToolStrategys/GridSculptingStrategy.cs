@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System.Linq;
 
 public class GridSculptingStrategy : IGridToolStrategy, IBrushTool
 {
@@ -94,29 +95,41 @@ public class GridSculptingStrategy : IGridToolStrategy, IBrushTool
     {
         if (activeGridObject == null)
         {
-            if (isRaising)
-                activeGridObject = gridManager.GetGridFromPosition(center + new Vector3(0, gridManager.worldSettings.cellHeight, 0));
-            else
-                activeGridObject = gridManager.GetGridFromPosition(center);
+            Vector3 adjustedCenter = isRaising ? center + new Vector3(0, gridManager.worldSettings.cellHeight, 0) : center;
+            activeGridObject = gridManager.GetGridFromPosition(adjustedCenter);
         }
 
-        for (int x = 0; x < gridManager.worldSettings.gridXSize; x++)
+        Vector3 flattenedCenter = VectorUtility.FlattenVector(center);
+        int gridXSize = gridManager.worldSettings.gridXSize;
+        int gridYSize = gridManager.worldSettings.gridYSize;
+        float cellSize = gridManager.worldSettings.cellSize; // Assuming you have this in your world settings
+
+        // Calculate the range in indices to limit the loops
+        int minX = Mathf.Max(0, Mathf.FloorToInt((flattenedCenter.x - brushSize) / cellSize));
+        int maxX = Mathf.Min(gridXSize - 1, Mathf.CeilToInt((flattenedCenter.x + brushSize) / cellSize));
+        int minY = Mathf.Max(0, Mathf.FloorToInt((flattenedCenter.z - brushSize) / cellSize));
+        int maxY = Mathf.Min(gridYSize - 1, Mathf.CeilToInt((flattenedCenter.z + brushSize) / cellSize));
+
+        for (int x = minX; x <= maxX; x++)
         {
-            for (int y = 0; y < gridManager.worldSettings.gridYSize; y++)
+            for (int y = minY; y <= maxY; y++)
             {
                 Cell cell = activeGridObject.GetCellFromIndex(x, y);
                 if (cell != null)
                 {
-                    float distance = Vector3.Distance(VectorUtility.FlattenVector(cell.position), VectorUtility.FlattenVector(center));
+                    Vector3 flattenedCellPosition = VectorUtility.FlattenVector(cell.position);
+                    float distance = Vector3.Distance(flattenedCellPosition, flattenedCenter);
                     if (distance <= brushSize)
                     {
-                        if (!selectedCells.Contains(cell))
-                            selectedCells.Add(cell);
+                        selectedCells.Add(cell);
                     }
                 }
             }
         }
+        selectedCells.Distinct();
     }
+
+
 
     void ApplyVisibilityChanges()
     {
@@ -153,5 +166,5 @@ public class GridSculptingStrategy : IGridToolStrategy, IBrushTool
     }
 
     #endregion
-    
+
 }
