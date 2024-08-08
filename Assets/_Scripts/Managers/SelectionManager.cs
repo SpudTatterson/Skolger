@@ -102,31 +102,40 @@ public class SelectionManager : MonoBehaviour
 
     void VisualizeSelection()
     {
-        
         Cell firstCell = GridManager.instance.GetCellFromPosition(worldMouseStartPos);
         Cell lastCell = GridManager.instance.GetCellFromPosition(worldMouseEndPos);
+
         if (this.LastCell != lastCell)
         {
-            Destroy(tempSelectionGrid);
-            //Draw Selection in the world
-            List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
-            tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.instance.SelectionMaterial);
+            DrawSelection(firstCell, lastCell);
 
-            // Vector3 halfExtents = VectorUtility.ScreenBoxToWorldBoxGridAligned(mouseStartPos, mouseEndPos, 1, LayerManager.instance.GroundLayerMask, out Vector3 center);
-            Box box = VectorUtility.CalculateBoxSize(firstCell.position, lastCell.position);
-
-            ExtendedDebug.DrawBox(box.center, box.halfExtents * 2, Quaternion.identity); // visualize in editor
-
-            //Trigger OnHover
-            List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents);
-            ResetHovered();
-            foreach (ISelectable selectable in selectables)
-            {
-                selectable.OnHover();
-                LastHovered.Add(selectable);
-            }
+            GetHovered(firstCell, lastCell);
             this.LastCell = lastCell;
         }
+    }
+
+    void GetHovered(Cell firstCell, Cell lastCell)
+    {
+        Box box = VectorUtility.CalculateBoxSize(firstCell.position, lastCell.position);
+
+        ExtendedDebug.DrawBox(box.center, box.halfExtents * 2, Quaternion.identity); // visualize in editor
+
+        //Trigger OnHover
+        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents);
+        ResetHovered();
+        foreach (ISelectable selectable in selectables)
+        {
+            selectable.OnHover();
+            LastHovered.Add(selectable);
+        }
+    }
+
+    void DrawSelection(Cell firstCell, Cell lastCell)
+    {
+        Destroy(tempSelectionGrid);
+        //Draw Selection in the world
+        List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
+        tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.instance.SelectionMaterial);
     }
 
     void ClickSelection()
@@ -227,7 +236,7 @@ public class SelectionManager : MonoBehaviour
 
     }
 
-    private void DefaultSelection(List<ISelectable> selectables)
+    void DefaultSelection(List<ISelectable> selectables)
     {
         if (selectables.Count == 1 && currentSelected.Count > 0 && selectables[0] == currentSelected[0])
         {
@@ -260,7 +269,7 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
-    private static void RemoveSelection(List<ISelectable> selectables)
+    void RemoveSelection(List<ISelectable> selectables)
     {
         foreach (var selectable in selectables)
         {
