@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5226111297854516330}
   - component: {fileID: 1494690535669247409}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: SetForHarvest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,13 +94,13 @@ GameObject:
   m_Component:
   - component: {fileID: 6533726697566526984}
   - component: {fileID: 3161763197694522570}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: HarvestBillboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6533726697566526984
 Transform:
   m_ObjectHideFlags: 0
@@ -143,6 +143,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BarBg
+      objectReference: {fileID: 0}
+    - target: {fileID: 21234194028150746, guid: 4b7dbf94cf0b32d499ede871cc632a83,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1276544903525674424, guid: 4b7dbf94cf0b32d499ede871cc632a83,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5449412770558432649, guid: 4b7dbf94cf0b32d499ede871cc632a83,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 8516889852023029532, guid: 4b7dbf94cf0b32d499ede871cc632a83,
         type: 3}
