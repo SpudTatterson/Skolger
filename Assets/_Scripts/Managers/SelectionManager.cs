@@ -16,7 +16,8 @@ public class SelectionManager : MonoBehaviour
     Vector3 worldMouseStartPos;
     Vector3 worldMouseEndPos;
     float mouseDownTime;
-    Cell LastCell;
+    Cell lastCell;
+    Cell firstCell;
     [SerializeField] SelectionAction selectionAction;
 
     List<ISelectable> LastHovered = new List<ISelectable>();
@@ -102,15 +103,15 @@ public class SelectionManager : MonoBehaviour
 
     void VisualizeSelection()
     {
-        Cell firstCell = GridManager.instance.GetCellFromPosition(worldMouseStartPos);
+        firstCell = GridManager.instance.GetCellFromPosition(worldMouseStartPos);
         Cell lastCell = GridManager.instance.GetCellFromPosition(worldMouseEndPos);
 
-        if (this.LastCell != lastCell)
+        if (this.lastCell != lastCell && lastCell != null)
         {
             DrawSelection(firstCell, lastCell);
 
             GetHovered(firstCell, lastCell);
-            this.LastCell = lastCell;
+            this.lastCell = lastCell;
         }
     }
 
@@ -152,7 +153,7 @@ public class SelectionManager : MonoBehaviour
 
     void BoxSelection()
     {
-        Box box = VectorUtility.CalculateBoxSizeGridAligned(worldMouseStartPos, worldMouseEndPos, 1);
+        Box box = VectorUtility.CalculateBoxSizeGridAligned(firstCell, lastCell, 1f);
         List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents * 0.95f);
         Select(selectables);
     }

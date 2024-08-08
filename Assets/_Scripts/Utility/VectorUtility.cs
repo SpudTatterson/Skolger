@@ -84,6 +84,10 @@ public class VectorUtility
 
         return CalculateBoxSize(firstCorner, secondCorner);
     }
+    public static Box CalculateBoxSizeGridAligned(Cell firstCorner, Cell secondCorner, float cellSize)
+    {
+        return CalculateBoxSize(firstCorner.position - new Vector3(cellSize / 2, 0, cellSize / 2), secondCorner.position + new Vector3(cellSize / 2, 0, cellSize / 2));
+    }
 
     public static Box CalculateBoxSize(Vector3 firstCorner, Vector3 secondCorner)
     {
