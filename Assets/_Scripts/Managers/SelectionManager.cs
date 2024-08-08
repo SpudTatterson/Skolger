@@ -259,6 +259,11 @@ public class SelectionManager : MonoBehaviour
                             continue;
 
                     }
+                    if (type == SelectionType.Colonist)
+                    {
+                        DeselectAll();
+                        doBreak = true;
+                    }
                 }
 
                 selectable.OnSelect();
