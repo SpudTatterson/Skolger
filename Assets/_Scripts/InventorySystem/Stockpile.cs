@@ -13,6 +13,8 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     List<Cell> occupiedCells = new List<Cell>();
     public Cell cornerCell { get; private set; }
     GameObject visual;
+    Outline outline;
+    public bool IsSelected { get; private set; }
 
 
     public void Initialize(int sizeX, int sizeY, Cell cornerCell)
@@ -44,6 +46,8 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
         // Create the grid mesh
         visual = MeshUtility.CreateGridMesh(this.occupiedCells, transform.position, "Stockpile", MaterialManager.instance.stockpileMaterial, transform, 1);
+        outline = visual.AddComponent<Outline>();
+        outline?.Disable();
     }
     public bool GetEmptyCell(out Cell cell)
     {
@@ -299,6 +303,34 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     }
     #region ISelectable
 
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+        IsSelected = true;
+
+        outline?.Enable();
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        if (IsSelected)
+            manager.UpdateSelection();
+
+        outline?.Disable();
+        IsSelected = false;
+    }
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
+
     public SelectionType GetSelectionType()
     {
         return SelectionType.Stockpile;
@@ -350,4 +382,9 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     }
 
     #endregion
+
+    void OnDisable()
+    {
+        OnDeselect();
+    }
 }

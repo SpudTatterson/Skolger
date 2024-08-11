@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class InventoryManager : MonoBehaviour
 
     public List<Stockpile> stockpiles = new List<Stockpile>();
     public SerializableDictionary<ItemType, SerializableDictionary<ItemData, int>> totalItems = new SerializableDictionary<ItemType, SerializableDictionary<ItemData, int>>();
+    public event Action<ItemData, int> OnInventoryUpdated;
 
     void Awake()
     {
@@ -81,6 +83,7 @@ public class InventoryManager : MonoBehaviour
             var newItemDict = new SerializableDictionary<ItemData, int> { { item, amount } };
             totalItems.Add(item.itemType, newItemDict);
         }
+        OnInventoryUpdated?.Invoke(item, amount);
     }
 
     public bool HasItem(ItemCost itemCost)
@@ -134,6 +137,7 @@ public class InventoryManager : MonoBehaviour
         {
             itemDict[item] = Mathf.Max(0, currentAmount - amount);
         }
+        OnInventoryUpdated?.Invoke(item, -amount);
     }
 
     public int CheckAmount(ItemData item)
