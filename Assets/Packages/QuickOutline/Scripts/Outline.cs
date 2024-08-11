@@ -111,6 +111,8 @@ public class Outline : MonoBehaviour
     // Retrieve or generate smooth normals
     LoadSmoothNormals();
 
+    Disable();
+
     // Apply material properties immediately
     needsUpdate = true;
   }
@@ -184,11 +186,17 @@ public class Outline : MonoBehaviour
   }
   public void Enable()
   {
-    this.enabled = true;
+    OutlineColor = Color.white;
+    outlineWidth = 2;
+
+    needsUpdate = true;
   }
   public void Disable()
   {
-    this.enabled = false;
+    outlineColor = Color.black;
+    outlineWidth = 4;
+
+    needsUpdate = true;
   }
   void Bake()
   {
