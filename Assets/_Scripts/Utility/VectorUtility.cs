@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class VectorUtility
@@ -99,6 +100,25 @@ public class VectorUtility
         Vector3 size = new Vector3(Mathf.Abs(firstCorner.x - secondCorner.x), cellHeight, Mathf.Abs(firstCorner.z - secondCorner.z));
 
         return new Box(center, size / 2);
+    }
+
+    public static Vector3 CalculateCenter(List<Vector3> positions)
+    {
+        if (positions == null || positions.Count == 0)
+        {
+            throw new System.Exception("Provided list was empty or null");
+        }
+
+        Vector3 sum = Vector3.zero;
+
+        foreach (Vector3 pos in positions)
+        {
+            sum += pos;
+        }
+
+        Vector3 center = sum / positions.Count;
+
+        return center;
     }
 
 }

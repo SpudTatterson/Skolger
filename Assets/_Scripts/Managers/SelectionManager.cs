@@ -481,6 +481,18 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
+    public void FocusCameraToSelected()
+    {
+        List<Vector3> selectedPositions = new List<Vector3>();
+        foreach(ISelectable selectable in currentSelected)
+        {
+            selectedPositions.Add((selectable as MonoBehaviour).transform.position);
+        }
+
+        Vector3 center = VectorUtility.CalculateCenter(selectedPositions);
+        StartCoroutine(CameraController.Instance.SendCameraToTarget(center));
+    }
+
     #endregion
 
     #region Cleanup
