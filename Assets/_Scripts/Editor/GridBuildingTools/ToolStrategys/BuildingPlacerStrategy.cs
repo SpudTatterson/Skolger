@@ -18,6 +18,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
     Cell firstCell;
     Cell cornerCell;
     Cell lastCell;
+    Direction placementDirection = Direction.TopLeft;
 
     public BuildingPlacerStrategy(GridManager gridManager, LayerManager layerManager)
     {
@@ -202,7 +203,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
     void PlaceBuilding(Cell cell, BuildingData buildingData)
     {
 
-        BuildingObject placed = BuildingObject.MakeInstance(buildingData, cell.position);
+        BuildingObject placed = BuildingObject.MakeInstance(buildingData, cell.position, placementDirection);
         
         Undo.RegisterCreatedObjectUndo(placed.gameObject, $"Created {buildingDatas[selectedBuilding].name}");
     }
