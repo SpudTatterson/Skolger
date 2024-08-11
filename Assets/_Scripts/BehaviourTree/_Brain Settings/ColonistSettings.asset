@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111866a9cd7a1574b82adc11434b365f, type: 3}
+  m_Name: ColonistSettings
+  m_EditorClassIdentifier: 
+  taskWander: 0
+  taskEat: 11
+  taskHaul: 1
+  taskConstruction: 2
+  taskHarvest: 3
+  maxWaitTime: 2
+  waypointRange: 10

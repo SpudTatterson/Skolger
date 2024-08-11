@@ -2,7 +2,7 @@ using UnityEngine;
 using NaughtyAttributes;
 using System.Collections;
 
-public class CameraController : MonoBehaviour
+public class CameraController : MonoSingleton<CameraController>
 {
     [Header("Movement Settings")]
     [Tooltip("Minimum and maximum distance the camera can go from the pivotPoint")]
@@ -218,5 +218,17 @@ public class CameraController : MonoBehaviour
     public bool IsUsingFollowTarget()
     {
         return useFollowTarget;
+    }
+    public IEnumerator SendCameraToTarget(Vector3 desiredPosition, float movementTime = 2f)
+    {
+        float elapsedTime = 0;
+        Vector3 startingPosition = cameraPivot.position;
+        while (elapsedTime < movementTime)
+        {
+            cameraPivot.position = Vector3.Slerp(startingPosition, desiredPosition, (elapsedTime / movementTime));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        cameraPivot.position = desiredPosition;
     }
 }

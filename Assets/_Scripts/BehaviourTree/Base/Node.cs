@@ -10,25 +10,27 @@ namespace BehaviorTree
         FAILURE
     }
 
-    public class Node
+    public abstract class Node
     {
         protected NodeState state;
 
         public Node parent;
         protected List<Node> children = new List<Node>();
-        public int priority {get; set; }
+        public int priority { get; set; }
+        public bool flaggedRoot { get; set; }
 
-        private Dictionary<string, object> dataContext = new Dictionary<string, object>();
+        private Dictionary<DataName, object> dataContext = new Dictionary<DataName, object>();
 
         public Node()
         {
             parent = null;
             priority = 0;
+            flaggedRoot = false;
         }
 
         public Node(List<Node> children)
         {
-            foreach(Node child in children)
+            foreach (Node child in children)
             {
                 Attach(child);
             }
@@ -40,14 +42,46 @@ namespace BehaviorTree
             children.Add(node);
         }
 
-        public virtual NodeState Evaluate() => NodeState.FAILURE;
+        public abstract NodeState Evaluate();
 
-        public void SetData(string key, object value)
+        public void SetData(DataName key, object value)
         {
             dataContext[key] = value;
         }
 
-        public object GetData(string key)
+        public Node GetRootNode()
+        {
+            Node root = this;
+            while (root.parent != null)
+            {
+                root = root.parent;
+            }
+            return root;
+        }
+
+        public Node GetFlaggedRootNode()
+        {
+            Node root = this;
+            while (root.parent != null && !flaggedRoot)
+            {
+                root = root.parent;
+            }
+            return root;
+        }
+
+        public void SetDataOnRoot(DataName key, object value)
+        {            
+            Node root = GetRootNode();
+            root.SetData(key, value);
+        }
+
+        public void SetDataOnFlaggedRoot(DataName key, object value)
+        {            
+            Node root = GetFlaggedRootNode();
+            root.SetData(key, value);
+        }
+
+        public object GetData(DataName key)
         {
             object value = null;
             if (dataContext.TryGetValue(key, out value))
@@ -68,7 +102,7 @@ namespace BehaviorTree
             return null;
         }
 
-        public bool ClearData(string key)
+        public bool ClearData(DataName key)
         {
             if (dataContext.ContainsKey(key))
             {
@@ -80,10 +114,11 @@ namespace BehaviorTree
             while (node != null)
             {
                 bool cleared = node.ClearData(key);
-                if(cleared)
+                if (cleared)
                 {
                     return true;
                 }
+                node = node.parent;
             }
             return false;
         }

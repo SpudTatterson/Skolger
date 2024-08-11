@@ -7,11 +7,23 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
+    BillBoard setForHarvestBillboard;
+    Outline outline;
+    FillBar fillBar;
     float timeHarvesting = 0f;
     public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
+    bool finishedHarvesting = false;
     bool setForHarvesting = false;
     SelectionType selectionType = SelectionType.Harvestable;
+    public bool IsSelected { get; private set; }
+
+    void Awake()
+    {
+        setForHarvestBillboard = GetComponentInChildren<BillBoard>(true);
+        outline = GetComponentInChildren<Outline>(true);
+        fillBar = GetComponentInChildren<FillBar>(true);
+    }
     public void Harvest()
     {
         foreach (ItemDrop drop in drops)
@@ -22,18 +34,19 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
             ItemObject.MakeInstance(drop.itemData, amount, dropCell.position);
         }
         TaskManager.Instance.RemoveFromHarvestQueue(this);
-        Destroy(this.gameObject);
+        finishedHarvesting = true;
     }
 
     public IEnumerator StartHarvesting()
     {
         timeHarvesting = 0f;
         beingHarvested = true;
-        Debug.Log("started harvesting");
+        fillBar.UpdateMaxFillAmount(baseGatherTime); // multiply by any modifiers
 
         while (timeHarvesting < baseGatherTime)
         {
             timeHarvesting += Time.deltaTime;
+            fillBar.UpdateFillAmount(timeHarvesting);
             yield return null;
         }
 
@@ -44,17 +57,24 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     {
         return beingHarvested;
     }
+    public bool FinishedHarvesting()
+    {
+        return finishedHarvesting;
+    }
     public void AddToHarvestQueue()
     {
         if (!setForHarvesting)
         {
             TaskManager.Instance.AddToHarvestQueue(this);
         }
+        ShowBillboard();
         setForHarvesting = true;
     }
+
     public void RemoveFromHarvestQueue()
     {
         TaskManager.Instance.RemoveFromHarvestQueue(this);
+        DisableBillboard();
         beingHarvested = false;
         setForHarvesting = false;
     }
@@ -63,6 +83,42 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
         return drops;
     }
 
+    void ShowBillboard()
+    {
+        setForHarvestBillboard?.gameObject.SetActive(true);
+    }
+    void DisableBillboard()
+    {
+        setForHarvestBillboard?.gameObject.SetActive(false);
+    }
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+        IsSelected = true;
+
+        outline?.Enable();
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        if (IsSelected)
+            manager.UpdateSelection();
+
+        outline?.Disable();
+        IsSelected = false;
+    }
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        if(!IsSelected)
+        outline?.Disable();
+    }
     public SelectionType GetSelectionType()
     {
         return selectionType;
@@ -116,5 +172,6 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     void OnDisable()
     {
         OnRelease();
+        OnDeselect();
     }
 }

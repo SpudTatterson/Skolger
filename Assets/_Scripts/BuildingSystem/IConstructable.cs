@@ -6,11 +6,11 @@ public interface IConstructable
 {
     ItemCost GetNextCost();
     List<ItemCost> GetAllCosts();
-    void AddItem(IItem item);
+    void AddItem(InventoryItem item);
 
-    void CheckIfCanConstruct();
+    bool CheckIfCostsFulfilled();
     void ConstructBuilding();
-    Vector3 GetPosition();
+    Cell GetPosition();
 
     void CancelConstruction();
     bool SetForCancellation { get; }

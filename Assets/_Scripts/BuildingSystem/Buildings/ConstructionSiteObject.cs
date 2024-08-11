@@ -13,8 +13,13 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     List<Cell> occupiedCells = new List<Cell>();
     public Cell cornerCell { get; private set; }
     bool allowed = true;
-    [SerializeField, Tooltip("Should be set to true if manually placed in world")]bool manualInit = false;
+    [SerializeField, Tooltip("Should be set to true if manually placed in world")] bool manualInit = false;
     public bool SetForCancellation { get; private set; }
+    public bool IsSelected { get; private set; }
+
+    Outline outline;
+
+    BillBoard forbiddenBillboard;
     // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
     public void Initialize(BuildingData buildingData)
@@ -34,6 +39,15 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
             else
                 fulfilledCosts.Add(cost.item, 0);
         }
+
+        // get necessary components
+        forbiddenBillboard = GetComponentInChildren<BillBoard>(true);
+        if (!TryGetComponent(out outline))
+        {
+            outline = gameObject.AddComponent<Outline>();
+        }
+        outline?.Disable();
+
     }
 
     public static ConstructionSiteObject MakeInstance(BuildingData buildingData, Cell cell, Transform parent = null, bool temp = false)
@@ -54,20 +68,25 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     void Start()
     {
+
         if (manualInit)
             Initialize(data);
     }
 
     #region Construction
 
-    public void AddItem(IItem itemObject)
+    public void AddItem(InventoryItem item)
     {
-        fulfilledCosts[itemObject.itemData] += itemObject.amount;
+        fulfilledCosts[item.itemData] += costs[0].cost;
+
+        item.UpdateAmount(-costs[0].cost);
+
+        if (item != null && item.amount > 0)
+        {
+            item.DropItem(cornerCell.GetClosestEmptyCell().position);
+        }
+
         costs.RemoveAt(0);
-
-        itemObject.UpdateAmount(itemObject.amount);
-
-        CheckIfCanConstruct();
     }
     public ItemCost GetNextCost()
     {
@@ -79,22 +98,22 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
         return costs;
     }
-    public Vector3 GetPosition()
+    public Cell GetPosition()
     {
-        return transform.position;
+        return cornerCell;
     }
 
-    public void CheckIfCanConstruct()
+    public bool CheckIfCostsFulfilled()
     {
         if (costs.Count == 0)
         {
-            ConstructBuilding();
+            return true;
         }
+        return false;
     }
 
     public void ConstructBuilding()
     {
-        Debug.Log("test");
         PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
         BuildingObject.MakeInstance(buildingData, this.transform.position);
     }
@@ -135,6 +154,35 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     #region Selection
 
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+        IsSelected = true;
+
+        outline?.Enable();
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        if (IsSelected)
+            manager.UpdateSelection();
+
+        outline?.Disable();
+        IsSelected = false;
+    }
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
+
+
     public SelectionType GetSelectionType()
     {
         return SelectionType.Constructable;
@@ -165,6 +213,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         allowed = true;
         // add to construction queue
         TaskManager.Instance.AddToConstructionQueue(this);
+        DisableBillboard();
     }
 
     public void OnDisallow()
@@ -173,6 +222,16 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         // remove from construction queue
         TaskManager.Instance.RemoveFromConstructionQueue(this);
         // visually show that this is disallowed 
+        EnableBillboard();
+    }
+
+    void EnableBillboard()
+    {
+        forbiddenBillboard.gameObject.SetActive(true);
+    }
+    void DisableBillboard()
+    {
+        forbiddenBillboard.gameObject.SetActive(false);
     }
     public bool IsAllowed()
     {
@@ -220,5 +279,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     void OnDisable()
     {
         OnRelease();
+
+        OnDeselect();
     }
 }

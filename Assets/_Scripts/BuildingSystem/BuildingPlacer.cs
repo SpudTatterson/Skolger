@@ -99,7 +99,7 @@ public class BuildingPlacer : MonoBehaviour
     }
     void ReturnTemp(GameObject temp)
     {
-        temp.layer =  buildingData.unplacedVisual.layer;
+        temp.layer = buildingData.unplacedVisual.layer;
         PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, temp);
     }
     GameObject GenerateTempBuilding(Cell hitCell)
@@ -111,6 +111,8 @@ public class BuildingPlacer : MonoBehaviour
 
     public void SetNewBuilding(BuildingData buildingData)
     {
+        if (tempGO != null)
+            CancelPlacement();
         this.buildingData = buildingData;
         placing = true;
     }
