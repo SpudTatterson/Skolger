@@ -15,6 +15,13 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 
     Outline outline;
 
+
+    void Awake()
+    {
+        if (outline == null)
+            outline = GetComponent<Outline>();
+    }
+
     public void Initialize(BuildingData buildingData)
     {
         this.buildingData = buildingData;
