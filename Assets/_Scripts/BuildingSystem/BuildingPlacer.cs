@@ -91,7 +91,7 @@ public class BuildingPlacer : MonoBehaviour
     {
         ReturnAllTemps();
 
-        if (cell.IsFree())
+        if ((cell.IsFree() && buildingData is not FloorTile) || (buildingData is FloorTile && !cell.hasFloor))
         {
             ConstructionSiteObject constructionSite = ConstructionSiteObject.MakeInstance(buildingData, cell, placementDirection);
 

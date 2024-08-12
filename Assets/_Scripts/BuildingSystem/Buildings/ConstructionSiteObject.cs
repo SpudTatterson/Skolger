@@ -263,6 +263,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         {
             cell.inUse = buildingData.usesCell;
             cell.walkable = buildingData.walkable;
+            if (buildingData is FloorTile) cell.hasFloor = true;
         }
     }
 
@@ -272,6 +273,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         {
             cell.inUse = false;
             cell.walkable = true;
+            if (buildingData is FloorTile) cell.hasFloor = false;
         }
     }
 

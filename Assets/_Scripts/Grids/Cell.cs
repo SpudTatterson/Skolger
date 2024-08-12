@@ -11,6 +11,7 @@ public class Cell
     public Vector3 position; // position in the world
     public bool walkable = true; // for Path Finding 
     public bool inUse = false; // does this cell have a building, tree, item etc on it
+    public bool hasFloor = false;
     public bool isVisible = true;
     public CellType cellType;
 
@@ -35,6 +36,15 @@ public class Cell
     {
         bool isCellAboveVisible = GetCellAbove().isVisible;
         if (!inUse && !isCellAboveVisible)
+            return true;
+        else
+            return false;
+    }
+    public bool IsRoofed()
+    {
+        Cell cellAbove = GetCellAbove();
+        
+        if (cellAbove.isVisible || cellAbove.hasFloor)
             return true;
         else
             return false;
