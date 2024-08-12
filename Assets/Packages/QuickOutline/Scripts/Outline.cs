@@ -55,6 +55,7 @@ public class Outline : MonoBehaviour
       needsUpdate = true;
     }
   }
+  [SerializeField] bool useFade = true;
 
   [Serializable]
   private class ListVector3
@@ -103,7 +104,7 @@ public class Outline : MonoBehaviour
 
     // Instantiate outline materials
     outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
-    outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+    outlineFillMaterial = useFade ? Instantiate(Resources.Load<Material>(@"Materials/OutlineFillWithFade")) : outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
 
     outlineMaskMaterial.name = "OutlineMask (Instance)";
     outlineFillMaterial.name = "OutlineFill (Instance)";
