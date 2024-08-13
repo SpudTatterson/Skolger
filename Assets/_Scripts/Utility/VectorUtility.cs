@@ -120,5 +120,13 @@ public class VectorUtility
 
         return center;
     }
+    public static Vector3 RoundVector3ToHalf(Vector3 vector)
+    {
+        return new Vector3(
+            Mathf.Round(vector.x * 2f) / 2f,
+            Mathf.Round(vector.y * 2f) / 2f,
+            Mathf.Round(vector.z * 2f) / 2f
+        );
+    }
 
 }
