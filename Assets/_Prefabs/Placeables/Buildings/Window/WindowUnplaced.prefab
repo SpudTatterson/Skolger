@@ -16,7 +16,7 @@ PrefabInstance:
     - target: {fileID: 3444910917444163466, guid: 11b07991cba4fb9409969afb68c4bf84,
         type: 3}
       propertyPath: m_Name
-      value: Window Variant
+      value: WindowUnplaced
       objectReference: {fileID: 0}
     - target: {fileID: 5598741079837761458, guid: 11b07991cba4fb9409969afb68c4bf84,
         type: 3}
