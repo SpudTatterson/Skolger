@@ -33,6 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1315227023290095738}
+  - {fileID: 2839449971004205289}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8968150675980879990
@@ -52,6 +53,7 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
     minDropAmount: 40
     maxDropAmount: 60
+  harvestableName: Pine Tree
 --- !u!65 &2576955565299534712
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -167,4 +169,78 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5474bcb9dd76b3b40a04d2d1f2eff171,
     type: 3}
   m_PrefabInstance: {fileID: 1570095453822664593}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &9064538116865570529
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7836593566460521188}
+    m_Modifications:
+    - target: {fileID: 4115498183985270076, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_Name
+      value: HarvestBillboard
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.252
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a46747e4c7aa98347b7b7b117d9226ce, type: 3}
+--- !u!4 &2839449971004205289 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 9064538116865570529}
   m_PrefabAsset: {fileID: 0}

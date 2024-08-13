@@ -258,6 +258,7 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: 03d2c613c6619de4aae845d5acbe02aa, type: 2}
     minDropAmount: 10
     maxDropAmount: 20
+  harvestableName: Apple Tree
 --- !u!65 &2908709359511931115
 BoxCollider:
   m_ObjectHideFlags: 0

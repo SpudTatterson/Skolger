@@ -7,6 +7,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
+    [SerializeField] string harvestableName = "Tree";
     BillBoard setForHarvestBillboard;
     Outline outline;
     FillBar fillBar;
@@ -132,7 +133,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     public string GetMultipleSelectionString(out int amount)
     {
         amount = 1;
-        return "Tree";
+        return harvestableName;
     }
 
 
