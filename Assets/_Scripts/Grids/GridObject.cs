@@ -448,40 +448,61 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             cell.SetUseAndWalkable(false, true);
         }
     }
-    public bool TryGetCellIndexes(Vector2Int initialIndex, int width, int height, out List<Vector2Int> indexes)
+    public bool TryGetCellIndexes(Vector2Int initialIndex, int width, int height, out List<Vector2Int> indexes, Direction direction = Direction.TopLeft)
     {
         indexes = new List<Vector2Int>();
 
         // Check if the requested grid area is out of the overall grid bounds
-        if (initialIndex.x + width > cells.GetLength(0) || initialIndex.y + height > cells.GetLength(1))
+        if (initialIndex.x < 0 || initialIndex.y < 0 || initialIndex.x + width > cells.GetLength(0) || initialIndex.y + height > cells.GetLength(1))
         {
             Debug.Log("Requested grid area is out of bounds.");
             return false;
         }
 
-        // Populate the list of indexes within the specified sub-area
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                Vector2Int index = initialIndex + new Vector2Int(x, y);
+                Vector2Int index;
+                switch (direction)
+                {
+                    default:
+                        index = initialIndex + new Vector2Int(x, y);
+                        break;
+                    case Direction.TopLeft:
+                        index = initialIndex + new Vector2Int(x, y);
+                        break;
+                    case Direction.TopRight:
+                        index = initialIndex + new Vector2Int(y, -x);
+                        break;
+                    case Direction.BottomLeft:
+                        index = initialIndex + new Vector2Int(-y, x);
+                        break;
+                    case Direction.BottomRight:
+                        index = initialIndex + new Vector2Int(-x, -y);
+                        break;
+                }
+
                 if (cells[index.x, index.y] == null) // Check if the cell at this index is null
                 {
                     Debug.Log("Null cell encountered at index: " + index);
                     indexes.Clear(); // Clear the list since the operation failed
                     return false;
                 }
+                Debug.DrawLine(cells[index.x, index.y].position, cells[index.x, index.y].position + Vector3.up, Color.blue, 10f);
                 indexes.Add(index); // Add the coordinate to the list
+
             }
         }
+
         return true; // All checks passed, and the list of indexes is populated
     }
-    public bool TryGetCells(Vector2Int initialIndex, int width, int height, out List<Cell> cells)
+    public bool TryGetCells(Vector2Int initialIndex, int width, int height, out List<Cell> cells, Direction direction = Direction.TopLeft)
     {
         List<Vector2Int> indexes;
         cells = new List<Cell>();
 
-        bool insideArray = TryGetCellIndexes(initialIndex, width, height, out indexes);
+        bool insideArray = TryGetCellIndexes(initialIndex, width, height, out indexes, direction);
         if (!insideArray) return false;
 
         foreach (Vector2Int i in indexes)
@@ -578,4 +599,12 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             Debug.Log(cell.grid == null);
         }
     }
+}
+
+public enum Direction
+{
+    TopLeft,
+    TopRight = 90,
+    BottomRight = 180,
+    BottomLeft = 270,
 }

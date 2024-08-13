@@ -6792,7 +6792,7 @@ MonoBehaviour:
         m_MethodName: SetNewBuilding
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: e5f202f2f85672d429170c0ae039e710,
+          m_ObjectArgument: {fileID: 11400000, guid: f7985a073032c9947979df0914a8b536,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: BuildingData, Assembly-CSharp
           m_IntArgument: 0
