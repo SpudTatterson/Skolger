@@ -95,7 +95,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     {
         for (int i = 0; i < Items.Length; i++)
         {
-            if (itemData == Items[i].itemData && amount <= Items[i].amount)
+            if (itemData !=null && Items[i] != null && itemData == Items[i].itemData && amount <= Items[i].amount)
             {
                 itemIndex = i;
                 return true;
@@ -252,7 +252,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         manager.AddToCurrentSelected(this);
         IsSelected = true;
 
-        outline.OutlineMode = Outline.Mode.OutlineAll;
+        outline.Enable();
     }
     public void OnDeselect()
     {
@@ -261,18 +261,18 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         if (IsSelected)
             manager.UpdateSelection();
 
-        outline.OutlineMode = Outline.Mode.OutlineHidden;
+        outline.Disable();
         IsSelected = false;
     }
 
     public void OnHover()
     {
-        outline.OutlineMode = Outline.Mode.OutlineAll;
+        outline.Enable();
     }
 
     public void OnHoverEnd()
     {
-        outline.OutlineMode = Outline.Mode.OutlineHidden;
+        outline.Disable();
     }
 
     #endregion

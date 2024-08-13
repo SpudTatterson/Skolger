@@ -8,6 +8,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 {
     [SerializeField, Label("Building Data"), Expandable] BuildingData data;
     [field: SerializeField, ReadOnly, Expandable] public BuildingData buildingData { get; private set; }
+    [SerializeField, ReadOnly] Direction placementDirection = Direction.TopLeft;
     List<Cell> occupiedCells;
     [field: SerializeField, ReadOnly] public Cell cornerCell { get; private set; }
 
@@ -22,9 +23,10 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
             outline = GetComponent<Outline>();
     }
 
-    public void Initialize(BuildingData buildingData)
+    public void Initialize(BuildingData buildingData, Direction placementDirection)
     {
         this.buildingData = buildingData;
+        this.placementDirection = placementDirection;
         GetOccupiedCells();
 
         OnOccupy();
@@ -36,7 +38,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         outline?.Disable();
     }
 
-    public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, Transform parent = null)
+    public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position,Direction placementDirection, Transform parent = null)
     {
         GameObject buildingVisual;
 #if UNITY_EDITOR
@@ -51,7 +53,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 #if UNITY_EDITOR
         EditorUtility.SetDirty(building);
 #endif
-        building.Initialize(buildingData);
+        building.Initialize(buildingData, placementDirection);
 
         return building;
     }
@@ -146,7 +148,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
             GridManager.InitializeSingleton();
 
         cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
-        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells);
+        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells, placementDirection);
         this.occupiedCells = occupiedCells;
     }
     public void OnOccupy()

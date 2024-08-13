@@ -16,7 +16,7 @@ Shader "Custom/Outline Fill" {
 
   SubShader {
     Tags {
-      "Queue" = "Transparent+110"
+      "Queue" = "Transparent+210"
       "RenderType" = "Transparent"
       "DisableBatching" = "True"
     }
@@ -30,7 +30,7 @@ Shader "Custom/Outline Fill" {
       ColorMask RGB
 
       Stencil {
-        Ref 1
+        Ref 2
         Comp NotEqual
       }
 

@@ -16,15 +16,19 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     [SerializeField, Tooltip("Should be set to true if manually placed in world")] bool manualInit = false;
     public bool SetForCancellation { get; private set; }
     public bool IsSelected { get; private set; }
+    [SerializeField, HideInInspector] Direction placementDirection = Direction.TopLeft;
 
     Outline outline;
 
     BillBoard forbiddenBillboard;
     // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
-    public void Initialize(BuildingData buildingData)
+    public void Initialize(BuildingData buildingData, Direction placementDirection)
     {
         this.buildingData = buildingData;
+        this.placementDirection = placementDirection;
+
+        transform.rotation = Quaternion.Euler(0, (int)placementDirection, 0);
 
         GetOccupiedCells();
         OnOccupy();
@@ -50,7 +54,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     }
 
-    public static ConstructionSiteObject MakeInstance(BuildingData buildingData, Cell cell, Transform parent = null, bool temp = false)
+    public static ConstructionSiteObject MakeInstance(BuildingData buildingData, Cell cell, Direction placementDirection, Transform parent = null, bool temp = false)
     {
         GameObject buildingGO = PoolManager.Instance.GetObject(buildingData.unplacedVisual, cell.position, parent);
 
@@ -60,7 +64,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         }
 
         if (!temp)
-            building.Initialize(buildingData);
+            building.Initialize(buildingData, placementDirection);
 
 
         return building;
@@ -70,7 +74,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     {
 
         if (manualInit)
-            Initialize(data);
+            Initialize(data, placementDirection);
     }
 
     #region Construction
@@ -115,7 +119,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     public void ConstructBuilding()
     {
         PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
-        BuildingObject.MakeInstance(buildingData, this.transform.position);
+        BuildingObject.MakeInstance(buildingData, this.transform.position, placementDirection);
     }
     [ContextMenu("CancelConstruction")]
     public void CancelConstruction()
@@ -248,7 +252,8 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
             GridManager.InitializeSingleton();
 
         cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
-        cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells);
+        cornerCell.grid.TryGetCells
+        ((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells, placementDirection);
         this.occupiedCells = occupiedCells;
     }
 
@@ -258,6 +263,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         {
             cell.inUse = buildingData.usesCell;
             cell.walkable = buildingData.walkable;
+            if (buildingData is FloorTile) cell.hasFloor = true;
         }
     }
 
@@ -267,6 +273,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         {
             cell.inUse = false;
             cell.walkable = true;
+            if (buildingData is FloorTile) cell.hasFloor = false;
         }
     }
 

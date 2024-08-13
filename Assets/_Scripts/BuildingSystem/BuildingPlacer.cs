@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class BuildingPlacer : MonoBehaviour
     List<GameObject> tempObjects = new List<GameObject>();
     Cell firstCell;
     Cell lastCell;
+    [SerializeField, ReadOnly] Direction placementDirection;
     [SerializeField, ReadOnly] List<GameObject> placedBuildings = new List<GameObject>();
     void Update()
     {
@@ -20,7 +22,11 @@ public class BuildingPlacer : MonoBehaviour
             CancelPlacement();
         if (placing && buildingData != null && !EventSystem.current.IsPointerOverGameObject())
         {
-
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                placementDirection = GetNextDirection(placementDirection);
+                tempGO.transform.rotation = Quaternion.Euler(0, (int)placementDirection, 0);
+            }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100f, LayerManager.instance.buildableLayerMask))
@@ -69,13 +75,25 @@ public class BuildingPlacer : MonoBehaviour
         }
     }
 
+    Direction GetNextDirection(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.TopLeft: return Direction.TopRight;
+            case Direction.TopRight: return Direction.BottomRight;
+            case Direction.BottomRight: return Direction.BottomLeft;
+            default: return Direction.TopLeft;
+        }
+
+    }
+
     void PlaceBuilding(Cell cell)
     {
         ReturnAllTemps();
 
-        if (cell.IsFree())
+        if ((cell.IsFree() && buildingData is not FloorTile) || (buildingData is FloorTile && !cell.hasFloor))
         {
-            ConstructionSiteObject constructionSite = ConstructionSiteObject.MakeInstance(buildingData, cell);
+            ConstructionSiteObject constructionSite = ConstructionSiteObject.MakeInstance(buildingData, cell, placementDirection);
 
             placedBuildings.Add(constructionSite.gameObject);
 
@@ -100,11 +118,13 @@ public class BuildingPlacer : MonoBehaviour
     void ReturnTemp(GameObject temp)
     {
         temp.layer = buildingData.unplacedVisual.layer;
+        temp.transform.rotation = Quaternion.identity;
         PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, temp);
     }
     GameObject GenerateTempBuilding(Cell hitCell)
     {
-        GameObject temp = ConstructionSiteObject.MakeInstance(buildingData, hitCell, temp: true).gameObject;
+        GameObject temp = ConstructionSiteObject.MakeInstance(buildingData, hitCell, placementDirection, temp: true).gameObject;
+        temp.transform.rotation = Quaternion.Euler(0, (float)placementDirection, 0);
         temp.layer = 0;
         return temp;
     }

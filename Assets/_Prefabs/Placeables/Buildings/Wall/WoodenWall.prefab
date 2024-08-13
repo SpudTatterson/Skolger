@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7931480035837312695}
   - component: {fileID: 1886262260453617047}
   - component: {fileID: 7775205306178741839}
+  - component: {fileID: 1280564634145656057}
+  - component: {fileID: 301886316333927302}
   m_Layer: 12
   m_Name: WoodenWall
   m_TagString: Untagged
@@ -96,6 +98,39 @@ MonoBehaviour:
     inUse: 0
     isVisible: 0
     cellType: 0
+--- !u!114 &1280564634145656057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4236940828671363148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useFade: 1
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+  dontOutlineSprites: 1
+--- !u!114 &301886316333927302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4236940828671363148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb53ad4dd86db04bb4178f366ae761f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableThreshold: 0.25
 --- !u!1001 &138337359370001395
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,19 +1,11 @@
-﻿//
-//  OutlineMask.shader
-//  QuickOutline
-//
-//  Created by Chris Nolet on 2/21/18.
-//  Copyright © 2018 Chris Nolet. All rights reserved.
-//
-
-Shader "Custom/Outline Mask" {
+﻿Shader "Custom/Outline Mask" {
   Properties {
     [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 0
   }
 
   SubShader {
     Tags {
-      "Queue" = "Transparent+100"
+      "Queue" = "Transparent+200"
       "RenderType" = "Transparent"
     }
 
@@ -25,7 +17,7 @@ Shader "Custom/Outline Mask" {
       ColorMask 0
 
       Stencil {
-        Ref 1
+        Ref 2
         Pass Replace
       }
     }

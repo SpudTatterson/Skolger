@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 77989181211879056}
   - component: {fileID: 6288681625395325381}
   - component: {fileID: 4224255462607249811}
+  - component: {fileID: 2847568122989218487}
   m_Layer: 12
   m_Name: Window
   m_TagString: Untagged
@@ -96,6 +97,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3, z: 1}
   m_Center: {x: 0, y: 1.5, z: 0}
+--- !u!114 &2847568122989218487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3444910917444163466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useFade: 1
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+  dontOutlineSprites: 1
 --- !u!1001 &837645614928612238
 PrefabInstance:
   m_ObjectHideFlags: 0

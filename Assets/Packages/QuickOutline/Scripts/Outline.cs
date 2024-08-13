@@ -55,6 +55,7 @@ public class Outline : MonoBehaviour
       needsUpdate = true;
     }
   }
+  [SerializeField] bool useFade = true;
 
   [Serializable]
   private class ListVector3
@@ -102,14 +103,18 @@ public class Outline : MonoBehaviour
     }
 
     // Instantiate outline materials
-    outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
-    outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+    // outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMaskFade"));
+    outlineMaskMaterial = useFade ? Instantiate(Resources.Load<Material>(@"Materials/OutlineMaskFade")) : outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
+    outlineFillMaterial = useFade ? Instantiate(Resources.Load<Material>(@"Materials/OutlineFillWithFade")) : outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+    // outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFillWithFade"));
 
     outlineMaskMaterial.name = "OutlineMask (Instance)";
     outlineFillMaterial.name = "OutlineFill (Instance)";
 
     // Retrieve or generate smooth normals
     LoadSmoothNormals();
+
+    Disable();
 
     // Apply material properties immediately
     needsUpdate = true;
@@ -184,11 +189,17 @@ public class Outline : MonoBehaviour
   }
   public void Enable()
   {
-    this.enabled = true;
+    OutlineColor = Color.white;
+    outlineWidth = 2;
+
+    needsUpdate = true;
   }
   public void Disable()
   {
-    this.enabled = false;
+    outlineColor = Color.black;
+    outlineWidth = 4;
+
+    needsUpdate = true;
   }
   void Bake()
   {
