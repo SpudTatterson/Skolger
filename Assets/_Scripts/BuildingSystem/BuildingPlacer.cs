@@ -29,7 +29,7 @@ public class BuildingPlacer : MonoBehaviour
             }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100f, LayerManager.instance.buildableLayerMask))
+            if (Physics.Raycast(ray, out hit, 100f, LayerManager.Instance.buildableLayerMask))
             {
                 Cell hitCell = GridManager.instance.GetCellFromPosition(hit.point);
 

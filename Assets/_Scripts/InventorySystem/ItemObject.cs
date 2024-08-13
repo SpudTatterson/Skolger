@@ -44,7 +44,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         item.transform.position = position;
 
         visualGO.transform.parent = parent;
-        visualGO.layer = LayerManager.instance.itemLayer;
+        visualGO.layer = LayerManager.Instance.itemLayer;
 
         return item;
     }

@@ -78,7 +78,7 @@ public class SelectionManager : MonoBehaviour
 
     void StartSelection()
     {
-        worldMouseStartPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.instance.GroundLayerMask);
+        worldMouseStartPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.Instance.GroundLayerMask);
         mouseDownTime = Time.time;
     }
 
@@ -98,7 +98,7 @@ public class SelectionManager : MonoBehaviour
 
     void DragSelection()
     {
-        worldMouseEndPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.instance.GroundLayerMask);
+        worldMouseEndPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.Instance.GroundLayerMask);
     }
 
     void VisualizeSelection()
@@ -136,14 +136,14 @@ public class SelectionManager : MonoBehaviour
         Destroy(tempSelectionGrid);
         //Draw Selection in the world
         List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
-        tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.instance.SelectionMaterial);
+        tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.Instance.SelectionMaterial);
     }
 
     void ClickSelection()
     {
         List<ISelectable> selectables = new List<ISelectable>();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
+        if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.Instance.SelectableLayerMask) &&
         hit.transform.TryGetComponent(out ISelectable selectable))
         {
             selectables.Add(selectable);
