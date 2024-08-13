@@ -103,8 +103,10 @@ public class Outline : MonoBehaviour
     }
 
     // Instantiate outline materials
-    outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
+    // outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMaskFade"));
+    outlineMaskMaterial = useFade ? Instantiate(Resources.Load<Material>(@"Materials/OutlineMaskFade")) : outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
     outlineFillMaterial = useFade ? Instantiate(Resources.Load<Material>(@"Materials/OutlineFillWithFade")) : outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+    // outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFillWithFade"));
 
     outlineMaskMaterial.name = "OutlineMask (Instance)";
     outlineFillMaterial.name = "OutlineFill (Instance)";

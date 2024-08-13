@@ -23,7 +23,7 @@
       ColorMask RGB
 
       Stencil {
-        Ref 1  // Use a different stencil reference value
+        Ref 1  
         Comp NotEqual
       }
 

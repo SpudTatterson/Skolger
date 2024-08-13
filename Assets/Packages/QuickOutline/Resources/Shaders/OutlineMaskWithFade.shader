@@ -1,11 +1,11 @@
-﻿Shader "Custom/Outline Mask" {
+﻿Shader "Custom/Outline Mask With Fade" {
   Properties {
     [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 0
   }
 
   SubShader {
     Tags {
-      "Queue" = "Transparent+200"
+      "Queue" = "Transparent+100"
       "RenderType" = "Transparent"
     }
 
@@ -17,7 +17,7 @@
       ColorMask 0
 
       Stencil {
-        Ref 2
+        Ref 1
         Pass Replace
       }
     }
