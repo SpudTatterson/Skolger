@@ -38,7 +38,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         outline?.Disable();
     }
 
-    public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position,Direction placementDirection, Transform parent = null)
+    public static BuildingObject MakeInstance(BuildingData buildingData, Vector3 position, Direction placementDirection, Transform parent = null)
     {
         GameObject buildingVisual;
 #if UNITY_EDITOR
@@ -144,8 +144,8 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 
     public void GetOccupiedCells()
     {
-        if (GridManager.instance == null)
-            GridManager.InitializeSingleton();
+        if (buildingData == null)
+            buildingData = data;
 
         cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells, placementDirection);
