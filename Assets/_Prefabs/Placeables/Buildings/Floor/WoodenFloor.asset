@@ -24,7 +24,7 @@ MonoBehaviour:
   takesFullCell: 0
   walkable: 1
   placementType: 2
-  unplacedVisual: {fileID: 6181547073965403903, guid: ddb087ed5309b1a48b04860531742255,
+  unplacedVisual: {fileID: 4972117050727208398, guid: 210e0bfe8af81784496cc370cd4cf633,
     type: 3}
-  buildingPrefab: {fileID: 8443945621157679312, guid: 0703bf8642891de489aa383cd7b67bcd,
+  buildingPrefab: {fileID: 8021421149502807262, guid: edb428d5108178f44ae7951bd0b2f36c,
     type: 3}
