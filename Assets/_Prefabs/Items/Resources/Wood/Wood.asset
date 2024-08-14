@@ -15,6 +15,6 @@ MonoBehaviour:
   itemName: Wood
   itemType: 0
   stackSize: 100
-  visual: {fileID: 5000814260665464331, guid: 9820ad9d9a0aa3f4fa7abf24292684b5, type: 3}
+  visual: {fileID: 8122161198484771903, guid: 8e87d6a5f6ba2cb49b9879c28104ba1d, type: 3}
   icon: {fileID: 21300000, guid: 27cdc5036ee7fb245ab9207a17d58602, type: 3}
   type: 0
