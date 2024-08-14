@@ -10,11 +10,11 @@ public class InventoryUI : MonoBehaviour
 
     void OnEnable()
     {
-        InventoryManager.instance.OnInventoryUpdated += UpdateUI;
+        InventoryManager.Instance.OnInventoryUpdated += UpdateUI;
     }
     void OnDisable()
     {
-        InventoryManager.instance.OnInventoryUpdated -= UpdateUI;
+        InventoryManager.Instance.OnInventoryUpdated -= UpdateUI;
     }
     void UpdateUI(ItemData item, int amount)
     {

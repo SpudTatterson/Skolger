@@ -24,9 +24,9 @@ public class TaskEat : Node
             ClearData(DataName.Stockpile);
             ClearData(DataName.FoodData);
 
-            if (InventoryManager.instance.HasItem(new ItemCost(edibleData, 1)))
+            if (InventoryManager.Instance.HasItem(new ItemCost(edibleData, 1)))
             {
-                IEdible edible = (EdibleInventoryItem)InventoryManager.instance.TakeItem(new ItemCost(edibleData, 1), stockpile);
+                IEdible edible = (EdibleInventoryItem)InventoryManager.Instance.TakeItem(new ItemCost(edibleData, 1), stockpile);
                 colonistData.Eat(edible);
             }
             else

@@ -146,7 +146,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         transform.SetParent(null);
         OnAllow();
 
-        InventoryManager.instance.RemoveAmountOfItem(itemData, amount);
+        InventoryManager.Instance.RemoveAmountOfItem(itemData, amount);
     }
 
     #region Selection

@@ -29,7 +29,7 @@ public class HaulerTest : MonoBehaviour//, IContainer<InventoryItem>
     IEnumerator HaulItem(ItemObject item)
     {
         hauling = true;
-        Stockpile stockpile = InventoryManager.instance.GetStockpileWithEmptySpace(out Cell cell);
+        Stockpile stockpile = InventoryManager.Instance.GetStockpileWithEmptySpace(out Cell cell);
         if (cell == null)
         {
             Debug.Log("no space in stockpiles");
