@@ -46,8 +46,13 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
         // Create the grid mesh
         visual = MeshUtility.CreateGridMesh(this.occupiedCells, transform.position, "Stockpile", MaterialManager.Instance.stockpileMaterial, transform, 1);
-        outline = visual.AddComponent<Outline>();
-        outline?.Disable();
+
+        visual.GetComponent<MeshCollider>().convex = true;
+
+        outline = gameObject.AddComponent<Outline>();
+        outline.SetStencilValue(3);
+        outline.SetAddToQueueValue(10);
+
     }
     public bool GetEmptyCell(out Cell cell)
     {
