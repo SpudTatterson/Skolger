@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
+public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
     [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
-    [SerializeField] string harvestableName = "Tree";
+    [SerializeField] string harvestableName = "";
     BillBoard setForHarvestBillboard;
     Outline outline;
     FillBar fillBar;
@@ -16,7 +16,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     bool beingHarvested = false;
     bool finishedHarvesting = false;
     bool setForHarvesting = false;
-    SelectionType selectionType = SelectionType.Harvestable;
+
     public bool IsSelected { get; private set; }
 
     void Awake()
@@ -122,7 +122,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     }
     public SelectionType GetSelectionType()
     {
-        return selectionType;
+        return SelectionType.Harvestable;
     }
     public ISelectionStrategy GetSelectionStrategy()
     {
@@ -150,7 +150,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     }
     public void OnOccupy()
     {
-        if (cornerCell == null) cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
+        if (cornerCell == null) GetOccupiedCells();
         cornerCell.inUse = true;
         cornerCell.walkable = false;
     }
