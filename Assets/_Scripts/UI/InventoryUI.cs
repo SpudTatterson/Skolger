@@ -18,7 +18,7 @@ public class InventoryUI : MonoBehaviour
     }
     void UpdateUI(ItemData item, int amount)
     {
-        if (items.ContainsKey(item.itemType))
+        if (items.ContainsKey(item.itemType) && items[item.itemType].ContainsKey(item))
         {
             // update existing item
             var uiItem = items[item.itemType][item];
