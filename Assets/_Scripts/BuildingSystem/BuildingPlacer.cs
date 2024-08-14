@@ -113,7 +113,7 @@ public class BuildingPlacer : MonoBehaviour
     void InitializeNewPlacement(Cell hitCell)
     {
         tempGO = GenerateTempBuilding(hitCell);
-        SelectionManager.instance.isSelecting = false;
+        SelectionManager.Instance.isSelecting = false;
     }
     void ReturnTemp(GameObject temp)
     {
@@ -145,7 +145,7 @@ public class BuildingPlacer : MonoBehaviour
         firstCell = null;
         lastCell = null;
         buildingData = null;
-        SelectionManager.instance.isSelecting = true;
+        SelectionManager.Instance.isSelecting = true;
     }
     bool Canceling()
     {

@@ -101,7 +101,7 @@ public class StockpilePlacer : MonoBehaviour
 
         selectedStockpile = stockpile;
 
-        SelectionManager.instance.isSelecting = false;
+        SelectionManager.Instance.isSelecting = false;
     }
     public void GrowStockpile(Stockpile stockpile)
     {
@@ -111,18 +111,18 @@ public class StockpilePlacer : MonoBehaviour
 
         selectedStockpile = stockpile;
 
-        SelectionManager.instance.isSelecting = false;
+        SelectionManager.Instance.isSelecting = false;
     }
 
     public void StartMakingStockPile()
     {
         inUse = true;
         makingStockpile = true;
-        SelectionManager.instance.isSelecting = false;
+        SelectionManager.Instance.isSelecting = false;
     }
     public void StopMakingStockpile()
     {
-        SelectionManager.instance.isSelecting = true;
+        SelectionManager.Instance.isSelecting = true;
         Destroy(tempGrid);
         makingStockpile = false;
         firstCell = null;

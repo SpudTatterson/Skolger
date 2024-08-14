@@ -248,7 +248,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     public void OnSelect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.AddToCurrentSelected(this);
         IsSelected = true;
 
@@ -256,7 +256,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     }
     public void OnDeselect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.RemoveFromCurrentSelected(this);
         if (IsSelected)
             manager.UpdateSelection();

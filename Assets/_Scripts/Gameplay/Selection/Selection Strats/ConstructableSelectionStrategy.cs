@@ -21,7 +21,7 @@ public class ConstructableSelectionStrategy : ISelectionStrategy
     {
         UIManager.instance.SetAllActionButtonsInactive();
 
-        SelectionManager.instance.CheckForAllowableSelection();
-        SelectionManager.instance.CheckForCancelableAction();
+        SelectionManager.Instance.CheckForAllowableSelection();
+        SelectionManager.Instance.CheckForCancelableAction();
     }
 }

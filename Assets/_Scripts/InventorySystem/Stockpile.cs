@@ -305,7 +305,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
     public void OnSelect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.AddToCurrentSelected(this);
         IsSelected = true;
 
@@ -313,7 +313,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     }
     public void OnDeselect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.RemoveFromCurrentSelected(this);
         if (IsSelected)
             manager.UpdateSelection();

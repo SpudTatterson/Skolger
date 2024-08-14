@@ -16,7 +16,7 @@ public class HarvestableSelectionStrategy : ISelectionStrategy
         selectionMenu.SetDrops(drops);
         selectionMenu.harvestableName.text = $"Name: {selectedItems[0].GetMultipleSelectionString(out _)}";
 
-        SelectionManager.instance.CheckForCancelableAction();
+        SelectionManager.Instance.CheckForCancelableAction();
     }
 
     public void EnableButtons()

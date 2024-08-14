@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SelectionManager : MonoBehaviour
+public class SelectionManager : MonoSingleton<SelectionManager>
 {
     public bool isSelecting = true;
-    public static SelectionManager instance { get; private set; }
     List<ISelectable> currentSelected = new List<ISelectable>();
     ISelectionStrategy selectionStrategy;
     [SerializeField] List<SelectionType> specialSelectionTypes;
@@ -23,16 +22,7 @@ public class SelectionManager : MonoBehaviour
     List<ISelectable> LastHovered = new List<ISelectable>();
 
     bool setToUpdate;
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            Debug.LogWarning("More then one SelectionManager");
-            Destroy(this);
-        }
-    }
+    
     void Update()
     {
         if (!isSelecting) return;

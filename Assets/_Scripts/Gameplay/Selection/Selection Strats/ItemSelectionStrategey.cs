@@ -22,6 +22,6 @@ public class ItemSelectionStrategy : ISelectionStrategy
     {
         UIManager.instance.SetAllActionButtonsInactive();
 
-        SelectionManager.instance.CheckForAllowableSelection();
+        SelectionManager.Instance.CheckForAllowableSelection();
     }
 }

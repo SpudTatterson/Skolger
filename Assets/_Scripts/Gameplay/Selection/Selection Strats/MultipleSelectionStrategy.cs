@@ -68,7 +68,7 @@ public class MultipleSelectionStrategy : ISelectionStrategy
     {
         mainSelectable.GetSelectionStrategy().EnableButtons();
 
-        SelectionManager.instance.CheckForCancelableAction();
-        SelectionManager.instance.CheckForAllowableSelection();
+        SelectionManager.Instance.CheckForCancelableAction();
+        SelectionManager.Instance.CheckForAllowableSelection();
     }
 }

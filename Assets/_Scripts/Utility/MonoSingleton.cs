@@ -14,7 +14,6 @@ where T : MonoBehaviour
             Debug.Log($"More Than one {nameof(T)} exists");
             Destroy(this);
         }
-        Debug.Log("Test");
     }
 
     void OnValidate()
