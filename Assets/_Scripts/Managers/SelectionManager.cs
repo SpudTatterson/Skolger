@@ -109,6 +109,8 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     {
         Box box = VectorUtility.CalculateBoxSize(firstCell.position, lastCell.position);
 
+        box.ShrinkBoxNoY(0.95f);
+
         ExtendedDebug.DrawBox(box.center, box.halfExtents * 2, Quaternion.identity); // visualize in editor
 
         //Trigger OnHover
@@ -144,7 +146,8 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     void BoxSelection()
     {
         Box box = VectorUtility.CalculateBoxSizeGridAligned(firstCell, lastCell, 1f);
-        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents * 0.95f);
+        box.ShrinkBoxNoY(0.95f);
+        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents);
         Select(selectables);
     }
 
@@ -458,14 +461,14 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         Cell cell = GridManager.Instance.GetCellFromPosition((selectable as MonoBehaviour).transform.position);
         Vector3 corner1 = cell.position - new Vector3(1f / 2, 0, 1f / 2);
         Vector3 corner2 = cell.position + new Vector3(1f / 2, 0, 1f / 2);
-        Vector3 halfSize = new Vector3(Mathf.Abs(corner1.x - corner2.x), 3f, Mathf.Abs(corner1.z - corner2.z) / 2f);
+        Box box = VectorUtility.CalculateBoxSize(corner1, corner2).ShrinkBoxNoY(0.95f);
 
-        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(cell.position, halfSize * 0.95f);
+        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(cell.position, box.halfExtents);
         selectables.Remove(selectable);
 
         if (selectables.Count != 0)
         {
-            currentSelected.Clear();
+            DeselectAll();
             selectables[0].OnSelect();
             SetSelectionType(selectables[0].GetSelectionType());
         }
