@@ -19,7 +19,7 @@ public class TaskDropInventoryItem : Node
         {
             //inventoryItem.DropItem(agent.transform.position);
             int InventoryIndex = (int)GetData(DataName.InventoryIndex);
-            colonistData.TakeItemOut(InventoryIndex).DropItem(GridManager.instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell().position);
+            colonistData.TakeItemOut(InventoryIndex).DropItem(GridManager.Instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell().position);
             ClearData(DataName.InventoryItem);
         }
 

@@ -31,7 +31,7 @@ public class BuildingPlacer : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100f, LayerManager.Instance.buildableLayerMask))
             {
-                Cell hitCell = GridManager.instance.GetCellFromPosition(hit.point);
+                Cell hitCell = GridManager.Instance.GetCellFromPosition(hit.point);
 
                 if (tempGO == null)
                     InitializeNewPlacement(hitCell);

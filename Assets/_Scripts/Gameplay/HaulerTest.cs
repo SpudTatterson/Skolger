@@ -62,7 +62,7 @@ public class HaulerTest : MonoBehaviour//, IContainer<InventoryItem>
         }
         else
         {
-            Cell newCell = GridManager.instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell();
+            Cell newCell = GridManager.Instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell();
             heldItem.DropItem(newCell.position);
             newCell.inUse = true;
         }

@@ -70,10 +70,10 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
         if (allowed) OnAllow();
         else OnDisallow();
-        if (GridManager.instance.GetCellFromPosition(transform.position) == null) cornerCell = null;
+        if (GridManager.Instance.GetCellFromPosition(transform.position) == null) cornerCell = null;
         else
         {
-            cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+            cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         }
     }
 
@@ -233,10 +233,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
     public void GetOccupiedCells()
     {
-        if (GridManager.instance == null)
-            GridManager.InitializeSingleton();
-
-        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
     }
     public void OnOccupy()
     {

@@ -146,14 +146,11 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
 
     public void GetOccupiedCells()
     {
-        if (GridManager.instance == null)
-            GridManager.InitializeSingleton();
-
-        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
     }
     public void OnOccupy()
     {
-        if (cornerCell == null) cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        if (cornerCell == null) cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         cornerCell.inUse = true;
         cornerCell.walkable = false;
     }

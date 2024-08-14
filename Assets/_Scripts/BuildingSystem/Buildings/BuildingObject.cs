@@ -147,7 +147,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         if (buildingData == null)
             buildingData = data;
 
-        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells, placementDirection);
         this.occupiedCells = occupiedCells;
     }

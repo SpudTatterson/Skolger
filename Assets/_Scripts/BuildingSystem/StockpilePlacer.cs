@@ -36,11 +36,11 @@ public class StockpilePlacer : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Input.GetKeyDown(KeyCode.Mouse0) && Physics.Raycast(ray, out RaycastHit hit, 500f, LayerManager.Instance.GroundLayerMask))
         {
-            firstCell = GridManager.instance.GetCellFromPosition(hit.point);
+            firstCell = GridManager.Instance.GetCellFromPosition(hit.point);
         }
         else if (Input.GetKey(KeyCode.Mouse0) && Physics.Raycast(ray, out hit, 500f, LayerManager.Instance.GroundLayerMask))
         {
-            Cell currentCell = GridManager.instance.GetCellFromPosition(hit.point);
+            Cell currentCell = GridManager.Instance.GetCellFromPosition(hit.point);
 
             if (previousCell == null || currentCell != previousCell)
             {

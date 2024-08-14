@@ -103,8 +103,8 @@ public class SelectionManager : MonoBehaviour
 
     void VisualizeSelection()
     {
-        firstCell = GridManager.instance.GetCellFromPosition(worldMouseStartPos);
-        Cell lastCell = GridManager.instance.GetCellFromPosition(worldMouseEndPos);
+        firstCell = GridManager.Instance.GetCellFromPosition(worldMouseStartPos);
+        Cell lastCell = GridManager.Instance.GetCellFromPosition(worldMouseEndPos);
 
         if (this.lastCell != lastCell && lastCell != null)
         {
@@ -465,7 +465,7 @@ public class SelectionManager : MonoBehaviour
     public void TryToSelectOtherItemInCell()
     {
         ISelectable selectable = currentSelected[0];
-        Cell cell = GridManager.instance.GetCellFromPosition((selectable as MonoBehaviour).transform.position);
+        Cell cell = GridManager.Instance.GetCellFromPosition((selectable as MonoBehaviour).transform.position);
         Vector3 corner1 = cell.position - new Vector3(1f / 2, 0, 1f / 2);
         Vector3 corner2 = cell.position + new Vector3(1f / 2, 0, 1f / 2);
         Vector3 halfSize = new Vector3(Mathf.Abs(corner1.x - corner2.x), 3f, Mathf.Abs(corner1.z - corner2.z) / 2f);

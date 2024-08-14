@@ -6,9 +6,8 @@ using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class GridManager : MonoSingleton<GridManager>
 {
-    public static GridManager instance { get; private set; }
     public List<GridObject> grids { get; private set; }
     [SerializeField, Required("Please attach the grids empty parent to generate the world map")] GameObject gridsParent;
 
@@ -16,23 +15,12 @@ public class GridManager : MonoBehaviour
 
     // get these values from a scriptable object 
 
-    void Awake()
+    protected override void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            Debug.Log("More then one grid manager");
-            Destroy(this);
-        }
-
+        base.Awake();
+        
         GetGridsIfMissing();
         RecalculateCellUsage();
-    }
-    [Button]
-    public static void InitializeSingleton()
-    {
-        instance = FindObjectOfType<GridManager>();
     }
     public GridObject GetGridFromPosition(Vector3 position)
     {

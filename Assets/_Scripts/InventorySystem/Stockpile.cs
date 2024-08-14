@@ -35,7 +35,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
         }
 
-        float cellSize = GridManager.instance.worldSettings.cellSize;
+        float cellSize = GridManager.Instance.worldSettings.cellSize;
         // Calculate the position of the bottom-left corner of the cell
         Vector3 cornerPosition = cornerCell.position - new Vector3(cellSize / 2, 0, cellSize / 2);
 
@@ -358,10 +358,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
     public void GetOccupiedCells()
     {
-        if (GridManager.instance == null)
-            GridManager.InitializeSingleton();
-
-        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells((Vector2Int)cornerCell, sizeX, sizeY, out List<Cell> occupiedCells);
         this.occupiedCells = occupiedCells;
     }
