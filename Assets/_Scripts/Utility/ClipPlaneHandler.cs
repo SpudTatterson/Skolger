@@ -16,7 +16,6 @@ public class ClipPlaneHandler : MonoBehaviour
 
         if (objectCollider == null)
             objectCollider = GetComponent<Collider>();
-        VisualLayerManager.Instance.OnYPlaneChange += CheckAgainstClipPlane;
     }
 
     void CheckAgainstClipPlane(float yClipPlane)
@@ -38,5 +37,15 @@ public class ClipPlaneHandler : MonoBehaviour
         {
             objectCollider.enabled = true;
         }
+    }
+
+    void OnEnable()
+    {
+        VisualLayerManager.Instance.OnYPlaneChange += CheckAgainstClipPlane;
+    }
+
+    void OnDisable()
+    {
+        VisualLayerManager.Instance.OnYPlaneChange -= CheckAgainstClipPlane;
     }
 }
