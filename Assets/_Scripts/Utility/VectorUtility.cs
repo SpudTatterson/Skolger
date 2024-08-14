@@ -69,19 +69,19 @@ public class VectorUtility
     public static Box ScreenBoxToWorldBoxGridAligned(Vector3 mouseStartPos, Vector3 mouseEndPos, float cellSize, LayerMask layerMask)
     {
         Vector3 firstCorner = ScreeToWorldPosition(mouseStartPos, layerMask);
-        firstCorner = GridManager.instance.GetCellFromPosition(firstCorner).position - new Vector3(cellSize / 2, 0, cellSize / 2);
+        firstCorner = GridManager.Instance.GetCellFromPosition(firstCorner).position - new Vector3(cellSize / 2, 0, cellSize / 2);
 
         Vector3 secondCorner = ScreeToWorldPosition(mouseEndPos, layerMask);
-        secondCorner = GridManager.instance.GetCellFromPosition(secondCorner).position + new Vector3(cellSize / 2, 0, cellSize / 2);
+        secondCorner = GridManager.Instance.GetCellFromPosition(secondCorner).position + new Vector3(cellSize / 2, 0, cellSize / 2);
 
         return CalculateBoxSize(firstCorner, secondCorner);
     }
 
     public static Box CalculateBoxSizeGridAligned(Vector3 firstCorner, Vector3 secondCorner, float cellSize)
     {
-        firstCorner = GridManager.instance.GetCellFromPosition(firstCorner).position - new Vector3(cellSize / 2, 0, cellSize / 2);
+        firstCorner = GridManager.Instance.GetCellFromPosition(firstCorner).position - new Vector3(cellSize / 2, 0, cellSize / 2);
 
-        secondCorner = GridManager.instance.GetCellFromPosition(secondCorner).position + new Vector3(cellSize / 2, 0, cellSize / 2);
+        secondCorner = GridManager.Instance.GetCellFromPosition(secondCorner).position + new Vector3(cellSize / 2, 0, cellSize / 2);
 
         return CalculateBoxSize(firstCorner, secondCorner);
     }
@@ -92,7 +92,7 @@ public class VectorUtility
 
     public static Box CalculateBoxSize(Vector3 firstCorner, Vector3 secondCorner)
     {
-        float cellHeight = GridManager.instance.worldSettings.cellHeight;
+        float cellHeight = GridManager.Instance.worldSettings.cellHeight;
 
         Vector3 center = (firstCorner + secondCorner) / 2;
         center.y += cellHeight / 2;
@@ -119,6 +119,14 @@ public class VectorUtility
         Vector3 center = sum / positions.Count;
 
         return center;
+    }
+    public static Vector3 RoundVector3ToHalf(Vector3 vector)
+    {
+        return new Vector3(
+            Mathf.Round(vector.x * 2f) / 2f,
+            Mathf.Round(vector.y * 2f) / 2f,
+            Mathf.Round(vector.z * 2f) / 2f
+        );
     }
 
 }

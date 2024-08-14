@@ -29,9 +29,9 @@ public class BuildingPlacer : MonoBehaviour
             }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100f, LayerManager.instance.buildableLayerMask))
+            if (Physics.Raycast(ray, out hit, 100f, LayerManager.Instance.buildableLayerMask))
             {
-                Cell hitCell = GridManager.instance.GetCellFromPosition(hit.point);
+                Cell hitCell = GridManager.Instance.GetCellFromPosition(hit.point);
 
                 if (tempGO == null)
                     InitializeNewPlacement(hitCell);
@@ -113,7 +113,7 @@ public class BuildingPlacer : MonoBehaviour
     void InitializeNewPlacement(Cell hitCell)
     {
         tempGO = GenerateTempBuilding(hitCell);
-        SelectionManager.instance.isSelecting = false;
+        SelectionManager.Instance.isSelecting = false;
     }
     void ReturnTemp(GameObject temp)
     {
@@ -145,7 +145,7 @@ public class BuildingPlacer : MonoBehaviour
         firstCell = null;
         lastCell = null;
         buildingData = null;
-        SelectionManager.instance.isSelecting = true;
+        SelectionManager.Instance.isSelecting = true;
     }
     bool Canceling()
     {

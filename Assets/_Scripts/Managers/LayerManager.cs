@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 
-public class LayerManager : MonoBehaviour
+public class LayerManager : MonoSingleton<LayerManager>
 {
-    public static LayerManager instance;
 
     [Layer] public int draggableLayer = 6;
     [Layer] public int groundLayer = 7;
     [Layer] public int itemLayer = 8;
+    [Layer] public int buildableLayer = 12;
 
     public LayerMask GroundLayerMask;
     public LayerMask ItemLayerMask;
@@ -17,14 +17,4 @@ public class LayerManager : MonoBehaviour
     public LayerMask buildableLayerMask;
 
 
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            Debug.LogWarning("More the one layerMask manager");
-            Destroy(this);
-        }
-    }
 }

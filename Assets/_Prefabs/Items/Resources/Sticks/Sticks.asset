@@ -15,6 +15,6 @@ MonoBehaviour:
   itemName: Sticks
   itemType: 0
   stackSize: 100
-  visual: {fileID: 592253715669423619, guid: c0fbee0facb557b42b6dd945f686a5da, type: 3}
+  visual: {fileID: 4578727919362545825, guid: e4be6e33c99e7844bab8cab63328bd84, type: 3}
   icon: {fileID: 21300000, guid: 27cdc5036ee7fb245ab9207a17d58602, type: 3}
   type: 1

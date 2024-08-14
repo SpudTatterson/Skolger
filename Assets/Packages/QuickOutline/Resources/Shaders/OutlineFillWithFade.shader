@@ -4,6 +4,7 @@
 
     _OutlineColor("Outline Color", Color) = (1, 1, 1, 1)
     _OutlineWidth("Outline Width", Range(0, 10)) = 2
+    _StencilRef("Stencil Ref", Float) = 2
     _FadeRange("Fade Range", Float) = 1.0  // Distance over which the fade occurs
   }
 
@@ -23,7 +24,7 @@
       ColorMask RGB
 
       Stencil {
-        Ref 1  
+        Ref [_StencilRef] 
         Comp NotEqual
       }
 

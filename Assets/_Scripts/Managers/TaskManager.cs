@@ -3,24 +3,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class TaskManager : MonoBehaviour
+public class TaskManager : MonoSingleton<TaskManager>
 {
-    public static TaskManager Instance { get; private set; }
 
     HashSet<IHarvestable> harvestQueue = new HashSet<IHarvestable>();
     HashSet<IConstructable> constructionQueue = new HashSet<IConstructable>();
     HashSet<ItemObject> haulQueue = new HashSet<ItemObject>();
-
-    void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else
-        {
-            Debug.Log("More Than one task manager exists");
-            Destroy(this);
-        }
-    }
 
     public void AddToHarvestQueue(IHarvestable harvestable)
     {

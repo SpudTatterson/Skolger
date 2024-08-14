@@ -44,7 +44,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         item.transform.position = position;
 
         visualGO.transform.parent = parent;
-        visualGO.layer = LayerManager.instance.itemLayer;
+        visualGO.layer = LayerManager.Instance.itemLayer;
 
         return item;
     }
@@ -70,10 +70,10 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
         if (allowed) OnAllow();
         else OnDisallow();
-        if (GridManager.instance.GetCellFromPosition(transform.position) == null) cornerCell = null;
+        if (GridManager.Instance.GetCellFromPosition(transform.position) == null) cornerCell = null;
         else
         {
-            cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+            cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         }
     }
 
@@ -146,14 +146,14 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         transform.SetParent(null);
         OnAllow();
 
-        InventoryManager.instance.RemoveAmountOfItem(itemData, amount);
+        InventoryManager.Instance.RemoveAmountOfItem(itemData, amount);
     }
 
     #region Selection
 
     public void OnSelect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.AddToCurrentSelected(this);
         IsSelected = true;
 
@@ -161,7 +161,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     }
     public void OnDeselect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.RemoveFromCurrentSelected(this);
         if (IsSelected)
             manager.UpdateSelection();
@@ -233,10 +233,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
     public void GetOccupiedCells()
     {
-        if (GridManager.instance == null)
-            GridManager.InitializeSingleton();
-
-        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
     }
     public void OnOccupy()
     {

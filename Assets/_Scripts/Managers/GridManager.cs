@@ -3,36 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
+using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class GridManager : MonoSingleton<GridManager>
 {
-    public static GridManager instance { get; private set; }
     public List<GridObject> grids { get; private set; }
-    [SerializeField, Required("Please attach the grids empty parent to generate the world map")] GameObject gridsParent;
+    [field: SerializeField, Required("Please attach the grids empty parent to generate the world map")] public GameObject gridsParent { get; private set; }
 
     [Expandable] public WorldSettings worldSettings;
 
     // get these values from a scriptable object 
+    public NavMeshSurface navMeshSurface { get; private set; }
 
-    void Awake()
+    protected override void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            Debug.Log("More then one grid manager");
-            Destroy(this);
-        }
+        base.Awake();
 
         GetGridsIfMissing();
         RecalculateCellUsage();
     }
-    [Button]
-    public static void InitializeSingleton()
+    [ContextMenu("test")]
+    void test()
     {
-        instance = FindObjectOfType<GridManager>();
+        Debug.Log(gridsParent == null);
+        Debug.Log(Instance.gridsParent == null);
+        GetGridsIfMissing();
     }
     public GridObject GetGridFromPosition(Vector3 position)
     {
@@ -66,6 +63,7 @@ public class GridManager : MonoBehaviour
     [ContextMenu("GenerateWorld"), Button]
     public void GenerateWorld()
     {
+
 #if UNITY_EDITOR
         EditorUtility.SetDirty(this);
 #endif
@@ -82,7 +80,25 @@ public class GridManager : MonoBehaviour
             Vector3 position = gridsParent.transform.position + Vector3.up * worldSettings.cellHeight * (i + 1);
             grids.Add(GridObject.MakeInstance(worldSettings, true, position, gridsParent.transform, $"Aboveground Grid Layer #{i}"));
         }
+
+        RebuildNavmesh();
     }
+
+    [Button]
+    public void RebuildNavmesh()
+    {
+        if (navMeshSurface == null)
+        {
+            if (!gridsParent.TryGetComponent(out NavMeshSurface navMeshSurface))
+            {
+                navMeshSurface = gridsParent.AddComponent<NavMeshSurface>();
+            }
+            this.navMeshSurface = navMeshSurface;
+        }
+
+        navMeshSurface.BuildNavMesh();
+    }
+
     [Button]
     public void RecalculateCellUsage()
     {

@@ -35,19 +35,24 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
         }
 
-        float cellSize = GridManager.instance.worldSettings.cellSize;
+        float cellSize = GridManager.Instance.worldSettings.cellSize;
         // Calculate the position of the bottom-left corner of the cell
         Vector3 cornerPosition = cornerCell.position - new Vector3(cellSize / 2, 0, cellSize / 2);
 
         // Adjust position slightly below the ground for better visual separation
         transform.position = cornerPosition + new Vector3(0, 0.01f, 0);
 
-        InventoryManager.instance.stockpiles.Add(this);
+        InventoryManager.Instance.stockpiles.Add(this);
 
         // Create the grid mesh
-        visual = MeshUtility.CreateGridMesh(this.occupiedCells, transform.position, "Stockpile", MaterialManager.instance.stockpileMaterial, transform, 1);
-        outline = visual.AddComponent<Outline>();
-        outline?.Disable();
+        visual = MeshUtility.CreateGridMesh(this.occupiedCells, transform.position, "Stockpile", MaterialManager.Instance.stockpileMaterial, transform, 1);
+
+        visual.GetComponent<MeshCollider>().convex = true;
+
+        outline = gameObject.AddComponent<Outline>();
+        outline.SetStencilValue(3);
+        outline.SetAddToQueueValue(10);
+
     }
     public bool GetEmptyCell(out Cell cell)
     {
@@ -67,7 +72,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, cell.position, true, transform, true, this);
             visualItems[cell] = cells[cell].gameObject;
             emptyCells.Remove(cell);
-            InventoryManager.instance.AddItem(item.itemData, item.amount);
+            InventoryManager.Instance.AddItem(item.itemData, item.amount);
             if (totalItems.ContainsKey(item.itemData))
                 totalItems[item.itemData] += item.amount;
             else
@@ -91,7 +96,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
                 if (stockpileItem.amount + amountToDistribute <= item.itemData.stackSize)
                 {
                     stockpileItem.MergeItem(item);
-                    InventoryManager.instance.AddItem(item.itemData, amountToDistribute);
+                    InventoryManager.Instance.AddItem(item.itemData, amountToDistribute);
                     totalItems[item.itemData] += amountToDistribute;
                     return true;
                 }
@@ -99,7 +104,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
                 {
                     int amountTaken = stockpileItem.MergeItem(item);
                     amountToDistribute -= amountTaken;
-                    InventoryManager.instance.AddItem(item.itemData, amountTaken);
+                    InventoryManager.Instance.AddItem(item.itemData, amountTaken);
                     totalItems[item.itemData] += amountTaken;
                 }
             }
@@ -112,7 +117,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             cells[cell] = ItemObject.MakeInstance(item.itemData, item.amount, cell.position, true, transform, true, this);
             visualItems[cell] = cells[cell].gameObject;
             emptyCells.Remove(cell);
-            InventoryManager.instance.AddItem(item.itemData, item.amount);
+            InventoryManager.Instance.AddItem(item.itemData, item.amount);
             if (totalItems.ContainsKey(item.itemData))
                 totalItems[item.itemData] += item.amount;
             else
@@ -138,7 +143,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             else if (item.amount > requiredAmount)
             {
                 ItemObject newItem = item.SplitItem(requiredAmount, position, parent);
-                InventoryManager.instance.RemoveAmountOfItem(newItem.itemData, newItem.amount);
+                InventoryManager.Instance.RemoveAmountOfItem(newItem.itemData, newItem.amount);
                 totalItems[newItem.itemData] -= amount;
                 return newItem.PickUp();
             }
@@ -146,7 +151,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             {
                 requiredAmount -= item.amount;
                 itemsToReturn.Add(item);
-                InventoryManager.instance.RemoveAmountOfItem(item.itemData, item.amount);
+                InventoryManager.Instance.RemoveAmountOfItem(item.itemData, item.amount);
                 totalItems[item.itemData] -= item.amount;
             }
         }
@@ -163,7 +168,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         // If we couldn't fulfill the request, put the items back
         foreach (ItemObject item in itemsToReturn)
         {
-            InventoryManager.instance.AddItem(item.itemData, item.amount);
+            InventoryManager.Instance.AddItem(item.itemData, item.amount);
             totalItems[item.itemData] += item.amount;
         }
         return null;
@@ -231,7 +236,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             Destroy(visualItems[cell]);
             visualItems[cell] = null;
             emptyCells.Add(cell);
-            InventoryManager.instance.RemoveAmountOfItem(item.itemData, item.amount);
+            InventoryManager.Instance.RemoveAmountOfItem(item.itemData, item.amount);
             totalItems[item.itemData] -= item.amount;
         }
     }
@@ -249,7 +254,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         {
             cell.inUse = false;
         }
-        InventoryManager.instance.stockpiles.Remove(this);
+        InventoryManager.Instance.stockpiles.Remove(this);
         OnRelease();
         Destroy(this.gameObject);
     }
@@ -305,7 +310,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
     public void OnSelect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.AddToCurrentSelected(this);
         IsSelected = true;
 
@@ -313,7 +318,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     }
     public void OnDeselect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.RemoveFromCurrentSelected(this);
         if (IsSelected)
             manager.UpdateSelection();
@@ -358,10 +363,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
 
     public void GetOccupiedCells()
     {
-        if (GridManager.instance == null)
-            GridManager.InitializeSingleton();
-
-        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells((Vector2Int)cornerCell, sizeX, sizeY, out List<Cell> occupiedCells);
         this.occupiedCells = occupiedCells;
     }

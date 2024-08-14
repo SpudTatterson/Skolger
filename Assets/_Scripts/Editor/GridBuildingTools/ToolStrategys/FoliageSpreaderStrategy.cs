@@ -149,7 +149,7 @@ public class FoliageSpreaderStrategy : IGridToolStrategy, IBrushTool
         {
             GameObject placedObject = PrefabUtility.InstantiatePrefab(foliagePrefabs[selectedFoliage]) as GameObject;
             placedObject.transform.position = cell.position;
-            placedObject.transform.rotation = Quaternion.Euler(new Vector3(0, Random.Range(0, 180), 0));
+            placedObject.transform.GetChild(0).rotation = Quaternion.Euler(new Vector3(0, Random.Range(0, 180), 0));
 
             ICellOccupier occupier = placedObject.GetComponent<ICellOccupier>();
             occupier.GetOccupiedCells();

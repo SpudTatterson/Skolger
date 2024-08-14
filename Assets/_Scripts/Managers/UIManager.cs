@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
-public class UIManager : MonoBehaviour
+public class UIManager : MonoSingleton<UIManager>
 {
     [Header("Selection")]
     public GameObject selectionPanel;
@@ -41,18 +41,6 @@ public class UIManager : MonoBehaviour
     public GameObject itemTypeGroupPrefab;
     public Transform inventoryPanel;
 
-
-    public static UIManager instance { get; private set; }
-
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else
-            Debug.Log("More then 1 UIManager Exists");
-
-        colonistInfoPanel.SetActive(false);
-    }
 
     #region SelectionUI
     public void SetAllSelectionUIInactive()

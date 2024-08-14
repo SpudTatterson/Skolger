@@ -6,11 +6,11 @@ public class BuildingSelectionStrategy : ISelectionStrategy
 {
     public void ApplySelection(List<ISelectable> selectedItems)
     {
-        UIManager.instance.SetAllSelectionUIInactive();
-        UIManager.instance.buildingSelection.gameObject.SetActive(true);
+        UIManager.Instance.SetAllSelectionUIInactive();
+        UIManager.Instance.buildingSelection.gameObject.SetActive(true);
         EnableButtons();
 
-        BuildingSelectionMenu selectionMenu = UIManager.instance.buildingSelection;
+        BuildingSelectionMenu selectionMenu = UIManager.Instance.buildingSelection;
 
 
         selectionMenu.buildingName.text = $"Name: {selectedItems[0].GetMultipleSelectionString(out _)}";
@@ -18,7 +18,7 @@ public class BuildingSelectionStrategy : ISelectionStrategy
 
     public void EnableButtons()
     {
-        UIManager.instance.SetAllActionButtonsInactive();
-        UIManager.instance.deconstructButton.SetActive(true);
+        UIManager.Instance.SetAllActionButtonsInactive();
+        UIManager.Instance.deconstructButton.SetActive(true);
     }
 }

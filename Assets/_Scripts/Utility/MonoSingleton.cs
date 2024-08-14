@@ -5,7 +5,7 @@ where T : MonoBehaviour
 {
     public static T Instance { get; private set; }
 
-    void Awake()
+    protected virtual void Awake()
     {
         if (Instance == null || Instance == this)
             Instance = this as T;

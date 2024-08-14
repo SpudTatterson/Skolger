@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StockpilePlacer : MonoBehaviour
+public class StockpilePlacer : MonoSingleton<StockpilePlacer>
 {
-    public static StockpilePlacer instance {get; private set;}
     public List<Cell> cells;
 
     Cell firstCell = null;
@@ -16,14 +15,6 @@ public class StockpilePlacer : MonoBehaviour
     bool inUse = false;
     Stockpile selectedStockpile;
 
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else
-            Debug.Log("More then 1 StockpilePlacer Exists");
-    }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse1))
@@ -34,25 +25,25 @@ public class StockpilePlacer : MonoBehaviour
         if (!inUse) return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Input.GetKeyDown(KeyCode.Mouse0) && Physics.Raycast(ray, out RaycastHit hit, 500f, LayerManager.instance.GroundLayerMask))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && Physics.Raycast(ray, out RaycastHit hit, 500f, LayerManager.Instance.GroundLayerMask))
         {
-            firstCell = GridManager.instance.GetCellFromPosition(hit.point);
+            firstCell = GridManager.Instance.GetCellFromPosition(hit.point);
         }
-        else if (Input.GetKey(KeyCode.Mouse0) && Physics.Raycast(ray, out hit, 500f, LayerManager.instance.GroundLayerMask))
+        else if (Input.GetKey(KeyCode.Mouse0) && Physics.Raycast(ray, out hit, 500f, LayerManager.Instance.GroundLayerMask))
         {
-            Cell currentCell = GridManager.instance.GetCellFromPosition(hit.point);
+            Cell currentCell = GridManager.Instance.GetCellFromPosition(hit.point);
 
             if (previousCell == null || currentCell != previousCell)
             {
                 var (size, cornerCell) = GridObject.GetGridBoxFrom2Cells(firstCell, currentCell);
                 Destroy(tempGrid);
                 Vector3 cornerPos = cornerCell.position - new Vector3(0.5f, -0.01f, 0.5f);
-                tempGrid = MeshUtility.CreateGridMesh(size.x, size.y, cornerPos, "StockpileTempVisual", MaterialManager.instance.stockpileMaterial);
+                tempGrid = MeshUtility.CreateGridMesh(size.x, size.y, cornerPos, "StockpileTempVisual", MaterialManager.Instance.stockpileMaterial);
             }
 
             previousCell = currentCell;
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse0) && Physics.Raycast(ray, out hit, 500f, LayerManager.instance.GroundLayerMask)
+        else if (Input.GetKeyUp(KeyCode.Mouse0) && Physics.Raycast(ray, out hit, 500f, LayerManager.Instance.GroundLayerMask)
                 && firstCell?.grid != null)
         {
             GridObject grid = hit.transform.GetComponentInParent<GridObject>();
@@ -101,7 +92,7 @@ public class StockpilePlacer : MonoBehaviour
 
         selectedStockpile = stockpile;
 
-        SelectionManager.instance.isSelecting = false;
+        SelectionManager.Instance.isSelecting = false;
     }
     public void GrowStockpile(Stockpile stockpile)
     {
@@ -111,18 +102,18 @@ public class StockpilePlacer : MonoBehaviour
 
         selectedStockpile = stockpile;
 
-        SelectionManager.instance.isSelecting = false;
+        SelectionManager.Instance.isSelecting = false;
     }
 
     public void StartMakingStockPile()
     {
         inUse = true;
         makingStockpile = true;
-        SelectionManager.instance.isSelecting = false;
+        SelectionManager.Instance.isSelecting = false;
     }
     public void StopMakingStockpile()
     {
-        SelectionManager.instance.isSelecting = true;
+        SelectionManager.Instance.isSelecting = true;
         Destroy(tempGrid);
         makingStockpile = false;
         firstCell = null;

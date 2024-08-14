@@ -112,11 +112,11 @@ public class Cell
     }
     public Cell GetCellAbove()
     {
-        return GridManager.instance.GetCellFromPosition(position + new Vector3(0, GridManager.instance.worldSettings.cellHeight, 0));
+        return GridManager.Instance.GetCellFromPosition(position + new Vector3(0, GridManager.Instance.worldSettings.cellHeight, 0));
     }
     public Cell GetCellBelow()
     {
-        return GridManager.instance.GetCellFromPosition(position - new Vector3(0, GridManager.instance.worldSettings.cellHeight, 0));
+        return GridManager.Instance.GetCellFromPosition(position - new Vector3(0, GridManager.Instance.worldSettings.cellHeight, 0));
     }
     public override string ToString()
     {

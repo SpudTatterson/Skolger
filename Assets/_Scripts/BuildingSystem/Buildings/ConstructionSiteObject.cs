@@ -160,7 +160,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     public void OnSelect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.AddToCurrentSelected(this);
         IsSelected = true;
 
@@ -168,7 +168,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     }
     public void OnDeselect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.RemoveFromCurrentSelected(this);
         if (IsSelected)
             manager.UpdateSelection();
@@ -248,10 +248,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     public void GetOccupiedCells()
     {
-        if (GridManager.instance == null)
-            GridManager.InitializeSingleton();
-
-        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells
         ((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells, placementDirection);
         this.occupiedCells = occupiedCells;

@@ -32,10 +32,6 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         GridObject gridObject = gridGO.AddComponent<GridObject>();
         gridObject.Init(worldSettings, startEmpty);
 
-        NavMeshSurface navMeshSurface = gridGO.AddComponent<NavMeshSurface>();
-        navMeshSurface.collectObjects = CollectObjects.Children;
-        navMeshSurface.BuildNavMesh();
-
         return gridObject;
     }
     public void Init(WorldSettings worldSettings, bool startEmpty)
@@ -94,8 +90,6 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         // Recreate visual grid based on cell visibility
         CreateVisualGrid();
 
-        // update nav mesh
-        GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
     [Button, ContextMenu("GenerateGrid")] //allows calling function from editor 
