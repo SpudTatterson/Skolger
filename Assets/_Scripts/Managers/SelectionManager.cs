@@ -22,7 +22,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     List<ISelectable> LastHovered = new List<ISelectable>();
 
     bool setToUpdate;
-    
+
     void Update()
     {
         if (!isSelecting) return;
@@ -38,7 +38,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
             if (currentSelected.Count != 0)
             {
                 SetSelectionType(currentSelected[0].GetSelectionType());
-                UIManager.instance.selectionPanel.SetActive(true);
+                UIManager.Instance.selectionPanel.SetActive(true);
             }
             else
                 ResetSelection();
@@ -334,14 +334,14 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     {
         if (currentSelected[0].HasActiveCancelableAction())
         {
-            UIManager.instance.EnableCancelButton();
+            UIManager.Instance.EnableCancelButton();
         }
     }
     public void CheckForAllowableSelection()
     {
         if (currentSelected[0] is IAllowable)
         {
-            UIManager.instance.EnableAllowDisallowButton((currentSelected[0] as IAllowable).IsAllowed());
+            UIManager.Instance.EnableAllowDisallowButton((currentSelected[0] as IAllowable).IsAllowed());
         }
     }
 
@@ -352,7 +352,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     public void SetToHarvest()
     {
         SetSelectionForHarvest(currentSelected);
-        UIManager.instance.EnableCancelButton();
+        UIManager.Instance.EnableCancelButton();
     }
 
     void SetSelectionForHarvest(List<ISelectable> selectables)
@@ -367,7 +367,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     public void Allow()
     {
         SetSelectionAllowed(currentSelected);
-        UIManager.instance.EnableAllowDisallowButton(true);
+        UIManager.Instance.EnableAllowDisallowButton(true);
     }
 
     void SetSelectionAllowed(List<ISelectable> selectables)
@@ -382,7 +382,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     public void Forbid()
     {
         SetSelectionForbidden(currentSelected);
-        UIManager.instance.EnableAllowDisallowButton(false);
+        UIManager.Instance.EnableAllowDisallowButton(false);
     }
 
     void SetSelectionForbidden(List<ISelectable> selectables)
@@ -493,8 +493,8 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         ResetDrag();
         ResetHovered();
 
-        UIManager.instance.SetAllSelectionUIInactive();
-        UIManager.instance.selectionPanel.SetActive(false);
+        UIManager.Instance.SetAllSelectionUIInactive();
+        UIManager.Instance.selectionPanel.SetActive(false);
     }
 
     void DeselectAll()

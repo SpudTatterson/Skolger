@@ -31,12 +31,12 @@ public class InventoryUI : MonoBehaviour
             {
                 // create new type container
                 items[item.itemType] = new SerializableDictionary<ItemData, InventoryUIItem>();
-                itemTypeParents[item.itemType] = Instantiate(UIManager.instance.itemTypeGroupPrefab, UIManager.instance.inventoryPanel).transform;
+                itemTypeParents[item.itemType] = Instantiate(UIManager.Instance.itemTypeGroupPrefab, UIManager.Instance.inventoryPanel).transform;
                 itemTypeParents[item.itemType].name = item.itemType.ToString();
                 itemTypeParents[item.itemType].GetComponent<TextMeshProUGUI>().text = item.itemType.ToString();
             }
             // create new item
-            GameObject newItemGO = Instantiate(UIManager.instance.defaultInventoryUIPrefab, itemTypeParents[item.itemType]);
+            GameObject newItemGO = Instantiate(UIManager.Instance.defaultInventoryUIPrefab, itemTypeParents[item.itemType]);
             TextMeshProUGUI newItemText = newItemGO.GetComponent<TextMeshProUGUI>();
             Image icon = newItemGO.GetComponentInChildren<Image>();
             newItemText.text = $"{amount} x {item.itemName}";
