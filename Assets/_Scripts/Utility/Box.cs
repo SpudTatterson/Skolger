@@ -10,6 +10,18 @@ public class Box
         this.halfExtents = halfExtents;
     }
 
+    public Box ShrinkBoxNoY(float shrinkFactor)
+    {
+        Vector3 shrunkSize = new Vector3 (
+            halfExtents.x * shrinkFactor,
+            halfExtents.y ,
+            halfExtents.z * shrinkFactor
+        );
+
+        halfExtents = shrunkSize;
+        return this;
+    }
+
     public static Box RoundBoxToHalf(Box box)
     {
         Vector3 roundedCenter = VectorUtility.RoundVector3ToHalf(box.center);
