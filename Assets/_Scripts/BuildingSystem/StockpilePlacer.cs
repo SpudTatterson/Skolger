@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StockpilePlacer : MonoBehaviour
+public class StockpilePlacer : MonoSingleton<StockpilePlacer>
 {
-    public static StockpilePlacer instance {get; private set;}
     public List<Cell> cells;
 
     Cell firstCell = null;
@@ -15,14 +14,6 @@ public class StockpilePlacer : MonoBehaviour
     bool growing = false;
     bool inUse = false;
     Stockpile selectedStockpile;
-
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else
-            Debug.Log("More then 1 StockpilePlacer Exists");
-    }
 
     void Update()
     {
