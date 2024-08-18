@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class TaskManager : MonoSingleton<TaskManager>
 {
 
-    HashSet<IHarvestable> harvestQueue = new HashSet<IHarvestable>();
-    HashSet<IConstructable> constructionQueue = new HashSet<IConstructable>();
-    HashSet<ItemObject> haulQueue = new HashSet<ItemObject>();
+    [ShowInInspector] HashSet<IHarvestable> harvestQueue = new HashSet<IHarvestable>();
+    [ShowInInspector] HashSet<IConstructable> constructionQueue = new HashSet<IConstructable>();
+    [ShowInInspector] HashSet<ItemObject> haulQueue = new HashSet<ItemObject>();
 
     public void AddToHarvestQueue(IHarvestable harvestable)
     {
