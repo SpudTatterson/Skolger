@@ -16,7 +16,7 @@ PrefabInstance:
     - target: {fileID: 3018515072817679476, guid: e8af49155a1c1b04d87a3d577a7dfa9a,
         type: 3}
       propertyPath: m_Name
-      value: Door_Unplaced Variant
+      value: Door_ConstructionSite
       objectReference: {fileID: 0}
     - target: {fileID: 5239838035031028049, guid: e8af49155a1c1b04d87a3d577a7dfa9a,
         type: 3}
