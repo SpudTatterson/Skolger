@@ -107,7 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef6917d101759e4bb7842e95d410690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
-  <buildingData>k__BackingField: {fileID: 0}
+  data: {fileID: 11400000, guid: 0e2251b8e30245249a2d66a652554d23, type: 2}
+  <buildingData>k__BackingField: {fileID: 11400000, guid: 0e2251b8e30245249a2d66a652554d23,
+    type: 2}
   manualInit: 0
   placementDirection: 0
