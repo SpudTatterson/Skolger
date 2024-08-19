@@ -477,7 +477,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     public void FocusCameraToSelected()
     {
         List<Vector3> selectedPositions = new List<Vector3>();
-        foreach(ISelectable selectable in currentSelected)
+        foreach (ISelectable selectable in currentSelected)
         {
             selectedPositions.Add((selectable as MonoBehaviour).transform.position);
         }
