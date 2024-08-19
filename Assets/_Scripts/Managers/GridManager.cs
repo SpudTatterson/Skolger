@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
@@ -12,7 +12,7 @@ public class GridManager : MonoSingleton<GridManager>
     public List<GridObject> grids { get; private set; }
     [field: SerializeField, Required("Please attach the grids empty parent to generate the world map")] public GameObject gridsParent { get; private set; }
 
-    [Expandable] public WorldSettings worldSettings;
+    [InlineEditor] public WorldSettings worldSettings;
 
     // get these values from a scriptable object 
     public NavMeshSurface navMeshSurface { get; private set; }

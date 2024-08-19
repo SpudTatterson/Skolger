@@ -19,7 +19,7 @@ public class PauseManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            Time.timeScale = 2;
+            Time.timeScale = 8;
             Debug.Log(Time.timeScale);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))

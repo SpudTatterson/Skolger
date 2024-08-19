@@ -1,11 +1,11 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
-using NaughtyAttributes;
 
 public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOccupier
 {
     [field: Header("Settings")]
-    [field: SerializeField, Expandable] public ItemData itemData { get; set; }
+    [field: SerializeField, InlineEditor] public ItemData itemData { get; set; }
     [SerializeField] int initialAmount;
     int stackSize;
     [SerializeField] bool doManualInitialized = false;

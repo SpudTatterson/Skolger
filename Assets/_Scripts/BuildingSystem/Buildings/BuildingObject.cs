@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
 public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 {
-    [SerializeField, Label("Building Data"), Expandable] BuildingData data;
-    [field: SerializeField, ReadOnly, Expandable] public BuildingData buildingData { get; private set; }
+    [SerializeField, LabelText("Building Data"), InlineEditor] BuildingData data;
+    [field: SerializeField, ReadOnly, InlineEditor] public BuildingData buildingData { get; private set; }
     [SerializeField, ReadOnly] Direction placementDirection = Direction.TopLeft;
     List<Cell> occupiedCells;
     [field: SerializeField, ReadOnly] public Cell cornerCell { get; private set; }

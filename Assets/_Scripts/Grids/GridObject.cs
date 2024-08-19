@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEditor;
-using NaughtyAttributes;
-using Unity.AI.Navigation;
 using UnityEngine.SceneManagement;
+using Sirenix.OdinInspector;
 
 [System.Serializable]
 public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
