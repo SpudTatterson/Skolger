@@ -24,6 +24,7 @@ public class TaskTakeItemFromStockpile : Node
             parent.parent.SetData(DataName.InventoryItem, item);
             colonistData.PutItemIn(item);
             var constructable = (IConstructable)GetData(DataName.Constructable);
+            ClearData(DataName.Target);
             parent.parent.SetData(DataName.Target, constructable.GetPosition());
 
             state = NodeState.SUCCESS;
