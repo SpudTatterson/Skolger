@@ -107,7 +107,7 @@ public class GridManager : MonoSingleton<GridManager>
         {
             grid.ResetCellUse();
         }
-        List<ICellOccupier> cellOccupiers = FindObjectsOfType<MonoBehaviour>(true).OfType<ICellOccupier>().ToList();
+        List<ICellOccupier> cellOccupiers = FindObjectsOfType<MonoBehaviour>().OfType<ICellOccupier>().ToList();
         foreach (ICellOccupier occupier in cellOccupiers)
         {
             occupier.GetOccupiedCells();
