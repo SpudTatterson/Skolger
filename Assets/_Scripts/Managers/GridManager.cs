@@ -10,7 +10,7 @@ using UnityEngine;
 public class GridManager : MonoSingleton<GridManager>
 {
     public List<GridObject> grids { get; private set; }
-    [field: SerializeField, Required("Please attach the grids empty parent to generate the world map")] public GameObject gridsParent { get; private set; }
+    [field: SerializeField, RequiredIn(PrefabKind.InstanceInScene, ErrorMessage = "Please attach the grids empty parent to generate the world map"),] public GameObject GridsParent { get; private set; }
 
     [InlineEditor] public WorldSettings worldSettings;
 
@@ -27,8 +27,8 @@ public class GridManager : MonoSingleton<GridManager>
     [ContextMenu("test")]
     void test()
     {
-        Debug.Log(gridsParent == null);
-        Debug.Log(Instance.gridsParent == null);
+        Debug.Log(GridsParent == null);
+        Debug.Log(Instance.GridsParent == null);
         GetGridsIfMissing();
     }
     public GridObject GetGridFromPosition(Vector3 position)
@@ -51,7 +51,7 @@ public class GridManager : MonoSingleton<GridManager>
     void GetGridsIfMissing()
     {
         if (grids == null || grids.Count == 0)
-            grids = gridsParent.GetComponentsInChildren<GridObject>().ToList();
+            grids = GridsParent.GetComponentsInChildren<GridObject>().ToList();
     }
 
     public Cell GetCellFromPosition(Vector3 position)
@@ -68,17 +68,17 @@ public class GridManager : MonoSingleton<GridManager>
         EditorUtility.SetDirty(this);
 #endif
         DestroyOldWorld();
-        grids.Add(GridObject.MakeInstance(worldSettings, false, gridsParent.transform.position, gridsParent.transform, "FloorGrid"));
+        grids.Add(GridObject.MakeInstance(worldSettings, false, GridsParent.transform.position, GridsParent.transform, "FloorGrid"));
 
         for (int i = 0; i < worldSettings.belowGroundLayers; i++)
         {
-            Vector3 position = gridsParent.transform.position - Vector3.up * worldSettings.cellHeight * (i + 1);
-            grids.Add(GridObject.MakeInstance(worldSettings, false, position, gridsParent.transform, $"Underground Grid Layer #{i}"));
+            Vector3 position = GridsParent.transform.position - Vector3.up * worldSettings.cellHeight * (i + 1);
+            grids.Add(GridObject.MakeInstance(worldSettings, false, position, GridsParent.transform, $"Underground Grid Layer #{i}"));
         }
         for (int i = 0; i < worldSettings.aboveGroundLayers; i++)
         {
-            Vector3 position = gridsParent.transform.position + Vector3.up * worldSettings.cellHeight * (i + 1);
-            grids.Add(GridObject.MakeInstance(worldSettings, true, position, gridsParent.transform, $"Aboveground Grid Layer #{i}"));
+            Vector3 position = GridsParent.transform.position + Vector3.up * worldSettings.cellHeight * (i + 1);
+            grids.Add(GridObject.MakeInstance(worldSettings, true, position, GridsParent.transform, $"Aboveground Grid Layer #{i}"));
         }
 
         RebuildNavmesh();
@@ -89,9 +89,9 @@ public class GridManager : MonoSingleton<GridManager>
     {
         if (navMeshSurface == null)
         {
-            if (!gridsParent.TryGetComponent(out NavMeshSurface navMeshSurface))
+            if (!GridsParent.TryGetComponent(out NavMeshSurface navMeshSurface))
             {
-                navMeshSurface = gridsParent.AddComponent<NavMeshSurface>();
+                navMeshSurface = GridsParent.AddComponent<NavMeshSurface>();
             }
             this.navMeshSurface = navMeshSurface;
         }
@@ -135,7 +135,7 @@ public class GridManager : MonoSingleton<GridManager>
     }
     private void DestroyOldWorld()
     {
-        grids = gridsParent.GetComponentsInChildren<GridObject>().ToList();
+        grids = GridsParent.GetComponentsInChildren<GridObject>().ToList();
 
         foreach (var grid in grids)
         {

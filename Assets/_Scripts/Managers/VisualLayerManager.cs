@@ -14,7 +14,7 @@ public class VisualLayerManager : MonoSingleton<VisualLayerManager>
     [SerializeField] float offset = 0.2f;
     bool needsUpdate = true;
     [Header("References")]
-    [SerializeField, Required] TextMeshProUGUI CurrentLayerText;
+    [SerializeField, RequiredIn(PrefabKind.InstanceInScene)] TextMeshProUGUI CurrentLayerText;
 
 
     public Action<float> OnYPlaneChange;
