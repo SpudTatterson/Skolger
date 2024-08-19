@@ -440,6 +440,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         foreach (Cell cell in cells)
         {
             cell.SetUseAndWalkable(false, true);
+            cell.hasFloor = false;
         }
     }
     public bool TryGetCellIndexes(Vector2Int initialIndex, int width, int height, out List<Vector2Int> indexes, Direction direction = Direction.TopLeft)

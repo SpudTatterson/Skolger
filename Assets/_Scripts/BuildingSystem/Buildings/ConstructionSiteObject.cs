@@ -70,6 +70,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         return building;
     }
 
+
     void Start()
     {
 
@@ -124,6 +125,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     [ContextMenu("CancelConstruction")]
     public void CancelConstruction()
     {
+        OnRelease();
         TaskManager.Instance.RemoveFromConstructionQueue(this);
         SetForCancellation = true;
         foreach (KeyValuePair<ItemData, int> cost in fulfilledCosts)
@@ -278,12 +280,16 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     void OnEnable()
     {
-        OnOccupy();
+        // OnOccupy();
     }
     void OnDisable()
     {
-        OnRelease();
+        // OnRelease();
 
         OnDeselect();
+    }
+    void OnValidate()
+    {
+        buildingData = data;
     }
 }
