@@ -9,7 +9,7 @@ public class CheckForConstructableCost : Node
 
         if (constructable == null)
         {
-            // ClearData(DataName.Constructable);
+            ClearData(DataName.Constructable);
             state = NodeState.FAILURE;
             return state;
         }
@@ -21,6 +21,10 @@ public class CheckForConstructableCost : Node
 
             state = NodeState.SUCCESS;
             return state;
+        }
+        else
+        {
+            ClearData(DataName.Constructable);
         }
 
         state = NodeState.FAILURE;
