@@ -35,7 +35,7 @@ public class StockpilePlacer : MonoSingleton<StockpilePlacer>
                 if (tempCellVisual == null)
                 {
                     List<Cell> currentCellList = new List<Cell> { currentCell };
-                    tempCellVisual = MeshUtility.CreateGridMesh(currentCellList, "tempCell", MaterialManager.Instance.stockpileMaterial);
+                    tempCellVisual = MeshUtility.CreateGridMesh(currentCellList, "tempCell", MaterialManager.Instance.materials.stockpileMaterial);
                 }
                 else
                 {
@@ -54,7 +54,7 @@ public class StockpilePlacer : MonoSingleton<StockpilePlacer>
                     var (size, cornerCell) = GridObject.GetGridBoxFrom2Cells(firstCell, currentCell);
                     Destroy(tempGrid);
                     Vector3 cornerPos = cornerCell.position - new Vector3(0.5f, -0.01f, 0.5f);
-                    tempGrid = MeshUtility.CreateGridMesh(size.x, size.y, cornerPos, "StockpileTempVisual", MaterialManager.Instance.stockpileMaterial);
+                    tempGrid = MeshUtility.CreateGridMesh(size.x, size.y, cornerPos, "StockpileTempVisual", MaterialManager.Instance.materials.stockpileMaterial);
                 }
 
                 previousCell = currentCell;

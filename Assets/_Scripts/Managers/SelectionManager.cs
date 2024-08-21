@@ -128,7 +128,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         Destroy(tempSelectionGrid);
         //Draw Selection in the world
         List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
-        tempSelectionGrid = MeshUtility.CreateGridMesh(cells, "SelectionGrid", MaterialManager.Instance.SelectionMaterial);
+        tempSelectionGrid = MeshUtility.CreateGridMesh(cells, "SelectionGrid", MaterialManager.Instance.materials.SelectionMaterial);
     }
 
     void ClickSelection()

@@ -183,7 +183,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
                 }
 
                 // Get material for this cell
-                Material cellMaterial = MaterialManager.Instance.GetMaterialForCellType(cell.cellType);
+                Material cellMaterial = MaterialManager.Instance.materials.GetMaterialForCellType(cell.cellType);
 
                 // Find or add the material index
                 int materialIndex = materials.IndexOf(cellMaterial);
@@ -231,20 +231,20 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         // Assign all materials to the MeshRenderer
         meshRenderer.materials = materials.ToArray();
 
-        if (!meshEmpty)
+        if (!meshEmpty) // do stuff for not empty meshes
         {
             MeshCollider mc = gridVisual.AddComponent<MeshCollider>();
+        }
+        else // do stuff for empty meshes
+        {
+            meshRenderer.material = MaterialManager.Instance.materials.cellMaterials[CellType.Grass];
         }
 
         visualGridChunks.Add(gridVisual);
     }
 
-    static int[] GetTriangleOrder()
-    {
-
-        // Define triangles for the cube (excluding the bottom face)
-        int[] cubeTriangles = new int[]
-        {
+    static readonly int[] cubeTriangles = new int[]
+            {
                 // Top face
                 0, 1, 2, 2, 3, 0,
                 // Front face

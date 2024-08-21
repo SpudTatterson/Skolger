@@ -132,6 +132,6 @@ public enum CellType
 {
     Grass,
     Rock,
-    Water,
+    Sand,
     Dirt
 }
