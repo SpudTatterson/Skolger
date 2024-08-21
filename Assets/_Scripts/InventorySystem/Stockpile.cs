@@ -45,7 +45,7 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         InventoryManager.Instance.stockpiles.Add(this);
 
         // Create the grid mesh
-        visual = MeshUtility.CreateGridMesh(this.occupiedCells, transform.position, "Stockpile", MaterialManager.Instance.stockpileMaterial, transform, 1);
+        visual = MeshUtility.CreateGridMesh(this.occupiedCells, "Stockpile", MaterialManager.Instance.stockpileMaterial, transform, 1);
 
         visual.GetComponent<MeshCollider>().convex = true;
 
