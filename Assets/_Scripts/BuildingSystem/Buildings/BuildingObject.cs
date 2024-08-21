@@ -27,6 +27,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     {
         this.buildingData = buildingData;
         this.placementDirection = placementDirection;
+        transform.rotation = Quaternion.Euler(0, (int)placementDirection, 0);
         GetOccupiedCells();
 
         OnOccupy();
@@ -157,6 +158,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         {
             cell.inUse = buildingData.usesCell;
             cell.walkable = buildingData.walkable;
+            if (buildingData is FloorTile) cell.hasFloor = true;
         }
     }
 
@@ -166,6 +168,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         {
             cell.inUse = false;
             cell.walkable = true;
+            if (buildingData is FloorTile) cell.hasFloor = false;
         }
     }
 
