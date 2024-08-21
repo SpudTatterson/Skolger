@@ -128,7 +128,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         Destroy(tempSelectionGrid);
         //Draw Selection in the world
         List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
-        tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.Instance.SelectionMaterial);
+        tempSelectionGrid = MeshUtility.CreateGridMesh(cells, "SelectionGrid", MaterialManager.Instance.SelectionMaterial);
     }
 
     void ClickSelection()
@@ -297,6 +297,11 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     public void SetNewSelectionAction(SelectionAction selectionAction)
     {
         this.selectionAction = selectionAction;
+        if(selectionAction != SelectionAction.Default && selectionAction != SelectionAction.Add && selectionAction != SelectionAction.Remove)
+        {
+            UIManager.Instance.SelectionActionCanvas.SetActive(true);
+            UIManager.Instance.actionText.text = $"Left Click + Drag to {selectionAction.ToString()}";
+        }
     }
     public void SetSelectionType(SelectionType selectionType)
     {
@@ -498,6 +503,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
 
         UIManager.Instance.SetAllSelectionUIInactive();
         UIManager.Instance.selectionPanel.SetActive(false);
+        UIManager.Instance.SelectionActionCanvas.SetActive(false);
     }
 
     void DeselectAll()
