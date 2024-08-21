@@ -20,13 +20,17 @@ public class UIManager : MonoSingleton<UIManager>
     [TabGroup("Selection Assets")] public RectTransform selectionBoxImage;
 
     [Header("Selection Action Buttons")]
-    [TabGroup("Selection Action Buttons")] public GameObject harvestButton;
-    [TabGroup("Selection Action Buttons")] public GameObject allowButton;
-    [TabGroup("Selection Action Buttons")] public GameObject disallowButton;
-    [TabGroup("Selection Action Buttons")] public GameObject cancelButton;
-    [TabGroup("Selection Action Buttons")] public GameObject deconstructButton;
-    [TabGroup("Selection Action Buttons")] public GameObject growZoneButton;
-    [TabGroup("Selection Action Buttons")] public GameObject shrinkZoneButton;
+    [TabGroup("Selection Action")] public GameObject harvestButton;
+    [TabGroup("Selection Action")] public GameObject allowButton;
+    [TabGroup("Selection Action")] public GameObject disallowButton;
+    [TabGroup("Selection Action")] public GameObject cancelButton;
+    [TabGroup("Selection Action")] public GameObject deconstructButton;
+    [TabGroup("Selection Action")] public GameObject growZoneButton;
+    [TabGroup("Selection Action")] public GameObject shrinkZoneButton;
+    [Space(10f)]
+    [Header("Selection Action UI")]
+    [TabGroup("Selection Action")] public GameObject SelectionActionCanvas;
+    [TabGroup("Selection Action")] public TextMeshProUGUI actionText;
 
     [Header("Colonist Info Panel")]
     [TabGroup("Colonist Info")] public GameObject colonistInfoPanel;
