@@ -36,6 +36,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         GameObject visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
+        if(!inStockpile) visualGO.transform.rotation =Quaternion.Euler(new Vector3(0, UnityEngine.Random.Range(0, 180), 0));
 
         visualGO.AddComponent<BoxCollider>();
 
