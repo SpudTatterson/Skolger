@@ -195,7 +195,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
                 }
 
                 // Get the triangles for this cell
-                int[] cubeTriangles = GetTriangleOrder();
+                int[] cubeTriangles = GetTriangles();
 
                 // Assign triangles with offset to the correct sub-mesh
                 for (int i = 0; i < cubeTriangles.Length; i++)
@@ -243,8 +243,10 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         visualGridChunks.Add(gridVisual);
     }
 
-    static readonly int[] cubeTriangles = new int[]
-            {
+    int[] GetTriangles()
+    {
+        int[] cubeTriangles = new int[]
+                    {
                 // Top face
                 0, 1, 2, 2, 3, 0,
                 // Front face
@@ -255,7 +257,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
                 14, 13, 12, 13, 14, 15,
                 // Right face
                 19, 16, 17, 16, 19, 18
-        };
+                };
         return cubeTriangles;
     }
 
