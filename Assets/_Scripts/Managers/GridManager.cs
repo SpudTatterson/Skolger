@@ -60,7 +60,7 @@ public class GridManager : MonoSingleton<GridManager>
         return GetGridFromPosition(position).GetCellFromPosition(position);
 
     }
-    [ContextMenu("GenerateWorld"), Button]
+    [ContextMenu("GenerateWorld"), Button, GUIColor("Red")]
     public void GenerateWorld()
     {
 
@@ -84,7 +84,17 @@ public class GridManager : MonoSingleton<GridManager>
         RebuildNavmesh();
     }
 
-    [Button]
+    [Button, GUIColor("Green")]
+    public void UpdateAllGrids()
+    {
+        GetGridsIfMissing();
+        foreach (GridObject grid in grids)
+        {
+            grid.UpdateVisualGrid();
+        }
+    }
+
+    [Button, GUIColor("Green")]
     public void RebuildNavmesh()
     {
         if (navMeshSurface == null)
@@ -99,7 +109,7 @@ public class GridManager : MonoSingleton<GridManager>
         navMeshSurface.BuildNavMesh();
     }
 
-    [Button]
+    [Button, GUIColor("Green")]
     public void RecalculateCellUsage()
     {
         GetGridsIfMissing();
@@ -115,7 +125,7 @@ public class GridManager : MonoSingleton<GridManager>
         }
     }
 
-    [Button]
+    [Button, GUIColor("Yellow")]
     public void SaveAllGridMeshesToFile()
     {
         GetGridsIfMissing();
@@ -124,7 +134,7 @@ public class GridManager : MonoSingleton<GridManager>
             grid.SaveAllChunkMeshesToFile();
         }
     }
-    [Button]
+    [Button, GUIColor("Yellow")]
     public void LoadAllGridMeshesFromFile()
     {
         GetGridsIfMissing();
