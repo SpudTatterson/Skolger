@@ -107,8 +107,8 @@ public class Cell
         }
 
         Debug.Log("No empty cell found on grid \n trying to find empty cell on grid below");
-        GetCellBelow().GetClosestEmptyCell();
-        return null; // No free cell found
+        
+        return GetCellBelow().GetClosestEmptyCell();
     }
     public Cell GetCellAbove()
     {
