@@ -4,6 +4,7 @@ Shader "Lpk/LightModel/ToonLightBase_WithYFade"
     {
         _BaseMap            ("Texture", 2D)                       = "white" {}
         _BaseColor          ("Color", Color)                      = (0.5,0.5,0.5,1)
+        _Transparency       ("Transparency", Range(0,1))          = 1   
         
         [Space]
         _ShadowStep         ("ShadowStep", Range(0, 1))           = 0.5
@@ -55,6 +56,7 @@ Shader "Lpk/LightModel/ToonLightBase_WithYFade"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseColor;
+                float _Transparency;
                 float _ShadowStep;
                 float _ShadowStepSmooth;
                 float _SpecularStep;
@@ -158,7 +160,7 @@ Shader "Lpk/LightModel/ToonLightBase_WithYFade"
                 float fadeFactor = input.visibilityFactor;
                 
                 // Calculate final alpha with fade
-                float alpha = 1.0 - fadeFactor;
+                float alpha = _Transparency - fadeFactor;
             
                 float3 finalColor = diffuse + ambient + specular;
                 finalColor = MixFog(finalColor, input.fogCoord);
