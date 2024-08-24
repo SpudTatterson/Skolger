@@ -36,15 +36,17 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         GameObject visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
-        if(!inStockpile) visualGO.transform.rotation =Quaternion.Euler(new Vector3(0, UnityEngine.Random.Range(0, 180), 0));
+        if (!inStockpile) visualGO.transform.rotation = Quaternion.Euler(new Vector3(0, UnityEngine.Random.Range(0, 180), 0));
 
         visualGO.AddComponent<BoxCollider>();
 
         ItemObject item = visualGO.AddComponent<ItemObject>();
-        item.Initialize(itemData, amount, allowed, visualGO, inStockpile, stockpile);
+        
+        visualGO.transform.parent = parent;
         item.transform.position = position;
 
-        visualGO.transform.parent = parent;
+        item.Initialize(itemData, amount, allowed, visualGO, inStockpile, stockpile);
+
         visualGO.layer = LayerManager.Instance.itemLayer;
 
         return item;
@@ -62,7 +64,11 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         }
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
-        currentStockpile = stockpile;
+        if (inStockpile)
+        {
+            currentStockpile = stockpile;
+            transform.localPosition = VectorUtility.FlattenVector(transform.localPosition);
+        }
 
         forbiddenBillboard = GetComponentInChildren<BillBoard>(true);
         outline = GetComponentInChildren<Outline>(true);
@@ -146,6 +152,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         currentStockpile = null;
         transform.SetParent(null);
         OnAllow();
+        OnOccupy();
 
         InventoryManager.Instance.RemoveAmountOfItem(itemData, amount);
     }
