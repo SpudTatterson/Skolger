@@ -51,6 +51,11 @@ namespace Skolger.UI.Tabs
                 button.ResetTab();
             }
         }
-    }
 
+        public void TriggerTab(int index)
+        {
+            OnTabSelected(tabButtons[index]);
+        }
+
+    }
 }
