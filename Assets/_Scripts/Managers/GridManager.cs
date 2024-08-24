@@ -9,8 +9,9 @@ using UnityEngine;
 
 public class GridManager : MonoSingleton<GridManager>
 {
-    public List<GridObject> grids { get; private set; }
-    [field: SerializeField, RequiredIn(PrefabKind.InstanceInScene, ErrorMessage = "Please attach the grids empty parent to generate the world map"),] public GameObject GridsParent { get; private set; }
+    public List<GridObject> grids;
+    [RequiredIn(PrefabKind.InstanceInScene, ErrorMessage = "Please attach the grids empty parent to generate the world map"),]
+    public GameObject GridsParent;
 
     [InlineEditor] public WorldSettings worldSettings;
 
@@ -34,7 +35,6 @@ public class GridManager : MonoSingleton<GridManager>
     public GridObject GetGridFromPosition(Vector3 position)
     {
         GetGridsIfMissing();
-
         foreach (GridObject grid in grids)
         {
             // Calculate the Y range for the grid
@@ -50,6 +50,7 @@ public class GridManager : MonoSingleton<GridManager>
 
     void GetGridsIfMissing()
     {
+        if (GridsParent == null) GridsParent = FindObjectOfType<NavMeshSurface>().gameObject;
         if (grids == null || grids.Count == 0)
             grids = GridsParent.GetComponentsInChildren<GridObject>().ToList();
     }
@@ -63,7 +64,7 @@ public class GridManager : MonoSingleton<GridManager>
     [ContextMenu("GenerateWorld"), Button, GUIColor("Red")]
     public void GenerateWorld()
     {
-
+        GridsParent.transform.position = Vector3.zero;
 #if UNITY_EDITOR
         EditorUtility.SetDirty(this);
 #endif

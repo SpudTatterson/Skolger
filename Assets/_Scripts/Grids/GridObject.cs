@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
-using System;
 
 [System.Serializable]
 public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
@@ -14,7 +13,6 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     [SerializeField, ReadOnly] int width;
     [SerializeField, ReadOnly] float cellSize;
     [SerializeField, ReadOnly] float cellHeight;
-    [SerializeField, ReadOnly] Material material;
     int groundLayer = 7;
     bool startEmpty;
 
@@ -40,7 +38,6 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         this.width = worldSettings.gridYSize;
         this.cellSize = worldSettings.cellSize;
         this.cellHeight = worldSettings.cellHeight;
-        this.material = worldSettings.material;
         this.groundLayer = worldSettings.groundLayer;
         this.startEmpty = startEmpty;
 
@@ -146,19 +143,20 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         MeshFilter meshFilter = gridVisual.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = gridVisual.AddComponent<MeshRenderer>();
 
-        // Prepare material list and sub-mesh lists
         List<Material> materials = new List<Material>();
         List<List<int>> subMeshTriangles = new List<List<int>>();
 
         int numberOfCells = chunkWidth * chunkHeight;
-        int verticesPerCell = 20; // 5 faces, 4 vertices each
+        int verticesPerCell = 20; // Max vertices for each cell (since we may skip some faces)
 
-        Mesh mesh = new Mesh();
+        Mesh mesh = new Mesh
+        {
+            name = "GridChunk_" + startX + "_" + startY
+        };
         Vector3[] vertices = new Vector3[numberOfCells * verticesPerCell];
         Vector2[] uv = new Vector2[numberOfCells * verticesPerCell];
 
         int vertIndex = 0;
-
         bool meshEmpty = true;
 
         for (int x = 0; x < chunkWidth; x++)
@@ -171,50 +169,26 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
                     continue;
                 }
 
-                meshEmpty = false;
-
                 Vector3 basePosition = new Vector3((startX + x) * cellSize, 0, (startY + y) * cellSize);
-                Vector3[] cubeVertices = GetVerts();
 
-                // Apply transform to vertices
-                for (int i = 0; i < cubeVertices.Length; i++)
+                bool[] cellVisibility = GetAdjacentCellVisibility(x, y, cell);
+                if (!(cellVisibility[0] && cellVisibility[1] && cellVisibility[2] && cellVisibility[3] && cellVisibility[4]))
                 {
-                    vertices[vertIndex + i] = basePosition + cubeVertices[i] + transform.position;
+                    meshEmpty = false;
                 }
 
-                // Get material for this cell
-                Material cellMaterial = MaterialManager.Instance.materials.GetMaterialForCellType(cell.cellType);
+                Vector3[] cubeVertices = GetAdjustedVerts(vertices, vertIndex, basePosition, cellVisibility);
 
-                // Find or add the material index
-                int materialIndex = materials.IndexOf(cellMaterial);
-                if (materialIndex == -1)
-                {
-                    materials.Add(cellMaterial);
-                    materialIndex = materials.Count - 1;
-                    subMeshTriangles.Add(new List<int>());
-                }
+                int materialIndex = GetMaterialIndex(materials, subMeshTriangles, cell);
 
-                // Get the triangles for this cell
-                int[] cubeTriangles = GetTriangles();
+                AdjustTriangles(subMeshTriangles, vertIndex, cellVisibility, materialIndex);
 
-                // Assign triangles with offset to the correct sub-mesh
-                for (int i = 0; i < cubeTriangles.Length; i++)
-                {
-                    subMeshTriangles[materialIndex].Add(vertIndex + cubeTriangles[i]);
-                }
-
-                // Assign UVs
-                Vector2[] cubeUVs = GetUVsForCellAtlas((int)cell.cellType);
-                for (int i = 0; i < cubeUVs.Length; i++)
-                {
-                    uv[vertIndex + i] = cubeUVs[i];
-                }
+                AdjustUV(uv, vertIndex, cell, cellVisibility);
 
                 // Increment indices for the next cube
                 vertIndex += cubeVertices.Length;
             }
         }
-
         mesh.vertices = vertices;
         mesh.uv = uv;
 
@@ -241,6 +215,142 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
         }
 
         visualGridChunks.Add(gridVisual);
+    }
+
+    void AdjustUV(Vector2[] uv, int vertIndex, Cell cell, bool[] cellVisibility)
+    {
+        // Assign UVs
+        Vector2[] cubeUVs = GetUVsForCellAtlas((int)cell.cellType);
+        for (int i = 0; i < cubeUVs.Length; i++)
+        {
+            if (cellVisibility[0] && i >= 0 && i < 4)
+            {
+                continue;
+            }
+            if (cellVisibility[1] && i >= 6 && i < 12)
+            {
+                continue;
+            }
+            if (cellVisibility[2] && i >= 12 && i < 18)
+            {
+                continue;
+            }
+            if (cellVisibility[3] && i >= 18 && i < 24)
+            {
+                continue;
+            }
+            if (cellVisibility[4] && i >= 24 && i < 30)
+            {
+                continue;
+            }
+
+
+            uv[vertIndex + i] = cubeUVs[i];
+        }
+    }
+
+    void AdjustTriangles(List<List<int>> subMeshTriangles, int vertIndex, bool[] cellVisibility, int materialIndex)
+    {
+        // Get the triangles for this cell
+        int[] cubeTriangles = GetTriangles();
+
+        // Assign triangles with offset to the correct sub-mesh, but skip top face triangles if not needed
+        for (int i = 0; i < cubeTriangles.Length; i++)
+        {
+            if (cellVisibility[0] && i >= 0 && i < 6)
+            {
+                continue;
+            }
+            if (cellVisibility[1] && i >= 6 && i < 12)
+            {
+                continue;
+            }
+            if (cellVisibility[2] && i >= 12 && i < 18)
+            {
+                continue;
+            }
+            if (cellVisibility[3] && i >= 18 && i < 24)
+            {
+                continue;
+            }
+            if (cellVisibility[4] && i >= 24 && i < 30)
+            {
+                continue;
+            }
+
+            subMeshTriangles[materialIndex].Add(vertIndex + cubeTriangles[i]);
+        }
+    }
+
+    int GetMaterialIndex(List<Material> materials, List<List<int>> subMeshTriangles, Cell cell)
+    {
+        // Get material for this cell
+        Material cellMaterial = MaterialManager.Instance.materials.GetMaterialForCellType(cell.cellType);
+
+        // Find or add the material index
+        int materialIndex = materials.IndexOf(cellMaterial);
+        if (materialIndex == -1)
+        {
+            materials.Add(cellMaterial);
+            materialIndex = materials.Count - 1;
+            subMeshTriangles.Add(new List<int>());
+        }
+
+        return materialIndex;
+    }
+
+    Vector3[] GetAdjustedVerts(Vector3[] vertices, int vertIndex, Vector3 basePosition, bool[] cellVisibility)
+    {
+        Vector3[] cubeVertices = GetVerts();
+        // Apply transform to vertices and add them, but skip the top face if there's a visible cell above
+        for (int i = 0; i < cubeVertices.Length; i++)
+        {
+            if (cellVisibility[0] && i >= 0 && i < 4)
+            {
+                continue;
+            }
+            if (cellVisibility[1] && i >= 4 && i < 8)
+            {
+                continue;
+            }
+            if (cellVisibility[2] && i >= 8 && i < 12)
+            {
+                continue;
+            }
+            if (cellVisibility[3] && i >= 12 && i < 16)
+            {
+                continue;
+            }
+            if (cellVisibility[4] && i >= 16 && i < 20)
+            {
+                continue;
+            }
+            vertices[vertIndex + i] = basePosition + cubeVertices[i] + transform.position;
+        }
+
+        return cubeVertices;
+    }
+
+    bool[] GetAdjacentCellVisibility(int x, int y, Cell cell)
+    {
+        // Check if there's a visible cell above and on the sides
+        bool hasVisibleCellAbove = cell.GetCellAbove() != null && cell.GetCellAbove().isVisible;
+        Cell frontCell = GetCellFromIndex(cell.x, cell.y + 1);
+        bool hasVisibleCellOnFront = frontCell != null && frontCell.isVisible;
+        Cell backCell = GetCellFromIndex(cell.x, cell.y - 1);
+        bool hasVisibleCellOnBack = backCell != null && backCell.isVisible;
+        Cell leftCell = GetCellFromIndex(cell.x - 1, cell.y);
+        bool hasVisibleCellOnLeft = leftCell != null && leftCell.isVisible;
+        Cell rightCell = GetCellFromIndex(cell.x + 1, cell.y);
+        bool hasVisibleCellOnRight = rightCell != null && rightCell.isVisible;
+        bool[] cellVisibility = new bool[]{
+                    hasVisibleCellAbove,
+                    hasVisibleCellOnFront,
+                    hasVisibleCellOnBack,
+                    hasVisibleCellOnLeft,
+                    hasVisibleCellOnRight,
+                };
+        return cellVisibility;
     }
 
     int[] GetTriangles()
