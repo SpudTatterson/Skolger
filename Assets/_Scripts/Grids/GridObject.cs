@@ -456,7 +456,11 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             if (mf.sharedMesh == null) continue;
             Mesh mesh = SaveMeshToFile(mf.gameObject, mf.sharedMesh);
             mf.sharedMesh = mesh;
-            mf.GetComponent<MeshCollider>().sharedMesh = mesh;
+
+            if (mf.TryGetComponent(out MeshCollider meshCollider))
+            {
+                meshCollider.sharedMesh = mesh;
+            }
         }
     }
     [Button]
