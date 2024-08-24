@@ -103,7 +103,7 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
-  _stencilValue: 1
+  _stencilValue: 4
   addToQueue: 50
   _dontOutlineSprites: 1
   _useFade: 1

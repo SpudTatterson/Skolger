@@ -1,7 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 public class VisualLayerManager : MonoSingleton<VisualLayerManager>
@@ -11,9 +10,11 @@ public class VisualLayerManager : MonoSingleton<VisualLayerManager>
     [SerializeField] float minYHeight = -3f;
 
     [Header("Y Plane")]
-    [SerializeField, OnValueChanged("UpdateYClip")] float yClip = 6f;
+    [SerializeField, OnValueChanged("UpdateYClip"), MinValue("@minYHeight"), MaxValue("@maxYHeight")] float yClip = 6f;
     [SerializeField] float offset = 0.2f;
     bool needsUpdate = true;
+    [Header("References")]
+    [SerializeField, RequiredIn(PrefabKind.InstanceInScene)] TextMeshProUGUI CurrentLayerText;
 
 
     public Action<float> OnYPlaneChange;
@@ -42,7 +43,8 @@ public class VisualLayerManager : MonoSingleton<VisualLayerManager>
     {
         yClip = Mathf.Clamp(yClip, minYHeight, maxYHeight);
         Shader.SetGlobalFloat("_GlobalYClip", yClip + offset);
-        OnYPlaneChange.Invoke(yClip + offset);
+        OnYPlaneChange?.Invoke(yClip + offset);
+        CurrentLayerText.text = yClip.ToString();
     }
     [Button]
     public void GoUp()

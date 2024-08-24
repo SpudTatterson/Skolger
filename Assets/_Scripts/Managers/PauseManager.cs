@@ -32,6 +32,11 @@ public class PauseManager : MonoBehaviour
             Time.timeScale = 1;
             Debug.Log(Time.timeScale);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Time.timeScale = 5;
+            Debug.Log(Time.timeScale);
+        }
     }
 
     void Toggle()

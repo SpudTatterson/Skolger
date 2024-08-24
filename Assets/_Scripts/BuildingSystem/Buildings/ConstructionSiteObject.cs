@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable, IAllowable, ICellOccupier
 {
-    [SerializeField, Label("Building Data"), Expandable] BuildingData data;
-    [field: SerializeField, ReadOnly, Expandable] public BuildingData buildingData { get; private set; }
+    [SerializeField, LabelText("Building Data"), InlineEditor] BuildingData data;
+    [field: SerializeField, ReadOnly, InlineEditor] public BuildingData buildingData { get; private set; }
     List<ItemCost> costs = new List<ItemCost>();
     SerializableDictionary<ItemData, int> fulfilledCosts = new SerializableDictionary<ItemData, int>();
     List<Cell> occupiedCells = new List<Cell>();
@@ -70,6 +70,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         return building;
     }
 
+
     void Start()
     {
 
@@ -124,6 +125,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     [ContextMenu("CancelConstruction")]
     public void CancelConstruction()
     {
+        OnRelease();
         TaskManager.Instance.RemoveFromConstructionQueue(this);
         SetForCancellation = true;
         foreach (KeyValuePair<ItemData, int> cost in fulfilledCosts)
@@ -278,12 +280,16 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
     void OnEnable()
     {
-        OnOccupy();
+        // OnOccupy();
     }
     void OnDisable()
     {
-        OnRelease();
+        // OnRelease();
 
         OnDeselect();
+    }
+    void OnValidate()
+    {
+        buildingData = data;
     }
 }

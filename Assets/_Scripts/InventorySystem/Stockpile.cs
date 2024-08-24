@@ -40,13 +40,14 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
         Vector3 cornerPosition = cornerCell.position - new Vector3(cellSize / 2, 0, cellSize / 2);
 
         // Adjust position slightly below the ground for better visual separation
-        transform.position = cornerPosition + new Vector3(0, 0.01f, 0);
+        transform.position = cornerPosition + new Vector3(0, 0.16f, 0);
 
         InventoryManager.Instance.stockpiles.Add(this);
 
         // Create the grid mesh
-        visual = MeshUtility.CreateGridMesh(this.occupiedCells, transform.position, "Stockpile", MaterialManager.Instance.stockpileMaterial, transform, 1);
+        visual = MeshUtility.CreateGridMesh(this.occupiedCells, "Stockpile", MaterialManager.Instance.materials.stockpileMaterial, transform, 1);
 
+        visual.transform.localPosition = VectorUtility.FlattenVector(visual.transform.localPosition);
         visual.GetComponent<MeshCollider>().convex = true;
 
         outline = gameObject.AddComponent<Outline>();
@@ -243,6 +244,8 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
     [ContextMenu("DestroyStockpile")]
     public void DestroyStockpile()
     {
+        OnRelease();
+        
         foreach (KeyValuePair<Cell, ItemObject> pair in cells)
         {
             if (pair.Value != null)
@@ -255,7 +258,6 @@ public class Stockpile : MonoBehaviour, ISelectable, ICellOccupier
             cell.inUse = false;
         }
         InventoryManager.Instance.stockpiles.Remove(this);
-        OnRelease();
         Destroy(this.gameObject);
     }
 

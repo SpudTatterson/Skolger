@@ -16,6 +16,7 @@ public class ClipPlaneHandler : MonoBehaviour
 
         if (objectCollider == null)
             objectCollider = GetComponent<Collider>();
+        VisualLayerManager.Instance.OnYPlaneChange += CheckAgainstClipPlane;
     }
 
     void CheckAgainstClipPlane(float yClipPlane)

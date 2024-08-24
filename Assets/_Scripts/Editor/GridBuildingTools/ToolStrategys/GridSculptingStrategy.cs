@@ -140,6 +140,10 @@ public class GridSculptingStrategy : IGridToolStrategy, IBrushTool
         activeGridObject.ChangeCellsVisibility(selectedCells, visibility);
 
         activeGridObject.UpdateVisualGrid();
+        if(!isRaising) gridManager.//get grid below and update it
+        GetGridFromPosition(VectorUtility.
+        FlattenVector(activeGridObject.transform.position,activeGridObject.transform.position.y - gridManager.worldSettings.cellHeight)).
+        UpdateVisualGrid();
         selectedCells.Clear();
         activeGridObject = null;
     }

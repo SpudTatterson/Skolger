@@ -126,7 +126,7 @@ public class BuildingPrefabCreator : EditorWindow
 
         foreach (Renderer renderer in renderers)
         {
-            renderer.sharedMaterial = MaterialManager.Instance.unfinishedBuildingMaterial;
+            renderer.sharedMaterial = MaterialManager.Instance.materials.unfinishedBuildingMaterial;
         }
 
         DestroyImmediate(buildingPrefab.GetComponent<BuildingObject>());

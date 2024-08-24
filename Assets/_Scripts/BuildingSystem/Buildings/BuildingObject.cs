@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
 public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 {
-    [SerializeField, Label("Building Data"), Expandable] BuildingData data;
-    [field: SerializeField, ReadOnly, Expandable] public BuildingData buildingData { get; private set; }
+    [SerializeField, LabelText("Building Data"), InlineEditor] BuildingData data;
+    [field: SerializeField, ReadOnly, InlineEditor] public BuildingData buildingData { get; private set; }
     [SerializeField, ReadOnly] Direction placementDirection = Direction.TopLeft;
     List<Cell> occupiedCells;
     [field: SerializeField, ReadOnly] public Cell cornerCell { get; private set; }
@@ -27,6 +27,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     {
         this.buildingData = buildingData;
         this.placementDirection = placementDirection;
+        transform.rotation = Quaternion.Euler(0, (int)placementDirection, 0);
         GetOccupiedCells();
 
         OnOccupy();
@@ -157,6 +158,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         {
             cell.inUse = buildingData.usesCell;
             cell.walkable = buildingData.walkable;
+            if (buildingData is FloorTile) cell.hasFloor = true;
         }
     }
 
@@ -166,6 +168,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
         {
             cell.inUse = false;
             cell.walkable = true;
+            if (buildingData is FloorTile) cell.hasFloor = false;
         }
     }
 

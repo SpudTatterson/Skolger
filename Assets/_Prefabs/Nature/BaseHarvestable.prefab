@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccb53ad4dd86db04bb4178f366ae761f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disableThreshold: 0.6
+  disableThreshold: 0.9
 --- !u!1001 &726260524221475845
 PrefabInstance:
   m_ObjectHideFlags: 0
