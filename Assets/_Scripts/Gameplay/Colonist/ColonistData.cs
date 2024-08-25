@@ -6,18 +6,21 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem>
+public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem>, ISelectable
 {
+    [field: Header("Hunger")]
     const float Max_Belly_Capacity = 100f;
     [field: SerializeField] public float HungerThreshold { get; private set; } = 40; // The amount of hungry at which the colonist will drop everything and go eat
     [field: SerializeField, ReadOnly] public float HungerLevel { get; private set; } = 50; // How hungry the colonist current is
     [field: SerializeField] public float HungerGainSpeed { get; private set; } = 1; // Hunger gain per second
     public string HungerStatus { get; private set; }
 
+    [field: Header("Inventory")]
     [field: SerializeField] public InventoryItem[] Items { get; private set; }
     public int InventorySlots { get; private set; } = 1;
     Queue<int> emptySlots = new();
 
+    [Header("Portrait")]
     public Sprite faceSprite;
     public int width = 256;
     public int height = 256;
@@ -39,6 +42,9 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         }
     }
 
+    [Header("Selection")]
+    [SerializeField] Outline outline;
+    public bool IsSelected { get; private set; }
     void Awake()
     {
         Items = new InventoryItem[InventorySlots];
@@ -51,7 +57,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     void Start()
     {
-        faceSprite = ColonistUtility.CaptureFace(gameObject, 1.75f, new Vector3(0,1.75f,1.15f), width, height, 1.5f);
+        faceSprite = ColonistUtility.CaptureFace(gameObject, 1.75f, new Vector3(0, 1.75f, 1.15f), width, height, 1.5f);
         UIManager.instance.AddColonistToBoard(colonistName, this);
     }
 
@@ -215,4 +221,59 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     {
         colonistActivity = activity;
     }
+
+
+    #region ISelectable
+
+    public SelectionType GetSelectionType()
+    {
+        return SelectionType.Colonist;
+    }
+
+    public ISelectionStrategy GetSelectionStrategy()
+    {
+        return new ColonistSelectionStrategy();
+    }
+
+    public string GetMultipleSelectionString(out int amount)
+    {
+        amount = 1;
+        return colonistName;
+    }
+
+    public bool HasActiveCancelableAction()
+    {
+        return false;
+    }
+
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+        IsSelected = true;
+
+        outline.OutlineMode = Outline.Mode.OutlineAll;
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        if (IsSelected)
+            manager.UpdateSelection();
+
+        outline.OutlineMode = Outline.Mode.OutlineHidden;
+        IsSelected = false;
+    }
+
+    public void OnHover()
+    {
+        outline.OutlineMode = Outline.Mode.OutlineAll;
+    }
+
+    public void OnHoverEnd()
+    {
+        outline.OutlineMode = Outline.Mode.OutlineHidden;
+    }
+
+    #endregion
 }

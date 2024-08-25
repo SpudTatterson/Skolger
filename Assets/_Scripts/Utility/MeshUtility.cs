@@ -4,6 +4,27 @@ using UnityEngine;
 
 public class MeshUtility : MonoBehaviour
 {
+    private static Dictionary<Cell, Vector3[]> cellVerticesCache = new Dictionary<Cell, Vector3[]>();
+
+    private static Vector3[] GetCellVertices(Cell cell, float cellSize)
+    {
+        if (cellVerticesCache.TryGetValue(cell, out Vector3[] cellVertices))
+        {
+            return cellVertices;
+        }
+
+        cellVertices = new Vector3[4];
+        Vector3 cornerPosition = cell.position - new Vector3(cellSize / 2, 0, cellSize / 2);
+        Vector3 basePosition = cornerPosition + new Vector3(0, 0.01f, 0);
+
+        cellVertices[0] = basePosition + new Vector3(0, 0, 0);
+        cellVertices[1] = basePosition + new Vector3(0, 0, cellSize);
+        cellVertices[2] = basePosition + new Vector3(cellSize, 0, cellSize);
+        cellVertices[3] = basePosition + new Vector3(cellSize, 0, 0);
+
+        cellVerticesCache[cell] = cellVertices;
+        return cellVertices;
+    }
     public static GameObject CreateGridMesh(int width, int height, Vector3 startPosition, string objectName, Material material, Transform parent = null, float cellSize = 1)
     {
         GameObject MeshObject = new GameObject(objectName);
@@ -77,14 +98,12 @@ public class MeshUtility : MonoBehaviour
 
         foreach (Cell cell in cells)
         {
-            Vector3 cornerPosition = cell.position - new Vector3(cellSize / 2, 0, cellSize / 2);
+            Vector3[] cellVertices = GetCellVertices(cell, cellSize);
 
-            Vector3 basePosition = cornerPosition + new Vector3(0, 0.01f, 0);
-
-            vertices[vertIndex + 0] = basePosition + new Vector3(0, 0, 0);
-            vertices[vertIndex + 1] = basePosition + new Vector3(0, 0, cellSize);
-            vertices[vertIndex + 2] = basePosition + new Vector3(cellSize, 0, cellSize);
-            vertices[vertIndex + 3] = basePosition + new Vector3(cellSize, 0, 0);
+            vertices[vertIndex + 0] = cellVertices[0];
+            vertices[vertIndex + 1] = cellVertices[1];
+            vertices[vertIndex + 2] = cellVertices[2];
+            vertices[vertIndex + 3] = cellVertices[3];
 
             triangles[triIndex + 0] = vertIndex + 0;
             triangles[triIndex + 1] = vertIndex + 1;
@@ -103,6 +122,7 @@ public class MeshUtility : MonoBehaviour
         }
 
 
+
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uv;
@@ -117,7 +137,7 @@ public class MeshUtility : MonoBehaviour
 
     public static void UpdateGridMesh(List<Cell> cells, MeshFilter meshFilter, float cellSize = 1)
     {
-        
+
         Mesh mesh = meshFilter.mesh;
         mesh.Clear();
         Vector3[] vertices = new Vector3[cells.Count * 4];

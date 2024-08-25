@@ -18,7 +18,8 @@ GameObject:
   - component: {fileID: 547942696602740720}
   - component: {fileID: 7793368260817705079}
   - component: {fileID: 7281736121582617657}
-  - component: {fileID: 7794366429827392130}
+  - component: {fileID: 3685384074947673535}
+  - component: {fileID: 3012153896857175366}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -109,8 +110,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stockpiles: []
   totalItems:
-    keys: []
-    values: 
+    keys: 
+    values: []
 --- !u!114 &4444768308068659478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,6 +128,7 @@ MonoBehaviour:
   stockpileMaterial: {fileID: 2100000, guid: 1e5ec0d2a694829409f038ae45d3d69b, type: 2}
   unfinishedBuildingMaterial: {fileID: 2100000, guid: 54a61d413f961ee40b69cc0af66181b7,
     type: 2}
+  SelectionMaterial: {fileID: 0}
 --- !u!114 &8654645700902479148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,6 +171,7 @@ MonoBehaviour:
   isSelecting: 1
   specialSelectionTypes: 
   dragDelay: 0.1
+  selectionAction: 0
 --- !u!114 &7281736121582617657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,6 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionPanel: {fileID: 0}
+  colonistSelection: {fileID: 0}
   harvestableSelection: {fileID: 0}
   itemSelection: {fileID: 0}
   constructableSelection: {fileID: 0}
@@ -198,7 +202,15 @@ MonoBehaviour:
   deconstructButton: {fileID: 0}
   growZoneButton: {fileID: 0}
   shrinkZoneButton: {fileID: 0}
---- !u!114 &7794366429827392130
+  colonistInfoPanel: {fileID: 0}
+  nameText: {fileID: 0}
+  activityText: {fileID: 0}
+  colonistsBoard: {fileID: 0}
+  colonistDataPrefab: {fileID: 0}
+  defaultInventoryUIPrefab: {fileID: 0}
+  itemTypeGroupPrefab: {fileID: 0}
+  inventoryPanel: {fileID: 0}
+--- !u!114 &3685384074947673535
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,7 +219,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 6069251704015072993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 829559cc3e026aa4f9d8b08763359610, type: 3}
+  m_Script: {fileID: 11500000, guid: be383814150870e40bca09eb98e44f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodeNameText: 
+  audioMixer: {fileID: 24100000, guid: dd859ea7effb5284a9de2fef95879571, type: 2}
+--- !u!114 &3012153896857175366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6069251704015072993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73ea442011c1df44b9fd725a4159a816, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundFXObject: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
+    type: 3}

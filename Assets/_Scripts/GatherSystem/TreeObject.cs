@@ -4,15 +4,29 @@ using UnityEngine;
 
 public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
+    [SerializeField] private AudioClip[] ChopingSound;
+
     [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
+    [SerializeField] string harvestableName = "Tree";
+    BillBoard setForHarvestBillboard;
+    Outline outline;
+    FillBar fillBar;
     float timeHarvesting = 0f;
     public Cell cornerCell { get; private set; }
     bool beingHarvested = false;
     bool finishedHarvesting = false;
     bool setForHarvesting = false;
     SelectionType selectionType = SelectionType.Harvestable;
+    public bool IsSelected { get; private set; }
+
+    void Awake()
+    {
+        setForHarvestBillboard = GetComponentInChildren<BillBoard>(true);
+        outline = GetComponentInChildren<Outline>(true);
+        fillBar = GetComponentInChildren<FillBar>(true);
+    }
     public void Harvest()
     {
         foreach (ItemDrop drop in drops)
@@ -30,10 +44,13 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     {
         timeHarvesting = 0f;
         beingHarvested = true;
+        fillBar.UpdateMaxFillAmount(baseGatherTime); // multiply by any modifiers
+        SoundsFXManager.instance.PlayRandomSoundFXClip(ChopingSound, transform, 1f);
 
         while (timeHarvesting < baseGatherTime)
         {
             timeHarvesting += Time.deltaTime;
+            fillBar.UpdateFillAmount(timeHarvesting);
             yield return null;
         }
 
@@ -54,11 +71,14 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
         {
             TaskManager.Instance.AddToHarvestQueue(this);
         }
+        ShowBillboard();
         setForHarvesting = true;
     }
+
     public void RemoveFromHarvestQueue()
     {
         TaskManager.Instance.RemoveFromHarvestQueue(this);
+        DisableBillboard();
         beingHarvested = false;
         setForHarvesting = false;
     }
@@ -67,6 +87,42 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
         return drops;
     }
 
+    void ShowBillboard()
+    {
+        setForHarvestBillboard?.gameObject.SetActive(true);
+    }
+    void DisableBillboard()
+    {
+        setForHarvestBillboard?.gameObject.SetActive(false);
+    }
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+        IsSelected = true;
+
+        outline?.Enable();
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        if (IsSelected)
+            manager.UpdateSelection();
+
+        outline?.Disable();
+        IsSelected = false;
+    }
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        if(!IsSelected)
+        outline?.Disable();
+    }
     public SelectionType GetSelectionType()
     {
         return selectionType;
@@ -80,7 +136,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     public string GetMultipleSelectionString(out int amount)
     {
         amount = 1;
-        return "Tree";
+        return harvestableName;
     }
 
 
@@ -120,5 +176,6 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     void OnDisable()
     {
         OnRelease();
+        OnDeselect();
     }
 }

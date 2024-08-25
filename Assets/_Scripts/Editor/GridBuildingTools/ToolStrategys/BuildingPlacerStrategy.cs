@@ -75,14 +75,14 @@ public class BuildingPlacerStrategy : IGridToolStrategy
             }
 
             Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerManager.GroundLayerMask))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerManager.buildableLayerMask))
             {
                 Cell cell = gridManager.GetCellFromPosition(hit.point);
                 if (cell == null) return;
                 Vector3 gridPoint = cell.position;
                 activeGridObject = cell.grid;
 
-                bool cellFree = cell.IsFreeAndExists();
+                bool cellFree = cell.IsFree();
                 Handles.color = cellFree ? Color.green : Color.red;
 
                 // Adjust the grid point to account for the building size
@@ -90,7 +90,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
                 Handles.DrawWireCube(gridPoint, size);
                 if (cornerCell != null && lastCell != null)
                     Handles.DrawLine(cornerCell.position, lastCell.position);
-
+                
                 if (!cellFree) return;
 
                 if (e.type == EventType.MouseDown && e.button == 0)
@@ -114,6 +114,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
                 }
                 else if ((e.type == EventType.MouseUp) && e.button == 0)
                 {
+                    Undo.RegisterCompleteObjectUndo(cell.grid, $"Created {buildingDatas[selectedBuilding].name}");
                     if (initialMouseDownTime + timeToInitDrag >= (float)EditorApplication.timeSinceStartup)
                     {
                         PlaceBuilding(cell, buildingDatas[selectedBuilding]);
@@ -124,7 +125,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
 
                         foreach (Cell c in cells)
                         {
-                            if (c.IsFreeAndExists())
+                            if (c.IsFree())
                                 PlaceBuilding(c, buildingDatas[selectedBuilding]);
                         }
                     }
@@ -200,7 +201,6 @@ public class BuildingPlacerStrategy : IGridToolStrategy
 
     void PlaceBuilding(Cell cell, BuildingData buildingData)
     {
-        Undo.RegisterCompleteObjectUndo(cell.grid, $"Created {buildingDatas[selectedBuilding].name}");
 
         BuildingObject placed = BuildingObject.MakeInstance(buildingData, cell.position);
         

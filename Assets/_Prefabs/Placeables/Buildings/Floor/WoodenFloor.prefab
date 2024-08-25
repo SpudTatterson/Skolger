@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3214204681265235617}
   - component: {fileID: 6849264169057272407}
   - component: {fileID: 525225275915502742}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: WoodenFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.1, z: 1}
+  m_Size: {x: 1, y: 0.2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &525225275915502742
 MonoBehaviour:
@@ -146,6 +146,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6ebc117cb86b5ba4795a53ff8beed5f3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

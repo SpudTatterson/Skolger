@@ -13,6 +13,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 54a61d413f961ee40b69cc0af66181b7, type: 2}
+    - target: {fileID: 2784532874544622955, guid: d384dc8fa7d21ec43b9d5f219ff774a8,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 54a61d413f961ee40b69cc0af66181b7, type: 2}
     - target: {fileID: 5116396948678509798, guid: d384dc8fa7d21ec43b9d5f219ff774a8,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -71,7 +76,7 @@ PrefabInstance:
     - target: {fileID: 8937700482084614974, guid: d384dc8fa7d21ec43b9d5f219ff774a8,
         type: 3}
       propertyPath: m_Name
-      value: Door Variant
+      value: Door Unplaced
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 46974190078039562, guid: d384dc8fa7d21ec43b9d5f219ff774a8, type: 3}

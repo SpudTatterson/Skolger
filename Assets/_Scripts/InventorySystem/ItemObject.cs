@@ -11,6 +11,8 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
     [SerializeField] bool allowedOnInit = true;
+    BillBoard forbiddenBillboard;
+    Outline outline;
 
     [field: SerializeField, ReadOnly] public int amount { get; private set; }
 
@@ -20,6 +22,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     public Cell cornerCell { get; private set; }
 
     public bool allowed { get; private set; }
+    public bool IsSelected { get; private set; }
 
 
 
@@ -59,6 +62,12 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
         currentStockpile = stockpile;
+
+        forbiddenBillboard = GetComponentInChildren<BillBoard>(true);
+        outline = GetComponentInChildren<Outline>(true);
+        if (outline == null)
+            outline = visualGO.AddComponent<Outline>();
+
         if (allowed) OnAllow();
         else OnDisallow();
         if (GridManager.instance.GetCellFromPosition(transform.position) == null) cornerCell = null;
@@ -142,6 +151,34 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
     #region Selection
 
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.AddToCurrentSelected(this);
+        IsSelected = true;
+
+        outline?.Enable();
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.instance;
+        manager.RemoveFromCurrentSelected(this);
+        if (IsSelected)
+            manager.UpdateSelection();
+
+        outline?.Disable();
+        IsSelected = false;
+    }
+
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
     public SelectionType GetSelectionType()
     {
         return SelectionType.Item;
@@ -172,6 +209,8 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         if (!inStockpile)
             TaskManager.Instance.AddToHaulQueue(this);
 
+        forbiddenBillboard?.gameObject.SetActive(false);
+
     }
 
     public void OnDisallow()
@@ -181,6 +220,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
             TaskManager.Instance.RemoveFromHaulQueue(this);
         //remove from haul queue
         // visually show that item is disallowed with billboard or something similar
+        forbiddenBillboard?.gameObject.SetActive(true);
     }
     public bool IsAllowed()
     {
@@ -216,7 +256,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         {
             OnRelease();
         }
-
+        OnDeselect();
     }
     void OnEnable()
     {
