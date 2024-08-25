@@ -2,18 +2,19 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
+
 
 public class ColonistBar : MonoBehaviour
 {
     private ColonistData colonist;
-    [SerializeField] UnityEngine.UI.Image colonistFace;
+    [SerializeField] Image colonistFace;
     [SerializeField] TextMeshProUGUI colonistName;
     [SerializeField] TextMeshProUGUI activity;
+    [SerializeField] Button colonistButton;
 
     private void Update()
     {
-        if(colonist == null)
+        if (colonist == null)
         {
             Destroy(gameObject);
         }
@@ -25,12 +26,16 @@ public class ColonistBar : MonoBehaviour
         this.colonist = colonist;
         colonistFace.sprite = colonist.faceSprite;
 
-        if(this.colonist != null)
+        if (this.colonist != null)
         {
             this.colonist.OnActivityChanged += UpdateActivity;
+            colonistButton.onClick.AddListener(FocusOnColonist);
         }
     }
-
+    void FocusOnColonist()
+    {
+        StartCoroutine(CameraController.Instance.SendCameraToTarget(colonist.transform.position));
+    }
     private void UpdateActivity(string activity)
     {
         this.activity.text = activity;
