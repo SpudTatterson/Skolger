@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c2d85c210dbb24f966b0c6d0546203, type: 3}
   m_Name: Door
   m_EditorClassIdentifier: 
-  icon: {fileID: 2800000, guid: 27cdc5036ee7fb245ab9207a17d58602, type: 3}
+  icon: {fileID: 2800000, guid: 13c7cac01229fa04189f28b05f733431, type: 3}
   placeableName: Door
   description: 
   costs:

@@ -422,13 +422,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Heart02_BrightBG
+      name: Play
       rect:
         serializedVersion: 2
-        x: 476
-        y: 705
+        x: 437
+        y: 718
         width: 74
-        height: 74
+        height: 78
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -716,13 +716,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Quest02_BrightBG
+      name: Lightning
       rect:
         serializedVersion: 2
-        x: 22
-        y: 399
-        width: 76
-        height: 77
+        x: 150
+        y: 406
+        width: 55
+        height: 80
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -740,8 +740,8 @@ TextureImporter:
       name: Coin_BrightBG
       rect:
         serializedVersion: 2
-        x: 134
-        y: 401
+        x: 41
+        y: 396
         width: 74
         height: 74
       alignment: 0
@@ -1220,13 +1220,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Down02_BrightBG
+      name: Playx2
       rect:
         serializedVersion: 2
-        x: 718
-        y: 95
+        x: 719
+        y: 73
         width: 79
-        height: 74
+        height: 77
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1236,6 +1236,48 @@ TextureImporter:
       bones: []
       spriteID: cffc1595842e35147bae636f1a876f9c
       internalID: -1307059962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stop
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 717
+        width: 74
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c80721f4be2325f4d84f2bee9152a2b9
+      internalID: -1184107305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayX3
+      rect:
+        serializedVersion: 2
+        x: 806
+        y: 68
+        width: 84
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c7f74f939b24594bbf4f39fd570b203
+      internalID: 849780074
       vertices: []
       indices: 
       edges: []
@@ -1263,16 +1305,15 @@ TextureImporter:
       Compass_BrightBG: -164947489
       Cross_BrightBG: -1632281137
       Diamond_BrightBG: 739342557
-      Down02_BrightBG: -1307059962
       Down_BrightBG: -619808510
       Exit_BrightBG: 479905756
       Gear01_BrightBG: -370961514
       Gear02_BrightBG: -838825703
       Gears_BrightBG: 644145648
       Heart01_BrightBG: -2043333513
-      Heart02_BrightBG: 1181023038
       Key_BrightBG: 472646816
       Left_BrightBG: 173104812
+      Lightning: 260871333
       Medal_BrightBG: 1727470623
       MusicNote01_BrightBG: -1691731645
       MusicNote02_BrightBG: -1234761571
@@ -1280,12 +1321,14 @@ TextureImporter:
       Padlock01_BrightBG: 2025532901
       Padlock02_BrightBG: -1126129179
       Pause_BrightBG: 1095640251
+      Play: 1181023038
+      PlayX3: 849780074
       Play_BrightBG: -569082693
+      Playx2: -1307059962
       Point_BrightBG: 1485912186
       Potion01_BrightBG: 1533262026
       Potion02_BrightBG: -1388486042
       Quest01_BrightBG: -777708162
-      Quest02_BrightBG: 260871333
       Reload_BrightBG: -1341189835
       Rewind_BrightBG: -236887718
       Right_BrightBG: -1726838794
@@ -1295,6 +1338,7 @@ TextureImporter:
       Skip_BrightBG: -1273248914
       Star01_BrightBG: 641866465
       Star02_BrightBG: 749710219
+      Stop: -1184107305
       Sword_BrightBG: 2022066493
       Text_BrightBG: 95342866
       ThunderStrike_BrightBG: -579725436

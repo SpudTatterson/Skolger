@@ -1,14 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Skolger.UI.Tabs;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PauseManager : MonoBehaviour
+public class TimeManager : MonoBehaviour
 {
+    [SerializeField] TabGroup timeManagerTabGroup;
     public UnityEvent OnPause;
     public UnityEvent OnResume;
     bool paused;
+
     // Update is called once per frame
     void Update()
     {
@@ -16,29 +19,31 @@ public class PauseManager : MonoBehaviour
         {
             Toggle();
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Time.timeScale = 2;
-            Debug.Log(Time.timeScale);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Time.timeScale = 1.5f;
-            Debug.Log(Time.timeScale);
+            timeManagerTabGroup.TriggerTab(0);
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Time.timeScale = 1;
-            Debug.Log(Time.timeScale);
+            timeManagerTabGroup.TriggerTab(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            timeManagerTabGroup.TriggerTab(2);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            timeManagerTabGroup.TriggerTab(3);
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            Time.timeScale = 5;
-            Debug.Log(Time.timeScale);
+            SetNewTimeScale(5);
         }
     }
-
+    public void SetNewTimeScale(float timeScale)
+    {
+        Time.timeScale = timeScale;
+    }
     void Toggle()
     {
         if (paused)
