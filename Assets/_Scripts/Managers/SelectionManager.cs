@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SelectionManager : MonoBehaviour
+public class SelectionManager : MonoSingleton<SelectionManager>
 {
     public bool isSelecting = true;
-    public static SelectionManager instance { get; private set; }
     List<ISelectable> currentSelected = new List<ISelectable>();
     ISelectionStrategy selectionStrategy;
     [SerializeField] List<SelectionType> specialSelectionTypes;
@@ -23,16 +22,7 @@ public class SelectionManager : MonoBehaviour
     List<ISelectable> LastHovered = new List<ISelectable>();
 
     bool setToUpdate;
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            Debug.LogWarning("More then one SelectionManager");
-            Destroy(this);
-        }
-    }
+
     void Update()
     {
         if (!isSelecting) return;
@@ -48,7 +38,7 @@ public class SelectionManager : MonoBehaviour
             if (currentSelected.Count != 0)
             {
                 SetSelectionType(currentSelected[0].GetSelectionType());
-                UIManager.instance.selectionPanel.SetActive(true);
+                UIManager.Instance.selectionPanel.SetActive(true);
             }
             else
                 ResetSelection();
@@ -78,7 +68,7 @@ public class SelectionManager : MonoBehaviour
 
     void StartSelection()
     {
-        worldMouseStartPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.instance.GroundLayerMask);
+        worldMouseStartPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.Instance.GroundLayerMask);
         mouseDownTime = Time.time;
     }
 
@@ -98,13 +88,13 @@ public class SelectionManager : MonoBehaviour
 
     void DragSelection()
     {
-        worldMouseEndPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.instance.GroundLayerMask);
+        worldMouseEndPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.Instance.GroundLayerMask);
     }
 
     void VisualizeSelection()
     {
-        firstCell = GridManager.instance.GetCellFromPosition(worldMouseStartPos);
-        Cell lastCell = GridManager.instance.GetCellFromPosition(worldMouseEndPos);
+        firstCell = GridManager.Instance.GetCellFromPosition(worldMouseStartPos);
+        Cell lastCell = GridManager.Instance.GetCellFromPosition(worldMouseEndPos);
 
         if (this.lastCell != lastCell && lastCell != null)
         {
@@ -118,6 +108,8 @@ public class SelectionManager : MonoBehaviour
     void GetHovered(Cell firstCell, Cell lastCell)
     {
         Box box = VectorUtility.CalculateBoxSize(firstCell.position, lastCell.position);
+
+        box.ShrinkBoxNoY(0.95f);
 
         ExtendedDebug.DrawBox(box.center, box.halfExtents * 2, Quaternion.identity); // visualize in editor
 
@@ -136,14 +128,14 @@ public class SelectionManager : MonoBehaviour
         Destroy(tempSelectionGrid);
         //Draw Selection in the world
         List<Cell> cells = new SquarePlacementStrategy().GetCells(firstCell, lastCell);
-        tempSelectionGrid = MeshUtility.CreateGridMesh(cells, firstCell.position, "SelectionGrid", MaterialManager.instance.SelectionMaterial);
+        tempSelectionGrid = MeshUtility.CreateGridMesh(cells, "SelectionGrid", MaterialManager.Instance.materials.SelectionMaterial);
     }
 
     void ClickSelection()
     {
         List<ISelectable> selectables = new List<ISelectable>();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.instance.SelectableLayerMask) &&
+        if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.Instance.SelectableLayerMask) &&
         hit.transform.TryGetComponent(out ISelectable selectable))
         {
             selectables.Add(selectable);
@@ -154,7 +146,8 @@ public class SelectionManager : MonoBehaviour
     void BoxSelection()
     {
         Box box = VectorUtility.CalculateBoxSizeGridAligned(firstCell, lastCell, 1f);
-        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents * 0.95f);
+        box.ShrinkBoxNoY(0.95f);
+        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(box.center, box.halfExtents);
         Select(selectables);
     }
 
@@ -304,6 +297,11 @@ public class SelectionManager : MonoBehaviour
     public void SetNewSelectionAction(SelectionAction selectionAction)
     {
         this.selectionAction = selectionAction;
+        if(selectionAction != SelectionAction.Default && selectionAction != SelectionAction.Add && selectionAction != SelectionAction.Remove)
+        {
+            UIManager.Instance.SelectionActionCanvas.SetActive(true);
+            UIManager.Instance.actionText.text = $"Left Click + Drag to {selectionAction.ToString()}";
+        }
     }
     public void SetSelectionType(SelectionType selectionType)
     {
@@ -344,14 +342,14 @@ public class SelectionManager : MonoBehaviour
     {
         if (currentSelected[0].HasActiveCancelableAction())
         {
-            UIManager.instance.EnableCancelButton();
+            UIManager.Instance.EnableCancelButton();
         }
     }
     public void CheckForAllowableSelection()
     {
         if (currentSelected[0] is IAllowable)
         {
-            UIManager.instance.EnableAllowDisallowButton((currentSelected[0] as IAllowable).IsAllowed());
+            UIManager.Instance.EnableAllowDisallowButton((currentSelected[0] as IAllowable).IsAllowed());
         }
     }
 
@@ -362,7 +360,7 @@ public class SelectionManager : MonoBehaviour
     public void SetToHarvest()
     {
         SetSelectionForHarvest(currentSelected);
-        UIManager.instance.EnableCancelButton();
+        UIManager.Instance.EnableCancelButton();
     }
 
     void SetSelectionForHarvest(List<ISelectable> selectables)
@@ -377,7 +375,7 @@ public class SelectionManager : MonoBehaviour
     public void Allow()
     {
         SetSelectionAllowed(currentSelected);
-        UIManager.instance.EnableAllowDisallowButton(true);
+        UIManager.Instance.EnableAllowDisallowButton(true);
     }
 
     void SetSelectionAllowed(List<ISelectable> selectables)
@@ -392,7 +390,16 @@ public class SelectionManager : MonoBehaviour
     public void Forbid()
     {
         SetSelectionForbidden(currentSelected);
-        UIManager.instance.EnableAllowDisallowButton(false);
+        UIManager.Instance.EnableAllowDisallowButton(false);
+    }
+
+    void SetSelectionForbidden(List<ISelectable> selectables)
+    {
+        foreach (ISelectable selectable in selectables)
+        {
+            if (selectable is IAllowable)
+                (selectable as IAllowable).OnDisallow();
+        }
     }
 
     void SetSelectionForbidden(List<ISelectable> selectables)
@@ -451,7 +458,7 @@ public class SelectionManager : MonoBehaviour
         if (currentSelected[0] is Stockpile)
         {
             Stockpile stockpile = currentSelected[0] as Stockpile;
-            StockpilePlacer.instance.GrowStockpile(stockpile);
+            StockpilePlacer.Instance.GrowStockpile(stockpile);
         }
     }
     public void TryToShrinkZone()
@@ -459,23 +466,23 @@ public class SelectionManager : MonoBehaviour
         if (currentSelected[0] is Stockpile)
         {
             Stockpile stockpile = currentSelected[0] as Stockpile;
-            StockpilePlacer.instance.ShrinkStockpile(stockpile);
+            StockpilePlacer.Instance.ShrinkStockpile(stockpile);
         }
     }
     public void TryToSelectOtherItemInCell()
     {
         ISelectable selectable = currentSelected[0];
-        Cell cell = GridManager.instance.GetCellFromPosition((selectable as MonoBehaviour).transform.position);
+        Cell cell = GridManager.Instance.GetCellFromPosition((selectable as MonoBehaviour).transform.position);
         Vector3 corner1 = cell.position - new Vector3(1f / 2, 0, 1f / 2);
         Vector3 corner2 = cell.position + new Vector3(1f / 2, 0, 1f / 2);
-        Vector3 halfSize = new Vector3(Mathf.Abs(corner1.x - corner2.x), 3f, Mathf.Abs(corner1.z - corner2.z) / 2f);
+        Box box = VectorUtility.CalculateBoxSize(corner1, corner2).ShrinkBoxNoY(0.95f);
 
-        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(cell.position, halfSize * 0.95f);
+        List<ISelectable> selectables = ComponentUtility.GetComponentsInBox<ISelectable>(cell.position, box.halfExtents);
         selectables.Remove(selectable);
 
         if (selectables.Count != 0)
         {
-            currentSelected.Clear();
+            DeselectAll();
             selectables[0].OnSelect();
             SetSelectionType(selectables[0].GetSelectionType());
         }
@@ -484,7 +491,7 @@ public class SelectionManager : MonoBehaviour
     public void FocusCameraToSelected()
     {
         List<Vector3> selectedPositions = new List<Vector3>();
-        foreach(ISelectable selectable in currentSelected)
+        foreach (ISelectable selectable in currentSelected)
         {
             selectedPositions.Add((selectable as MonoBehaviour).transform.position);
         }
@@ -503,8 +510,9 @@ public class SelectionManager : MonoBehaviour
         ResetDrag();
         ResetHovered();
 
-        UIManager.instance.SetAllSelectionUIInactive();
-        UIManager.instance.selectionPanel.SetActive(false);
+        UIManager.Instance.SetAllSelectionUIInactive();
+        UIManager.Instance.selectionPanel.SetActive(false);
+        UIManager.Instance.SelectionActionCanvas.SetActive(false);
     }
 
     void DeselectAll()

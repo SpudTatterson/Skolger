@@ -7,7 +7,7 @@ public class SelectionUIButtons : MonoBehaviour
     SelectionManager selectionManager;
     void Start()
     {
-        selectionManager = SelectionManager.instance;
+        selectionManager = SelectionManager.Instance;
     }
     public void SetActionToHarvest()
     {

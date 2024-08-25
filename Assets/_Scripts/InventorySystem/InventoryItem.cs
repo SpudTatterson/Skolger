@@ -1,12 +1,12 @@
 using System;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [System.Serializable]
 public class InventoryItem : IItem
 {
 
-    [field: SerializeField, Expandable] public ItemData itemData { get; private set; }
+    [field: SerializeField, InlineEditor] public ItemData itemData { get; private set; }
     [field: SerializeField, ReadOnly] public int amount { get; private set; }
 
     public int currentInventorySlot { get; private set; }

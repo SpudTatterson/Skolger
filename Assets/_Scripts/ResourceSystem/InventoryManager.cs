@@ -3,24 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : MonoSingleton<InventoryManager>
 {
-    public static InventoryManager instance;
-
     public List<Stockpile> stockpiles = new List<Stockpile>();
     public SerializableDictionary<ItemType, SerializableDictionary<ItemData, int>> totalItems = new SerializableDictionary<ItemType, SerializableDictionary<ItemData, int>>();
     public event Action<ItemData, int> OnInventoryUpdated;
-
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            Destroy(this);
-            Debug.Log("More than one InventoryManager exists.");
-        }
-    }
 
     // Method to get stockpile with empty space
     public Stockpile GetStockpileWithEmptySpace(out Cell cell)

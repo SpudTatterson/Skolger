@@ -50,9 +50,9 @@ public class BuilderTest : MonoBehaviour//, IContainer<InventoryItem>
 
         hauling = true;
 
-        if (InventoryManager.instance.HasItem(costToGet))
+        if (InventoryManager.Instance.HasItem(costToGet))
         {
-            Cell itemPosition = InventoryManager.instance.GetItemLocation(costToGet.item, costToGet.cost, out _);
+            Cell itemPosition = InventoryManager.Instance.GetItemLocation(costToGet.item, costToGet.cost, out _);
             agent.SetDestination(itemPosition.position);
             while (!ReachedDestinationOrGaveUp())
             {
@@ -64,7 +64,7 @@ public class BuilderTest : MonoBehaviour//, IContainer<InventoryItem>
                 hauling = false;
                 yield break;
             }
-            PutItemIn(InventoryManager.instance.TakeItem(costToGet));// take item
+            PutItemIn(InventoryManager.Instance.TakeItem(costToGet));// take item
             Cell constructablePosition = constructable.GetPosition(); // get constructable position
             agent.SetDestination(constructablePosition.position);
             while (!ReachedDestinationOrGaveUp())

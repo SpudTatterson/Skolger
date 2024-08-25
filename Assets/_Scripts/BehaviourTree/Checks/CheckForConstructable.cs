@@ -15,7 +15,7 @@ public class CheckForConstructable : Node
 
         if (hasInventoryItem != null || !colonistData.IsEmpty())
         {
-            state = NodeState.FAILURE;
+            state = NodeState.RUNNING;
             return state;
         }
 
@@ -30,7 +30,6 @@ public class CheckForConstructable : Node
         if (constructable != null)
         {
             parent.parent.SetData(DataName.Constructable, constructable);
-
             state = NodeState.SUCCESS;
             return state;
         }

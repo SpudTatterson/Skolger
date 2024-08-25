@@ -58,7 +58,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     void Start()
     {
         faceSprite = ColonistUtility.CaptureFace(gameObject, 1.75f, new Vector3(0, 1.75f, 1.15f), width, height, 1.5f);
-        UIManager.instance.AddColonistToBoard(colonistName, this);
+        UIManager.Instance.AddColonistToBoard(colonistName, this);
     }
 
     public void Eat(IEdible edible)
@@ -95,7 +95,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     {
         for (int i = 0; i < Items.Length; i++)
         {
-            if (itemData == Items[i].itemData && amount <= Items[i].amount)
+            if (itemData !=null && Items[i] != null && itemData == Items[i].itemData && amount <= Items[i].amount)
             {
                 itemIndex = i;
                 return true;
@@ -167,8 +167,8 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     public void DisplayInfo()
     {
-        UIManager.instance.ShowColonistWindow(colonistName, colonistActivity);
-        UIManager.instance.SetCurrentColonist(this);
+        UIManager.Instance.ShowColonistWindow(colonistName, colonistActivity);
+        UIManager.Instance.SetCurrentColonist(this);
     }
 
     string SetRandomName()
@@ -248,31 +248,31 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     public void OnSelect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.AddToCurrentSelected(this);
         IsSelected = true;
 
-        outline.OutlineMode = Outline.Mode.OutlineAll;
+        outline.Enable();
     }
     public void OnDeselect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.RemoveFromCurrentSelected(this);
         if (IsSelected)
             manager.UpdateSelection();
 
-        outline.OutlineMode = Outline.Mode.OutlineHidden;
+        outline.Disable();
         IsSelected = false;
     }
 
     public void OnHover()
     {
-        outline.OutlineMode = Outline.Mode.OutlineAll;
+        outline.Enable();
     }
 
     public void OnHoverEnd()
     {
-        outline.OutlineMode = Outline.Mode.OutlineHidden;
+        outline.Disable();
     }
 
     #endregion

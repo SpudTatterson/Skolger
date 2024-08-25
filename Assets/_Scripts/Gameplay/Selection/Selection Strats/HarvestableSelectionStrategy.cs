@@ -4,24 +4,24 @@ public class HarvestableSelectionStrategy : ISelectionStrategy
 {
     public void ApplySelection(List<ISelectable> selectedItems)
     {
-        UIManager.instance.SetAllSelectionUIInactive();
-        UIManager.instance.harvestableSelection.gameObject.SetActive(true);
+        UIManager.Instance.SetAllSelectionUIInactive();
+        UIManager.Instance.harvestableSelection.gameObject.SetActive(true);
         EnableButtons();
 
         IHarvestable harvestable = selectedItems[0]as IHarvestable;
         List<ItemDrop> drops = harvestable.GetItemDrops();
 
-        HarvestableSelectionMenu selectionMenu = UIManager.instance.harvestableSelection;
+        HarvestableSelectionMenu selectionMenu = UIManager.Instance.harvestableSelection;
 
         selectionMenu.SetDrops(drops);
         selectionMenu.harvestableName.text = $"Name: {selectedItems[0].GetMultipleSelectionString(out _)}";
 
-        SelectionManager.instance.CheckForCancelableAction();
+        SelectionManager.Instance.CheckForCancelableAction();
     }
 
     public void EnableButtons()
     {
-        UIManager.instance.SetAllActionButtonsInactive();
-        UIManager.instance.harvestButton.SetActive(true);
+        UIManager.Instance.SetAllActionButtonsInactive();
+        UIManager.Instance.harvestButton.SetActive(true);
     }
 }

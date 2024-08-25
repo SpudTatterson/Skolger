@@ -6,12 +6,12 @@ public class ItemSelectionStrategy : ISelectionStrategy
     {
         IAllowable allowable = selectedItems[0] as IAllowable;
 
-        UIManager.instance.SetAllSelectionUIInactive();
-        UIManager.instance.itemSelection.gameObject.SetActive(true);
+        UIManager.Instance.SetAllSelectionUIInactive();
+        UIManager.Instance.itemSelection.gameObject.SetActive(true);
         EnableButtons();
 
         ItemObject selectedItem = selectedItems[0]as ItemObject;
-        ItemSelectionMenu selectionMenu = UIManager.instance.itemSelection;
+        ItemSelectionMenu selectionMenu = UIManager.Instance.itemSelection;
 
         selectionMenu.itemName.text = $"Item Name: {selectedItem.itemData.name}";
         selectionMenu.amount.text = $"Amount: {selectedItem.amount}";
@@ -20,8 +20,8 @@ public class ItemSelectionStrategy : ISelectionStrategy
 
     public void EnableButtons()
     {
-        UIManager.instance.SetAllActionButtonsInactive();
+        UIManager.Instance.SetAllActionButtonsInactive();
 
-        SelectionManager.instance.CheckForAllowableSelection();
+        SelectionManager.Instance.CheckForAllowableSelection();
     }
 }

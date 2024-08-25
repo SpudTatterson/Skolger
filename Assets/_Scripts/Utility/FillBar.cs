@@ -1,19 +1,19 @@
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class FillBar : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] float maxFillAmount = 100;
-    float currentFill = 0f;
+    [ShowInInspector, ProgressBar(0, "maxFillAmount"), ReadOnly] float currentFill = 0f;
     [SerializeField] bool inverseFillBar = false;
-    [SerializeField, Foldout("Advance Settings")] Vector3 emptyPosition = new Vector3(1, 0, 0);
-    [SerializeField, Foldout("Advance Settings")] Vector3 fullPosition = new Vector3(0, 0, 0);
+    [SerializeField, FoldoutGroup("Advance Settings")] Vector3 emptyPosition = new Vector3(1, 0, 0);
+    [SerializeField, FoldoutGroup("Advance Settings")] Vector3 fullPosition = new Vector3(0, 0, 0);
 
     [Header("References")]
-    [SerializeField] SpriteRenderer barBGRenderer;
-    [SerializeField] SpriteRenderer barRenderer;
-    [SerializeField] Transform mask;
+    [SerializeField, ChildGameObjectsOnly] SpriteRenderer barBGRenderer;
+    [SerializeField, ChildGameObjectsOnly] SpriteRenderer barRenderer;
+    [SerializeField, ChildGameObjectsOnly] Transform mask;
 
     [ContextMenu("UpdateHealth")]
     void test()
@@ -34,7 +34,7 @@ public class FillBar : MonoBehaviour
         else
             FillAmount = Mathf.InverseLerp(0, maxFillAmount, currentFill);
 
-        Vector3 maskPos = new Vector3(Mathf.InverseLerp(emptyPosition.x, fullPosition.x, FillAmount), 0 ,0);
+        Vector3 maskPos = new Vector3(Mathf.InverseLerp(emptyPosition.x, fullPosition.x, FillAmount), 0, 0);
         mask.localPosition = maskPos;
     }
     public void UpdateMaxFillAmount(float maxFillAmount)

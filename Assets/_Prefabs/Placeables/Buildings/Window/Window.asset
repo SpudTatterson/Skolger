@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c2d85c210dbb24f966b0c6d0546203, type: 3}
   m_Name: Window
   m_EditorClassIdentifier: 
-  icon: {fileID: 2800000, guid: 27cdc5036ee7fb245ab9207a17d58602, type: 3}
+  icon: {fileID: 2800000, guid: ac2f43869c082fd449863f75db4876a9, type: 3}
   placeableName: Window
   description: 
   costs:
@@ -23,8 +23,8 @@ MonoBehaviour:
   usesCell: 1
   takesFullCell: 1
   walkable: 0
-  placementType: 0
-  unplacedVisual: {fileID: 7126457429312485867, guid: 1f3fb1004f14dc84881d2c65fe597bd4,
+  placementType: 1
+  unplacedVisual: {fileID: 75827493000815712, guid: b50c90128e0235d429d192ce4816f158,
     type: 3}
-  buildingPrefab: {fileID: 3444910917444163466, guid: 11b07991cba4fb9409969afb68c4bf84,
+  buildingPrefab: {fileID: 8160813735509985790, guid: 44ca0c1623740df40b4c67cd49f3bc1a,
     type: 3}

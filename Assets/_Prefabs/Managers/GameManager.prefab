@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3350276427243490880}
   - component: {fileID: 5118616145373962099}
   - component: {fileID: 9153664454649759732}
+  - component: {fileID: 1277449317815865942}
   - component: {fileID: 2176899014970851094}
   - component: {fileID: 7981274547399356321}
   - component: {fileID: 4444768308068659478}
@@ -18,8 +19,8 @@ GameObject:
   - component: {fileID: 547942696602740720}
   - component: {fileID: 7793368260817705079}
   - component: {fileID: 7281736121582617657}
-  - component: {fileID: 3685384074947673535}
-  - component: {fileID: 3012153896857175366}
+  - component: {fileID: 6083706945564748004}
+  - component: {fileID: 3262080582239986333}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -39,7 +40,8 @@ Transform:
   m_LocalPosition: {x: 29.633213, y: 11.781396, z: 88.047295}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2966592439087320381}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5118616145373962099
@@ -54,8 +56,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869cd2cdb0a7a484aa8564a453a4be97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridsParent: {fileID: 0}
-  worldSettings: {fileID: 0}
+  grids: []
+  GridsParent: {fileID: 0}
+  worldSettings: {fileID: 11400000, guid: a459f3e8c2f06c54b9e0f825ef35ea0f, type: 2}
 --- !u!114 &9153664454649759732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,12 +66,29 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6069251704015072993}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6365d4b528577a849b8bb99190157598, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cells: []
+--- !u!114 &1277449317815865942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6069251704015072993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 260492e2a726a624d9dc9146153cae53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxYHeight: 12
+  minYHeight: -3
+  yClip: 6
+  offset: 0.2
+  CurrentLayerText: {fileID: 0}
 --- !u!114 &2176899014970851094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,6 +104,7 @@ MonoBehaviour:
   draggableLayer: 6
   groundLayer: 7
   itemLayer: 8
+  buildableLayer: 12
   GroundLayerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -95,7 +116,7 @@ MonoBehaviour:
     m_Bits: 257
   buildableLayerMask:
     serializedVersion: 2
-    m_Bits: 2176
+    m_Bits: 4224
 --- !u!114 &7981274547399356321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,11 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ba8a67fae165144a335e17a03096df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridMaterial: {fileID: 2100000, guid: 728b3d800a13b1c4a920504130fb8f08, type: 2}
-  stockpileMaterial: {fileID: 2100000, guid: 1e5ec0d2a694829409f038ae45d3d69b, type: 2}
-  unfinishedBuildingMaterial: {fileID: 2100000, guid: 54a61d413f961ee40b69cc0af66181b7,
-    type: 2}
-  SelectionMaterial: {fileID: 0}
+  materials: {fileID: 0}
 --- !u!114 &8654645700902479148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +172,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingData: {fileID: 0}
   timeForDragStart: 0.1
+  placementDirection: 0
   placedBuildings: []
 --- !u!114 &7793368260817705079
 MonoBehaviour:
@@ -169,7 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSelecting: 1
-  specialSelectionTypes: 
+  specialSelectionTypes: 0500000006000000
   dragDelay: 0.1
   selectionAction: 0
 --- !u!114 &7281736121582617657
@@ -193,7 +211,8 @@ MonoBehaviour:
   stockpileSelection: {fileID: 0}
   multipleSelection: {fileID: 0}
   multipleSelectionContent: {fileID: 0}
-  defaultTextAsset: {fileID: 0}
+  defaultTextAsset: {fileID: 2699217162409157615, guid: 99d73b1146071a047b51d2aae787c734,
+    type: 3}
   selectionBoxImage: {fileID: 0}
   harvestButton: {fileID: 0}
   allowButton: {fileID: 0}
@@ -202,38 +221,172 @@ MonoBehaviour:
   deconstructButton: {fileID: 0}
   growZoneButton: {fileID: 0}
   shrinkZoneButton: {fileID: 0}
+  SelectionActionCanvas: {fileID: 0}
+  actionText: {fileID: 0}
   colonistInfoPanel: {fileID: 0}
   nameText: {fileID: 0}
   activityText: {fileID: 0}
   colonistsBoard: {fileID: 0}
-  colonistDataPrefab: {fileID: 0}
-  defaultInventoryUIPrefab: {fileID: 0}
-  itemTypeGroupPrefab: {fileID: 0}
-  inventoryPanel: {fileID: 0}
---- !u!114 &3685384074947673535
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6069251704015072993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be383814150870e40bca09eb98e44f89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioMixer: {fileID: 24100000, guid: dd859ea7effb5284a9de2fef95879571, type: 2}
---- !u!114 &3012153896857175366
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6069251704015072993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ea442011c1df44b9fd725a4159a816, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  soundFXObject: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
+  colonistDataPrefab: {fileID: 3841737032443900864, guid: 57998a69f3ec5674eafa5e92fbd49925,
     type: 3}
+  defaultInventoryUIPrefab: {fileID: 7782425593505376041, guid: f09a314cfe73d314ba29a4147c854507,
+    type: 3}
+  itemTypeGroupPrefab: {fileID: 4163565694974767020, guid: dfc3562d9517d47429c58918a622d6ac,
+    type: 3}
+  inventoryPanel: {fileID: 0}
+--- !u!114 &6083706945564748004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6069251704015072993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f81e420f32277449b59ec52b7453047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3262080582239986333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6069251704015072993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656e3a6611bbb944189e6fa89979158d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8850378604462149758
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2966592439087320381}
+  - component: {fileID: 7058752154788391183}
+  - component: {fileID: 7302125334535349503}
+  - component: {fileID: 7073123503895159297}
+  m_Layer: 0
+  m_Name: DayNightCycle Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2966592439087320381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850378604462149758}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3350276427243490880}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7058752154788391183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850378604462149758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05b0c2b4e897e15448ee7de1f7e31558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDayCycleOn: 1
+  RandomStartTime: 0
+  <TimeOfDay>k__BackingField: 12
+  StartTime: 12
+  <CycleDuration>k__BackingField: 300
+--- !u!114 &7302125334535349503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850378604462149758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87bd7b210a9544341a57a2a34e576340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsTolerance: 0.2
+  ResetEventsTime: 0.1
+  events:
+  - eventName: Morning
+    Time: 6
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    executed: 0
+  - eventName: Night
+    Time: 19
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    executed: 0
+--- !u!114 &7073123503895159297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850378604462149758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8596d44e656bf114da2eb227bb39df6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Preset: {fileID: 11400000, guid: 10703449fc64e7143a3eb054ef487398, type: 2}
+  morningInterval: {x: 0, y: 0.5}
+  afterNoonInterval: {x: 0.5, y: 1}
+  SunDirectionalLight: {fileID: 0}
+  lightIntensity: {x: 0, y: 1}
+  IsShadowChangeOn: 0
+  shadowStrength: 0.5
+  sunYRotation: 45
+  isMoonActive: 1
+  MoonDirectionalLight: {fileID: 0}
+  IsMoonRotationOn: 1
+  moonYRotation: 15
+  MoonIntensity: {x: 0, y: 0.3}
+  MoonShadowStrength: 0.5
+  IsSkyBoxOn: 0
+  skyboxMat: {fileID: 0}
+  customPropertyName: 
+  rotationAxis: 0

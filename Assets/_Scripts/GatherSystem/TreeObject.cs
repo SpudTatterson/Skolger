@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
+public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
     [SerializeField] private AudioClip[] ChopingSound;
 
     [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
-    [SerializeField] string harvestableName = "Tree";
+    [SerializeField] string harvestableName = "";
     BillBoard setForHarvestBillboard;
     Outline outline;
     FillBar fillBar;
@@ -18,7 +18,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     bool beingHarvested = false;
     bool finishedHarvesting = false;
     bool setForHarvesting = false;
-    SelectionType selectionType = SelectionType.Harvestable;
+
     public bool IsSelected { get; private set; }
 
     void Awake()
@@ -45,7 +45,6 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
         timeHarvesting = 0f;
         beingHarvested = true;
         fillBar.UpdateMaxFillAmount(baseGatherTime); // multiply by any modifiers
-        SoundsFXManager.instance.PlayRandomSoundFXClip(ChopingSound, transform, 1f);
 
         while (timeHarvesting < baseGatherTime)
         {
@@ -97,7 +96,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     }
     public void OnSelect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.AddToCurrentSelected(this);
         IsSelected = true;
 
@@ -105,7 +104,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     }
     public void OnDeselect()
     {
-        SelectionManager manager = SelectionManager.instance;
+        SelectionManager manager = SelectionManager.Instance;
         manager.RemoveFromCurrentSelected(this);
         if (IsSelected)
             manager.UpdateSelection();
@@ -125,7 +124,7 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
     }
     public SelectionType GetSelectionType()
     {
-        return selectionType;
+        return SelectionType.Harvestable;
     }
     public ISelectionStrategy GetSelectionStrategy()
     {
@@ -149,14 +148,11 @@ public class TreeObject : MonoBehaviour, IHarvestable, ISelectable, ICellOccupie
 
     public void GetOccupiedCells()
     {
-        if (GridManager.instance == null)
-            GridManager.InitializeSingleton();
-
-        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
     }
     public void OnOccupy()
     {
-        if (cornerCell == null) cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        if (cornerCell == null) GetOccupiedCells();
         cornerCell.inUse = true;
         cornerCell.walkable = false;
     }

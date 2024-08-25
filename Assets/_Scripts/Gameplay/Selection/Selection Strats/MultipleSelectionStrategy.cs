@@ -12,10 +12,10 @@ public class MultipleSelectionStrategy : ISelectionStrategy
 
     public void ApplySelection(List<ISelectable> selectedItems)
     {
-        UIManager.instance.SetAllSelectionUIInactive();
-        UIManager.instance.multipleSelection.SetActive(true);
+        UIManager.Instance.SetAllSelectionUIInactive();
+        UIManager.Instance.multipleSelection.SetActive(true);
 
-        Transform scrollViewContent = UIManager.instance.multipleSelectionContent;
+        Transform scrollViewContent = UIManager.Instance.multipleSelectionContent;
         ClearMultipleSelectionTexts();
         selectedNamesAndAmounts.Clear();
         type = selectedItems[0].GetSelectionType();
@@ -36,7 +36,7 @@ public class MultipleSelectionStrategy : ISelectionStrategy
         foreach (KeyValuePair<string, int> pair in selectedNamesAndAmounts)
         {
 
-            TextMeshProUGUI text = PoolManager.Instance.GetObject(UIManager.instance.defaultTextAsset.gameObject, parent: scrollViewContent).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI text = PoolManager.Instance.GetObject(UIManager.Instance.defaultTextAsset.gameObject, parent: scrollViewContent).GetComponent<TextMeshProUGUI>();
             text.text = $"{pair.Value} x {pair.Key}";
             multipleSelectionTexts.Add(text);
         }
@@ -47,7 +47,7 @@ public class MultipleSelectionStrategy : ISelectionStrategy
             EnableButtons();
         }
         else
-            UIManager.instance.SetAllActionButtonsInactive();
+            UIManager.Instance.SetAllActionButtonsInactive();
     }
 
 
@@ -55,7 +55,7 @@ public class MultipleSelectionStrategy : ISelectionStrategy
     {
         foreach (TextMeshProUGUI text in multipleSelectionTexts)
         {
-            PoolManager.Instance.ReturnObject(UIManager.instance.defaultTextAsset.gameObject, text.gameObject);
+            PoolManager.Instance.ReturnObject(UIManager.Instance.defaultTextAsset.gameObject, text.gameObject);
         }
         multipleSelectionTexts.Clear();
     }
@@ -68,7 +68,7 @@ public class MultipleSelectionStrategy : ISelectionStrategy
     {
         mainSelectable.GetSelectionStrategy().EnableButtons();
 
-        SelectionManager.instance.CheckForCancelableAction();
-        SelectionManager.instance.CheckForAllowableSelection();
+        SelectionManager.Instance.CheckForCancelableAction();
+        SelectionManager.Instance.CheckForAllowableSelection();
     }
 }

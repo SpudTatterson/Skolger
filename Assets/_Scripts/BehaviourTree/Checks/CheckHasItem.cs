@@ -9,9 +9,9 @@ public class CheckHasItem : Node
 
         if (itemCost != null)
         {
-            if (InventoryManager.instance.HasItem(itemCost))
+            if (InventoryManager.Instance.HasItem(itemCost))
             {
-                Cell itemPosition = InventoryManager.instance.GetItemLocation(itemCost.item, itemCost.cost, out Stockpile stockpile);
+                Cell itemPosition = InventoryManager.Instance.GetItemLocation(itemCost.item, itemCost.cost, out Stockpile stockpile);
                 parent.parent.SetData(DataName.Target, itemPosition);
                 parent.parent.SetData(DataName.Stockpile, stockpile);
 

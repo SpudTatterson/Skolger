@@ -1,4 +1,4 @@
-﻿//
+//
 //  Outline.cs
 //  QuickOutline
 //
@@ -87,9 +87,23 @@ public class Outline : MonoBehaviour
   private Material outlineMaskMaterial;
   private Material outlineFillMaterial;
 
-  [SerializeField] bool dontOutlineSprites = true;
+  [SerializeField] int _stencilValue = 1;
+  [SerializeField] int addToQueue =  50;
+  [SerializeField] bool _dontOutlineSprites = true;
+  [SerializeField] bool _useFade = true;
   private bool needsUpdate;
 
+  [Header("Enabled Settings")]
+  [SerializeField] Mode _enabledMode = Mode.OutlineAll;
+  [SerializeField] float _enabledWidth = 2;
+  [SerializeField] Color _enabledColor = Color.white;
+  [Header("Disabled Settings")]
+  [SerializeField] Mode _disabledMode = Mode.OutlineVisible;
+  [SerializeField] float _disabledWidth = 4;
+  [SerializeField] Color _disabledColor = Color.black;
+
+  int fillInitialQueue;
+  int maskInitialQueue;
   void Awake()
   {
 
@@ -97,19 +111,26 @@ public class Outline : MonoBehaviour
     renderers = GetComponentsInChildren<Renderer>().ToList();
     for (int i = 0; i < renderers.Count; i++)
     {
-      if (dontOutlineSprites && renderers[i] is SpriteRenderer)
+      if (_dontOutlineSprites && renderers[i] is SpriteRenderer)
         renderers.RemoveAt(i);
     }
 
     // Instantiate outline materials
-    outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
-    outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+    // outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMaskFade"));
+    outlineMaskMaterial = _useFade ? Instantiate(Resources.Load<Material>(@"Materials/OutlineMaskFade")) : outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
+    outlineFillMaterial = _useFade ? Instantiate(Resources.Load<Material>(@"Materials/OutlineFillWithFade")) : outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+    // outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFillWithFade"));
 
     outlineMaskMaterial.name = "OutlineMask (Instance)";
     outlineFillMaterial.name = "OutlineFill (Instance)";
 
+    fillInitialQueue = outlineFillMaterial.renderQueue;
+    maskInitialQueue = outlineMaskMaterial.renderQueue;
+
     // Retrieve or generate smooth normals
     LoadSmoothNormals();
+
+    Disable();
 
     // Apply material properties immediately
     needsUpdate = true;
@@ -184,11 +205,29 @@ public class Outline : MonoBehaviour
   }
   public void Enable()
   {
-    this.enabled = true;
+    OutlineColor = _enabledColor;
+    outlineWidth = _enabledWidth;
+
+    outlineMode = _enabledMode;
+
+    needsUpdate = true;
   }
   public void Disable()
   {
-    this.enabled = false;
+    outlineColor = _disabledColor;
+    outlineWidth = _disabledWidth;
+
+    outlineMode = _disabledMode;
+
+    needsUpdate = true;
+  }
+  public void SetStencilValue(int value)
+  {
+    _stencilValue = value;
+  }
+  public void SetAddToQueueValue(int value)
+  {
+    addToQueue = value;
   }
   void Bake()
   {
@@ -324,6 +363,11 @@ public class Outline : MonoBehaviour
 
     // Apply properties according to mode
     outlineFillMaterial.SetColor("_OutlineColor", outlineColor);
+    outlineFillMaterial.SetInt("_StencilRef", _stencilValue);
+    outlineMaskMaterial.SetInt("_StencilRef", _stencilValue);
+
+    outlineFillMaterial.renderQueue = fillInitialQueue + addToQueue;
+    outlineMaskMaterial.renderQueue = maskInitialQueue + addToQueue;
 
     switch (outlineMode)
     {

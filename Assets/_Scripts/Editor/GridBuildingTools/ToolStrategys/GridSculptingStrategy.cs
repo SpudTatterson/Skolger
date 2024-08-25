@@ -102,7 +102,7 @@ public class GridSculptingStrategy : IGridToolStrategy, IBrushTool
         Vector3 flattenedCenter = VectorUtility.FlattenVector(center);
         int gridXSize = gridManager.worldSettings.gridXSize;
         int gridYSize = gridManager.worldSettings.gridYSize;
-        float cellSize = gridManager.worldSettings.cellSize; // Assuming you have this in your world settings
+        float cellSize = gridManager.worldSettings.cellSize;
 
         // Calculate the range in indices to limit the loops
         int minX = Mathf.Max(0, Mathf.FloorToInt((flattenedCenter.x - brushSize) / cellSize));
@@ -140,6 +140,10 @@ public class GridSculptingStrategy : IGridToolStrategy, IBrushTool
         activeGridObject.ChangeCellsVisibility(selectedCells, visibility);
 
         activeGridObject.UpdateVisualGrid();
+        if(!isRaising) gridManager.//get grid below and update it
+        GetGridFromPosition(VectorUtility.
+        FlattenVector(activeGridObject.transform.position,activeGridObject.transform.position.y - gridManager.worldSettings.cellHeight)).
+        UpdateVisualGrid();
         selectedCells.Clear();
         activeGridObject = null;
     }

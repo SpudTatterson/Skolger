@@ -1,24 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Sirenix.OdinInspector;
 
-public class MaterialManager : MonoBehaviour
+
+public class MaterialManager : MonoSingleton<MaterialManager>
 {
-    public static MaterialManager instance;
-
-    public Material gridMaterial;
-    public Material stockpileMaterial;
-    public Material unfinishedBuildingMaterial;
-    public Material SelectionMaterial;
-
-    void Awake()
-    {
-        if(instance == null)
-        instance = this;
-        else
-        {
-            Debug.Log("More then one material manager");
-            Destroy(this);
-        }
-    }
+    [InlineEditor] public MaterialsAsset materials;
 }
