@@ -318,7 +318,16 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
-  dontOutlineSprites: 1
+  _stencilValue: 1
+  addToQueue: 50
+  _dontOutlineSprites: 1
+  _useFade: 1
+  _enabledMode: 0
+  _enabledWidth: 2
+  _enabledColor: {r: 1, g: 1, b: 1, a: 1}
+  _disabledMode: 1
+  _disabledWidth: 4
+  _disabledColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1001 &2850999531416118413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -455,7 +464,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: fef0009c6132b644b887c6bd8066f5c3, type: 2}
+      objectReference: {fileID: 2100000, guid: edfb641d012164d498d44af51ba85319, type: 2}
     - target: {fileID: 919132149155446097, guid: 909aaa79ca2be97479457d5b879f9ab8,
         type: 3}
       propertyPath: m_Name
@@ -534,7 +543,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: fef0009c6132b644b887c6bd8066f5c3, type: 2}
+      objectReference: {fileID: 2100000, guid: edfb641d012164d498d44af51ba85319, type: 2}
     - target: {fileID: 919132149155446097, guid: cbfbb737993d4eb4b9d634504a3b2ad0,
         type: 3}
       propertyPath: m_Name

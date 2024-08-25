@@ -68,8 +68,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f614c0520908cb42b5f67d320930f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: e5f202f2f85672d429170c0ae039e710, type: 2}
+  data: {fileID: 11400000, guid: f7985a073032c9947979df0914a8b536, type: 2}
   <buildingData>k__BackingField: {fileID: 0}
+  placementDirection: 0
   <cornerCell>k__BackingField:
     id: 
     x: 0
@@ -78,6 +79,7 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     walkable: 0
     inUse: 0
+    hasFloor: 0
     isVisible: 0
     cellType: 0
 --- !u!114 &-8178868165742316376
@@ -92,14 +94,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useFade: 1
   outlineMode: 0
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 2
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
-  dontOutlineSprites: 1
+  _stencilValue: 1
+  addToQueue: 50
+  _dontOutlineSprites: 1
+  _useFade: 1
+  _enabledMode: 0
+  _enabledWidth: 2
+  _enabledColor: {r: 1, g: 1, b: 1, a: 1}
+  _disabledMode: 1
+  _disabledWidth: 4
+  _disabledColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1001 &1844141340327466193
 PrefabInstance:
   m_ObjectHideFlags: 0

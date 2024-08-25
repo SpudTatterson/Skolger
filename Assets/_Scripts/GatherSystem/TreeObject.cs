@@ -45,6 +45,7 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
         timeHarvesting = 0f;
         beingHarvested = true;
         fillBar.UpdateMaxFillAmount(baseGatherTime); // multiply by any modifiers
+        SoundsFXManager.instance.PlayRandomSoundFXClip(ChopingSound, transform, 1f);
 
         while (timeHarvesting < baseGatherTime)
         {

@@ -402,15 +402,6 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         }
     }
 
-    void SetSelectionForbidden(List<ISelectable> selectables)
-    {
-        foreach (ISelectable selectable in selectables)
-        {
-            if (selectable is IAllowable)
-                (selectable as IAllowable).OnDisallow();
-        }
-    }
-
     public void TryToCancelActions()
     {
         CancelSelection(currentSelected);

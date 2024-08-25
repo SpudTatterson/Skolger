@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a02bd808cdb8fc49b292c09c1850bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ChopingSound: []
   baseGatherTime: 4
   drops:
   - itemData: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
@@ -163,7 +164,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: fef0009c6132b644b887c6bd8066f5c3, type: 2}
+      objectReference: {fileID: 2100000, guid: edfb641d012164d498d44af51ba85319, type: 2}
     - target: {fileID: 919132149155446097, guid: 9b89868d7414a3b49808a53da936c570,
         type: 3}
       propertyPath: m_Name
