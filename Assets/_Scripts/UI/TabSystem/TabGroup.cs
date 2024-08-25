@@ -6,13 +6,14 @@ namespace Skolger.UI.Tabs
 {
     public class TabGroup : MonoBehaviour
     {
-        List<TabButton> tabButtons = new List<TabButton>();
+        [SerializeField] List<TabButton> tabButtons = new List<TabButton>();
         TabButton selectedTab;
         [SerializeField] bool requireSelectedTab;
 
         public void Subscribe(TabButton button)
         {
-            tabButtons.Add(button);
+            if (!tabButtons.Contains(button))
+                tabButtons.Add(button);
         }
 
         public void UnSubscribe(TabButton button)
