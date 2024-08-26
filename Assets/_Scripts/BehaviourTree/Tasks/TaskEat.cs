@@ -27,7 +27,7 @@ public class TaskEat : Node
             if (InventoryManager.Instance.HasItem(new ItemCost(edibleData, 1)))
             {
                 IEdible edible = (EdibleInventoryItem)InventoryManager.Instance.TakeItem(new ItemCost(edibleData, 1), stockpile);
-                colonistData.Eat(edible);
+                colonistData.hungerManager.Eat(edible);
             }
             else
             {

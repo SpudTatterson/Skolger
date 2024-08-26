@@ -1,19 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem>, ISelectable
+public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectable
 {
-    [field: Header("Hunger")]
+
     const float Max_Belly_Capacity = 100f;
-    [field: SerializeField] public float HungerThreshold { get; private set; } = 40; // The amount of hungry at which the colonist will drop everything and go eat
-    [field: SerializeField, ReadOnly] public float HungerLevel { get; private set; } = 50; // How hungry the colonist current is
-    [field: SerializeField] public float HungerGainSpeed { get; private set; } = 1; // Hunger gain per second
-    public string HungerStatus { get; private set; }
+    public HungerManager hungerManager;
 
     [field: Header("Inventory")]
     [field: SerializeField] public InventoryItem[] Items { get; private set; }
@@ -21,9 +16,9 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     Queue<int> emptySlots = new();
 
     [Header("Portrait")]
-    public Sprite faceSprite;
-    public int width = 256;
-    public int height = 256;
+    [SerializeField] int width = 256;
+    [SerializeField] int height = 256;
+    public Sprite faceSprite { get; private set; }
 
     public event Action<string> OnActivityChanged;
     [HideInInspector] public string colonistName { get; private set; }
@@ -47,6 +42,7 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
     public bool IsSelected { get; private set; }
     void Awake()
     {
+        hungerManager = GetComponent<HungerManager>();
         Items = new InventoryItem[InventorySlots];
         for (int i = 0; i < Items.Length; i++)
         {
@@ -61,41 +57,12 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
         UIManager.Instance.AddColonistToBoard(colonistName, this);
     }
 
-    public void Eat(IEdible edible)
-    {
-        HungerLevel += edible.FoodValue;
-        HungerLevel = Mathf.Clamp(HungerLevel, 0, Max_Belly_Capacity);
-        //Destroy(((MonoBehaviour)edible).gameObject);
-    }
-
-    public void GetHungry(float hunger)
-    {
-        HungerLevel -= HungerGainSpeed * hunger;
-        HungerLevel = Mathf.Clamp(HungerLevel, 0, Max_Belly_Capacity);
-        HungerStatus = HungerStatusSetter();
-    }
-
-    string HungerStatusSetter()
-    {
-        if (HungerLevel <= 0)
-            return "starving";
-        else if (HungerLevel <= 40)
-            return "Hungry";
-        else
-            return "Full";
-    }
-
-    public bool IsHungry()
-    {
-        if (HungerLevel < HungerThreshold) return true;
-        return false;
-    }
 
     public bool HasItem(ItemData itemData, int amount, out int? itemIndex)
     {
         for (int i = 0; i < Items.Length; i++)
         {
-            if (itemData !=null && Items[i] != null && itemData == Items[i].itemData && amount <= Items[i].amount)
+            if (itemData != null && Items[i] != null && itemData == Items[i].itemData && amount <= Items[i].amount)
             {
                 itemIndex = i;
                 return true;
@@ -153,16 +120,8 @@ public class ColonistData : MonoBehaviour, IHungerable, IContainer<InventoryItem
 
     void Update()
     {
-        GetHungry(Time.deltaTime);
+        hungerManager.GetHungry(Time.deltaTime);
     }
-
-    void OnMouseDown()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, Mathf.Infinity, ~gameObject.layer))
-        {
-            DisplayInfo();
-        }
     }
 
     public void DisplayInfo()
