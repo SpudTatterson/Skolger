@@ -20,16 +20,12 @@ public interface ISelectable
     public string GetMultipleSelectionString(out int amount);
     bool HasActiveCancelableAction();
 
-    public void OnSelect()
-    {
-        SelectionManager manager = SelectionManager.instance;
-        manager.AddToCurrentSelected(this);
-    }
+    public bool IsSelected { get; }
 
-    public void OnDeselect()
-    {
-        SelectionManager manager = SelectionManager.instance;
-        manager.RemoveFromCurrentSelected(this);
-    }
+    public void OnSelect();
+    public void OnDeselect();
+
+    public void OnHover();
+    public void OnHoverEnd();
 
 }

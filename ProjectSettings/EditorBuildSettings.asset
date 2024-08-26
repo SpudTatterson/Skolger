@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Alex/AI_Test 1.unity
     guid: bbb1b4b37e065f846b62658d3ddf21c6
+  - enabled: 1
+    path: Assets/Scenes/Aviv/ResourceTestScene.unity
+    guid: 80a5118716a1f694d933454f91fe47c9
   m_configObjects: {}

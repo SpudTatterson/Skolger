@@ -20,10 +20,11 @@ public class TaskTakeItemFromStockpile : Node
         if (cost != null && ReachedDestinationOrGaveUp())
         {
             Stockpile stockpile = (Stockpile)GetData(DataName.Stockpile);
-            var item = InventoryManager.instance.TakeItem(cost, stockpile);
+            var item = InventoryManager.Instance.TakeItem(cost, stockpile);
             parent.parent.SetData(DataName.InventoryItem, item);
             colonistData.PutItemIn(item);
             var constructable = (IConstructable)GetData(DataName.Constructable);
+            ClearData(DataName.Target);
             parent.parent.SetData(DataName.Target, constructable.GetPosition());
 
             state = NodeState.SUCCESS;

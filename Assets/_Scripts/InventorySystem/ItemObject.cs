@@ -1,16 +1,18 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
-using NaughtyAttributes;
 
 public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOccupier
 {
     [field: Header("Settings")]
-    [field: SerializeField, Expandable] public ItemData itemData { get; set; }
+    [field: SerializeField, InlineEditor] public ItemData itemData { get; set; }
     [SerializeField] int initialAmount;
     int stackSize;
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
     [SerializeField] bool allowedOnInit = true;
+    BillBoard forbiddenBillboard;
+    Outline outline;
 
     [field: SerializeField, ReadOnly] public int amount { get; private set; }
 
@@ -20,6 +22,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     public Cell cornerCell { get; private set; }
 
     public bool allowed { get; private set; }
+    public bool IsSelected { get; private set; }
 
 
 
@@ -33,15 +36,18 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
     {
         GameObject visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
+        if (!inStockpile) visualGO.transform.rotation = Quaternion.Euler(new Vector3(0, UnityEngine.Random.Range(0, 180), 0));
 
         visualGO.AddComponent<BoxCollider>();
 
         ItemObject item = visualGO.AddComponent<ItemObject>();
-        item.Initialize(itemData, amount, allowed, visualGO, inStockpile, stockpile);
+        
+        visualGO.transform.parent = parent;
         item.transform.position = position;
 
-        visualGO.transform.parent = parent;
-        visualGO.layer = LayerManager.instance.itemLayer;
+        item.Initialize(itemData, amount, allowed, visualGO, inStockpile, stockpile);
+
+        visualGO.layer = LayerManager.Instance.itemLayer;
 
         return item;
     }
@@ -58,13 +64,23 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         }
         this.visualGO = visualGO;
         this.inStockpile = inStockpile;
-        currentStockpile = stockpile;
+        if (inStockpile)
+        {
+            currentStockpile = stockpile;
+            transform.localPosition = VectorUtility.FlattenVector(transform.localPosition);
+        }
+
+        forbiddenBillboard = GetComponentInChildren<BillBoard>(true);
+        outline = GetComponentInChildren<Outline>(true);
+        if (outline == null)
+            outline = visualGO.AddComponent<Outline>();
+
         if (allowed) OnAllow();
         else OnDisallow();
-        if (GridManager.instance.GetCellFromPosition(transform.position) == null) cornerCell = null;
+        if (GridManager.Instance.GetCellFromPosition(transform.position) == null) cornerCell = null;
         else
         {
-            cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+            cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         }
     }
 
@@ -136,12 +152,41 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         currentStockpile = null;
         transform.SetParent(null);
         OnAllow();
+        OnOccupy();
 
-        InventoryManager.instance.RemoveAmountOfItem(itemData, amount);
+        InventoryManager.Instance.RemoveAmountOfItem(itemData, amount);
     }
 
     #region Selection
 
+    public void OnSelect()
+    {
+        SelectionManager manager = SelectionManager.Instance;
+        manager.AddToCurrentSelected(this);
+        IsSelected = true;
+
+        outline?.Enable();
+    }
+    public void OnDeselect()
+    {
+        SelectionManager manager = SelectionManager.Instance;
+        manager.RemoveFromCurrentSelected(this);
+        if (IsSelected)
+            manager.UpdateSelection();
+
+        outline?.Disable();
+        IsSelected = false;
+    }
+
+    public void OnHover()
+    {
+        outline?.Enable();
+    }
+
+    public void OnHoverEnd()
+    {
+        outline?.Disable();
+    }
     public SelectionType GetSelectionType()
     {
         return SelectionType.Item;
@@ -172,6 +217,8 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         if (!inStockpile)
             TaskManager.Instance.AddToHaulQueue(this);
 
+        forbiddenBillboard?.gameObject.SetActive(false);
+
     }
 
     public void OnDisallow()
@@ -181,6 +228,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
             TaskManager.Instance.RemoveFromHaulQueue(this);
         //remove from haul queue
         // visually show that item is disallowed with billboard or something similar
+        forbiddenBillboard?.gameObject.SetActive(true);
     }
     public bool IsAllowed()
     {
@@ -193,10 +241,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
     public void GetOccupiedCells()
     {
-        if (GridManager.instance == null)
-            GridManager.InitializeSingleton();
-
-        cornerCell = GridManager.instance.GetCellFromPosition(transform.position);
+        cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
     }
     public void OnOccupy()
     {
@@ -216,7 +261,7 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
         {
             OnRelease();
         }
-
+        OnDeselect();
     }
     void OnEnable()
     {

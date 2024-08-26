@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Placeable/FloorTile")]
-public class FloorTile : PlaceableData
+public class FloorTile : BuildingData
 {
-    
+
 }

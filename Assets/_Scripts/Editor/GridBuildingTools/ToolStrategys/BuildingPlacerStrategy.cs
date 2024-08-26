@@ -18,6 +18,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
     Cell firstCell;
     Cell cornerCell;
     Cell lastCell;
+    Direction placementDirection = Direction.TopLeft;
 
     public BuildingPlacerStrategy(GridManager gridManager, LayerManager layerManager)
     {
@@ -114,6 +115,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
                 }
                 else if ((e.type == EventType.MouseUp) && e.button == 0)
                 {
+                    Undo.RegisterCompleteObjectUndo(cell.grid, $"Created {buildingDatas[selectedBuilding].name}");
                     if (initialMouseDownTime + timeToInitDrag >= (float)EditorApplication.timeSinceStartup)
                     {
                         PlaceBuilding(cell, buildingDatas[selectedBuilding]);
@@ -200,9 +202,8 @@ public class BuildingPlacerStrategy : IGridToolStrategy
 
     void PlaceBuilding(Cell cell, BuildingData buildingData)
     {
-        Undo.RegisterCompleteObjectUndo(cell.grid, $"Created {buildingDatas[selectedBuilding].name}");
 
-        BuildingObject placed = BuildingObject.MakeInstance(buildingData, cell.position);
+        BuildingObject placed = BuildingObject.MakeInstance(buildingData, cell.position, placementDirection);
         
         Undo.RegisterCreatedObjectUndo(placed.gameObject, $"Created {buildingDatas[selectedBuilding].name}");
     }

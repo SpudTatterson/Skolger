@@ -16,7 +16,7 @@ public class CheckForStockpile : Node
 
     public override NodeState Evaluate()
     {
-        Stockpile stockpile = InventoryManager.instance.GetStockpileWithEmptySpace(out Cell cell);
+        Stockpile stockpile = InventoryManager.Instance.GetStockpileWithEmptySpace(out Cell cell);
         InventoryItem inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
         
         if (cell == null)
