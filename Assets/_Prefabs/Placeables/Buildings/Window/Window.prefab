@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 77989181211879056}
   - component: {fileID: 6288681625395325381}
   - component: {fileID: 4224255462607249811}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,6 +164,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a0ce5d485052df9419ffae6486acb448,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -242,6 +247,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DoorNWindowWall
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b2e7af945038e9447950478338204718,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
