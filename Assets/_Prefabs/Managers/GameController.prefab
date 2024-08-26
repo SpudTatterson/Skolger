@@ -8659,6 +8659,138 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7361082673225500390
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3853917788577592690}
+  - component: {fileID: 2969648959517507023}
+  - component: {fileID: 1570356747389401037}
+  - component: {fileID: 7393219231764879545}
+  m_Layer: 0
+  m_Name: DayNightCycle Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3853917788577592690
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7361082673225500390}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 583088102292671378}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2969648959517507023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7361082673225500390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05b0c2b4e897e15448ee7de1f7e31558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDayCycleOn: 1
+  RandomStartTime: 0
+  <TimeOfDay>k__BackingField: 12
+  StartTime: 12
+  <CycleDuration>k__BackingField: 300
+--- !u!114 &1570356747389401037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7361082673225500390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87bd7b210a9544341a57a2a34e576340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsTolerance: 0.2
+  ResetEventsTime: 0.1
+  events:
+  - eventName: Morning
+    Time: 6
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4843668205090335950}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    executed: 0
+  - eventName: Night
+    Time: 19
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4843668205090335950}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    executed: 0
+--- !u!114 &7393219231764879545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7361082673225500390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8596d44e656bf114da2eb227bb39df6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Preset: {fileID: 11400000, guid: 10703449fc64e7143a3eb054ef487398, type: 2}
+  morningInterval: {x: 0, y: 0.5}
+  afterNoonInterval: {x: 0.5, y: 1}
+  SunDirectionalLight: {fileID: 348354862200497070}
+  lightIntensity: {x: 0, y: 1}
+  IsShadowChangeOn: 0
+  shadowStrength: 0.5
+  sunYRotation: 45
+  isMoonActive: 1
+  MoonDirectionalLight: {fileID: 620461775793320188}
+  IsMoonRotationOn: 1
+  moonYRotation: 15
+  MoonIntensity: {x: 0, y: 0.3}
+  MoonShadowStrength: 0.5
+  IsSkyBoxOn: 0
+  skyboxMat: {fileID: 0}
+  customPropertyName: 
+  rotationAxis: 0
 --- !u!1 &7375030909870474578
 GameObject:
   m_ObjectHideFlags: 0
@@ -12155,6 +12287,12 @@ PrefabInstance:
       objectReference: {fileID: 8792759777822448757}
     - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
+      propertyPath: itemTypeGroupPrefab
+      value: 
+      objectReference: {fileID: 4163565694974767020, guid: dfc3562d9517d47429c58918a622d6ac,
+        type: 3}
+    - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
       propertyPath: harvestableSelection
       value: 
       objectReference: {fileID: 7174970011084384213}
@@ -12168,6 +12306,12 @@ PrefabInstance:
       propertyPath: constructableSelection
       value: 
       objectReference: {fileID: 5214328979150345081}
+    - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
+      propertyPath: defaultInventoryUIPrefab
+      value: 
+      objectReference: {fileID: 7782425593505376041, guid: f09a314cfe73d314ba29a4147c854507,
+        type: 3}
     - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
       propertyPath: multipleSelectionContent
@@ -12185,7 +12329,11 @@ PrefabInstance:
       objectReference: {fileID: 4843668205090335950}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3350276427243490880, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3853917788577592690}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6069251704015072993, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
