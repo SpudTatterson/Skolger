@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectable
 {
 
-    const float Max_Belly_Capacity = 100f;
+    public ColonistMoodManager colonistMood;
     public HungerManager hungerManager;
 
     [field: Header("Inventory")]
@@ -42,6 +42,7 @@ public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectabl
     public bool IsSelected { get; private set; }
     void Awake()
     {
+        colonistMood = GetComponent<ColonistMoodManager>();
         hungerManager = GetComponent<HungerManager>();
         Items = new InventoryItem[InventorySlots];
         for (int i = 0; i < Items.Length; i++)
@@ -121,7 +122,7 @@ public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectabl
     void Update()
     {
         hungerManager.GetHungry(Time.deltaTime);
-    }
+        colonistMood.UpdateMood();
     }
 
     public void DisplayInfo()
