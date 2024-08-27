@@ -758,11 +758,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Circles_BrightBG
+      name: GearIcon
       rect:
         serializedVersion: 2
-        x: 243
-        y: 401
+        x: 234
+        y: 405
         width: 80
         height: 79
       alignment: 0
@@ -1270,7 +1270,7 @@ TextureImporter:
         width: 84
         height: 83
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1300,7 +1300,6 @@ TextureImporter:
       Burger_BrightBG: -605624883
       Camera01_BrightBG: -622110977
       Camera02_BrightBG: 1717361482
-      Circles_BrightBG: 447409311
       Coin_BrightBG: 749509126
       Compass_BrightBG: -164947489
       Cross_BrightBG: -1632281137
@@ -1309,6 +1308,7 @@ TextureImporter:
       Exit_BrightBG: 479905756
       Gear01_BrightBG: -370961514
       Gear02_BrightBG: -838825703
+      GearIcon: 447409311
       Gears_BrightBG: 644145648
       Heart01_BrightBG: -2043333513
       Key_BrightBG: 472646816
