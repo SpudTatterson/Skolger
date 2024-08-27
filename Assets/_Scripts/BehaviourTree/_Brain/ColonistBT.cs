@@ -47,6 +47,9 @@ public class ColonistBT : Tree
             case BrainState.Rest:
                 root = restingStateRoot;
                 break;
+            case BrainState.Breakdown:
+                root = GetBreakDownNode();
+                break;
 
         }
     }
@@ -99,7 +102,23 @@ public class ColonistBT : Tree
             CreateTaskWander()
         });
     }
+
+    private Node GetBreakDownNode()
+    {
+        switch (colonistData.colonistMood.breakDownType)
+        {
+            case BreakDownType.Wander:
+                Debug.Log("Wander Breakdown");
+                return CreateTaskWander();
+            case BreakDownType.EatingFrenzy:
+                Debug.Log("Eating Breakdown");
+                return CreateTaskEat();
+
+            default:
+                return unrestrictedStateRoot;
+        }
     }
+
     #endregion
 
     #region Eating Task

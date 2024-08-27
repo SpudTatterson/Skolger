@@ -2,18 +2,25 @@ using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ColonistMoodManager : MonoBehaviour
 {
     ColonistData colonist;
+    [Header("Settings")]
+    [SerializeField] int breakPoint = 10; // the point that the colonist will throw a tantrum
+    [SerializeField] int maxMood = 100;
+    [SerializeField] Vector2 minMaxBreakdownTimes = new Vector2(30, 100);
+    [SerializeField] BaseMoodEffectSO postBreakDownBuff;
 
-    int maxMood = 100;
-    int breakPoint = 10; // the point that the colonist will throw a tantrum
+
     [SerializeField] int currentMood;
     MoodStatus moodStatus;
     public event Action<int, MoodStatus> onMoodChange;
     public event Action<List<BaseMoodEffect>> OnEffectsChanged;
-    public event Action onColonistTantrum;
+    public event Action onColonistBreakdown;
+
+    public BreakDownType breakDownType {get; private set;} = BreakDownType.None;
 
     [ShowInInspector] Dictionary<MoodModifiers, int> moodModifiers = new Dictionary<MoodModifiers, int>();
     [ShowInInspector] Dictionary<BaseMoodEffectSO, List<BaseMoodEffect>> currentEffects = new Dictionary<BaseMoodEffectSO, List<BaseMoodEffect>>();
@@ -35,8 +42,8 @@ public class ColonistMoodManager : MonoBehaviour
         if (!currentEffects.ContainsKey(effectData))
         {
             currentEffects.Add(effectData, new List<BaseMoodEffect>());
-            currentEffects[effectData].Add(moodEffect);
         }
+        currentEffects[effectData].Add(moodEffect);
         OnEffectsChanged?.Invoke(currentEffects[effectData]);
         UpdateCurrentMood(moodEffect.effectData.effect);
     }
@@ -55,10 +62,27 @@ public class ColonistMoodManager : MonoBehaviour
         currentMood = Mathf.Clamp(currentMood, 0, maxMood);
         if (currentMood < breakPoint)
         {
-            onColonistTantrum?.Invoke();
+            StartBreakdown();
         }
         moodStatus = DetermineMoodState(currentMood);
         onMoodChange?.Invoke(currentMood, moodStatus);
+    }
+
+    void StartBreakdown()
+    {
+        colonist.SetBrainState(BrainState.Breakdown);
+        onColonistBreakdown?.Invoke();
+        float breakDownTime = Random.Range(minMaxBreakdownTimes.x, minMaxBreakdownTimes.y);
+        int breakDownType = Random.Range(1, Enum.GetNames(typeof(BreakDownType)).Length);
+        this.breakDownType = (BreakDownType)breakDownType;
+        Invoke(nameof(StopBreakDown), breakDownTime);
+    }
+
+    void StopBreakDown()
+    {
+        colonist.SetBrainState(BrainState.Unrestricted);
+        breakDownType = BreakDownType.None;
+        AddEffect(postBreakDownBuff);
     }
     MoodStatus DetermineMoodState(int mood)
     {
@@ -94,8 +118,9 @@ public class ColonistMoodManager : MonoBehaviour
         float timeToAdd = Time.deltaTime;
         foreach (KeyValuePair<BaseMoodEffectSO, List<BaseMoodEffect>> effectType in currentEffects)
         {
-            foreach (BaseMoodEffect moodEffect in effectType.Value)
+            for (int i = 0; i < effectType.Value.Count; i++)
             {
+                BaseMoodEffect moodEffect = effectType.Value[i];
                 moodEffect.activeTime += timeToAdd;
                 if (moodEffect.activeTime > moodEffect.effectData.effectTime)
                 {
@@ -120,4 +145,11 @@ public enum MoodStatus
     Neutral,
     Stressed,
     Depressed
+}
+
+public enum BreakDownType
+{
+    None,
+    Wander,
+    EatingFrenzy,
 }
