@@ -10,6 +10,8 @@ public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectabl
     public ColonistMoodManager colonistMood;
     public HungerManager hungerManager;
 
+    [field: SerializeField] public BrainState brainState { get; private set; } = BrainState.Unrestricted;
+
     [field: Header("Inventory")]
     [field: SerializeField] public InventoryItem[] Items { get; private set; }
     public int InventorySlots { get; private set; } = 1;
@@ -125,10 +127,9 @@ public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectabl
         colonistMood.UpdateMood();
     }
 
-    public void DisplayInfo()
+    public void SetBrainState(BrainState state)
     {
-        UIManager.Instance.ShowColonistWindow(colonistName, colonistActivity);
-        UIManager.Instance.SetCurrentColonist(this);
+        brainState = state;
     }
 
     string SetRandomName()

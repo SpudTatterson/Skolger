@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using BehaviorTree;
 using UnityEngine;
 using UnityEngine.AI;
 using Tree = BehaviorTree.Tree;
+using Random = UnityEngine.Random;
 
 public class ColonistBT : Tree
 {
@@ -13,6 +15,12 @@ public class ColonistBT : Tree
     private ColonistData colonistData;
     private Dictionary<TaskKey, string> taskDescriptions;
 
+    //states cache
+    private Node workStateRoot;
+    private Node unrestrictedStateRoot;
+    private Node restingStateRoot;
+
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -20,32 +28,77 @@ public class ColonistBT : Tree
         taskDescriptions = TaskDescriptions();
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        UpdateBrainState();  // Check and update brain state each frame
+    }
+
+    private void UpdateBrainState()
+    {
+        switch (colonistData.brainState)
+        {
+            case BrainState.Work:
+                root = workStateRoot;
+                break;
+            case BrainState.Unrestricted:
+                root = unrestrictedStateRoot;
+                break;
+            case BrainState.Rest:
+                root = restingStateRoot;
+                break;
+
+        }
+    }
+
+
     #region Behaviour Tree Setup
+
+    // This will be called once at the start to setup all root nodes.
     protected override Node SetupTree()
     {
-        Node Task_Wander = CreateTaskWander();
-        Node Task_Eat = CreateTaskEat();
+        // Setup different root nodes based on states
+        workStateRoot = SetupWorkState();
+        unrestrictedStateRoot = SetupUnrestrictedState();
+        restingStateRoot = SetupRestingState();
 
-        Node Task_Hauling = CreateTaskHaul();
-        Node Task_Constructing = CreateTaskConstruct();
-        Node Task_Harvesting = CreateTaskHarvest();
+        // Return the default state to start with (e.g., Wandering)
+        return unrestrictedStateRoot;
+    }
 
-        Node root = new Selector(new List<Node>
+    private Node SetupWorkState()
+    {
+        return new Selector(new List<Node>
         {
-            // Basic AI tasks that the player can not access in game
-            // and the priorities are set from the start.
-            Task_Eat,
-            Task_Wander,
-            // ----------------------------------------------------
-            // AI tasks that the player will have access in game
-            // the priorities can change in runtime.
-            Task_Hauling,
-            Task_Constructing,
-            Task_Harvesting
-            // ----------------------------------------------------
-        });
+            CreateTaskWander(),
 
-        return root;
+            CreateTaskHaul(),
+            CreateTaskConstruct(),
+            CreateTaskHarvest()
+        });
+    }
+
+    private Node SetupUnrestrictedState()
+    {
+        return new Selector(new List<Node>
+        {
+            CreateTaskEat(),
+            CreateTaskWander(),
+
+            CreateTaskHaul(),
+            CreateTaskConstruct(),
+            CreateTaskHarvest()
+        });
+    }
+
+    private Node SetupRestingState()
+    {
+        return new Selector(new List<Node>
+        {
+            CreateTaskEat(),
+            CreateTaskWander()
+        });
+    }
     }
     #endregion
 
