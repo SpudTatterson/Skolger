@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class GridManager : MonoSingleton<GridManager>
 {
-    [ReadOnly] public List<GridObject> grids;
+    public List<GridObject> grids;
     
     [RequiredIn(PrefabKind.InstanceInScene, ErrorMessage = "Please attach the grids empty parent to generate the world map"),]
     public GameObject GridsParent;

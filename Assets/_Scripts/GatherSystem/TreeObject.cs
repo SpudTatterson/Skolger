@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
+    [SerializeField] private AudioClip[] ChopingSound;
+
     [SerializeField] float baseGatherTime = 5f;
 
     [SerializeField] List<ItemDrop> drops = new List<ItemDrop>();
@@ -43,6 +45,7 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
         timeHarvesting = 0f;
         beingHarvested = true;
         fillBar.UpdateMaxFillAmount(baseGatherTime); // multiply by any modifiers
+        SoundsFXManager.instance.PlayRandomSoundFXClip(ChopingSound, transform, 1f);
 
         while (timeHarvesting < baseGatherTime)
         {
