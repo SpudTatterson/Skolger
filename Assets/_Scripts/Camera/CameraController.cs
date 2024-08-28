@@ -75,7 +75,7 @@ public class CameraController : MonoSingleton<CameraController>
             // Calculate target position for smoother movement
             Vector3 targetPosition = dragOrigin - dragDiff;
             // Use Lerp or MoveTowards for smooth transition
-            cameraPivot.position = Vector3.Lerp(cameraPivot.position, targetPosition, Time.deltaTime * dragSmoothing);
+            cameraPivot.position = Vector3.Lerp(cameraPivot.position, targetPosition, Time.unscaledDeltaTime * dragSmoothing);
         }
     }
 
@@ -90,7 +90,7 @@ public class CameraController : MonoSingleton<CameraController>
             }
 
             Vector3 movementDirection = new Vector3(vert, 0, -horiz);
-            cameraPivot.Translate(movementDirection.normalized * speed * Time.deltaTime);
+            cameraPivot.Translate(movementDirection.normalized * speed * Time.unscaledDeltaTime);
         }
         else
             cameraPivot.position = followTarget.position;
@@ -132,7 +132,7 @@ public class CameraController : MonoSingleton<CameraController>
             Vector3 dragDiff = Input.mousePosition - lastMousePosition;
 
             // Apply rotation
-            cameraPivot.Rotate(Vector3.up, dragDiff.x * dragRotationSpeed * Time.deltaTime, Space.World);
+            cameraPivot.Rotate(Vector3.up, dragDiff.x * dragRotationSpeed * Time.unscaledDeltaTime, Space.World);
 
             // Update lastMousePosition for the next frame
             lastMousePosition = Input.mousePosition;
@@ -159,13 +159,13 @@ public class CameraController : MonoSingleton<CameraController>
             }
 
             // Accelerate rotation speed
-            currentRotationSpeed += rotationAcceleration * Time.deltaTime;
+            currentRotationSpeed += rotationAcceleration * Time.unscaledDeltaTime;
             // Clamp the currentRotationSpeed to ensure it doesn't exceed maxRotationSpeed
             currentRotationSpeed = Mathf.Clamp(currentRotationSpeed, 0, maxRotationSpeed);
 
             // Apply rotation
-            // Use currentRotationSpeed multiplied by direction and Time.deltaTime to ensure frame-rate independent rotation
-            cameraPivot.Rotate(Vector3.up, direction * currentRotationSpeed * Time.deltaTime);
+            // Use currentRotationSpeed multiplied by direction and Time.unscaledDeltaTime to ensure frame-rate independent rotation
+            cameraPivot.Rotate(Vector3.up, direction * currentRotationSpeed * Time.unscaledDeltaTime);
         }
         else
         {
@@ -184,6 +184,7 @@ public class CameraController : MonoSingleton<CameraController>
 
     void ScrollToZoom()
     {
+        if (Input.GetKey(KeyCode.LeftControl)) return;
         float distance = CheckDistance();
 
         if (mouseScroll > 0 && distance > minMaxDistance.x)
@@ -206,7 +207,7 @@ public class CameraController : MonoSingleton<CameraController>
         while (elapsedTime < CamResetSpeed)
         {
             cameraPivot.position = Vector3.Lerp(startingPosition, followTarget.position, (elapsedTime / CamResetSpeed));
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -229,7 +230,7 @@ public class CameraController : MonoSingleton<CameraController>
         while (elapsedTime < movementTime)
         {
             cameraPivot.position = Vector3.Slerp(startingPosition, desiredPosition, (elapsedTime / movementTime));
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime;
             yield return null;
         }
         cameraPivot.position = desiredPosition;
