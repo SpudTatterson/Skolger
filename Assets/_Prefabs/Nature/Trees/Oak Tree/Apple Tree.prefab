@@ -243,6 +243,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7805987253553451111, guid: 5d3c4c1ada7916448b91266a5cd9802e,
         type: 3}
+      propertyPath: ChopingSound.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7805987253553451111, guid: 5d3c4c1ada7916448b91266a5cd9802e,
+        type: 3}
+      propertyPath: ChopingSound.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 59d7150ac3fa6134ab3e3ba4224b6cbf, type: 3}
+    - target: {fileID: 7805987253553451111, guid: 5d3c4c1ada7916448b91266a5cd9802e,
+        type: 3}
+      propertyPath: ChopingSound.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 9d9839d21c49b5348bf727708a3a2d34, type: 3}
+    - target: {fileID: 7805987253553451111, guid: 5d3c4c1ada7916448b91266a5cd9802e,
+        type: 3}
+      propertyPath: ChopingSound.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 66f7d9fddbd0da64fbfe9d335bd67445, type: 3}
+    - target: {fileID: 7805987253553451111, guid: 5d3c4c1ada7916448b91266a5cd9802e,
+        type: 3}
       propertyPath: drops.Array.data[0].itemData
       value: 
       objectReference: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e,

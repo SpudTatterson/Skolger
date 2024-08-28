@@ -1,4 +1,4 @@
-﻿Shader "Custom/Outline Mask" {
+Shader "Custom/Outline Mask" {
   Properties {
     [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 0
     _StencilRef("Stencil Ref", Float) = 2

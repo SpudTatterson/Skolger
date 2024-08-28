@@ -1,4 +1,4 @@
-﻿Shader "Custom/Outline Fill" {
+Shader "Custom/Outline Fill" {
   Properties {
     [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 0
 
