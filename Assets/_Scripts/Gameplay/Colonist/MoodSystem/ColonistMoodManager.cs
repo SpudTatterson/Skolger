@@ -20,7 +20,7 @@ public class ColonistMoodManager : MonoBehaviour
     public event Action<List<BaseMoodEffect>> OnEffectsChanged;
     public event Action onColonistBreakdown;
 
-    public BreakDownType breakDownType {get; private set;} = BreakDownType.None;
+    public BreakDownType breakDownType { get; private set; } = BreakDownType.None;
 
     [ShowInInspector] Dictionary<MoodModifiers, int> moodModifiers = new Dictionary<MoodModifiers, int>();
     [ShowInInspector] Dictionary<BaseMoodEffectSO, List<BaseMoodEffect>> currentEffects = new Dictionary<BaseMoodEffectSO, List<BaseMoodEffect>>();
@@ -29,7 +29,9 @@ public class ColonistMoodManager : MonoBehaviour
     {
         colonist = GetComponent<ColonistData>();
         moodModifiers.Add(MoodModifiers.Hunger, 0);
+        colonist.hungerManager.onStatusChange += UpdateHungerModifier;
     }
+
     public void ForceMoodUpdate()
     {
         onMoodChange?.Invoke(currentMood, moodStatus);
@@ -64,7 +66,7 @@ public class ColonistMoodManager : MonoBehaviour
         {
             StartBreakdown();
         }
-        moodStatus = DetermineMoodState(currentMood);
+        moodStatus = MoodUtility.DetermineMoodState(currentMood);
         onMoodChange?.Invoke(currentMood, moodStatus);
     }
 
@@ -83,29 +85,6 @@ public class ColonistMoodManager : MonoBehaviour
         colonist.SetBrainState(BrainState.Unrestricted);
         breakDownType = BreakDownType.None;
         AddEffect(postBreakDownBuff);
-    }
-    MoodStatus DetermineMoodState(int mood)
-    {
-        if (mood >= 80f)
-        {
-            return MoodStatus.Happy;
-        }
-        else if (mood >= 60f)
-        {
-            return MoodStatus.Content;
-        }
-        else if (mood >= 40f)
-        {
-            return MoodStatus.Neutral;
-        }
-        else if (mood >= 20f)
-        {
-            return MoodStatus.Stressed;
-        }
-        else
-        {
-            return MoodStatus.Depressed;
-        }
     }
 
     public void UpdateMoodModifier(MoodModifiers moodModifierType, int modifier)
@@ -130,26 +109,8 @@ public class ColonistMoodManager : MonoBehaviour
         }
 
     }
-}
-
-public enum MoodModifiers
-{
-    Health,
-    Hunger,
-    Rest
-}
-public enum MoodStatus
-{
-    Happy,
-    Content,
-    Neutral,
-    Stressed,
-    Depressed
-}
-
-public enum BreakDownType
-{
-    None,
-    Wander,
-    EatingFrenzy,
+    void UpdateHungerModifier(HungerStatus status)
+    {
+        UpdateMoodModifier(MoodModifiers.Hunger, MoodUtility.GetMoodModifier(status));
+    }
 }

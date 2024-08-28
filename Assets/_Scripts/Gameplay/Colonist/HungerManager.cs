@@ -12,13 +12,14 @@ public class HungerManager : MonoBehaviour, IHungerable
     [field: SerializeField, ReadOnly] public float HungerLevel { get; private set; } = 50; // How hungry the colonist current is
     [field: SerializeField] public float HungerGainSpeed { get; private set; } = 0.1f; // Hunger gain per second
     public HungerStatus hungerStatus { get; private set; }
+    public event Action<HungerStatus> onStatusChange;
     void Awake()
     {
         colonist = GetComponent<ColonistData>();
     }
     void Start()
     {
-        UpdateMood(hungerStatus);
+        HandleStatusChanged(hungerStatus);
     }
     public void Eat(IEdible edible)
     {
@@ -34,34 +35,13 @@ public class HungerManager : MonoBehaviour, IHungerable
         if (hungerStatus != this.hungerStatus)
         {
             this.hungerStatus = hungerStatus;
-            UpdateMood(hungerStatus);
+            HandleStatusChanged(hungerStatus);
         }
     }
 
-    void UpdateMood(HungerStatus hungerStatus)
+    void HandleStatusChanged(HungerStatus hungerStatus)
     {
-        int moodModifier = GetMoodModifier(hungerStatus);
-        colonist.colonistMood.UpdateMoodModifier(MoodModifiers.Hunger, moodModifier);
-    }
-
-    int GetMoodModifier(HungerStatus hungerStatus)
-    {
-        if (hungerStatus == HungerStatus.Starving)
-        {
-            return -20;
-        }
-        else if (hungerStatus == HungerStatus.Hungry)
-        {
-            return -10;
-        }
-        else if (hungerStatus == HungerStatus.Satisfied)
-        {
-            return 5;
-        }
-        else
-        {
-            return 10;
-        }
+        onStatusChange?.Invoke(hungerStatus);
     }
 
     HungerStatus GetHungerStatus()
