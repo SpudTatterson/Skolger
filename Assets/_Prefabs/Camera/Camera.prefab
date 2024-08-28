@@ -148,7 +148,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6100318057904391476}
   - component: {fileID: 3432880000564023727}
-  m_Layer: 12
+  m_Layer: 6
   m_Name: DragPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,8 +410,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMaxDistance: {x: 10, y: 40}
-  speed: 15
-  sprintSpeedAddition: 5
   useFollowTarget: 0
   CamResetSpeed: 1
   dragToMoveCameraKeyCode: 325
@@ -419,6 +417,8 @@ MonoBehaviour:
   draggableLayers:
     serializedVersion: 2
     m_Bits: 4096
+  speed: 15
+  sprintSpeedAddition: 5
   dragToRotateCameraKeyCode: 324
   dragRotationSpeed: 8
   initialRotationSpeed: 45
