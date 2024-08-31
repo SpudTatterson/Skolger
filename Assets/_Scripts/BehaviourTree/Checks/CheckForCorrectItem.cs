@@ -12,7 +12,7 @@ class CheckForCorrectItem : Node
     public override NodeState Evaluate()
     {
         ItemCost cost = (ItemCost)GetData(DataName.Cost);
-        if(colonistData.HasItem(cost.item, cost.cost, out _))
+        if(colonistData.inventory.HasItem(cost.item, cost.cost, out _))
         {
             state = NodeState.SUCCESS;
             return state;

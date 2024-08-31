@@ -12,7 +12,7 @@ public class CheckItemInInventory : Node
     public override NodeState Evaluate()
     {
         var inventoryItem = GetData(DataName.InventoryItem);
-        if (inventoryItem == null || colonistData.IsEmpty())
+        if (inventoryItem == null || colonistData.inventory.IsEmpty())
         {
             state = NodeState.FAILURE;
             return state;

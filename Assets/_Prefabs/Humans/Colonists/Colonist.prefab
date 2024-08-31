@@ -26,12 +26,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 944674293314684046}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.657, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalScale: {x: 0.85000014, y: 0.85, z: 0.85000014}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7679221216020895626}
+  m_Father: {fileID: 1808363606923244143}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5082911519618899507
 MeshFilter:
@@ -83,6 +83,40 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2730968940291420581
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1808363606923244143}
+  m_Layer: 10
+  m_Name: Visual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1808363606923244143
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2730968940291420581}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8368361996859710943}
+  - {fileID: 8705228806471305772}
+  - {fileID: 7709154263131943306}
+  m_Father: {fileID: 7679221216020895626}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3488476873385593109
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,6 +134,7 @@ GameObject:
   - component: {fileID: 8652547128870079184}
   - component: {fileID: 7854912760610213261}
   - component: {fileID: 8611095537669486093}
+  - component: {fileID: 6364238019845083758}
   m_Layer: 10
   m_Name: Colonist
   m_TagString: Untagged
@@ -120,9 +155,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8368361996859710943}
-  - {fileID: 8705228806471305772}
-  - {fileID: 7709154263131943306}
+  - {fileID: 1808363606923244143}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!136 &35430064873682575
@@ -216,10 +249,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f36f52c47566b3c45bbb59ff8154f985, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colonistMood: {fileID: 7854912760610213261}
-  hungerManager: {fileID: 8611095537669486093}
+  visual: {fileID: 2730968940291420581}
+  <moodManager>k__BackingField: {fileID: 7854912760610213261}
+  <hungerManager>k__BackingField: {fileID: 8611095537669486093}
+  <restManger>k__BackingField: {fileID: 0}
+  <agent>k__BackingField: {fileID: 3129767780018028186}
+  <inventory>k__BackingField: {fileID: 6364238019845083758}
   <brainState>k__BackingField: 0
-  <Items>k__BackingField: []
   width: 256
   height: 256
   outline: {fileID: 8652547128870079184}
@@ -284,6 +320,19 @@ MonoBehaviour:
   <HungerThreshold>k__BackingField: 40
   <HungerLevel>k__BackingField: 50
   <HungerGainSpeed>k__BackingField: 0.1
+--- !u!114 &6364238019845083758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3488476873385593109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 347e72bfe5b90844cb7fd568f6504826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Items>k__BackingField: []
 --- !u!1 &3639081120247255979
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,14 +440,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4684165472725213240}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6652923475973267974}
   - {fileID: 6841805761670003144}
-  m_Father: {fileID: 7679221216020895626}
+  m_Father: {fileID: 1808363606923244143}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6204862586650991934
 GameObject:
@@ -511,10 +560,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.969, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.6383475, z: 0.75}
+  m_LocalScale: {x: 0.7500001, y: 0.6383475, z: 0.7500001}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7679221216020895626}
+  m_Father: {fileID: 1808363606923244143}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &285486855362751204
 MeshFilter:

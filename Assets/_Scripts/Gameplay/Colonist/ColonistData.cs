@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
-public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectable
+public class ColonistData : MonoBehaviour, ISelectable
 {
 
-    public ColonistMoodManager colonistMood;
-    public HungerManager hungerManager;
+    [SerializeField, ChildGameObjectsOnly, BoxGroup("References")] GameObject visual;
+    [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistMoodManager moodManager { get; private set; }
+    [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public HungerManager hungerManager { get; private set; }
+    [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public NavMeshAgent agent { get; private set; }
+    [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistInventory inventory { get; private set; }
 
     [field: SerializeField] public BrainState brainState { get; private set; } = BrainState.Unrestricted;
-
-    [field: Header("Inventory")]
-    [field: SerializeField] public InventoryItem[] Items { get; private set; }
-    public int InventorySlots { get; private set; } = 1;
-    Queue<int> emptySlots = new();
 
     [Header("Portrait")]
     [SerializeField] int width = 256;
@@ -45,13 +44,13 @@ public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectabl
     void Awake()
     {
         colonistMood = GetComponent<ColonistMoodManager>();
-        hungerManager = GetComponent<HungerManager>();
-        Items = new InventoryItem[InventorySlots];
-        for (int i = 0; i < Items.Length; i++)
-        {
-            emptySlots.Enqueue(i);
-        }
-        colonistName = SetRandomName();
+
+        colonistName = ColonistUtility.SetRandomName();
+    }
+
+    void Sleep()
+    {
+        visual.SetActive(false);
     }
 
     void Start()
@@ -60,122 +59,16 @@ public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectabl
         UIManager.Instance.AddColonistToBoard(colonistName, this);
     }
 
-
-    public bool HasItem(ItemData itemData, int amount, out int? itemIndex)
-    {
-        for (int i = 0; i < Items.Length; i++)
-        {
-            if (itemData != null && Items[i] != null && itemData == Items[i].itemData && amount <= Items[i].amount)
-            {
-                itemIndex = i;
-                return true;
-            }
-        }
-        itemIndex = null;
-        return false;
-    }
-    public bool IsEmpty()
-    {
-        foreach (InventoryItem item in Items)
-        {
-            if (!InventoryItem.CheckIfItemIsNull(item)) return false;
-        }
-        return true;
-    }
-
-    public bool HasSpace()
-    {
-        if (emptySlots.Count > 0)
-            return true;
-        return false;
-    }
-
-    public InventoryItem TakeItemOut(ItemData itemData, int amount)
-    {
-        if (HasItem(itemData, amount, out int? itemIndex))
-        {
-            Items[(int)itemIndex].UpdateAmount(-amount);
-            return new InventoryItem(itemData, amount);
-        }
-        return null;
-    }
-    public InventoryItem TakeItemOut(int ItemIndex)
-    {
-        InventoryItem item = new InventoryItem(Items[ItemIndex]);
-        Items[ItemIndex].UpdateAmount(-Items[ItemIndex].amount);
-        return item;
-    }
-
-    public void PutItemIn(InventoryItem item)
-    {
-        item.OnDestroy += HandleItemDestruction;
-        int invIndex = emptySlots.Dequeue();
-        item.UpdateOccupiedInventorySlot(invIndex);
-        Items[invIndex] = item;
-    }
-
-    void HandleItemDestruction(InventoryItem item)
-    {
-        item.OnDestroy -= HandleItemDestruction;
-        Items[item.currentInventorySlot] = null;
-        emptySlots.Enqueue(item.currentInventorySlot);
-    }
-
     void Update()
     {
         hungerManager.GetHungry(Time.deltaTime);
         colonistMood.UpdateMood();
+        moodManager.UpdateMood();
     }
 
     public void SetBrainState(BrainState state)
     {
         brainState = state;
-    }
-
-    string SetRandomName()
-    {
-        List<string> firstNames = new List<string>
-        {
-            "Erik",
-            "Bjorn",
-            "Sigrid",
-            "Leif",
-            "Astrid",
-            "Olaf",
-            "Freya",
-            "Ivar",
-            "Gunnar",
-            "Helga",
-            "Ragnhild",
-            "Sven",
-            "Ingrid",
-            "Harald",
-            "Ragnar"
-        };
-
-        List<string> lastNames = new List<string>
-        {
-            "Halden",
-            "Strand",
-            "Berg",
-            "Fjord",
-            "Alfheim",
-            "Hamar",
-            "Kjell",
-            "Vik",
-            "Skog",
-            "Lothbrok",
-            "Dal",
-            "Stav",
-            "Voll",
-            "Ask",
-            "Grove",
-        };
-
-        int firstName = Random.Range(0, firstNames.Count);
-        int lastName = Random.Range(0, lastNames.Count);
-
-        return firstNames[firstName] + " " + lastNames[lastName];
     }
 
     public void ChangeActivity(string activity)
@@ -237,4 +130,5 @@ public class ColonistData : MonoBehaviour, IContainer<InventoryItem>, ISelectabl
     }
 
     #endregion
+
 }

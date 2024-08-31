@@ -13,7 +13,7 @@ public class CheckForConstructable : Node
         var hasConstructable = GetData(DataName.Constructable);
         var hasInventoryItem = GetData(DataName.InventoryItem);
 
-        if (hasInventoryItem != null || !colonistData.IsEmpty())
+        if (hasInventoryItem != null || !colonistData.inventory.IsEmpty())
         {
             state = NodeState.RUNNING;
             return state;

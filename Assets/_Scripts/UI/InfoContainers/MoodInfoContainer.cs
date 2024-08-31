@@ -17,12 +17,12 @@ namespace Skolger.UI.InfoContainers
 
         void OnEnable()
         {
-            colonist.colonistMood.onMoodChange += UpdateInfo;
-            colonist.colonistMood.ForceMoodUpdate();
+            colonist.moodManager.onMoodChange += UpdateInfo;
+            colonist.moodManager.ForceMoodUpdate();
         }
         void OnDisable()
         {
-            colonist.colonistMood.onMoodChange -= UpdateInfo;
+            colonist.moodManager.onMoodChange -= UpdateInfo;
         }
     }
 }
