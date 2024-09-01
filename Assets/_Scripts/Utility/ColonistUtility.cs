@@ -4,6 +4,44 @@ using UnityEngine;
 
 public static class ColonistUtility
 {
+    static readonly List<string> firstNames = new List<string>
+        {
+            "Erik",
+            "Bjorn",
+            "Sigrid",
+            "Leif",
+            "Astrid",
+            "Olaf",
+            "Freya",
+            "Ivar",
+            "Gunnar",
+            "Helga",
+            "Ragnhild",
+            "Sven",
+            "Ingrid",
+            "Harald",
+            "Ragnar"
+        };
+
+    static readonly List<string> lastNames = new List<string>
+        {
+            "Halden",
+            "Strand",
+            "Berg",
+            "Fjord",
+            "Alfheim",
+            "Hamar",
+            "Kjell",
+            "Vik",
+            "Skog",
+            "Lothbrok",
+            "Dal",
+            "Stav",
+            "Voll",
+            "Ask",
+            "Grove",
+        };
+
     public static Sprite CaptureFace(GameObject objectToCapture, float faceHeight, Vector3 offset, int width, int height, float renderDistance)
     {
         RenderTexture renderTexture = new RenderTexture(width, height, 32);
@@ -39,4 +77,13 @@ public static class ColonistUtility
 
         return sprite;
     }
+
+    public static string SetRandomName()
+    {
+        int firstName = Random.Range(0, firstNames.Count);
+        int lastName = Random.Range(0, lastNames.Count);
+
+        return firstNames[firstName] + " " + lastNames[lastName];
+    }
+
 }

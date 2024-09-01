@@ -23,7 +23,7 @@ public class TaskPickUpItem : Node
 
             parent.parent.SetData(DataName.InventoryItem, inventoryItem);
             ClearData(DataName.Target);
-            colonistData.PutItemIn(inventoryItem);
+            colonistData.inventory.PutItemIn(inventoryItem);
             parent.parent.parent.SetData(DataName.InventoryIndex, inventoryItem.currentInventorySlot);
             
             state = NodeState.SUCCESS;
