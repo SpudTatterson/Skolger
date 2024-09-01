@@ -26,9 +26,8 @@ public static class MoodUtility
     {
         switch (restStatus)
         {
-            case RestStatus.Insomniac: return -30;
-            case RestStatus.SleepDeprived: return -20;
-            case RestStatus.Exhausted: return -10;
+            case RestStatus.Insomniac: return -20;
+            case RestStatus.SleepDeprived: return -10;
             case RestStatus.Tired: return -5;
             case RestStatus.Rested: return 5;
             case RestStatus.WellRested: return 15;

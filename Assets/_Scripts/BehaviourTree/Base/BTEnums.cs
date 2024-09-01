@@ -32,5 +32,6 @@ public enum BrainState
     Rest,
     Recreational,
     Drafted,
-    Breakdown
+    Breakdown,
+    Sleeping
 }

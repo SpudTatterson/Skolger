@@ -11,6 +11,7 @@ public class ColonistData : MonoBehaviour, ISelectable
     [SerializeField, ChildGameObjectsOnly, BoxGroup("References")] GameObject visual;
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistMoodManager moodManager { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public HungerManager hungerManager { get; private set; }
+    [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public RestManger restManger { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public NavMeshAgent agent { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistInventory inventory { get; private set; }
 
@@ -43,14 +44,22 @@ public class ColonistData : MonoBehaviour, ISelectable
     public bool IsSelected { get; private set; }
     void Awake()
     {
-        colonistMood = GetComponent<ColonistMoodManager>();
+        restManger.OnSleep += Sleep;
+        restManger.OnWakeUp += WakeUp;
 
         colonistName = ColonistUtility.SetRandomName();
+    }
+
+    void WakeUp()
+    {
+        visual.SetActive(true);
+        SetBrainState(BrainState.Unrestricted);   //return to other brain state
     }
 
     void Sleep()
     {
         visual.SetActive(false);
+        SetBrainState(BrainState.Sleeping);
     }
 
     void Start()
@@ -62,7 +71,7 @@ public class ColonistData : MonoBehaviour, ISelectable
     void Update()
     {
         hungerManager.GetHungry(Time.deltaTime);
-        colonistMood.UpdateMood();
+       // restManger.UpdateRest();
         moodManager.UpdateMood();
     }
 

@@ -28,8 +28,12 @@ public class ColonistMoodManager : MonoBehaviour
     void Awake()
     {
         colonist = GetComponent<ColonistData>();
+
         moodModifiers.Add(MoodModifiers.Hunger, 0);
         colonist.hungerManager.onStatusChange += UpdateHungerModifier;
+
+        //moodModifiers.Add(MoodModifiers.Rest, 0);
+        //subscribe to colonist rest on status change
     }
 
     public void ForceMoodUpdate()

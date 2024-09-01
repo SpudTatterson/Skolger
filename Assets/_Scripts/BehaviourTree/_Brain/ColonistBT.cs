@@ -9,16 +9,16 @@ using Random = UnityEngine.Random;
 
 public class ColonistBT : Tree
 {
-    [SerializeField] private ColonistSettingsSO colonistSettings;
+    [SerializeField] ColonistSettingsSO colonistSettings;
 
-    private NavMeshAgent agent;
-    private ColonistData colonistData;
-    private Dictionary<TaskKey, string> taskDescriptions;
-
-    //states cache
-    private Node workStateRoot;
-    private Node unrestrictedStateRoot;
-    private Node restingStateRoot;
+    NavMeshAgent agent;
+    ColonistData colonistData;
+    Dictionary<TaskKey, string> taskDescriptions;
+    // cache
+    Node workStateRoot;
+    Node unrestrictedStateRoot;
+    Node restingStateRoot;
+    Node sleepStateRoot;
 
 
     private void Awake()
@@ -40,18 +40,21 @@ public class ColonistBT : Tree
         {
             case BrainState.Work:
                 root = workStateRoot;
-                break;
+                return;
             case BrainState.Unrestricted:
                 root = unrestrictedStateRoot;
-                break;
+                return;
             case BrainState.Rest:
                 root = restingStateRoot;
-                break;
+                return;
             case BrainState.Breakdown:
                 root = GetBreakDownNode();
-                break;
-
+                return;
+            case BrainState.Sleeping:
+                root = sleepStateRoot;
+                return;
         }
+        throw new NotImplementedException("Didn't find case for current brain state");
     }
 
 
@@ -64,9 +67,15 @@ public class ColonistBT : Tree
         workStateRoot = SetupWorkState();
         unrestrictedStateRoot = SetupUnrestrictedState();
         restingStateRoot = SetupRestingState();
+        sleepStateRoot = SetupSleepState();
 
         // Return the default state to start with (e.g., Wandering)
         return unrestrictedStateRoot;
+    }
+
+    private Node SetupSleepState()
+    {
+        return new Selector(new List<Node>());
     }
 
     private Node SetupWorkState()
@@ -105,7 +114,7 @@ public class ColonistBT : Tree
 
     private Node GetBreakDownNode()
     {
-        switch (colonistData.colonistMood.breakDownType)
+        switch (colonistData.moodManager.breakDownType)
         {
             case BreakDownType.Wander:
                 Debug.Log("Wander Breakdown");
