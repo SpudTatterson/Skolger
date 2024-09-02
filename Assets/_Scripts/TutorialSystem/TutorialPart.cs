@@ -11,13 +11,34 @@ namespace Skolger.Tutorial
         [HideInInspector] protected TutorialPart Part;
         public bool finished { get; protected set; }
 
-        public abstract void Initialize();
-        public abstract void Update();
+        [SerializeReference] private List<VisualAid> visualAids = new List<VisualAid>();
+
+        public virtual void Initialize()
+        {
+            foreach (var visualAid in visualAids)
+            {
+                visualAid.Initialize();
+            }
+        }
+
+        public virtual void Update()
+        {
+            foreach (var visualAid in visualAids)
+            {
+                visualAid.Update();
+            }
+        }
+
         public virtual void Finish()
         {
             finished = true;
+            foreach (var visualAid in visualAids)
+            {
+                visualAid.Reset();
+            }
         }
     }
+
 
     [System.Serializable]
     public class TutorialPart : BaseStep
@@ -54,53 +75,25 @@ namespace Skolger.Tutorial
     [System.Serializable]
     public class PressTabStep : BaseStep
     {
-        [SerializeField] UI.Tabs.TabButton tab;
-        [SerializeField] Color blinkColor;
-
-        Color initialColor;
+        [SerializeField] private UI.Tabs.TabButton tab;
 
         public override void Initialize()
         {
-            initialColor = tab.image.color;
+            base.Initialize();
             tab.OnSelected.AddListener(Finish);
         }
-
-        public override void Finish()
-        {
-            base.Finish();
-            tab.image.color = initialColor;
-        }
-
-        public override void Update()
-        {
-            float t = Mathf.Sin(Time.time * 3f) * 0.5f + 0.5f; // Sine wave oscillating between 0 and 1
-            tab.image.color = Color.Lerp(initialColor, blinkColor, t);
-        }
     }
+
     [System.Serializable]
     public class PressButtonStep : BaseStep
     {
-        [SerializeField] Button button;
-        [SerializeField] Color blinkColor;
-
-        Color initialColor;
+        [SerializeField] private Button button;
 
         public override void Initialize()
         {
-            initialColor = button.image.color;
+            base.Initialize();
             button.onClick.AddListener(Finish);
-        }
-
-        public override void Finish()
-        {
-            base.Finish();
-            button.image.color = initialColor;
-        }
-
-        public override void Update()
-        {
-            float t = Mathf.Sin(Time.time * 3f) * 0.5f + 0.5f; // Sine wave oscillating between 0 and 1
-            button.image.color = Color.Lerp(initialColor, blinkColor, t);
         }
     }
 }
+
