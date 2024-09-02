@@ -9,8 +9,8 @@ namespace Skolger.UI.Tabs
     public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         [Header("Events")]
-        [SerializeField] UnityEvent OnSelected;
-        [SerializeField] UnityEvent OnDeselected;
+        public UnityEvent OnSelected;
+        public UnityEvent OnDeselected;
         [Header("Visual Settings")]
         [SerializeField] Color idleColor = new Color(0.9f, 0.9f, 0.9f);
         [SerializeField] Color hoverColor = Color.white;
@@ -18,15 +18,15 @@ namespace Skolger.UI.Tabs
 
         [Header("Refs")]
         [SerializeField] TabGroup tabGroup;
-        Image background;
+        public Image image;
 
         bool selected;
 
         void Awake()
         {
             tabGroup.Subscribe(this);
-            background = GetComponent<Image>();
-            background.color = idleColor;
+            image = GetComponent<Image>();
+            image.color = idleColor;
         }
 
         #region Pointer Events
@@ -40,7 +40,7 @@ namespace Skolger.UI.Tabs
         {
             tabGroup.OnTabEnter(this);
             if (!selected)
-                background.color = hoverColor;
+                image.color = hoverColor;
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -53,7 +53,7 @@ namespace Skolger.UI.Tabs
         public void ResetTab()
         {
             if (!selected)
-                background.color = idleColor;
+                image.color = idleColor;
         }
         public void ResetSelected()
         {
@@ -63,7 +63,7 @@ namespace Skolger.UI.Tabs
         public void OnSelect()
         {
             selected = true;
-            background.color = selectedColor;
+            image.color = selectedColor;
             OnSelected.Invoke();
         }
         public void OnDeselect()
