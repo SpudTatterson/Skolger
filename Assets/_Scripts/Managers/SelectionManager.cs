@@ -201,7 +201,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
                     selectable.OnSelect();
                 }
             }
-            SetSelectionType(selectables[0].GetSelectionType());
+            UpdateSelection();
         }
         else if (selectionAction == SelectionAction.Remove)
         {
@@ -414,16 +414,16 @@ public class SelectionManager : MonoSingleton<SelectionManager>
 
     void CancelSelection(List<ISelectable> selectables)
     {
-        for (int i = 0; i < selectables.Count; i++)
+        List<ISelectable> dupeList = new List<ISelectable>(selectables);
+        foreach (ISelectable selectable in dupeList)
         {
-            ISelectable selectable = selectables[i];
-            if (selectable is IHarvestable)
+            if (selectable is IHarvestable harvestable)
             {
-                (selectable as IHarvestable).RemoveFromHarvestQueue();
+                harvestable.RemoveFromHarvestQueue();
             }
-            if (selectable is IConstructable)
+            if (selectable is IConstructable constructable)
             {
-                (selectable as IConstructable).CancelConstruction();
+                constructable.CancelConstruction();
             }
         }
     }
@@ -435,16 +435,16 @@ public class SelectionManager : MonoSingleton<SelectionManager>
 
     void SetSelectionForDestruction(List<ISelectable> selectables)
     {
-        for (int i = 0; i < selectables.Count; i++)
+        List<ISelectable> dupeList = new List<ISelectable>(selectables);
+        foreach (ISelectable selectable in dupeList)
         {
-            ISelectable selectable = selectables[i];
-            if (selectable is BuildingObject)
+            if (selectable is BuildingObject building)
             {
-                (selectable as BuildingObject).Deconstruct();
+                building.Deconstruct();
             }
-            if (selectable is Stockpile)
+            if (selectable is Stockpile stockpile)
             {
-                (selectable as Stockpile).DestroyStockpile();
+                stockpile.DestroyStockpile();
             }
         }
     }
