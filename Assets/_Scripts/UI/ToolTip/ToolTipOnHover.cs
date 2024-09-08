@@ -15,5 +15,10 @@ namespace Skolger.UI.ToolTip
     {
         ToolTip.HideToolTip_Static();
     }
+
+    public void SetHoverText(string hoverText)
+    {
+        textOnHover = hoverText;
+    }
 }
 }
