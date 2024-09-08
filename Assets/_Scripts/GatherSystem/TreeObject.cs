@@ -18,6 +18,7 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
     bool beingHarvested = false;
     bool finishedHarvesting = false;
     bool setForHarvesting = false;
+    public event System.Action OnHarvested;
 
     public bool IsSelected { get; private set; }
 
@@ -29,6 +30,7 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
     }
     public void Harvest()
     {
+        OnHarvested?.Invoke();
         foreach (ItemDrop drop in drops)
         {
             int amount = Random.Range(drop.minDropAmount, drop.maxDropAmount);
@@ -45,7 +47,7 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
         timeHarvesting = 0f;
         beingHarvested = true;
         fillBar.UpdateMaxFillAmount(baseGatherTime); // multiply by any modifiers
-        SoundsFXManager.instance.PlayRandomSoundFXClip(ChopingSound, transform, 1f);
+        //SoundsFXManager.instance.PlayRandomSoundFXClip(ChopingSound, transform, 1f);
 
         while (timeHarvesting < baseGatherTime)
         {
@@ -120,8 +122,8 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
 
     public void OnHoverEnd()
     {
-        if(!IsSelected)
-        outline?.Disable();
+        if (!IsSelected)
+            outline?.Disable();
     }
     public SelectionType GetSelectionType()
     {

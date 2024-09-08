@@ -1,27 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
 
-public class SceneUtility : MonoBehaviour
+public static class SceneUtility
 {
-    [SerializeField] UnityEvent StartEvents;
-    void Start()
-    {
-        StartEvents.Invoke();
-    }
-    public void RestartScene()
+    public static void RestartScene()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-    public void LoadScene(int buildIndex)
+    public static void LoadScene(int buildIndex)
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(buildIndex);
     }
-    public void Exit()
+    public static void Exit()
     {
         Application.Quit();
 
@@ -29,7 +21,7 @@ public class SceneUtility : MonoBehaviour
         UnityEditor.EditorApplication.ExitPlaymode();
         #endif
     }
-    public void NextScene()
+    public static void NextScene()
     {
         Time.timeScale = 1;
         LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

@@ -79,7 +79,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         {
             ClickSelection();
         }
-        else if (worldMouseStartPos != Vector3.zero && IsDragging())
+        else if (firstCell != null && lastCell != null && IsDragging())
         {
             BoxSelection();
         }
@@ -161,6 +161,8 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         worldMouseStartPos = Vector3.zero;
         worldMouseEndPos = Vector3.zero;
         mouseDownTime = 0;
+        firstCell = null;
+        lastCell = null;
     }
 
     void HandleSelectionAction()
@@ -244,7 +246,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         else
         {
             DeselectAll();
-
+            SelectionType specialSelectionType = SelectionType.None;
             foreach (var selectable in selectables)
             {
                 bool doBreak = false;
@@ -256,18 +258,20 @@ public class SelectionManager : MonoSingleton<SelectionManager>
                             doBreak = true;
                         else
                             continue;
-
                     }
                     if (type == SelectionType.Colonist)
                     {
-                        DeselectAll();
-                        doBreak = true;
+                        specialSelectionType = SelectionType.Colonist;
                     }
                 }
 
                 selectable.OnSelect();
 
                 if (doBreak) break;
+            }
+            if (specialSelectionType == SelectionType.Colonist)
+            {
+                DeselectAllAcceptType(SelectionType.Colonist);
             }
             UpdateSelection();
         }
@@ -499,7 +503,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     #endregion
 
     #region Cleanup
-    void ResetSelection()
+    public void ResetSelection()
     {
         selectionAction = SelectionAction.Default;
         DeselectAll();
@@ -522,6 +526,16 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         currentSelected.Clear();
 
         selectionStrategy?.CleanUp();
+    }
+    void DeselectAllAcceptType(SelectionType type)
+    {
+        List<ISelectable> selectedCopy = new List<ISelectable>(currentSelected);
+
+        foreach (ISelectable selectable in selectedCopy)
+        {
+            if (selectable.GetSelectionType() != type)
+                selectable.OnDeselect();
+        }
     }
 
     void ResetHovered()
