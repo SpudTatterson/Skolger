@@ -296,6 +296,7 @@ MonoBehaviour:
   idleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   selectedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  ignoreClicksOnChildGameObjects: 1
   tabGroup: {fileID: 6429203571054983301}
   image: {fileID: 0}
 --- !u!114 &7140809472640600010
@@ -311,6 +312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: x1.5
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1 &210645897220182559
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,44 +384,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &264431017184769702
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1116262321864785308}
-  m_Layer: 5
-  m_Name: Placeable Panels
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1116262321864785308
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 264431017184769702}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7612583606288499627}
-  - {fileID: 7856319460716465530}
-  - {fileID: 4852535068231648864}
-  m_Father: {fileID: 3150273597664242044}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 910.8506, y: 394.1358}
-  m_Pivot: {x: 0, y: 0}
 --- !u!1 &355732404318976499
 GameObject:
   m_ObjectHideFlags: 0
@@ -900,7 +864,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1619,9 +1583,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740d29c648a720c47b7bfa87aec390cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabButtons: []
+  tabButtons:
+  - {fileID: 7937172385849365353}
+  - {fileID: 2526620390301041717}
+  - {fileID: 8444980758497008064}
   requireSelectedTab: 0
-  rightClickToCloseAllTabs: 1
+  closeAllTabs: 324
+  tabShortCuts:
+  - tab: {fileID: 7937172385849365353}
+    shortcut: 282
+  - tab: {fileID: 2526620390301041717}
+    shortcut: 283
+  - tab: {fileID: 8444980758497008064}
+    shortcut: 284
 --- !u!114 &8998055956974553921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2053,6 +2027,7 @@ MonoBehaviour:
   idleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   selectedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  ignoreClicksOnChildGameObjects: 1
   tabGroup: {fileID: 8313950919230898669}
   image: {fileID: 0}
 --- !u!1 &2511744780728681367
@@ -2635,6 +2610,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Go Layer Up
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1 &3282447759716721610
 GameObject:
   m_ObjectHideFlags: 0
@@ -4195,6 +4171,7 @@ MonoBehaviour:
   idleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   selectedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  ignoreClicksOnChildGameObjects: 1
   tabGroup: {fileID: 6429203571054983301}
   image: {fileID: 0}
 --- !u!114 &3419673940905250570
@@ -4210,6 +4187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: x1
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1 &4080620917002023551
 GameObject:
   m_ObjectHideFlags: 0
@@ -4728,7 +4706,16 @@ MonoBehaviour:
   - {fileID: 2663922091459909003}
   - {fileID: 5128637348456812596}
   requireSelectedTab: 1
-  rightClickToCloseAllTabs: 1
+  closeAllTabs: 324
+  tabShortCuts:
+  - tab: {fileID: 7902565519964226516}
+    shortcut: 32
+  - tab: {fileID: 4140345754897727743}
+    shortcut: 49
+  - tab: {fileID: 2663922091459909003}
+    shortcut: 50
+  - tab: {fileID: 5128637348456812596}
+    shortcut: 51
 --- !u!114 &861870530539492065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5114,6 +5101,7 @@ MonoBehaviour:
   idleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   selectedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  ignoreClicksOnChildGameObjects: 1
   tabGroup: {fileID: 6429203571054983301}
   image: {fileID: 0}
 --- !u!114 &4536497077750383045
@@ -5129,6 +5117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: x2.5
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1 &5318665857543499576
 GameObject:
   m_ObjectHideFlags: 0
@@ -5779,6 +5768,7 @@ MonoBehaviour:
   idleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   selectedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  ignoreClicksOnChildGameObjects: 1
   tabGroup: {fileID: 6429203571054983301}
   image: {fileID: 0}
 --- !u!114 &6859092792394433644
@@ -5794,6 +5784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Stop
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1 &5786387107586638434
 GameObject:
   m_ObjectHideFlags: 0
@@ -5940,6 +5931,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Go Layer Down
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1 &5815507732085732963
 GameObject:
   m_ObjectHideFlags: 0
@@ -5999,7 +5991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -7070,6 +7062,7 @@ MonoBehaviour:
   idleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   selectedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  ignoreClicksOnChildGameObjects: 1
   tabGroup: {fileID: 1975298264730005652}
   image: {fileID: 0}
 --- !u!1 &6890279533735013065
@@ -7318,7 +7311,8 @@ MonoBehaviour:
   tabButtons:
   - {fileID: 6380117369599014540}
   requireSelectedTab: 0
-  rightClickToCloseAllTabs: 1
+  closeAllTabs: 324
+  tabShortCuts: []
 --- !u!114 &4025047976221809539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7721,6 +7715,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4295726748210226807}
+  - {fileID: 4852535068231648864}
   m_Father: {fileID: 2635781001805651335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7811,6 +7806,7 @@ MonoBehaviour:
   idleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   selectedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  ignoreClicksOnChildGameObjects: 1
   tabGroup: {fileID: 3979650629032774946}
   image: {fileID: 0}
 --- !u!114 &5508772521190337169
@@ -7826,6 +7822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Zones
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1 &7292626673828771520
 GameObject:
   m_ObjectHideFlags: 0
@@ -8118,7 +8115,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7856319460716465530}
   m_Father: {fileID: 2635781001805651335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -8209,6 +8207,7 @@ MonoBehaviour:
   idleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   selectedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  ignoreClicksOnChildGameObjects: 1
   tabGroup: {fileID: 3979650629032774946}
   image: {fileID: 0}
 --- !u!114 &2437857473308349230
@@ -8224,6 +8223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Furniture
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1 &7452082095542038225
 GameObject:
   m_ObjectHideFlags: 0
@@ -8867,7 +8867,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2635781001805651335}
-  - {fileID: 1116262321864785308}
   m_Father: {fileID: 4342716863997459449}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -9395,6 +9394,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2999854444362609050}
+  - {fileID: 7612583606288499627}
   m_Father: {fileID: 2635781001805651335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -9485,6 +9485,7 @@ MonoBehaviour:
   idleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   selectedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  ignoreClicksOnChildGameObjects: 1
   tabGroup: {fileID: 3979650629032774946}
   image: {fileID: 0}
 --- !u!114 &2937347896975980958
@@ -9500,6 +9501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Building
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1 &8931252939924737435
 GameObject:
   m_ObjectHideFlags: 0
@@ -9553,7 +9555,8 @@ MonoBehaviour:
   tabButtons:
   - {fileID: 3811085701915063280}
   requireSelectedTab: 0
-  rightClickToCloseAllTabs: 1
+  closeAllTabs: 324
+  tabShortCuts: []
 --- !u!114 &4877256045543049974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11219,6 +11222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Wooden Floor
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1001 &2198857325054158937
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12478,6 +12482,12 @@ PrefabInstance:
       propertyPath: multipleSelectionContent
       value: 
       objectReference: {fileID: 1286374621152596947}
+    - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
+      propertyPath: multipleSelectionTextAsset
+      value: 
+      objectReference: {fileID: 8738527957228337793, guid: cd8b44fd8207b2149b870af0054a8545,
+        type: 3}
     - target: {fileID: 7302125334535349503, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
       propertyPath: events.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -13061,6 +13071,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Stockpile
+  ignoreClicksOnChildGameObjects: 1
 --- !u!224 &6406290626666051529 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7593699377191995417, guid: 4f9def7931ee65b41aae63732f63e901,
@@ -13281,6 +13292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Door
+  ignoreClicksOnChildGameObjects: 1
 --- !u!224 &6397533607610112510 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7593699377191995417, guid: 4f9def7931ee65b41aae63732f63e901,
@@ -15150,6 +15162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Window
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1001 &5356768731927234628
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15325,7 +15338,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1116262321864785308}
+    m_TransformParent: {fileID: 6638483211518586297}
     m_Modifications:
     - target: {fileID: 2641760693131080885, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
@@ -15405,12 +15418,12 @@ PrefabInstance:
     - target: {fileID: 2840712125821165559, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 110
+      value: 37.5
       objectReference: {fileID: 0}
     - target: {fileID: 2840712125821165559, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 77
+      value: 71.12601
       objectReference: {fileID: 0}
     - target: {fileID: 2840712125821165559, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
@@ -15450,7 +15463,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1116262321864785308}
+    m_TransformParent: {fileID: 5092495590635516437}
     m_Modifications:
     - target: {fileID: 2641760693131080885, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
@@ -15530,12 +15543,12 @@ PrefabInstance:
     - target: {fileID: 2840712125821165559, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 31
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 2840712125821165559, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 77
+      value: 71.12601
       objectReference: {fileID: 0}
     - target: {fileID: 2840712125821165559, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
@@ -16498,7 +16511,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1116262321864785308}
+    m_TransformParent: {fileID: 3518985801672511090}
     m_Modifications:
     - target: {fileID: 2641760693131080885, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
@@ -16588,12 +16601,12 @@ PrefabInstance:
     - target: {fileID: 2840712125821165559, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 185
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2840712125821165559, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 77
+      value: 71.12601
       objectReference: {fileID: 0}
     - target: {fileID: 2840712125821165559, guid: 14bb2c7a0dee785409789a1d402da4ef,
         type: 3}
@@ -18102,6 +18115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textOnHover: Wall
+  ignoreClicksOnChildGameObjects: 1
 --- !u!1001 &9098806039169626343
 PrefabInstance:
   m_ObjectHideFlags: 0
