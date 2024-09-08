@@ -59,7 +59,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         {
             EndSelection();
         }
-        else if (Input.GetKey(KeyCode.Mouse0) && worldMouseStartPos != Vector3.zero)
+        else if (Input.GetKey(KeyCode.Mouse0) && worldMouseStartPos != Vector3.zero && IsDragging())
         {
             DragSelection();
             VisualizeSelection();
@@ -75,15 +75,20 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     void EndSelection()
     {
         ResetHovered();
-        if (mouseDownTime + dragDelay > Time.time)
+        if (!IsDragging())
         {
             ClickSelection();
         }
-        else if (worldMouseStartPos != Vector3.zero)
+        else if (worldMouseStartPos != Vector3.zero && IsDragging())
         {
             BoxSelection();
         }
         ResetDrag();
+    }
+
+    bool IsDragging()
+    {
+        return mouseDownTime + dragDelay < Time.time;
     }
 
     void DragSelection()
@@ -135,7 +140,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     {
         List<ISelectable> selectables = new List<ISelectable>();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.SphereCast(ray, 1, out RaycastHit hit, 50, LayerManager.Instance.SelectableLayerMask) &&
+        if (Physics.SphereCast(ray, 0.2f, out RaycastHit hit, Mathf.Infinity, LayerManager.Instance.SelectableLayerMask) &&
         hit.transform.TryGetComponent(out ISelectable selectable))
         {
             selectables.Add(selectable);
@@ -196,7 +201,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
                     selectable.OnSelect();
                 }
             }
-            SetSelectionType(selectables[0].GetSelectionType());
+            UpdateSelection();
         }
         else if (selectionAction == SelectionAction.Remove)
         {
@@ -297,7 +302,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     public void SetNewSelectionAction(SelectionAction selectionAction)
     {
         this.selectionAction = selectionAction;
-        if(selectionAction != SelectionAction.Default && selectionAction != SelectionAction.Add && selectionAction != SelectionAction.Remove)
+        if (selectionAction != SelectionAction.Default && selectionAction != SelectionAction.Add && selectionAction != SelectionAction.Remove)
         {
             UIManager.Instance.SelectionActionCanvas.SetActive(true);
             UIManager.Instance.actionText.text = $"Left Click + Drag to {selectionAction.ToString()}";
@@ -409,16 +414,16 @@ public class SelectionManager : MonoSingleton<SelectionManager>
 
     void CancelSelection(List<ISelectable> selectables)
     {
-        for (int i = 0; i < selectables.Count; i++)
+        List<ISelectable> dupeList = new List<ISelectable>(selectables);
+        foreach (ISelectable selectable in dupeList)
         {
-            ISelectable selectable = selectables[i];
-            if (selectable is IHarvestable)
+            if (selectable is IHarvestable harvestable)
             {
-                (selectable as IHarvestable).RemoveFromHarvestQueue();
+                harvestable.RemoveFromHarvestQueue();
             }
-            if (selectable is IConstructable)
+            if (selectable is IConstructable constructable)
             {
-                (selectable as IConstructable).CancelConstruction();
+                constructable.CancelConstruction();
             }
         }
     }
@@ -430,16 +435,16 @@ public class SelectionManager : MonoSingleton<SelectionManager>
 
     void SetSelectionForDestruction(List<ISelectable> selectables)
     {
-        for (int i = 0; i < selectables.Count; i++)
+        List<ISelectable> dupeList = new List<ISelectable>(selectables);
+        foreach (ISelectable selectable in dupeList)
         {
-            ISelectable selectable = selectables[i];
-            if (selectable is BuildingObject)
+            if (selectable is BuildingObject building)
             {
-                (selectable as BuildingObject).Deconstruct();
+                building.Deconstruct();
             }
-            if (selectable is Stockpile)
+            if (selectable is Stockpile stockpile)
             {
-                (selectable as Stockpile).DestroyStockpile();
+                stockpile.DestroyStockpile();
             }
         }
     }
