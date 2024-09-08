@@ -8,6 +8,7 @@ namespace Skolger.UI.Tabs
     [RequireComponent(typeof(Image))]
     public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
+        const string IgnoreClicksTooltip = "If this is causing issues with image on top of tab make sure to turn of raycast target on specific child";
         [Header("Events")]
         public UnityEvent OnSelected;
         public UnityEvent OnDeselected;
@@ -15,7 +16,8 @@ namespace Skolger.UI.Tabs
         [SerializeField] Color idleColor = new Color(0.9f, 0.9f, 0.9f);
         [SerializeField] Color hoverColor = Color.white;
         [SerializeField] Color selectedColor = new Color(0.7f, 0.7f, 0.7f);
-
+        [Header("Additional Settings")]
+        [SerializeField, Tooltip(IgnoreClicksTooltip)] bool ignoreClicksOnChildGameObjects = true;
         [Header("Refs")]
         [SerializeField] TabGroup tabGroup;
         public Image image;
@@ -32,7 +34,8 @@ namespace Skolger.UI.Tabs
         #region Pointer Events
 
         public void OnPointerClick(PointerEventData eventData)
-        {
+        {            
+            if(ignoreClicksOnChildGameObjects  && eventData.pointerEnter == gameObject)
             tabGroup.OnTabSelected(this);
         }
 
