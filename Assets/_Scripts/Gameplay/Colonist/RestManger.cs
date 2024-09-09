@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class RestManger : MonoBehaviour
 {
-    ColonistData colonist;
-    BedBuilding assignedBed;
+    public BedBuilding assignedBed { get; private set; }
 
     const float Max_Rest_Capacity = 100f;
     [BoxGroup("Thresholds"), SerializeField] float wellRestedThreshold = 70;
@@ -17,7 +16,7 @@ public class RestManger : MonoBehaviour
     [SerializeField] float tirednessSpeed = 0.1f;
     [SerializeField] float restGainSpeed = 0.3f;
 
-    bool sleeping = false;
+    public bool sleeping { get; private set;} = false;
     float sleepEffectivenessModifier = 1;
     public event Action OnSleep;
     public event Action OnWakeUp;
@@ -25,20 +24,15 @@ public class RestManger : MonoBehaviour
     RestStatus restStatus;
     public event Action<RestStatus> OnStatusChange;
 
-
-    void Awake()
-    {
-        colonist = GetComponent<ColonistData>();
-    }
     void Start()
     {
         OnStatusChange?.Invoke(restStatus);
     }
 
-    public void Sleep(float bedQuality)
+    public void Sleep()
     {
         sleeping = true;
-        sleepEffectivenessModifier = bedQuality;
+        sleepEffectivenessModifier = assignedBed.data.bedQuality;
         OnSleep?.Invoke();
     }
     public void WakeUp()
@@ -79,6 +73,19 @@ public class RestManger : MonoBehaviour
             return RestStatus.SleepDeprived;
         else
             return RestStatus.Insomniac;
+    }
+
+    public bool IsTired()
+    {
+        return RestLevel <= tiredThreshold;
+    }
+    public bool IsWellRested()
+    {
+        return RestLevel > wellRestedThreshold;
+    }
+    public void AssignBed(BedBuilding bed)
+    {
+        assignedBed = bed;
     }
 }
 

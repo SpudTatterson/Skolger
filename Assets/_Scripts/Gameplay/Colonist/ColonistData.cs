@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 
 public class ColonistData : MonoBehaviour, ISelectable
 {
-
     [SerializeField, ChildGameObjectsOnly, BoxGroup("References")] GameObject visual;
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistMoodManager moodManager { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public HungerManager hungerManager { get; private set; }
@@ -71,12 +70,13 @@ public class ColonistData : MonoBehaviour, ISelectable
     void Update()
     {
         hungerManager.GetHungry(Time.deltaTime);
-       // restManger.UpdateRest();
+        restManger.UpdateRest();
         moodManager.UpdateMood();
     }
 
     public void SetBrainState(BrainState state)
     {
+        if(state == BrainState.Rest && brainState == BrainState.Sleeping) return;
         brainState = state;
     }
 
