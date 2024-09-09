@@ -23,7 +23,7 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
             outline = GetComponent<Outline>();
     }
 
-    public void Initialize(BuildingData buildingData, Direction placementDirection)
+    public virtual void Initialize(BuildingData buildingData, Direction placementDirection)
     {
         this.buildingData = buildingData;
         this.placementDirection = placementDirection;
@@ -174,8 +174,12 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
 
     #endregion
 
-    void OnDisable()
+    protected virtual void OnDisable()
     {
         OnDeselect();
+    }
+    protected virtual void OnEnable()
+    {
+
     }
 }
