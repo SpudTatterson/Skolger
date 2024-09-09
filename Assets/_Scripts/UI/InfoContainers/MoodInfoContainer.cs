@@ -15,8 +15,9 @@ namespace Skolger.UI.InfoContainers
             statusText.text = status.ToString();
         }
 
-        void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             colonist.moodManager.onMoodChange += UpdateInfo;
             colonist.moodManager.ForceMoodUpdate();
         }

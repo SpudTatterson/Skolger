@@ -87,6 +87,7 @@ public class VectorUtility
     }
     public static Box CalculateBoxSizeGridAligned(Cell firstCorner, Cell secondCorner, float cellSize)
     {
+        if(firstCorner == null || secondCorner == null) throw new MissingReferenceException("One of the cells are null");
         return CalculateBoxSize(firstCorner.position - new Vector3(cellSize / 2, 0, cellSize / 2), secondCorner.position + new Vector3(cellSize / 2, 0, cellSize / 2));
     }
 

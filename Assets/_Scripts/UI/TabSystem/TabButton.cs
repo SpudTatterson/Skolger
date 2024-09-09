@@ -8,31 +8,34 @@ namespace Skolger.UI.Tabs
     [RequireComponent(typeof(Image))]
     public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
+        const string IgnoreClicksTooltip = "If this is causing issues with image on top of tab make sure to turn of raycast target on specific child";
         [Header("Events")]
-        [SerializeField] UnityEvent OnSelected;
-        [SerializeField] UnityEvent OnDeselected;
+        public UnityEvent OnSelected;
+        public UnityEvent OnDeselected;
         [Header("Visual Settings")]
         [SerializeField] Color idleColor = new Color(0.9f, 0.9f, 0.9f);
         [SerializeField] Color hoverColor = Color.white;
         [SerializeField] Color selectedColor = new Color(0.7f, 0.7f, 0.7f);
-
+        [Header("Additional Settings")]
+        [SerializeField, Tooltip(IgnoreClicksTooltip)] bool ignoreClicksOnChildGameObjects = true;
         [Header("Refs")]
         [SerializeField] TabGroup tabGroup;
-        Image background;
+        public Image image;
 
         bool selected;
 
         void Awake()
         {
             tabGroup.Subscribe(this);
-            background = GetComponent<Image>();
-            background.color = idleColor;
+            image = GetComponent<Image>();
+            image.color = idleColor;
         }
 
         #region Pointer Events
 
         public void OnPointerClick(PointerEventData eventData)
-        {
+        {            
+            if(ignoreClicksOnChildGameObjects  && eventData.pointerEnter == gameObject)
             tabGroup.OnTabSelected(this);
         }
 
@@ -40,7 +43,7 @@ namespace Skolger.UI.Tabs
         {
             tabGroup.OnTabEnter(this);
             if (!selected)
-                background.color = hoverColor;
+                image.color = hoverColor;
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -53,7 +56,7 @@ namespace Skolger.UI.Tabs
         public void ResetTab()
         {
             if (!selected)
-                background.color = idleColor;
+                image.color = idleColor;
         }
         public void ResetSelected()
         {
@@ -63,7 +66,7 @@ namespace Skolger.UI.Tabs
         public void OnSelect()
         {
             selected = true;
-            background.color = selectedColor;
+            image.color = selectedColor;
             OnSelected.Invoke();
         }
         public void OnDeselect()

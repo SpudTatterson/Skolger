@@ -131,10 +131,8 @@ public class ColonistBT : Tree
         switch (colonistData.moodManager.breakDownType)
         {
             case BreakDownType.Wander:
-                Debug.Log("Wander Breakdown");
                 return CreateTaskWander();
             case BreakDownType.EatingFrenzy:
-                Debug.Log("Eating Breakdown");
                 return CreateTaskEat();
 
             default:

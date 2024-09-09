@@ -14,7 +14,7 @@ namespace Skolger.UI.InfoContainers
         [SerializeField] protected Color emptyColor = Color.red;
         [SerializeField] protected Color fullColor = Color.green;
 
-        void Awake()
+        protected virtual void OnEnable()
         {
             ColonistBar colonistBar = GetComponentInParent<ColonistBar>();
             if (colonistBar != null)
