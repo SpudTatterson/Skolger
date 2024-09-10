@@ -55,14 +55,19 @@ namespace Skolger.Tutorial
 
         public override void Update()
         {
-            if (!active) return;
             if (startType == PointType.WorldPoint)
                 startScreenPoint = Camera.main.WorldToScreenPoint(startWorldPoint.position);
 
             if (endType == PointType.WorldPoint)
                 endScreenPoint = Camera.main.WorldToScreenPoint(endWorldPoint.position);
 
-            elapsedTime += Time.deltaTime;
+            if (!active)
+            {
+
+                rectTransform.anchoredPosition = endScreenPoint;
+                return;
+            }
+            elapsedTime += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsedTime / time);
 
             if (!reverse)
@@ -83,8 +88,6 @@ namespace Skolger.Tutorial
                     reverse = !reverse;
                 else
                 {
-                    Debug.Log("Working");
-                    Debug.Log(snapBackTime);
                     active = false;
                     DOVirtual.DelayedCall(snapBackTime, RestartPosition);
                 }
@@ -94,7 +97,6 @@ namespace Skolger.Tutorial
 
         public void RestartPosition()
         {
-            Debug.Log("Restarted");
             active = true;
             rectTransform.anchoredPosition = startScreenPoint;
         }
