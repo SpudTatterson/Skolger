@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -24,10 +25,12 @@ namespace Skolger.Tutorial
 
         [SerializeField] bool loop = true;
         [SerializeField, ShowIf("loop")] bool snapBack = true;
+        [SerializeField, ShowIf("snapBack")] float snapBackTime = 1f;
 
         Tween tween;
         float elapsedTime = 0f;
         bool reverse = false;
+        bool active = true;
         public override void Initialize()
         {
             rectTransform.gameObject.SetActive(true);
@@ -52,6 +55,7 @@ namespace Skolger.Tutorial
 
         public override void Update()
         {
+            if (!active) return;
             if (startType == PointType.WorldPoint)
                 startScreenPoint = Camera.main.WorldToScreenPoint(startWorldPoint.position);
 
@@ -78,9 +82,21 @@ namespace Skolger.Tutorial
                 if (!snapBack)
                     reverse = !reverse;
                 else
-                    rectTransform.anchoredPosition = startScreenPoint;
+                {
+                    Debug.Log("Working");
+                    Debug.Log(snapBackTime);
+                    active = false;
+                    DOVirtual.DelayedCall(snapBackTime, RestartPosition);
+                }
                 elapsedTime = 0f;
             }
+        }
+
+        public void RestartPosition()
+        {
+            Debug.Log("Restarted");
+            active = true;
+            rectTransform.anchoredPosition = startScreenPoint;
         }
     }
 }
