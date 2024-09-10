@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 8611095537669486093}
   - component: {fileID: 6219760873208269886}
   - component: {fileID: 6364238019845083758}
+  - component: {fileID: 3623187770659993671}
   m_Layer: 10
   m_Name: Colonist
   m_TagString: Untagged
@@ -352,6 +353,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Items>k__BackingField: []
+--- !u!114 &3623187770659993671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3488476873385593109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0528d79cc05b8074ea3724c57da59806, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3639081120247255979
 GameObject:
   m_ObjectHideFlags: 0
