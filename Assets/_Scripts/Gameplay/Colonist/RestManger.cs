@@ -32,7 +32,7 @@ public class RestManger : MonoBehaviour
     public void Sleep()
     {
         sleeping = true;
-        sleepEffectivenessModifier = assignedBed.data.bedQuality;
+        sleepEffectivenessModifier = assignedBed.bedData.bedQuality;
         OnSleep?.Invoke();
     }
     public void WakeUp()

@@ -4,11 +4,11 @@ using UnityEngine;
 public class BedBuilding : BuildingObject
 {
     ColonistData assignedColonist;
-    public BedData data { get; private set; }
+    public BedData bedData { get; private set; }
 
     void Awake()
     {
-        data = buildingData as BedData;
+        bedData = buildingData as BedData;
     }
 
     public override void Initialize(BuildingData buildingData, Direction placementDirection)
