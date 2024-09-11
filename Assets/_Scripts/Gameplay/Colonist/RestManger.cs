@@ -16,12 +16,12 @@ public class RestManger : MonoBehaviour
     [SerializeField] float tirednessSpeed = 0.1f;
     [SerializeField] float restGainSpeed = 0.3f;
 
-    public bool sleeping { get; private set;} = false;
+    public bool sleeping { get; private set; } = false;
     float sleepEffectivenessModifier = 1;
     public event Action OnSleep;
     public event Action OnWakeUp;
 
-    RestStatus restStatus;
+    public RestStatus restStatus { get; private set; }
     public event Action<RestStatus> OnStatusChange;
 
     void Start()
