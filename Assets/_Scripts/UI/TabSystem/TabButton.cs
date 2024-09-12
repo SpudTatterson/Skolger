@@ -34,9 +34,14 @@ namespace Skolger.UI.Tabs
         #region Pointer Events
 
         public void OnPointerClick(PointerEventData eventData)
-        {            
-            if(ignoreClicksOnChildGameObjects  && eventData.pointerEnter == gameObject)
-            tabGroup.OnTabSelected(this);
+        {
+            if (!ignoreClicksOnChildGameObjects)
+            {
+                tabGroup.OnTabSelected(this);
+                return;
+            }
+            if (ignoreClicksOnChildGameObjects && eventData.pointerEnter == gameObject)
+                tabGroup.OnTabSelected(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
