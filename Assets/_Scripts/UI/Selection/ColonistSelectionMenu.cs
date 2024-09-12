@@ -8,7 +8,7 @@ public class ColonistSelectionMenu : MonoBehaviour
     [SerializeField] TextMeshProUGUI activeTask;
     [SerializeField] Image colonistImage;
 
-    ColonistData colonist;
+    public ColonistData colonist { get; private set; }
 
     public void UpdateMenu(ColonistData colonist)
     {

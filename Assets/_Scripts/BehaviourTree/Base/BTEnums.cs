@@ -24,3 +24,14 @@ public enum TaskKey
     Wandering,
     Harvesting
 }
+
+public enum BrainState
+{
+    Unrestricted,
+    Work,
+    Rest,
+    Recreational,
+    Drafted,
+    Breakdown,
+    Sleeping
+}

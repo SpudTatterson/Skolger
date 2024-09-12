@@ -23,10 +23,10 @@ public class CheckForStockpile : Node
         {
             object hasStockpile = GetData(DataName.Stockpile);
 
-            if (inventoryItem != null || !colonistData.IsEmpty())
+            if (inventoryItem != null || !colonistData.inventory.IsEmpty())
             {
                 int itemIndex  = (int)GetData(DataName.InventoryIndex);
-                colonistData.TakeItemOut(itemIndex).DropItem(agent.transform.position);
+                colonistData.inventory.TakeItemOut(itemIndex).DropItem(agent.transform.position);
                 agent.ResetPath();
 
                 ClearData(DataName.InventoryItem);

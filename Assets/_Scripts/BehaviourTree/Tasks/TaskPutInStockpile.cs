@@ -31,8 +31,8 @@ public class TaskPutInStockpile : Node
             return state;            
         }
         int itemIndex = (int)GetData(DataName.InventoryIndex);
-        InventoryItem item = colonistData.Items[itemIndex];
-        stockpile.AddItem(colonistData.TakeItemOut(itemIndex));
+        InventoryItem item = colonistData.inventory.Items[itemIndex];
+        stockpile.AddItem(colonistData.inventory.TakeItemOut(itemIndex));
         ClearData(DataName.InventoryItem);
         ClearData(DataName.Cell);
         ClearData(DataName.Target);
