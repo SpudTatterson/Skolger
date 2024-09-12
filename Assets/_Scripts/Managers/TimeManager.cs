@@ -19,22 +19,6 @@ public class TimeManager : MonoBehaviour
         {
             Toggle();
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            timeManagerTabGroup.TriggerTab(0);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            timeManagerTabGroup.TriggerTab(1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            timeManagerTabGroup.TriggerTab(2);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            timeManagerTabGroup.TriggerTab(3);
-        }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             SetNewTimeScale(5);

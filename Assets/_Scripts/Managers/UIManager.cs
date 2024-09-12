@@ -16,7 +16,7 @@ public class UIManager : MonoSingleton<UIManager>
     [TabGroup("Selection Panels")] public StockpileSelectionMenu stockpileSelection;
     [TabGroup("Selection Panels")] public GameObject multipleSelection;
     [TabGroup("Selection Assets")] public Transform multipleSelectionContent;
-    [TabGroup("Selection Assets")] public TextMeshProUGUI defaultTextAsset;
+    [TabGroup("Selection Assets")] public GameObject multipleSelectionTextAsset; 
     [TabGroup("Selection Assets")] public RectTransform selectionBoxImage;
 
     [Header("Selection Action Buttons")]

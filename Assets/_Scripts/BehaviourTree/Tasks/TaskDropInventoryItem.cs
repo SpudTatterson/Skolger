@@ -15,11 +15,11 @@ public class TaskDropInventoryItem : Node
     {
         var inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
 
-        if (inventoryItem != null || !colonistData.IsEmpty())
+        if (inventoryItem != null || !colonistData.inventory.IsEmpty())
         {
             //inventoryItem.DropItem(agent.transform.position);
             int InventoryIndex = (int)GetData(DataName.InventoryIndex);
-            colonistData.TakeItemOut(InventoryIndex).DropItem(GridManager.Instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell().position);
+            colonistData.inventory.TakeItemOut(InventoryIndex).DropItem(GridManager.Instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell().position);
             ClearData(DataName.InventoryItem);
         }
 

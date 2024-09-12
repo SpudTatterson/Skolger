@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ColonistBar : MonoBehaviour
 {
-    private ColonistData colonist;
+    public ColonistData colonist {get; private set;}
     [SerializeField] Image colonistFace;
     [SerializeField] TextMeshProUGUI colonistName;
     [SerializeField] TextMeshProUGUI activity;

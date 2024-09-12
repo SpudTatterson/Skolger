@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class StockpilePlacer : MonoSingleton<StockpilePlacer>
@@ -16,6 +17,8 @@ public class StockpilePlacer : MonoSingleton<StockpilePlacer>
     bool inUse = false;
     Stockpile selectedStockpile;
     GameObject tempCellVisual;
+
+    public UnityEvent onStockpilePlaced;
 
     void Update()
     {
@@ -99,6 +102,8 @@ public class StockpilePlacer : MonoSingleton<StockpilePlacer>
             c.inUse = true;
             c.walkable = true;
         }
+
+        onStockpilePlaced?.Invoke();
     }
 
     public void ShrinkStockpile(Stockpile stockpile)

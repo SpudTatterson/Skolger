@@ -19,6 +19,8 @@ public class ColonistSelectionStrategy : ISelectionStrategy
 
     public void EnableButtons()
     {
+        if (ui == null)
+            ui = UIManager.Instance;
         ui.SetAllActionButtonsInactive();
         // draft button
     }

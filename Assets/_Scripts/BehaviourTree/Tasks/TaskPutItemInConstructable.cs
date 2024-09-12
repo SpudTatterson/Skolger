@@ -18,13 +18,20 @@ public class TaskPutItemInConstructable : Node
 
         if (constructable != null && ReachedDestinationOrGaveUp())
         {
-            int itemIndex = (int)GetData(DataName.InventoryIndex);
-            constructable.AddItem(colonistData.TakeItemOut(itemIndex));
+            var data = GetData(DataName.InventoryIndex);
+            if (data == null)
+            {
+                state = NodeState.FAILURE;
+                return state;
+            }
+
+            int itemIndex = (int)data;
+            constructable.AddItem(colonistData.inventory.TakeItemOut(itemIndex));
             ClearData(DataName.InventoryItem);
             ClearData(DataName.Target);
             ClearData(DataName.Cost);
 
-            if(constructable.CheckIfCostsFulfilled())
+            if (constructable.CheckIfCostsFulfilled())
             {
                 constructable.ConstructBuilding();
                 ClearData(DataName.Constructable);

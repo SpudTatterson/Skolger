@@ -481,19 +481,45 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
     {
         if (mesh != null)
         {
-
+            // Ensure you have a unique path for the mesh file
             Mesh existingMesh = LoadMeshFromFile(visualGO, out string path);
             if (existingMesh != null)
             {
                 if (existingMesh != mesh)
                 {
-                    // Assign new mesh data to existing mesh asset
+                    // Clear existing mesh before assigning new data
                     existingMesh.Clear();
+
+                    // Assign vertices, triangles, UVs, normals, etc.
                     existingMesh.vertices = mesh.vertices;
                     existingMesh.triangles = mesh.triangles;
                     existingMesh.uv = mesh.uv;
-                    existingMesh.normals = mesh.normals;
+
+                    // Handle submeshes correctly
+                    existingMesh.subMeshCount = mesh.subMeshCount;
+                    for (int i = 0; i < mesh.subMeshCount; i++)
+                    {
+                        existingMesh.SetTriangles(mesh.GetTriangles(i), i);
+                    }
+
+                    // Ensure normals and tangents are copied over
+                    if (mesh.normals != null && mesh.normals.Length == mesh.vertexCount)
+                    {
+                        existingMesh.normals = mesh.normals;
+                    }
+                    else
+                    {
+                        existingMesh.RecalculateNormals(); // Recalculate if missing
+                    }
+
+                    if (mesh.tangents != null && mesh.tangents.Length == mesh.vertexCount)
+                    {
+                        existingMesh.tangents = mesh.tangents;
+                    }
+
+                    // Recalculate bounds for the mesh
                     existingMesh.RecalculateBounds();
+
 #if UNITY_EDITOR
                     AssetDatabase.SaveAssets();
 #endif
@@ -503,15 +529,17 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
             else
             {
 #if UNITY_EDITOR
+                // Create a new asset if the mesh doesn't exist yet
                 AssetDatabase.CreateAsset(mesh, path);
 
-                Debug.Log("Saved mesh to " + path);
+                Debug.Log("Saved new mesh to " + path);
                 existingMesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
 #endif
             }
 
             return existingMesh;
         }
+
 #if UNITY_EDITOR
         AssetDatabase.SaveAssets();
 #endif
@@ -628,7 +656,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
                     indexes.Clear(); // Clear the list since the operation failed
                     return false;
                 }
-                Debug.DrawLine(cells[index.x, index.y].position, cells[index.x, index.y].position + Vector3.up, Color.blue, 10f);
+                // Debug.DrawLine(cells[index.x, index.y].position, cells[index.x, index.y].position + Vector3.up, Color.blue, 10f);
                 indexes.Add(index); // Add the coordinate to the list
 
             }
