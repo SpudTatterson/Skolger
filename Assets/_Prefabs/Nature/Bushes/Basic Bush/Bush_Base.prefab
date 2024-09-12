@@ -209,6 +209,21 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: d63064bbda6cee54d8d9eb8f4c13a57d, type: 3}
     - target: {fileID: 7805987253553451111, guid: 5d3c4c1ada7916448b91266a5cd9802e,
         type: 3}
+      propertyPath: ChoppingSound.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 51b325f45fa41284f87e7d5ad29a865b, type: 3}
+    - target: {fileID: 7805987253553451111, guid: 5d3c4c1ada7916448b91266a5cd9802e,
+        type: 3}
+      propertyPath: ChoppingSound.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: a0c593b154357794180325d7b68cae43, type: 3}
+    - target: {fileID: 7805987253553451111, guid: 5d3c4c1ada7916448b91266a5cd9802e,
+        type: 3}
+      propertyPath: ChoppingSound.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: d63064bbda6cee54d8d9eb8f4c13a57d, type: 3}
+    - target: {fileID: 7805987253553451111, guid: 5d3c4c1ada7916448b91266a5cd9802e,
+        type: 3}
       propertyPath: drops.Array.data[0].itemData
       value: 
       objectReference: {fileID: 11400000, guid: 4aa0672e957819344873fedb144622a0,
