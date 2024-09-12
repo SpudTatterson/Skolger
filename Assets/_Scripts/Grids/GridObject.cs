@@ -656,7 +656,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
                     indexes.Clear(); // Clear the list since the operation failed
                     return false;
                 }
-                Debug.DrawLine(cells[index.x, index.y].position, cells[index.x, index.y].position + Vector3.up, Color.blue, 10f);
+                // Debug.DrawLine(cells[index.x, index.y].position, cells[index.x, index.y].position + Vector3.up, Color.blue, 10f);
                 indexes.Add(index); // Add the coordinate to the list
 
             }

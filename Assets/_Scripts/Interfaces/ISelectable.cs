@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum SelectionType
 {
+    None,
     Item,
     Constructable,
     Building,

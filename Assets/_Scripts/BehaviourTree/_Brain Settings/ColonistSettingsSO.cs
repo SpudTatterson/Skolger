@@ -9,6 +9,7 @@ public class ColonistSettingsSO : ScriptableObject
     [Space]
     public int taskWander;
     public int taskEat;
+    public int taskSleep = 12;
 
     [Header("Player tasks that change in run time")]
     [Space]

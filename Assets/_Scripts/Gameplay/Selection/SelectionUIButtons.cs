@@ -9,6 +9,10 @@ public class SelectionUIButtons : MonoBehaviour
     {
         selectionManager = SelectionManager.Instance;
     }
+    public void SetActionToDefault()
+    {
+        selectionManager.SetNewSelectionAction(SelectionAction.Default);
+    }
     public void SetActionToHarvest()
     {
         selectionManager.SetNewSelectionAction(SelectionAction.Harvest);

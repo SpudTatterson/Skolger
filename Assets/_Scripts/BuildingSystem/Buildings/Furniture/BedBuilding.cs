@@ -1,30 +1,70 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BedBuilding : BuildingObject
 {
     ColonistData assignedColonist;
-    BedData data;
+    public BedData bedData { get; private set; }
 
     void Awake()
     {
-        data = buildingData as BedData;
+        bedData = buildingData as BedData;
     }
-    public void SetAssignedColonist(ColonistData assignedColonist)
+
+    public override void Initialize(BuildingData buildingData, Direction placementDirection)
+    {
+        base.Initialize(buildingData, placementDirection);
+        assignedColonist = null;
+    }
+    public void AssignColonist(ColonistData assignedColonist)
     {
         this.assignedColonist = assignedColonist;
     }
 
-    public void Sleep(ColonistData colonist)
+    public bool IsFree()
     {
-        if (assignedColonist == null)
+        return assignedColonist == null;
+    }
+
+    protected override void OnDisable()
+    {
+        BedManager.Unsubscribe(this);
+        assignedColonist?.restManger?.AssignBed(null);
+        AssignColonist(null);
+    }
+    protected override void OnEnable()
+    {
+        BedManager.Subscribe(this);
+    }
+
+
+}
+
+public class BedManager
+{
+    public static List<BedBuilding> bedBuildings = new List<BedBuilding>();
+
+    public static void Subscribe(BedBuilding bed)
+    {
+        if (!bedBuildings.Contains(bed))
+            bedBuildings.Add(bed);
+    }
+    public static void Unsubscribe(BedBuilding bed)
+    {
+        bedBuildings.Remove(bed);
+    }
+
+    public static bool TryFindFreeBed(out BedBuilding freeBed)
+    {
+        foreach (var bed in bedBuildings)
         {
-            SetAssignedColonist(colonist);
+            if (bed.IsFree())
+            {
+                freeBed = bed;
+                return true;
+            }
         }
-        if(colonist != assignedColonist)
-        {
-            Debug.Log($"{colonist.name} went to wrong bed!");
-            return;
-        }
-        assignedColonist.restManger.Sleep(data.bedQuality);
+        freeBed = null;
+        return false;
     }
 }
