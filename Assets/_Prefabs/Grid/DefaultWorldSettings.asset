@@ -17,6 +17,6 @@ MonoBehaviour:
   cellSize: 1
   cellHeight: 3
   groundLayer: 7
-  aboveGroundLayers: 5
+  aboveGroundLayers: 10
   belowGroundLayers: 2
   material: {fileID: 2100000, guid: 728b3d800a13b1c4a920504130fb8f08, type: 2}
