@@ -26,4 +26,10 @@ public static class SceneUtility
         Time.timeScale = 1;
         LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+
+ 
+
+
+
+
 }
