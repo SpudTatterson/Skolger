@@ -4,31 +4,34 @@ using System.Collections.Generic;
 using Skolger.UI.Tabs;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
-public class TimeManager : MonoBehaviour
+public class PauseManager : MonoSingleton<PauseManager>
 {
-    [SerializeField] TabGroup timeManagerTabGroup;
     public UnityEvent OnPause;
     public UnityEvent OnResume;
+    public UnityEvent OnPauseMenu;
+    public UnityEvent OnResumeMenu;
     bool paused;
+    bool pauseMenuOpen = false;
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Toggle();
+            TogglePauseMenu();
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            SetNewTimeScale(5);
+            SetNewTimeScale(10);
         }
     }
     public void SetNewTimeScale(float timeScale)
     {
         Time.timeScale = timeScale;
     }
-    void Toggle()
+    public void TogglePause()
     {
         if (paused)
         {
@@ -53,5 +56,31 @@ public class TimeManager : MonoBehaviour
         Time.timeScale = 1;
         paused = false;
     }
+    public void TogglePauseMenu()
+    {
+        if (pauseMenuOpen)
+        {
+            UnPause();
+            OnResumeMenu?.Invoke();
+        }
+        else
+        {
+            Pause();
+            OnPauseMenu?.Invoke();
+        }
+        pauseMenuOpen = !pauseMenuOpen;
+    }
 
+    public void LoadScene(int index)
+    {
+        SceneUtility.LoadScene(index);
+    }
+    public void Exit()
+    {
+        SceneUtility.Exit();
+    }
+    public void Restart()
+    {
+        SceneUtility.RestartScene();
+    }
 }
