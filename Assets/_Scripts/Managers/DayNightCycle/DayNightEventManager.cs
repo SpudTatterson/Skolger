@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sydewa;
 using UnityEngine.Events;
+using System;
 
 public class DayNightEventManager : MonoSingleton<DayNightEventManager>
 {
@@ -56,7 +57,7 @@ public class DayNightEventManager : MonoSingleton<DayNightEventManager>
 
     public UnityEvent GetEvent(string eventName)
     {
-        if (eventsSortedByNames.TryGetValue(eventName, out var eventInfo))  
+        if (eventsSortedByNames.TryGetValue(eventName, out var eventInfo))
             return eventInfo.Event;
         throw new System.Exception("Failed to find event as none match that name");
     }
@@ -64,7 +65,21 @@ public class DayNightEventManager : MonoSingleton<DayNightEventManager>
     {
         if (eventsSortedByTime.TryGetValue(timeOfDay, out var eventInfo))
             return eventInfo.Event;
-        throw new System.Exception("Failed to find event as none match the specified time");
+        else
+            return CreateEvent(timeOfDay);
+        // throw new System.Exception("Failed to find event as none match the specified time");
+    }
+
+    UnityEvent CreateEvent(float timeOfDay, string eventName = default)
+    {
+        if (eventName == default)
+            eventName = $"Hour {timeOfDay}";
+
+
+        EventInfo newEvent = new EventInfo(eventName, timeOfDay);
+        events.Add(newEvent);
+        OnValidate();
+        return newEvent.Event;
     }
 
     void OnValidate()

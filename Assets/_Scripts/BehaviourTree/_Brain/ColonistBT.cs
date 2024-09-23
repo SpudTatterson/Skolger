@@ -75,13 +75,25 @@ public class ColonistBT : Tree
 
     private Node SetupSleepState()
     {
-        return new Selector(new List<Node>());
+        return CreateTaskWakeUp();
+    }
+
+    private Node CreateTaskWakeUp()
+    {
+        return new Sequence(new List<Node>{
+            new CheckIfNotTired(colonistData),
+            new TaskWakeUp(colonistData),
+        })
+        {
+            priority = colonistSettings.taskSleep,
+        };
     }
 
     private Node SetupWorkState()
     {
         return new Selector(new List<Node>
         {
+            new TaskWakeUp(colonistData),
             CreateTaskWander(),
 
             CreateTaskHaul(),
@@ -94,6 +106,7 @@ public class ColonistBT : Tree
     {
         return new Selector(new List<Node>
         {
+            new TaskWakeUp(colonistData),
             CreateTaskEat(),
             CreateTaskWander(),
 
@@ -107,6 +120,7 @@ public class ColonistBT : Tree
     {
         return new Selector(new List<Node>
         {
+            CreateTaskSleep(),
             CreateTaskEat(),
             CreateTaskWander()
         });
@@ -144,6 +158,19 @@ public class ColonistBT : Tree
         };
     }
     #endregion
+
+    Node CreateTaskSleep()
+    {
+        return new Sequence(new List<Node>{
+            new CheckIfTired(colonistData),
+            new CheckForBed(colonistData),
+            new TaskGoToTarget(agent),
+            new TaskGoToSleep(colonistData),
+        })
+        {
+            priority = colonistSettings.taskSleep,
+        };
+    }
 
     #region Wandering Task
     private Node CreateTaskWander()

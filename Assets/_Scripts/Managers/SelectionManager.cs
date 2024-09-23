@@ -188,7 +188,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
 
     void Select(List<ISelectable> selectables)
     {
-        if (selectables.Count == 0)
+        if (selectables.Count == 0 && selectionAction == SelectionAction.Default)
         {
             ResetSelection();
             return;
@@ -310,6 +310,10 @@ public class SelectionManager : MonoSingleton<SelectionManager>
         {
             UIManager.Instance.SelectionActionCanvas.SetActive(true);
             UIManager.Instance.actionText.text = $"Left Click + Drag to {selectionAction.ToString()}";
+        }
+        else
+        {
+            UIManager.Instance.SelectionActionCanvas.SetActive(false);
         }
     }
     public void SetSelectionType(SelectionType selectionType)

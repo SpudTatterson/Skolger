@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
-    [SerializeField] private AudioClip[] ChopingSound;
+    [SerializeField] private AudioClip[] ChoppingSound;
+    [SerializeField, Tooltip("Amount of time to wait between playing effects")] float effectsWaitTime = 1f;
 
     [SerializeField] float baseGatherTime = 5f;
 
@@ -46,12 +48,21 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
     {
         timeHarvesting = 0f;
         beingHarvested = true;
-        fillBar.UpdateMaxFillAmount(baseGatherTime); // multiply by any modifiers
-        //SoundsFXManager.instance.PlayRandomSoundFXClip(ChopingSound, transform, 1f);
+        fillBar.UpdateMaxFillAmount(baseGatherTime); // Multiply by any modifiers
+
+        float timeSincePlayedEffect = 0;
 
         while (timeHarvesting < baseGatherTime)
         {
             timeHarvesting += Time.deltaTime;
+            timeSincePlayedEffect += Time.deltaTime;
+
+            if (timeSincePlayedEffect >= effectsWaitTime)
+            {
+                HitTree();
+                timeSincePlayedEffect = 0f;
+            }
+
             fillBar.UpdateFillAmount(timeHarvesting);
             yield return null;
         }
@@ -59,6 +70,14 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
         beingHarvested = false;
         Harvest();
     }
+
+
+    void HitTree()
+    {
+        SoundsFXManager.instance.PlayRandomSoundFXClip(ChoppingSound, transform, 1f);
+        transform.DOShakeRotation(0.15f, 5);
+    }
+
     public bool IsBeingHarvested()
     {
         return beingHarvested;

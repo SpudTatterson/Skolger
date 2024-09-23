@@ -7,12 +7,15 @@ using Random = UnityEngine.Random;
 
 public class ColonistData : MonoBehaviour, ISelectable
 {
-
     [SerializeField, ChildGameObjectsOnly, BoxGroup("References")] GameObject visual;
+    [SerializeField, ChildGameObjectsOnly, BoxGroup("References")] GameObject downedVisual;
+    [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistHealth healthManager { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistMoodManager moodManager { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public HungerManager hungerManager { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public RestManger restManger { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public NavMeshAgent agent { get; private set; }
+    [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistBT brain { get; private set; }
+
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistInventory inventory { get; private set; }
 
     [field: SerializeField] public BrainState brainState { get; private set; } = BrainState.Unrestricted;
@@ -47,6 +50,10 @@ public class ColonistData : MonoBehaviour, ISelectable
         restManger.OnSleep += Sleep;
         restManger.OnWakeUp += WakeUp;
 
+        healthManager.OnDowned += GetDowned;
+        healthManager.OnRecovered += GetRecovered;
+        healthManager.OnDeath += Die;
+
         colonistName = ColonistUtility.SetRandomName();
     }
 
@@ -59,7 +66,26 @@ public class ColonistData : MonoBehaviour, ISelectable
     void Sleep()
     {
         visual.SetActive(false);
+        downedVisual.SetActive(false);
         SetBrainState(BrainState.Sleeping);
+    }
+    void GetDowned()
+    {
+        visual.SetActive(false);
+        downedVisual.SetActive(true);
+        agent.enabled = false;
+        brain.enabled = false;
+    }
+    void GetRecovered()
+    {
+        downedVisual.SetActive(false);
+        visual.SetActive(!restManger.sleeping);
+        agent.enabled = true;
+        brain.enabled = true;
+    }
+    void Die()
+    {
+        Destroy(this.gameObject);
     }
 
     void Start()
@@ -71,12 +97,13 @@ public class ColonistData : MonoBehaviour, ISelectable
     void Update()
     {
         hungerManager.GetHungry(Time.deltaTime);
-       // restManger.UpdateRest();
+        restManger.UpdateRest();
         moodManager.UpdateMood();
     }
 
     public void SetBrainState(BrainState state)
     {
+        if (state == BrainState.Rest && brainState == BrainState.Sleeping) return;
         brainState = state;
     }
 
