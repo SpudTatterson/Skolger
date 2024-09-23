@@ -20,12 +20,14 @@ MonoBehaviour:
     cost: 20
   - item: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
     cost: 10
-  xSize: 1
-  ySize: 1
+  xSize: 2
+  ySize: 3
   usesCell: 1
   takesFullCell: 0
   walkable: 0
   placementType: 0
-  unplacedVisual: {fileID: 0}
-  buildingPrefab: {fileID: 0}
+  unplacedVisual: {fileID: 3919568271020502232, guid: e393d6e3353a36e469f9c31f5d9b002b,
+    type: 3}
+  buildingPrefab: {fileID: 2631872588979838870, guid: 6f9e034c15017f34fa6aea5bed1949d4,
+    type: 3}
   bedQuality: 0.7
