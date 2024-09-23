@@ -137,6 +137,7 @@ public class BuildingPlacer : MonoBehaviour
     }
     public void CancelPlacement()
     {
+        if(!placing) return; 
         placing = false;
         ReturnAllTemps();
         ReturnTemp(tempGO);
