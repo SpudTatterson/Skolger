@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class BuildingPlacer : MonoBehaviour
+public class BuildingPlacer : MonoSingleton<BuildingPlacer>
 {
     [SerializeField] BuildingData buildingData;
     [SerializeField] float timeForDragStart = 0.1f;
@@ -16,6 +16,8 @@ public class BuildingPlacer : MonoBehaviour
     Cell lastCell;
     [SerializeField, ReadOnly] Direction placementDirection;
     [SerializeField, ReadOnly] List<GameObject> placedBuildings = new List<GameObject>();
+
+    public event Action<BuildingData, Cell> OnBuildingPlaced;
     void Update()
     {
         if (Canceling() && placing)
@@ -59,11 +61,13 @@ public class BuildingPlacer : MonoBehaviour
                 }
                 else if (Input.GetKeyUp(KeyCode.Mouse0) && !hitCell.inUse && dragTime < timeForDragStart)
                 {
+                    ReturnAllTemps();
                     PlaceBuilding(hitCell);
                 }
                 else if (Input.GetKeyUp(KeyCode.Mouse0) && dragTime > timeForDragStart)
                 {
                     List<Cell> cells = buildingData.PlacementStrategy.GetCells(firstCell, hitCell);
+                    ReturnAllTemps();
                     foreach (Cell cell in cells)
                     {
                         PlaceBuilding(cell);
@@ -89,7 +93,6 @@ public class BuildingPlacer : MonoBehaviour
 
     void PlaceBuilding(Cell cell)
     {
-        ReturnAllTemps();
         if ((cell.IsFree() && buildingData is not FloorTile) || (buildingData is FloorTile && !cell.hasFloor))
         {
             ConstructionSiteObject constructionSite = ConstructionSiteObject.MakeInstance(buildingData, cell, placementDirection);
@@ -97,6 +100,8 @@ public class BuildingPlacer : MonoBehaviour
             placedBuildings.Add(constructionSite.gameObject);
 
             TaskManager.Instance.AddToConstructionQueue(constructionSite);
+
+            OnBuildingPlaced?.Invoke(buildingData, cell);
         }
     }
 
