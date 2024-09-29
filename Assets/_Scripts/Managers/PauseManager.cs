@@ -29,6 +29,8 @@ public class PauseManager : MonoSingleton<PauseManager>
     }
     public void SetNewTimeScale(float timeScale)
     {
+        if (timeScale != 0 && paused)
+            UnPause();
         Time.timeScale = timeScale;
     }
     public void TogglePause()
