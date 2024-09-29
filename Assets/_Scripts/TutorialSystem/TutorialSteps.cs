@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Skolger.Tutorial
@@ -11,12 +13,13 @@ namespace Skolger.Tutorial
         public string name;
         public bool finished { get; protected set; }
 
-        [SerializeReference] private List<VisualAid> visualAids = new List<VisualAid>();
+        [SerializeReference] List<VisualAid> visualAids = new List<VisualAid>();
 
         public virtual void Initialize()
         {
             foreach (var visualAid in visualAids)
             {
+                visualAid.SetParent(this);
                 visualAid.Initialize();
             }
         }
@@ -25,7 +28,8 @@ namespace Skolger.Tutorial
         {
             foreach (var visualAid in visualAids)
             {
-                visualAid.Update();
+                if (!visualAid.finished)
+                    visualAid.Update();
             }
         }
 
@@ -46,11 +50,13 @@ namespace Skolger.Tutorial
 
         public override void Initialize()
         {
+            base.Initialize();
             if (Steps.Count != 0)
                 Steps[0].Initialize();
         }
         public override void Update()
         {
+            base.Update();
             if ((Steps.Count > 0) && !Steps[0].finished)
             {
                 Steps[0].Update();
@@ -71,7 +77,7 @@ namespace Skolger.Tutorial
 
     public class PressTabStep : BaseStep
     {
-        [SerializeField] private UI.Tabs.TabButton tab;
+        [SerializeField] UI.Tabs.TabButton tab;
 
         public override void Initialize()
         {
@@ -82,7 +88,7 @@ namespace Skolger.Tutorial
 
     public class PressButtonStep : BaseStep
     {
-        [SerializeField] private Button button;
+        [SerializeField] Button button;
 
         public override void Initialize()
         {
@@ -100,7 +106,7 @@ namespace Skolger.Tutorial
             StockpilePlacer.Instance.onStockpilePlaced.AddListener(OnStockpilePlaced);
         }
 
-        private void OnStockpilePlaced()
+        void OnStockpilePlaced()
         {
             Finish();
         }
@@ -111,6 +117,36 @@ namespace Skolger.Tutorial
 
             base.Finish();
         }
+    }
+    public class PlaceBuildingStep : BaseStep, IRaycastCellHelperUser
+    {
+        [SerializeField, InlineButton("StartSelecting")] Vector3 cellPos; // need to figure out way to select from editor preferably with a raycast or something similar
+        [SerializeField] BuildingData buildingData;
+
+        Cell cell;
+        public override void Initialize()
+        {
+            base.Initialize();
+            cell = GridManager.Instance.GetCellFromPosition(cellPos);
+            BuildingPlacer.Instance.OnBuildingPlaced += CheckIfPlaced;
+        }
+
+        void CheckIfPlaced(BuildingData data, Cell cell)
+        {
+            if (data == buildingData && cell == this.cell)
+                base.Finish();
+        }
+
+        void StartSelecting()
+        {
+            RaycastCellHelper.StartEditModeRaycast(this);
+        }
+        public void SetCellPosition(Vector3 point)
+        {
+            cellPos = point;
+        }
+
+
     }
     public class CompositeStep : BaseStep
     {
@@ -145,23 +181,35 @@ namespace Skolger.Tutorial
         }
     }
 
-    public class HarvestStep : BaseStep
+    public class HarvestStep : BaseStep, INumberedStep
     {
-        [SerializeField] BaseHarvestable harvestable;
+        [SerializeField] BaseHarvestable[] harvestables;
 
+        public event Action<float> OnNumberChange;
+
+        public float max => needToHarvest;
+
+        public float current => harvested;
+
+        int needToHarvest;
+        int harvested;
         public override void Initialize()
         {
             base.Initialize();
-            if (harvestable != null)
-                harvestable.OnHarvested += Finish;
-            else
-                Finish();
+            needToHarvest = harvestables.Length;
+            foreach (var harvestable in harvestables)
+            {
+                if (harvestable != null)
+                    harvestable.OnHarvested += OnHarvested;
+                else
+                    OnHarvested();
+            }
         }
 
-        public override void Finish()
+        void OnHarvested()
         {
-            base.Finish();
-            harvestable.OnHarvested -= Finish;
+            harvested++;
+            OnNumberChange?.Invoke(harvested);
         }
     }
     public class GetItemStep : BaseStep
@@ -187,6 +235,63 @@ namespace Skolger.Tutorial
             InventoryManager.Instance.OnInventoryUpdated -= CheckForItem;
         }
 
+    }
+
+    public class WaitForTimeStep : BaseStep
+    {
+        [SerializeField, Range(0, 24)] float timeOfDay;
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            DayNightEventManager.Instance.GetEvent(timeOfDay).AddListener(Finish);
+        }
+        public override void Finish()
+        {
+            base.Finish();
+
+            DayNightEventManager.Instance.GetEvent(timeOfDay).RemoveListener(Finish);
+        }
+    }
+    public class PressKeyStep : BaseStep, INumberedStep
+    {
+        [SerializeField] List<KeyCode> keyCodes = new List<KeyCode>();
+        [SerializeField] int neededNumberOfPresses = 4;
+
+        int numberOfPresses;
+
+        public float max => neededNumberOfPresses;
+
+        public float current => numberOfPresses;
+
+        public event Action<float> OnNumberChange;
+
+        public override void Update()
+        {
+            base.Update();
+
+            foreach (var key in keyCodes)
+            {
+                if (Input.GetKeyDown(key))
+                {
+                    numberOfPresses++;
+                    OnNumberChange.Invoke(numberOfPresses);
+                }
+            }
+
+            if (numberOfPresses >= neededNumberOfPresses)
+            {
+                Finish();
+            }
+        }
+    }
+
+    public interface INumberedStep
+    {
+        float max { get; }
+        float current { get; }
+
+        event Action<float> OnNumberChange;
     }
 }
 
