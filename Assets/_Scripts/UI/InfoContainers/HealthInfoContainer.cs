@@ -13,9 +13,8 @@ namespace Skolger.UI.InfoContainers
             statusText.text = status.ToString();
         }
 
-        protected override void OnEnable()
+        void OnEnable()
         {
-            base.OnEnable();
             colonist.healthManager.OnHealthChanged += UpdateInfo;
             colonist.healthManager.UpdateHealth();
 
