@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c2d85c210dbb24f966b0c6d0546203, type: 3}
+  m_Name: Chest
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 27cdc5036ee7fb245ab9207a17d58602, type: 3}
+  placeableName: Chest
+  description: 
+  costs:
+  - item: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
+    cost: 10
+  xSize: 2
+  ySize: 1
+  usesCell: 1
+  takesFullCell: 0
+  walkable: 0
+  placementType: 0
+  unplacedVisual: {fileID: 2127155680997301605, guid: be7baeaf65c48fa4bbdb4642d0f9eb39,
+    type: 3}
+  buildingPrefab: {fileID: 2435568890149668131, guid: 5a6304ca07c002b4f96a7e6cca17ef85,
+    type: 3}

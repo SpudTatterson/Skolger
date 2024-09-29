@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c2d85c210dbb24f966b0c6d0546203, type: 3}
+  m_Name: Comfortable Chair
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 27cdc5036ee7fb245ab9207a17d58602, type: 3}
+  placeableName: 
+  description: 
+  costs:
+  - item: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
+    cost: 15
+  xSize: 1
+  ySize: 1
+  usesCell: 0
+  takesFullCell: 0
+  walkable: 0
+  placementType: 1
+  unplacedVisual: {fileID: 4510910687615624702, guid: d7bbf703da9575144b816d4a202323d1,
+    type: 3}
+  buildingPrefab: {fileID: 3700098492717359209, guid: dbe93ad81073db541b83bc5867f04ea5,
+    type: 3}
