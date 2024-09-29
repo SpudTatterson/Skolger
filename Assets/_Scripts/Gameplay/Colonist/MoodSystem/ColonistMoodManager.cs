@@ -13,12 +13,14 @@ public class ColonistMoodManager : MonoBehaviour
     [SerializeField] Vector2 minMaxBreakdownTimes = new Vector2(30, 100);
     [SerializeField] BaseMoodEffectSO postBreakDownBuff;
 
-
     [SerializeField] int currentMood;
     MoodStatus moodStatus;
     public event Action<int, MoodStatus> onMoodChange;
     public event Action<List<BaseMoodEffect>> OnEffectsChanged;
     public event Action onColonistBreakdown;
+
+    [Header("Mood Billboards")]
+    [SerializeField] List<BillBoardMood> moodSprites;
 
     public BreakDownType breakDownType { get; private set; } = BreakDownType.None;
 
@@ -32,8 +34,11 @@ public class ColonistMoodManager : MonoBehaviour
         moodModifiers.Add(MoodModifiers.Hunger, 0);
         colonist.hungerManager.onStatusChange += UpdateHungerModifier;
 
-        //moodModifiers.Add(MoodModifiers.Rest, 0);
+        moodModifiers.Add(MoodModifiers.Rest, 0);
+        colonist.restManger.OnStatusChange += UpdateRestModifier;
         //subscribe to colonist rest on status change
+
+        onMoodChange += UpdateBillboard;
     }
 
     public void ForceMoodUpdate()
@@ -117,4 +122,26 @@ public class ColonistMoodManager : MonoBehaviour
     {
         UpdateMoodModifier(MoodModifiers.Hunger, MoodUtility.GetMoodModifier(status));
     }
+    void UpdateRestModifier(RestStatus status)
+    {
+        UpdateMoodModifier(MoodModifiers.Rest, MoodUtility.GetMoodModifier(status));
+    }
+
+    void UpdateBillboard(int mood, MoodStatus status)
+    {
+        colonist.billboard.gameObject.SetActive(true);
+        colonist.billboard.UpdateImage(moodSprites.Find(x => x.Status == status).sprite);
+        Invoke("TurnBillboardOff", 10);
+    }
+    void TurnBillboardOff()
+    {
+        colonist.billboard.gameObject.SetActive(false);
+    }
+}
+
+[Serializable]
+class BillBoardMood
+{
+    public MoodStatus Status;
+    public Sprite sprite;
 }

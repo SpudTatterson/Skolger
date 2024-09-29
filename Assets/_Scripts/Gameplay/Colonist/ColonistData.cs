@@ -15,8 +15,8 @@ public class ColonistData : MonoBehaviour, ISelectable
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public RestManger restManger { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public NavMeshAgent agent { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistBT brain { get; private set; }
-
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistInventory inventory { get; private set; }
+    [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public BillBoard billboard { get; private set; }
 
     [field: SerializeField] public BrainState brainState { get; private set; } = BrainState.Unrestricted;
 
@@ -24,6 +24,9 @@ public class ColonistData : MonoBehaviour, ISelectable
     [SerializeField] int width = 256;
     [SerializeField] int height = 256;
     public Sprite faceSprite { get; private set; }
+
+    [Header("Sprites")]
+    [SerializeField] Sprite sleepSprite;
 
     public event Action<string> OnActivityChanged;
     [HideInInspector] public string colonistName { get; private set; }
@@ -60,6 +63,8 @@ public class ColonistData : MonoBehaviour, ISelectable
     void WakeUp()
     {
         visual.SetActive(true);
+        agent.enabled = true;
+        billboard.gameObject.SetActive(false);
         SetBrainState(BrainState.Unrestricted);   //return to other brain state
     }
 
@@ -67,6 +72,9 @@ public class ColonistData : MonoBehaviour, ISelectable
     {
         visual.SetActive(false);
         downedVisual.SetActive(false);
+        agent.enabled = false;
+        billboard.gameObject.SetActive(true);
+        billboard.UpdateImage(sleepSprite);
         SetBrainState(BrainState.Sleeping);
     }
     void GetDowned()
@@ -103,6 +111,11 @@ public class ColonistData : MonoBehaviour, ISelectable
 
     public void SetBrainState(BrainState state)
     {
+        if (state == BrainState.Rest)
+        {
+            billboard.gameObject.SetActive(true);
+            billboard.UpdateImage(sleepSprite);
+        }
         if (state == BrainState.Rest && brainState == BrainState.Sleeping) return;
         brainState = state;
     }
