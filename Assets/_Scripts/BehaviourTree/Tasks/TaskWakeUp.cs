@@ -14,10 +14,15 @@ class TaskWakeUp : Node
         if (colonistData.restManger.sleeping)
         {
             colonistData.restManger.WakeUp();
+            
+            if (BedManager.tempBeds.ContainsKey(colonistData))
+            {
+                BedManager.tempBeds[colonistData].Deconstruct();
+            }
             state = NodeState.SUCCESS;
             return state;
         }
-        else 
+        else
         {
             state = NodeState.FAILURE;
             return state;

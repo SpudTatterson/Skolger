@@ -29,6 +29,17 @@ public class CheckForBed : Node
             else
             {
                 // add to issues tracker that a colonist is missing a bed 
+
+                BedBuilding tempBed = BuildingObject.MakeInstance(Resources.Load<BuildingData>("TempBed"),
+                 GridManager.Instance.GetCellFromPosition(colonistData.transform.position).position,
+                 Direction.TopLeft) as BedBuilding;
+
+                colonistData.restManger.AssignBed(tempBed);
+                tempBed.AssignColonist(colonistData);
+                SetDataOnRoot(DataName.Target, colonistData.restManger.assignedBed);
+                BedManager.tempBeds.Add(colonistData, tempBed);
+
+
                 state = NodeState.RUNNING;
                 return state;
             }
