@@ -689,6 +689,7 @@ public class GridObject : MonoBehaviour, ISerializationCallbackReceiver
 
     public static (Vector2Int size, Cell cornerCell) GetGridBoxFrom2Cells(Cell cell1, Cell cell2)
     {
+        if(cell1 == null || cell2 == null) return (new Vector2Int(0,0), null);
         int xMin = Mathf.Min(cell1.x, cell2.x);
         int yMin = Mathf.Min(cell1.y, cell2.y);
         int xMax = Mathf.Max(cell1.x, cell2.x);
