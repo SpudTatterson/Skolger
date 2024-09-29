@@ -69,7 +69,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
     void StartSelection()
     {
         worldMouseStartPos = VectorUtility.ScreeToWorldPosition(Input.mousePosition, LayerManager.Instance.GroundLayerMask);
-        mouseDownTime = Time.time;
+        mouseDownTime = Time.unscaledTime;
     }
 
     void EndSelection()
@@ -88,7 +88,7 @@ public class SelectionManager : MonoSingleton<SelectionManager>
 
     bool IsDragging()
     {
-        return mouseDownTime + dragDelay < Time.time;
+        return mouseDownTime + dragDelay < Time.unscaledTime;
     }
 
     void DragSelection()
