@@ -847,11 +847,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
         type: 3}
-      propertyPath: MaxDistance
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
-        type: 3}
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: -4064850468369043237, guid: dd859ea7effb5284a9de2fef95879571,
@@ -946,11 +941,6 @@ PrefabInstance:
       propertyPath: Loop
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2674857656973817412, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
-        type: 3}
-      propertyPath: m_audioClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 6968f8577e38a3c409fca97b5840fdf9, type: 3}
     - target: {fileID: 2674857656973817412, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
         type: 3}
       propertyPath: BypassEffects

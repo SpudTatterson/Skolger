@@ -7,14 +7,17 @@ namespace Skolger.Tutorial
 {
     public class TaskVisualAid : VisualAid
     {
-        [SerializeField] GameObject taskPrefab;
-        [SerializeField] RectTransform tasksParent;
+        GameObject taskPrefab;
+        RectTransform tasksParent;
 
         [SerializeField] string taskName;
 
         UITask task;
         public override void Initialize()
         {
+            taskPrefab = UIManager.Instance.taskPrefab;
+            tasksParent = UIManager.Instance.taskParent;
+
             if (taskName == "") throw new System.Exception("taskName is empty");
             task = MonoBehaviour.Instantiate(taskPrefab, tasksParent).GetComponent<UITask>();
             task.UpdateText(taskName);
@@ -33,13 +36,15 @@ namespace Skolger.Tutorial
     public class TextBoxVisualAid : VisualAid
     {
         [SerializeField] GameObject textPrefab;
-        [SerializeField] RectTransform tasksParent;
+        RectTransform tasksParent;
 
         [SerializeField] string text;
 
         TextMeshProUGUI textObject;
         public override void Initialize()
         {
+            tasksParent = UIManager.Instance.taskParent;
+
             if (text == "") throw new System.Exception("taskName is empty");
             textObject = MonoBehaviour.Instantiate(textPrefab, tasksParent).GetComponent<TextMeshProUGUI>();
             textObject.text = text;
@@ -77,17 +82,18 @@ namespace Skolger.Tutorial
     }
     public class UIFillBarVisualAid : VisualAid
     {
-        [SerializeField] GameObject fillbarPrefab;
-        [SerializeField] RectTransform tasksParent;
+        GameObject fillbarPrefab;
+        RectTransform tasksParent;
 
         UIFillbar fillbar;
-        INumberedStep numberedStep;
 
         public override void Initialize()
         {
+            fillbarPrefab = UIManager.Instance.fillbarPrefab;
+            tasksParent = UIManager.Instance.taskParent;
+
             if (parentStep is INumberedStep numberedStep)
             {
-                this.numberedStep = numberedStep;
                 fillbar = MonoBehaviour.Instantiate(fillbarPrefab, tasksParent).GetComponent<UIFillbar>();
                 fillbar.Initialize(numberedStep.current, numberedStep.max);
                 numberedStep.OnNumberChange += fillbar.UpdateBar;

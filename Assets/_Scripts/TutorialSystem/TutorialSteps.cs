@@ -118,22 +118,49 @@ namespace Skolger.Tutorial
             base.Finish();
         }
     }
-    public class PlaceBuildingStep : BaseStep, IRaycastCellHelperUser
+    public class PlaceBuildingStep : BaseStep, IRaycastCellHelperUser, INumberedStep
     {
-        [SerializeField, InlineButton("StartSelecting")] Vector3 cellPos; // need to figure out way to select from editor preferably with a raycast or something similar
+        [SerializeField, InlineButton("StartSelecting")] List<Vector3> positions; // need to figure out way to select from editor preferably with a raycast or something similar
         [SerializeField] BuildingData buildingData;
 
-        Cell cell;
+        [SerializeField] bool needToPlaceOnAllCells = true;
+        [SerializeField, HideIf(nameof(needToPlaceOnAllCells))] int neededBuildingsPlaced;
+
+        public event Action<float> OnNumberChange;
+
+        public float max => neededBuildingsPlaced;
+
+        public float current => buildingsPlaced;
+
+        int buildingsPlaced;
+        Cell[] cells = new Cell[0];
         public override void Initialize()
         {
             base.Initialize();
-            cell = GridManager.Instance.GetCellFromPosition(cellPos);
+
+            cells = new Cell[positions.Count];
+            for (int i = 0; i < positions.Count; i++)
+            {
+                cells[i] = GridManager.Instance.GetCellFromPosition(positions[i]);
+            }
+
             BuildingPlacer.Instance.OnBuildingPlaced += CheckIfPlaced;
+
+            if (needToPlaceOnAllCells)
+                neededBuildingsPlaced = cells.Length;
         }
 
         void CheckIfPlaced(BuildingData data, Cell cell)
         {
-            if (data == buildingData && cell == this.cell)
+            foreach (var c in cells)
+            {
+                if (data == buildingData && cell == c)
+                {
+                    buildingsPlaced++;
+                    OnNumberChange?.Invoke(buildingsPlaced);
+                }
+            }
+            if (buildingsPlaced >= neededBuildingsPlaced)
                 base.Finish();
         }
 
@@ -141,9 +168,20 @@ namespace Skolger.Tutorial
         {
             RaycastCellHelper.StartEditModeRaycast(this);
         }
-        public void SetCellPosition(Vector3 point)
+        public void SetCells(Cell[] cells)
         {
-            cellPos = point;
+            this.cells = cells;
+            foreach (var cell in cells)
+            {
+                positions.Add(cell.position);
+            }
+            ShowCells();
+        }
+        [Button]
+        void ShowCells()
+        {
+            foreach (var cell in cells)
+                Debug.DrawLine(cell.position, cell.position + Vector3.up, Color.blue, 5);
         }
 
 
@@ -210,6 +248,11 @@ namespace Skolger.Tutorial
         {
             harvested++;
             OnNumberChange?.Invoke(harvested);
+
+            if (harvested >= needToHarvest)
+            {
+                Finish();
+            }
         }
     }
     public class GetItemStep : BaseStep

@@ -16,7 +16,7 @@ public class UIManager : MonoSingleton<UIManager>
     [TabGroup("Selection Panels")] public StockpileSelectionMenu stockpileSelection;
     [TabGroup("Selection Panels")] public GameObject multipleSelection;
     [TabGroup("Selection Assets")] public Transform multipleSelectionContent;
-    [TabGroup("Selection Assets")] public GameObject multipleSelectionTextAsset; 
+    [TabGroup("Selection Assets")] public GameObject multipleSelectionTextAsset;
     [TabGroup("Selection Assets")] public RectTransform selectionBoxImage;
 
     [Header("Selection Action Buttons")]
@@ -46,6 +46,12 @@ public class UIManager : MonoSingleton<UIManager>
     [TabGroup("Inventory")] public GameObject defaultInventoryUIPrefab;
     [TabGroup("Inventory")] public GameObject itemTypeGroupPrefab;
     [TabGroup("Inventory")] public Transform inventoryPanel;
+
+    [TabGroup("Tutorial")] public GameObject taskPrefab;
+    [TabGroup("Tutorial")] public RectTransform taskParent;
+    [TabGroup("Tutorial")] public GameObject fillbarPrefab;
+    //[TabGroup("Tutorial")] 
+
 
 
     #region SelectionUI

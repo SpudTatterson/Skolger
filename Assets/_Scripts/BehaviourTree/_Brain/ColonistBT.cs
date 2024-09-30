@@ -40,21 +40,21 @@ public class ColonistBT : Tree
         {
             case BrainState.Work:
                 root = workStateRoot;
-                return;
+                break;
             case BrainState.Unrestricted:
                 root = unrestrictedStateRoot;
-                return;
+                break;
             case BrainState.Rest:
                 root = restingStateRoot;
-                return;
+                break;
             case BrainState.Breakdown:
                 root = GetBreakDownNode();
-                return;
+                break;
             case BrainState.Sleeping:
                 root = sleepStateRoot;
-                return;
+                break;
+            default: throw new NotImplementedException("Didn't find case for current brain state");
         }
-        throw new NotImplementedException("Didn't find case for current brain state");
     }
 
 

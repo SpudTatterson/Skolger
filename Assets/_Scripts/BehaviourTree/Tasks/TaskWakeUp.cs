@@ -1,4 +1,5 @@
 using BehaviorTree;
+using UnityEngine;
 
 class TaskWakeUp : Node
 {
@@ -18,6 +19,7 @@ class TaskWakeUp : Node
             if (BedManager.tempBeds.ContainsKey(colonistData))
             {
                 BedManager.tempBeds[colonistData].Deconstruct();
+                BedManager.tempBeds.Remove(colonistData);
             }
             state = NodeState.SUCCESS;
             return state;

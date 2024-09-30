@@ -1,13 +1,15 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Skolger.Tutorial
 {
-    public class UIPointerVisualAid : VisualAid
+    public class UIPointerVisualAid : VisualAid, IRaycastCellHelperUser
     {
         [SerializeField] GameObject pointer;
         [SerializeField] List<Transform> transforms;
-        [SerializeField] List<Vector3> positions;
+        [SerializeField, InlineButton("StartSelecting")] List<Vector3> positions;
 
         [SerializeField] Vector3 onScreenOffset = new Vector3(50, 50, 0);
         [SerializeField] float lerpSpeed = 5f;
@@ -23,23 +25,33 @@ namespace Skolger.Tutorial
             pointer?.SetActive(true);
             mainCamera = Camera.main;
             offScreenPosition = pointer.transform.position;
+
+            foreach (Transform t in transforms)
+            {
+                positions.Add(t.position);
+            }
         }
 
         public override void Reset()
         {
+            pointer.transform.position = offScreenPosition;
             pointer?.SetActive(false);
-            pointer.transform.position = onScreenOffset;
+        }
+
+        void StartSelecting()
+        {
+            RaycastCellHelper.StartEditModeRaycast(this);
+        }
+
+        public void SetCells(Cell[] cells)
+        {
+            cells.ForEach(c => positions.Add(c.position));
         }
 
         public override void Update()
         {
             if (pointer == null || mainCamera == null)
                 return;
-
-            foreach (Transform t in transforms)
-            {
-                positions.Add(t.position);
-            }
 
             Vector3 center = VectorUtility.CalculateCenter(positions);
             Vector3 screenCenter = mainCamera.WorldToScreenPoint(center);

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 namespace Skolger.Tutorial
@@ -9,18 +11,24 @@ namespace Skolger.Tutorial
     public class GhostVisualAid : VisualAid, IRaycastCellHelperUser
     {
         [SerializeField] GameObject model;
-        
-        [SerializeField, InlineButton("StartSelecting")] Vector3 cellPos;
-        GameObject tempObject;
+        [SerializeField] bool isFloor = false;
+
+        [SerializeField, InlineButton("StartSelecting")] Cell[] cells;
+        List<GameObject> tempObjects = new List<GameObject>();
         public override void Initialize()
         {
-            Cell cell = GridManager.Instance.GetCellFromPosition(cellPos);
-            tempObject = MonoBehaviour.Instantiate(model, cell.position, Quaternion.identity);
+            foreach (var c in cells)
+            {
+                Cell cell = GridManager.Instance.GetCellFromPosition(c.position);
+                if ((!isFloor && !cell.inUse) || (isFloor && !cell.hasFloor))
+                    tempObjects.Add(MonoBehaviour.Instantiate(model, cell.position, Quaternion.identity));
+            }
         }
 
         public override void Reset()
         {
-            MonoBehaviour.Destroy(tempObject);
+            foreach (var tempObject in tempObjects)
+                MonoBehaviour.Destroy(tempObject);
         }
 
         public override void Update()
@@ -33,9 +41,18 @@ namespace Skolger.Tutorial
             RaycastCellHelper.StartEditModeRaycast(this);
         }
 
-        public void SetCellPosition(Vector3 point)
+        public void SetCells(Cell[] cells)
         {
-            cellPos = point;
+            this.cells = cells;
+            ShowCells();
+        }
+
+        [Button]
+        void ShowCells()
+        {
+            foreach (var cell in cells)
+                if ((!isFloor && !cell.inUse) || (isFloor && !cell.hasFloor))
+                    Debug.DrawLine(cell.position, cell.position + Vector3.up, Color.blue, 5);
         }
     }
 

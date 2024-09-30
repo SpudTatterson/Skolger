@@ -73,7 +73,7 @@ public class ColonistMoodManager : MonoBehaviour
         currentMood = Mathf.Clamp(currentMood, 0, maxMood);
         if (currentMood < breakPoint)
         {
-            StartBreakdown();
+            // StartBreakdown();
         }
         moodStatus = MoodUtility.DetermineMoodState(currentMood);
         onMoodChange?.Invoke(currentMood, moodStatus);
