@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class BuildingPlacer : MonoSingleton<BuildingPlacer>
 {
+    [SerializeField] AudioClip clip;
     [SerializeField] BuildingData buildingData;
     [SerializeField] float timeForDragStart = 0.1f;
     bool placing;
@@ -100,9 +101,12 @@ public class BuildingPlacer : MonoSingleton<BuildingPlacer>
             placedBuildings.Add(constructionSite.gameObject);
 
             TaskManager.Instance.AddToConstructionQueue(constructionSite);
+            SoundsFXManager.instance?.PlaySoundFXClip(clip, Camera.main.transform, 100);
 
             OnBuildingPlaced?.Invoke(buildingData, cell);
         }
+
+
     }
 
     void ReturnAllTemps()

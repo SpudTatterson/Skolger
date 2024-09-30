@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOccupier
 {
+    [SerializeField] public ParticleSystem hitEffect;
     [SerializeField] private AudioClip[] ChoppingSound;
     [SerializeField, Tooltip("Amount of time to wait between playing effects")] float effectsWaitTime = 1f;
 
@@ -76,6 +77,10 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
     {
         SoundsFXManager.instance.PlayRandomSoundFXClip(ChoppingSound, transform, 1f);
         transform.DOShakeRotation(0.15f, 5);
+
+        Debug.Log("hry");
+        hitEffect.Play();
+        
     }
 
     public bool IsBeingHarvested()
