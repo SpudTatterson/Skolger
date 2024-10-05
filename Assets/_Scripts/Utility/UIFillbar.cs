@@ -22,7 +22,6 @@ public class UIFillbar : MonoBehaviour
     
     public void UpdateBar(float value)
     {
-        Debug.Log(value);
         fillbar.fillAmount =  Mathf.InverseLerp(0, maxValue, value);
     }
 }

@@ -53,7 +53,6 @@ public class UITaskManager
 
     static public UITask GetTask(string taskName)
     {
-        Debug.Log(taskNames.Count);
         if (taskNames.ContainsKey(taskName))
             return taskNames[taskName];
         throw new System.Exception("Task not found " + taskName);
