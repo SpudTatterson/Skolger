@@ -63,7 +63,7 @@ public class ColonistData : MonoBehaviour, ISelectable
     void WakeUp()
     {
         visual.SetActive(true);
-        agent.enabled = true;
+        agent.isStopped = false;
         billboard.gameObject.SetActive(false);
         // SetBrainState(BrainState.Unrestricted);   //return to other brain state
     }
@@ -72,7 +72,7 @@ public class ColonistData : MonoBehaviour, ISelectable
     {
         visual.SetActive(false);
         downedVisual.SetActive(false);
-        agent.enabled = false;
+        agent.isStopped = true;
         billboard.gameObject.SetActive(true);
         billboard.UpdateImage(sleepSprite);
         SetBrainState(BrainState.Sleeping);
@@ -81,7 +81,7 @@ public class ColonistData : MonoBehaviour, ISelectable
     {
         visual.SetActive(false);
         downedVisual.SetActive(true);
-        agent.enabled = false;
+        agent.isStopped = true;
         brain.enabled = false;
     }
     void GetRecovered()
@@ -117,7 +117,7 @@ public class ColonistData : MonoBehaviour, ISelectable
             billboard.UpdateImage(sleepSprite);
         }
         if (state == BrainState.Rest && brainState == BrainState.Sleeping) return;
-        if(state == BrainState.Unrestricted && brainState == BrainState.Sleeping) restManger.WakeUp(); // this is bad code but its 1 am and i need to hand this in tomorow please fix this if you find the issue is that if he was mid task before he went to sleep he wont go into the wake up task in the brain and gets stuck sleeping forever
+        if (state == BrainState.Unrestricted && brainState == BrainState.Sleeping) restManger.WakeUp(); // this is bad code but its 1 am and i need to hand this in tomorow please fix this if you find the issue is that if he was mid task before he went to sleep he wont go into the wake up task in the brain and gets stuck sleeping forever
         brainState = state;
     }
 
