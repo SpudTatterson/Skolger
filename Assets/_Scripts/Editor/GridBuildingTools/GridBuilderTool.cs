@@ -14,16 +14,18 @@ public class GridBuilderTool : EditorWindow
     GridSculptingStrategy sculptingStrategy;
     GridPaintingStrategy paintingStrategy;
     BuildingPlacerStrategy placerStrategy;
-    FoliageSpreaderStrategy spreaderStrategy;
+    FoliageSpreaderStrategy foliageStrategy;
+    ItemSpreaderStrategy itemStrategy;
 
-    string[] tools = { "World Sculpting", "World Painting", "Building Placer", "Foliage Spreader" };
+    string[] tools = { "World Sculpting", "World Painting", "Building Placer", "Foliage Spreader", "Item Spreader" };
     ActiveTool activeTool;
     enum ActiveTool
     {
         WorldSculpting,
         WorldPainting,
         BuildingPlacer,
-        FoliageSpreader
+        FoliageSpreader,
+        ItemSpreader,
     }
 
     [MenuItem("Tools/Grid/Grid Builder Tool")]
@@ -41,17 +43,20 @@ public class GridBuilderTool : EditorWindow
         sculptingStrategy = new GridSculptingStrategy(gridManager, layerManager);
         BrushToolManager.RegisterTool(sculptingStrategy);
         placerStrategy = new BuildingPlacerStrategy(gridManager, layerManager);
-        spreaderStrategy = new FoliageSpreaderStrategy(gridManager, layerManager);
-        BrushToolManager.RegisterTool(spreaderStrategy);
+        foliageStrategy = new FoliageSpreaderStrategy(gridManager, layerManager);
+        BrushToolManager.RegisterTool(foliageStrategy);
         paintingStrategy = new GridPaintingStrategy(gridManager, layerManager);
         BrushToolManager.RegisterTool(paintingStrategy);
+        itemStrategy = new ItemSpreaderStrategy(gridManager, layerManager);
+        BrushToolManager.RegisterTool(itemStrategy);
     }
     void OnDisable()
     {
         SceneView.duringSceneGui -= OnSceneGUI;
-        BrushToolManager.UnregisterTool(spreaderStrategy);
+        BrushToolManager.UnregisterTool(foliageStrategy);
         BrushToolManager.UnregisterTool(paintingStrategy);
         BrushToolManager.UnregisterTool(sculptingStrategy);
+        BrushToolManager.UnregisterTool(itemStrategy);
     }
 
 
@@ -66,9 +71,11 @@ public class GridBuilderTool : EditorWindow
         else if (activeTool == ActiveTool.BuildingPlacer)
             placerStrategy.OnGUI();
         else if (activeTool == ActiveTool.FoliageSpreader)
-            spreaderStrategy.OnGUI();
+            foliageStrategy.OnGUI();
         else if (activeTool == ActiveTool.WorldPainting)
             paintingStrategy.OnGUI();
+        else if (activeTool == ActiveTool.ItemSpreader)
+            itemStrategy.OnGUI();
     }
 
 
@@ -82,9 +89,11 @@ public class GridBuilderTool : EditorWindow
         else if (activeTool == ActiveTool.BuildingPlacer)
             placerStrategy.OnSceneGUI();
         else if (activeTool == ActiveTool.FoliageSpreader)
-            spreaderStrategy.OnSceneGUI();
+            foliageStrategy.OnSceneGUI();
         else if (activeTool == ActiveTool.WorldPainting)
             paintingStrategy.OnSceneGUI();
+        else if (activeTool == ActiveTool.ItemSpreader)
+            itemStrategy.OnSceneGUI();
     }
 
 
