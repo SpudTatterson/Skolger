@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -118,74 +119,6 @@ namespace Skolger.Tutorial
             base.Finish();
         }
     }
-    public class PlaceBuildingStep : BaseStep, IRaycastCellHelperUser, INumberedStep
-    {
-        [SerializeField, InlineButton("StartSelecting")] List<Vector3> positions; // need to figure out way to select from editor preferably with a raycast or something similar
-        [SerializeField] BuildingData buildingData;
-
-        [SerializeField] bool needToPlaceOnAllCells = true;
-        [SerializeField, HideIf(nameof(needToPlaceOnAllCells))] int neededBuildingsPlaced;
-
-        public event Action<float> OnNumberChange;
-
-        public float max => neededBuildingsPlaced;
-
-        public float current => buildingsPlaced;
-
-        int buildingsPlaced;
-        Cell[] cells = new Cell[0];
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            cells = new Cell[positions.Count];
-            for (int i = 0; i < positions.Count; i++)
-            {
-                cells[i] = GridManager.Instance.GetCellFromPosition(positions[i]);
-            }
-
-            BuildingPlacer.Instance.OnBuildingPlaced += CheckIfPlaced;
-
-            if (needToPlaceOnAllCells)
-                neededBuildingsPlaced = cells.Length;
-        }
-
-        void CheckIfPlaced(BuildingData data, Cell cell)
-        {
-            foreach (var c in cells)
-            {
-                if (data == buildingData && cell == c)
-                {
-                    buildingsPlaced++;
-                    OnNumberChange?.Invoke(buildingsPlaced);
-                }
-            }
-            if (buildingsPlaced >= neededBuildingsPlaced)
-                base.Finish();
-        }
-
-        void StartSelecting()
-        {
-            RaycastCellHelper.StartEditModeRaycast(this);
-        }
-        public void SetCells(Cell[] cells)
-        {
-            this.cells = cells;
-            foreach (var cell in cells)
-            {
-                positions.Add(cell.position);
-            }
-            ShowCells();
-        }
-        [Button]
-        void ShowCells()
-        {
-            foreach (var cell in cells)
-                Debug.DrawLine(cell.position, cell.position + Vector3.up, Color.blue, 5);
-        }
-
-
-    }
     public class CompositeStep : BaseStep
     {
         [SerializeReference] List<BaseStep> Steps = new List<BaseStep>();
@@ -233,8 +166,8 @@ namespace Skolger.Tutorial
         int harvested;
         public override void Initialize()
         {
-            base.Initialize();
             needToHarvest = harvestables.Length;
+            base.Initialize();
             foreach (var harvestable in harvestables)
             {
                 if (harvestable != null)
@@ -318,7 +251,7 @@ namespace Skolger.Tutorial
                 if (Input.GetKeyDown(key))
                 {
                     numberOfPresses++;
-                    OnNumberChange.Invoke(numberOfPresses);
+                    OnNumberChange?.Invoke(numberOfPresses);
                 }
             }
 
@@ -326,6 +259,77 @@ namespace Skolger.Tutorial
             {
                 Finish();
             }
+        }
+    }
+
+    public class PressAnyKeyStep : BaseStep
+    {
+        [SerializeField] float timeBeforeCanClick = 1;
+
+        float time;
+
+        public override void Update()
+        {
+            base.Update();
+
+            time += Time.unscaledDeltaTime;
+            if (time > timeBeforeCanClick && Input.anyKeyDown)
+            {
+                Finish();
+            }
+        }
+    }
+
+    public class AllowStep : BaseStep, INumberedStep
+    {
+        [SerializeField, ValidateInput("ValidateAllowables", "All GameObjects must have an IAllowable component")] List<GameObject> allowableObjects;
+
+        public float max => amountToAllow;
+
+        public float current => allowed;
+
+        public event Action<float> OnNumberChange;
+
+        int amountToAllow;
+        int allowed;
+        List<IAllowable> allowables = new List<IAllowable>();
+        public override void Initialize()
+        {
+            allowableObjects.ForEach(gameObject => { allowables.Add(gameObject.GetComponent<IAllowable>()); Debug.Log("test"); });
+            amountToAllow = allowables.Count;
+
+            base.Initialize();
+        }
+        public override void Update()
+        {
+            base.Update();
+            int allowed = 0;
+            foreach (var allowable in allowables)
+            {
+                if (allowable.IsAllowed())
+                    allowed++;
+            }
+
+            if (allowed >= amountToAllow)
+                Finish();
+
+            if (this.allowed != allowed)
+            {
+                this.allowed = allowed;
+                OnNumberChange?.Invoke(this.allowed);
+            }
+        }
+
+        bool ValidateAllowables(List<GameObject> gameObjects)
+        {
+            foreach (var go in gameObjects)
+            {
+                if (go == null || go.GetComponent<IAllowable>() == null)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 

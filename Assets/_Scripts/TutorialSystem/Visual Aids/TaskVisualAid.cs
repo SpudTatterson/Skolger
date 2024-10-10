@@ -48,6 +48,8 @@ namespace Skolger.Tutorial
             if (text == "") throw new System.Exception("taskName is empty");
             textObject = MonoBehaviour.Instantiate(textPrefab, tasksParent).GetComponent<TextMeshProUGUI>();
             textObject.text = text;
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tasksParent);
         }
 
         public override void Reset()
@@ -106,7 +108,8 @@ namespace Skolger.Tutorial
 
         public override void Reset()
         {
-            MonoBehaviour.Destroy(fillbar.gameObject);
+            if (fillbar != null && fillbar.gameObject != null)
+                MonoBehaviour.Destroy(fillbar.gameObject);
         }
 
         public override void Update()

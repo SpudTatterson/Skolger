@@ -25,11 +25,6 @@ namespace Skolger.Tutorial
             pointer?.SetActive(true);
             mainCamera = Camera.main;
             offScreenPosition = pointer.transform.position;
-
-            foreach (Transform t in transforms)
-            {
-                positions.Add(t.position);
-            }
         }
 
         public override void Reset()
@@ -52,8 +47,8 @@ namespace Skolger.Tutorial
         {
             if (pointer == null || mainCamera == null)
                 return;
+            Vector3 center = CalculateCenter();
 
-            Vector3 center = VectorUtility.CalculateCenter(positions);
             Vector3 screenCenter = mainCamera.WorldToScreenPoint(center);
 
             // Check if the object is behind the camera (negative z value)
@@ -86,6 +81,30 @@ namespace Skolger.Tutorial
 
             Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
             pointer.transform.rotation = targetRotation;
+        }
+
+        private Vector3 CalculateCenter()
+        {
+            Vector3 transCenter = Vector3.zero, posCenter = Vector3.zero, center = Vector3.zero;
+            int centerAmount = 0;
+            transforms.RemoveAll(t => t == null);
+            positions.RemoveAll(t => t == null);
+            if (transforms.Count > 0)
+            {
+                transCenter = VectorUtility.CalculateCenter(transforms);
+                center += transCenter;
+                centerAmount++;
+            }
+
+            if (positions.Count > 0)
+            {
+                posCenter = VectorUtility.CalculateCenter(positions);
+                center += posCenter;
+                centerAmount++;
+            }
+
+            center = center / centerAmount;
+            return center;
         }
     }
 }
