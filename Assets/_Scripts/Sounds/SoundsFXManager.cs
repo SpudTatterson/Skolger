@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SoundsFXManager : MonoSingleton<SoundsFXManager>
 {
-    public static SoundsFXManager instance;
     [SerializeField] private AudioSource soundFXObject;
 
     public void PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float volume, float maxDistance = 200)
