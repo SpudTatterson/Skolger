@@ -10,12 +10,12 @@ public class Box
         this.halfExtents = halfExtents;
     }
 
-    public Box ShrinkBoxNoY(float shrinkFactor)
+    public Box ShrinkBoxNoY(float amountToShrink)
     {
         Vector3 shrunkSize = new Vector3 (
-            halfExtents.x * shrinkFactor,
+            halfExtents.x - amountToShrink,
             halfExtents.y ,
-            halfExtents.z * shrinkFactor
+            halfExtents.z - amountToShrink
         );
 
         halfExtents = shrunkSize;

@@ -87,7 +87,7 @@ public class VectorUtility
     }
     public static Box CalculateBoxSizeGridAligned(Cell firstCorner, Cell secondCorner, float cellSize)
     {
-        if(firstCorner == null || secondCorner == null) throw new MissingReferenceException("One of the cells are null");
+        if (firstCorner == null || secondCorner == null) throw new MissingReferenceException("One of the cells are null");
         return CalculateBoxSize(firstCorner.position - new Vector3(cellSize / 2, 0, cellSize / 2), secondCorner.position + new Vector3(cellSize / 2, 0, cellSize / 2));
     }
 
@@ -121,6 +121,16 @@ public class VectorUtility
 
         return center;
     }
+    public static Vector3 CalculateCenter(List<Transform> transforms)
+    {
+        List<Vector3> positions = new List<Vector3>();
+        foreach (Transform t in transforms)
+        {
+            if(t != null) positions.Add(t.position);
+        }
+        
+        return CalculateCenter(positions);
+    }
     public static Vector3 RoundVector3ToHalf(Vector3 vector)
     {
         return new Vector3(
@@ -130,4 +140,65 @@ public class VectorUtility
         );
     }
 
+    public static Vector2 OffsetPositionToScreen(Vector2 position, Vector2 sizeDelta, Vector2 offset = default)
+    {
+        Vector2 screenBounds = new Vector2(Screen.width, Screen.height);
+
+        Vector2 clampedPosition = position + offset;
+        bool outsideTop = false;
+
+        // Check if exceeds top or bottom bounds
+        if (clampedPosition.y + sizeDelta.y > screenBounds.y) // Top
+        {
+            clampedPosition.y = position.y - sizeDelta.y;
+            outsideTop = true;
+        }
+        if (clampedPosition.y < 0) // Bottom
+        {
+            clampedPosition.y = position.y + sizeDelta.y;
+        }
+
+        // Check if exceeds right or left bounds
+        if (clampedPosition.x + sizeDelta.x > screenBounds.x || outsideTop) // Right side
+        {
+            clampedPosition.x = position.x - sizeDelta.x;
+        }
+        if (clampedPosition.x < 0) // Left side
+        {
+            clampedPosition.x = position.x + sizeDelta.x;
+        }
+
+
+        return clampedPosition;
+    }
+    public static Vector2 ClampPositionToScreen(Vector2 position, Vector2 sizeDelta, Vector2 offset = default)
+    {
+        Vector2 screenBounds = new Vector2(Screen.width, Screen.height);
+
+        Vector2 clampedPosition = position + offset;
+
+
+        // Check if exceeds top or bottom bounds
+        if (clampedPosition.y + sizeDelta.y > screenBounds.y) // Top
+        {
+            clampedPosition.y = screenBounds.y - sizeDelta.y;
+        }
+        if (clampedPosition.y < 0) // Bottom
+        {
+            clampedPosition.y = 0;
+        }
+
+        // Check if exceeds right or left bounds
+        if (clampedPosition.x + sizeDelta.x > screenBounds.x) // Right side
+        {
+            clampedPosition.x = screenBounds.x - sizeDelta.x;
+        }
+        if (clampedPosition.x < 0) // Left side
+        {
+            clampedPosition.x = 0;
+        }
+
+
+        return clampedPosition;
+    }
 }
