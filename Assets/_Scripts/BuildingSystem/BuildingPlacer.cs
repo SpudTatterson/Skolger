@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 
 public class BuildingPlacer : MonoSingleton<BuildingPlacer>
 {
-    [SerializeField] AudioClip clip;
     [SerializeField] BuildingData buildingData;
     [SerializeField] float timeForDragStart = 0.1f;
     bool placing;
@@ -18,7 +17,7 @@ public class BuildingPlacer : MonoSingleton<BuildingPlacer>
     [SerializeField, ReadOnly] Direction placementDirection;
     [SerializeField, ReadOnly] List<GameObject> placedBuildings = new List<GameObject>();
 
-    public event Action<BuildingData, Cell> OnBuildingPlaced;
+    public event Action<BuildingData, Cell, ConstructionSiteObject> OnBuildingPlaced;
     void Update()
     {
         if (Canceling() && placing)
@@ -64,6 +63,7 @@ public class BuildingPlacer : MonoSingleton<BuildingPlacer>
                 {
                     ReturnAllTemps();
                     PlaceBuilding(hitCell);
+                    SoundsFXManager.Instance?.PlaySoundFXClip(buildingData.placementSound, Camera.main.transform, 100);
                 }
                 else if (Input.GetKeyUp(KeyCode.Mouse0) && dragTime > timeForDragStart)
                 {
@@ -73,6 +73,7 @@ public class BuildingPlacer : MonoSingleton<BuildingPlacer>
                     {
                         PlaceBuilding(cell);
                     }
+                    SoundsFXManager.Instance?.PlaySoundFXClip(buildingData.placementSound, Camera.main.transform, 100);
                 }
 
 
@@ -101,9 +102,8 @@ public class BuildingPlacer : MonoSingleton<BuildingPlacer>
             placedBuildings.Add(constructionSite.gameObject);
 
             TaskManager.Instance.AddToConstructionQueue(constructionSite);
-            SoundsFXManager.instance?.PlaySoundFXClip(clip, Camera.main.transform, 100);
 
-            OnBuildingPlaced?.Invoke(buildingData, cell);
+            OnBuildingPlaced?.Invoke(buildingData, cell, constructionSite);
         }
 
 
@@ -146,7 +146,7 @@ public class BuildingPlacer : MonoSingleton<BuildingPlacer>
     }
     public void CancelPlacement()
     {
-        if(!placing) return; 
+        if (!placing) return;
         placing = false;
         ReturnAllTemps();
         ReturnTemp(tempGO);
