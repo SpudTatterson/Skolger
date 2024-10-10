@@ -160,7 +160,7 @@ Shader "Lpk/LightModel/ToonLightBase_WithYFade"
                 float fadeFactor = input.visibilityFactor;
                 
                 // Calculate final alpha with fade
-                float alpha = _Transparency - fadeFactor;
+                float alpha = lerp(_Transparency, 0.0, fadeFactor);
             
                 float3 finalColor = diffuse + ambient + specular;
                 finalColor = MixFog(finalColor, input.fogCoord);
