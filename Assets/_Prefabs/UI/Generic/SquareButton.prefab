@@ -160,17 +160,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5711855286409545030}
-  m_LocalRotation: {x: -0, y: -0, z: 0.3409439, w: 0.9400837}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7593699377191995417}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 39.869}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0.29999924, y: -0.19999695}
-  m_SizeDelta: {x: -9.5939, y: -9.5942}
+  m_SizeDelta: {x: -14.524, y: -15.3486}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4878232710244188029
 CanvasRenderer:
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c0fbffaa937a52f4e892e05432cc8370, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -289,7 +289,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 2.5
+  m_PixelsPerUnitMultiplier: 4.67
 --- !u!114 &2740977945521572256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6e2f09325cb604c87cb08eb656da8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 3d0e10faaacc11d4f821513def6010da, type: 3}
+  clip: {fileID: 8300000, guid: 28355daf123d92e419144d2e70fd0823, type: 3}
 --- !u!1001 &4694668834867709666
 PrefabInstance:
   m_ObjectHideFlags: 0
