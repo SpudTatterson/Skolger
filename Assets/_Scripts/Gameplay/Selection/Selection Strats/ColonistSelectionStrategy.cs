@@ -8,13 +8,14 @@ public class ColonistSelectionStrategy : ISelectionStrategy
     public void ApplySelection(List<ISelectable> selectedItems)
     {
         ui = UIManager.Instance;
-        ui.SetAllSelectionUIInactive();
-        ui.colonistSelection.gameObject.SetActive(true);
-        EnableButtons();
-
+        
         ColonistData colonist = selectedItems[0] as ColonistData;
 
         ui.colonistSelection.UpdateMenu(colonist);
+       
+        ui.SetAllSelectionUIInactive();
+        ui.colonistSelection.gameObject.SetActive(true);
+        EnableButtons();
     }
 
     public void EnableButtons()
