@@ -23,46 +23,7 @@ namespace Skolger.UI.ToolTip
 
         void LateUpdate()
         {
-            Vector2 mousePosition = Input.mousePosition;
-            AdjustPosition(mousePosition);
-        }
-
-        void AdjustPosition(Vector2 mousePosition)
-        {
-            // Set the tooltip position to follow the mouse, adding the offset
-            transform.position = mousePosition + offset;
-
-            // Get the screen boundaries
-            Vector2 screenBounds = new Vector2(Screen.width, Screen.height);
-
-            // Get the tooltip size
-            Vector2 backgroundSize = background.sizeDelta;
-
-            // Clamp the position to ensure the tooltip stays within screen bounds
-            Vector2 clampedPosition = transform.position;
-
-            // Check if tooltip exceeds right or left bounds
-            if (clampedPosition.x + backgroundSize.x > screenBounds.x) // Right side
-            {
-                clampedPosition.x = screenBounds.x - backgroundSize.x;
-            }
-            if (clampedPosition.x < 0) // Left side
-            {
-                clampedPosition.x = 0;
-            }
-
-            // Check if tooltip exceeds top or bottom bounds
-            if (clampedPosition.y + backgroundSize.y > screenBounds.y) // Top
-            {
-                clampedPosition.y = screenBounds.y - backgroundSize.y;
-            }
-            if (clampedPosition.y < 0) // Bottom
-            {
-                clampedPosition.y = 0;
-            }
-
-            // Set the tooltip position to the clamped position
-            transform.position = clampedPosition;
+            transform.position = VectorUtility.OffsetPositionToScreen(Input.mousePosition, background.sizeDelta, offset);
         }
 
         void ShowToolTip(string tooltipString)
@@ -75,7 +36,7 @@ namespace Skolger.UI.ToolTip
             background.sizeDelta = backgroundSize;
 
             // Adjust position immediately to prevent flickering
-            AdjustPosition(Input.mousePosition);
+            transform.position = VectorUtility.OffsetPositionToScreen(Input.mousePosition, background.sizeDelta, offset);
         }
 
         void HideToolTip()

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Skolger.UI.InfoContainers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,11 +7,12 @@ using UnityEngine.UI;
 
 public class ColonistBar : MonoBehaviour
 {
-    public ColonistData colonist {get; private set;}
+    public ColonistData colonist { get; private set; }
     [SerializeField] Image colonistFace;
     [SerializeField] TextMeshProUGUI colonistName;
     [SerializeField] TextMeshProUGUI activity;
     [SerializeField] Button colonistButton;
+    [SerializeField] InfoContainer[] infoContainers;
 
     private void Update()
     {
@@ -30,6 +32,11 @@ public class ColonistBar : MonoBehaviour
         {
             this.colonist.OnActivityChanged += UpdateActivity;
             colonistButton.onClick.AddListener(FocusOnColonist);
+        }
+
+        foreach (InfoContainer infoContainer in infoContainers)
+        {
+            infoContainer.Initialize(colonist);
         }
     }
     void FocusOnColonist()

@@ -78,12 +78,356 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorialParts:
-  - name: 
-    visualAids: []
-    Steps: []
+  - name: Part 1
+    visualAids:
+    - rid: 6300629960322187302
+    Steps:
+    - rid: 6300629960322187303
+    - rid: 6300629960322187306
+    - rid: 6300629960322187309
+    - rid: 6300629960322187313
+  - name: Part 2
+    visualAids:
+    - rid: 6300629960322187317
+    - rid: 6300629960322187318
+    - rid: 6300629960322187319
+    Steps:
+    - rid: 6300629960322187320
+    - rid: 6300629960322187330
+    - rid: 6300629960322187339
+  OnFinishedTutorial:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 6300629960322187302
+      type: {class: ChangeTextVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        textObject: {fileID: 0}
+        text: Basic Controls
+    - rid: 6300629960322187303
+      type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: WASD
+        visualAids:
+        - rid: 6300629960322187304
+        - rid: 6300629960322187305
+        keyCodes: 77000000610000007300000064000000
+        neededNumberOfPresses: 4
+    - rid: 6300629960322187304
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Move with WASD
+    - rid: 6300629960322187305
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187306
+      type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Mouse Drag
+        visualAids:
+        - rid: 6300629960322187307
+        - rid: 6300629960322187308
+        keyCodes: 45010000
+        neededNumberOfPresses: 2
+    - rid: 6300629960322187307
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Drag Click Middle Mouse
+    - rid: 6300629960322187308
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187309
+      type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Pause
+        visualAids:
+        - rid: 6300629960322187310
+        - rid: 6300629960322187311
+        - rid: 6300629960322187312
+        keyCodes: 20000000
+        neededNumberOfPresses: 2
+    - rid: 6300629960322187310
+      type: {class: TextBoxVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        textPrefab: {fileID: 2382108017143445734, guid: 1a715652956cdd04c80a9a3ef9a92fce,
+          type: 3}
+        tasksParent: {fileID: 0}
+        text: Sometimes you need to stop to think and plan
+    - rid: 6300629960322187311
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Press the Space bar
+    - rid: 6300629960322187312
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187313
+      type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Pause
+        visualAids:
+        - rid: 6300629960322187314
+        - rid: 6300629960322187315
+        - rid: 6300629960322187316
+        keyCodes: 310000003200000033000000
+        neededNumberOfPresses: 4
+    - rid: 6300629960322187314
+      type: {class: TextBoxVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        textPrefab: {fileID: 2382108017143445734, guid: 1a715652956cdd04c80a9a3ef9a92fce,
+          type: 3}
+        tasksParent: {fileID: 0}
+        text: Sometimes things are going to slow and you want to speed up
+    - rid: 6300629960322187315
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Press 1, 2 & 3
+    - rid: 6300629960322187316
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187317
+      type: {class: ChangeTextVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        textObject: {fileID: 0}
+        text: Rebuild The House
+    - rid: 6300629960322187318
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Place A Stockpile
+    - rid: 6300629960322187319
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Harvest Trees
+    - rid: 6300629960322187320
+      type: {class: TutorialPart, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: PlaceStockpile
+        visualAids:
+        - rid: 6300629960322187321
+        Steps:
+        - rid: 6300629960322187322
+        - rid: 6300629960322187323
+        - rid: 6300629960322187324
+    - rid: 6300629960322187321
+      type: {class: FinishTaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskName: Place A Stockpile
+    - rid: 6300629960322187322
+      type: {class: PressTabStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Open Zone Tab
+        visualAids:
+        - rid: 6300629960322187325
+        - rid: 6300629960322187326
+        tab: {fileID: 0}
+    - rid: 6300629960322187323
+      type: {class: PressButtonStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Start Placing Stockpile
+        visualAids:
+        - rid: 6300629960322187327
+        - rid: 6300629960322187328
+        button: {fileID: 0}
+    - rid: 6300629960322187324
+      type: {class: StockpilePlacementStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Place Stockpile
+        visualAids:
+        - rid: 6300629960322187329
+    - rid: 6300629960322187325
+      type: {class: BlinkingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetGraphic: {fileID: 0}
+        blinkColor: {r: 0.63740116, g: 0.98490566, b: 0.94096684, a: 1}
+        time: 1
+        ease: 25
+    - rid: 6300629960322187326
+      type: {class: ScalingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetTransforms:
+        - {fileID: 0}
+        targetScale: {x: 1.1, y: 1.1, z: 1.1}
+        time: 0.5
+        easeType: 25
+    - rid: 6300629960322187327
+      type: {class: BlinkingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetGraphic: {fileID: 0}
+        blinkColor: {r: 0.6392157, g: 0.9843138, b: 0.94117653, a: 1}
+        time: 1
+        ease: 25
+    - rid: 6300629960322187328
+      type: {class: ScalingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetTransforms:
+        - {fileID: 0}
+        targetScale: {x: 1.1, y: 1.1, z: 1.1}
+        time: 0.5
+        easeType: 25
+    - rid: 6300629960322187329
+      type: {class: ActionTextVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        text: Left Click + Drag To Place Stockpile
+    - rid: 6300629960322187330
+      type: {class: TutorialPart, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Get Wood
+        visualAids:
+        - rid: 6300629960322187331
+        Steps:
+        - rid: 6300629960322187332
+        - rid: 6300629960322187333
+    - rid: 6300629960322187331
+      type: {class: FinishTaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskName: Harvest Trees
+    - rid: 6300629960322187332
+      type: {class: PressTabStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Start Harvesting
+        visualAids:
+        - rid: 6300629960322187334
+        - rid: 6300629960322187335
+        - rid: 6300629960322187336
+        tab: {fileID: 0}
+    - rid: 6300629960322187333
+      type: {class: HarvestStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Harvest Tree
+        visualAids:
+        - rid: 6300629960322187337
+        - rid: 6300629960322187338
+        harvestables:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+    - rid: 6300629960322187334
+      type: {class: BlinkingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetGraphic: {fileID: 0}
+        blinkColor: {r: 0.63740116, g: 0.98490566, b: 0.94096684, a: 1}
+        time: 1
+        ease: 25
+    - rid: 6300629960322187335
+      type: {class: ScalingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetTransforms:
+        - {fileID: 0}
+        targetScale: {x: 1.1, y: 1.1, z: 1.1}
+        time: 0.5
+        easeType: 25
+    - rid: 6300629960322187336
+      type: {class: Move2DVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        rectTransform: {fileID: 0}
+        time: 1
+        startWorldPoint: {fileID: 0}
+        startScreenPoint: {x: 0, y: 0, z: 0}
+        startType: 0
+        endWorldPoint: {fileID: 0}
+        endScreenPoint: {x: 0, y: 0, z: 0}
+        endType: 0
+        ease: 1
+        loop: 1
+        snapBack: 1
+        snapBackTime: 1
+    - rid: 6300629960322187337
+      type: {class: ScalingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetTransforms:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        targetScale: {x: 1.01, y: 1.01, z: 1.01}
+        time: 1
+        easeType: 23
+    - rid: 6300629960322187338
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187339
+      type: {class: TutorialPart, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Rebuild house
+        visualAids: []
+        Steps:
+        - rid: 6300629960322187340
+    - rid: 6300629960322187340
+      type: {class: PlaceBuildingStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Place Door
+        visualAids:
+        - rid: 6300629960322187341
+        - rid: 6300629960322187342
+        cellPos: {x: 62.518307, y: 0, z: 108.615616}
+        buildingData: {fileID: 11400000, guid: bae58b56bbc345242ab0566331760d46, type: 2}
+    - rid: 6300629960322187341
+      type: {class: GhostVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        model: {fileID: 752833526009587429, guid: 5ce6874b24b559f4b8c0e3e04339ee49,
+          type: 3}
+        cellPos: {x: 62.383812, y: 0, z: 108.60121}
+    - rid: 6300629960322187342
+      type: {class: UIPointerVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        pointer: {fileID: 0}
+        transforms: []
+        positions:
+        - {x: 62.5, y: 0, z: 108.5}
+        onScreenOffset: {x: -100, y: 0, z: 0}
+        lerpSpeed: 5
+        paddingX: 300
+        paddingY: 150
+        lockDistance: 10
 --- !u!1 &6069251704015072993
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,11 +847,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
         type: 3}
-      propertyPath: MaxDistance
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
-        type: 3}
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: -4064850468369043237, guid: dd859ea7effb5284a9de2fef95879571,
@@ -602,11 +941,6 @@ PrefabInstance:
       propertyPath: Loop
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2674857656973817412, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
-        type: 3}
-      propertyPath: m_audioClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 6968f8577e38a3c409fca97b5840fdf9, type: 3}
     - target: {fileID: 2674857656973817412, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
         type: 3}
       propertyPath: BypassEffects

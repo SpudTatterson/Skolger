@@ -107,7 +107,7 @@ public class GridManager : MonoSingleton<GridManager>
             }
             this.navMeshSurface = navMeshSurface;
         }
-
+        navMeshSurface.collectObjects = CollectObjects.Children;
         navMeshSurface.BuildNavMesh();
     }
 

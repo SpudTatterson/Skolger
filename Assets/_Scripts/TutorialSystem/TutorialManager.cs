@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Skolger.Tutorial
 {
-    public class TutorialManager : MonoBehaviour
+    public class TutorialManager : MonoSingleton<TutorialManager>
     {
         [SerializeField] List<TutorialPart> tutorialParts = new List<TutorialPart>();
+
+        [SerializeField] UnityEvent OnFinishedTutorial;
+        bool tutorialFinished = false;
 
         void Start()
         {
@@ -27,9 +31,10 @@ namespace Skolger.Tutorial
                 if (tutorialParts.Count != 0)
                     tutorialParts[0].Initialize();
             }
-            else if (tutorialParts.Count == 0)
+            else if (tutorialParts.Count == 0 && !tutorialFinished)
             {
-                Debug.Log("Finished Tutorial");
+                tutorialFinished = true;
+                OnFinishedTutorial?.Invoke();
             }
         }
     }

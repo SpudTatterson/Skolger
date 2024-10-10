@@ -1,4 +1,5 @@
 using BehaviorTree;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class TaskPutItemInConstructable : Node
@@ -35,6 +36,8 @@ public class TaskPutItemInConstructable : Node
             {
                 constructable.ConstructBuilding();
                 ClearData(DataName.Constructable);
+                state = NodeState.SUCCESS;
+                return state;
             }
 
             state = NodeState.RUNNING;

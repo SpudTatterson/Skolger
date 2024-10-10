@@ -88,12 +88,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9d9839d21c49b5348bf727708a3a2d34, type: 3}
   - {fileID: 8300000, guid: 66f7d9fddbd0da64fbfe9d335bd67445, type: 3}
   effectsWaitTime: 1
-  baseGatherTime: 4
-  drops:
-  - itemData: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
-    minDropAmount: 40
-    maxDropAmount: 60
-  harvestableName: Pine Tree
+  baseGatherTime: 5
+  drops: []
+  harvestableName: 
 --- !u!65 &5415146560360813065
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -203,7 +200,7 @@ PrefabInstance:
     - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.252
+      value: 7.04
       objectReference: {fileID: 0}
     - target: {fileID: 6533726697566526984, guid: a46747e4c7aa98347b7b7b117d9226ce,
         type: 3}
