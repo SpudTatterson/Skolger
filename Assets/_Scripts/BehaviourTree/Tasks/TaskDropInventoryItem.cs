@@ -18,9 +18,14 @@ public class TaskDropInventoryItem : Node
         if (inventoryItem != null || !colonistData.inventory.IsEmpty())
         {
             //inventoryItem.DropItem(agent.transform.position);
-            int InventoryIndex = (int)GetData(DataName.InventoryIndex);
-            colonistData.inventory.TakeItemOut(InventoryIndex).DropItem(GridManager.Instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell().position);
-            ClearData(DataName.InventoryItem);
+            object index = GetData(DataName.InventoryIndex);
+            int InventoryIndex;
+            if (index != null)
+            {
+                InventoryIndex = (int)index;
+                colonistData.inventory.TakeItemOut(InventoryIndex).DropItem(GridManager.Instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell().position);
+                ClearData(DataName.InventoryItem);
+            }
         }
 
         state = NodeState.SUCCESS;

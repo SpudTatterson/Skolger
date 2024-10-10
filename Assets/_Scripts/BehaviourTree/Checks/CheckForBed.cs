@@ -37,7 +37,10 @@ public class CheckForBed : Node
                 colonistData.restManger.AssignBed(tempBed);
                 tempBed.AssignColonist(colonistData);
                 SetDataOnRoot(DataName.Target, colonistData.restManger.assignedBed);
+                if (BedManager.tempBeds.ContainsKey(colonistData))
+                    BedManager.tempBeds[colonistData].Deconstruct();
                 BedManager.tempBeds.Add(colonistData, tempBed);
+
 
 
                 state = NodeState.RUNNING;
