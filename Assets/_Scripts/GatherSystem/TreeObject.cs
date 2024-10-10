@@ -75,10 +75,9 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
 
     void HitTree()
     {
-        SoundsFXManager.instance.PlayRandomSoundFXClip(ChoppingSound, transform, 1f);
+        SoundsFXManager.Instance.PlayRandomSoundFXClip(ChoppingSound, transform, 1f);
         transform.DOShakeRotation(0.15f, 5);
 
-        Debug.Log("hry");
         hitEffect.Play();
         
     }
