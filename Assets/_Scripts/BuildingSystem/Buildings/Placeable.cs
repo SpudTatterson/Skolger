@@ -9,6 +9,7 @@ public class PlaceableData : ScriptableObject
     [BoxGroup("Main Info")] public string placeableName;
     [Multiline, BoxGroup("Main Info")] public string description;
     [BoxGroup("Main Info")] public List<ItemCost> costs = new List<ItemCost>();
+    [BoxGroup("Main Info")] public AudioClip placementSound;
 
     [BoxGroup("Settings")] public int xSize = 1;
     [BoxGroup("Settings")] public int ySize = 1;

@@ -1,13 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Skolger.UI.Tabs;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
 
 public class PauseManager : MonoSingleton<PauseManager>
 {
+    [SerializeField] TabGroup timeControlTabGroup;
+    [SerializeField] Skolger.UI.Tabs.TabButton regularSpeedTab;
     public UnityEvent OnPause;
     public UnityEvent OnResume;
     public UnityEvent OnPauseMenu;
@@ -29,6 +27,8 @@ public class PauseManager : MonoSingleton<PauseManager>
     }
     public void SetNewTimeScale(float timeScale)
     {
+        if (timeScale != 0 && paused)
+            UnPause();
         Time.timeScale = timeScale;
     }
     public void TogglePause()
@@ -36,6 +36,7 @@ public class PauseManager : MonoSingleton<PauseManager>
         if (paused)
         {
             UnPause();
+            timeControlTabGroup?.OnTabSelected(regularSpeedTab);
         }
         else
         {

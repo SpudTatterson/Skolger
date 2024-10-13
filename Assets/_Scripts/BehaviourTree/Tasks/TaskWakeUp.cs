@@ -1,4 +1,5 @@
 using BehaviorTree;
+using UnityEngine;
 
 class TaskWakeUp : Node
 {
@@ -14,10 +15,16 @@ class TaskWakeUp : Node
         if (colonistData.restManger.sleeping)
         {
             colonistData.restManger.WakeUp();
+            
+            if (BedManager.tempBeds.ContainsKey(colonistData))
+            {
+                BedManager.tempBeds[colonistData].Deconstruct();
+                BedManager.tempBeds.Remove(colonistData);
+            }
             state = NodeState.SUCCESS;
             return state;
         }
-        else 
+        else
         {
             state = NodeState.FAILURE;
             return state;

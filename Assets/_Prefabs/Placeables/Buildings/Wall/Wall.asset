@@ -18,6 +18,7 @@ MonoBehaviour:
   costs:
   - item: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
     cost: 20
+  placementSound: {fileID: 8300000, guid: 6026395438688ea4895c2d2dad4c7e71, type: 3}
   xSize: 1
   ySize: 1
   usesCell: 1

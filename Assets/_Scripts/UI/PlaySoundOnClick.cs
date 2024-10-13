@@ -9,6 +9,9 @@ public class PlaySoundOnClick : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        SoundsFXManager.instance?.PlaySoundFXClip(clip, Camera.main.transform, 100);
+        if (clip != null)
+            SoundsFXManager.Instance?.PlaySoundFXClip(clip, 100);
+        else
+            Debug.LogWarning("Sound missing on " + gameObject.name);
     }
 }

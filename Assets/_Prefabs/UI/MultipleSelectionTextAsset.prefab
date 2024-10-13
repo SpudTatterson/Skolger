@@ -11,7 +11,17 @@ PrefabInstance:
     - target: {fileID: 1508309402121746696, guid: 99d73b1146071a047b51d2aae787c734,
         type: 3}
       propertyPath: m_Name
-      value: DefaultTextAsset Variant
+      value: MultipleSelectionTextAsset
+      objectReference: {fileID: 0}
+    - target: {fileID: 1508309402121746696, guid: 99d73b1146071a047b51d2aae787c734,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2699217162409157615, guid: 99d73b1146071a047b51d2aae787c734,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3154238761096903752, guid: 99d73b1146071a047b51d2aae787c734,
         type: 3}

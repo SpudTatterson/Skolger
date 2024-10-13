@@ -5,21 +5,16 @@ public static class MoodUtility
 {
     public static int GetMoodModifier(HungerStatus hungerStatus)
     {
-        if (hungerStatus == HungerStatus.Starving)
+        switch (hungerStatus)
         {
-            return -20;
-        }
-        else if (hungerStatus == HungerStatus.Hungry)
-        {
-            return -10;
-        }
-        else if (hungerStatus == HungerStatus.Satisfied)
-        {
-            return 5;
-        }
-        else
-        {
-            return 10;
+            case HungerStatus.Starving:
+                return -20;
+            case HungerStatus.Hungry:
+                return -10;
+            case HungerStatus.Satisfied:
+                return 5;
+            default:
+                return 10;
         }
     }
     public static int GetMoodModifier(RestStatus restStatus)

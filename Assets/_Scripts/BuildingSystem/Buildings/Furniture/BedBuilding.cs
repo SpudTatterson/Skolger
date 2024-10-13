@@ -15,6 +15,7 @@ public class BedBuilding : BuildingObject
     {
         base.Initialize(buildingData, placementDirection);
         assignedColonist = null;
+        bedData = buildingData as BedData;
     }
     public void AssignColonist(ColonistData assignedColonist)
     {
@@ -43,6 +44,7 @@ public class BedBuilding : BuildingObject
 public class BedManager
 {
     public static List<BedBuilding> bedBuildings = new List<BedBuilding>();
+    public static Dictionary<ColonistData, BedBuilding> tempBeds = new Dictionary<ColonistData, BedBuilding>();
 
     public static void Subscribe(BedBuilding bed)
     {
