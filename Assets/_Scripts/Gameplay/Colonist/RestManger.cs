@@ -44,17 +44,24 @@ public class RestManger : MonoBehaviour
     public void UpdateRest()
     {
         if (!sleeping)
-            RestLevel -= tirednessSpeed * Time.deltaTime;
+        {
+            RestLevel -= tirednessSpeed * DayNightTimeManager.Instance.adjustedDeltaTime;
+        }
         else
-            RestLevel += restGainSpeed * Time.deltaTime * sleepEffectivenessModifier;
+        {
+            RestLevel += restGainSpeed * DayNightTimeManager.Instance.adjustedDeltaTime * sleepEffectivenessModifier;
+        }
 
         RestLevel = Mathf.Clamp(RestLevel, 0, Max_Rest_Capacity);
+
         RestStatus restStatus = GetRestStatus();
         if (restStatus != this.restStatus)
         {
             HandleStatusChanged(restStatus);
         }
     }
+
+
     void HandleStatusChanged(RestStatus restStatus)
     {
         this.restStatus = restStatus;
