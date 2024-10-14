@@ -1,4 +1,5 @@
 using BehaviorTree;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class TaskPutItemInConstructable : Node
@@ -16,18 +17,27 @@ public class TaskPutItemInConstructable : Node
         var constructable = (IConstructable)GetData(EDataName.Constructable);
         var item = (InventoryItem)GetData(EDataName.InventoryItem);
 
-        if (constructable != null && ColonistUtility.ReachedDestinationOrGaveUp(agent))
+        if (constructable != null && ReachedDestinationOrGaveUp())
         {
-            int itemIndex = (int)GetData(EDataName.InventoryIndex);
-            constructable.AddItem(colonistData.TakeItemOut(itemIndex));
+            var data = GetData(EDataName.InventoryIndex);
+            if (data == null)
+            {
+                state = NodeState.FAILURE;
+                return state;
+            }
+
+            int itemIndex = (int)data;
+            constructable.AddItem(colonistData.inventory.TakeItemOut(itemIndex));
             ClearData(EDataName.InventoryItem);
             ClearData(EDataName.Target);
             ClearData(EDataName.Cost);
 
-            if(constructable.CheckIfCostsFulfilled())
+            if (constructable.CheckIfCostsFulfilled())
             {
                 constructable.ConstructBuilding();
                 ClearData(EDataName.Constructable);
+                state = NodeState.SUCCESS;
+                return state;
             }
 
             state = NodeState.RUNNING;
@@ -36,5 +46,22 @@ public class TaskPutItemInConstructable : Node
 
         state = NodeState.RUNNING;
         return state;
+    }
+
+    public bool ReachedDestinationOrGaveUp()
+    {
+
+        if (!agent.pathPending)
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

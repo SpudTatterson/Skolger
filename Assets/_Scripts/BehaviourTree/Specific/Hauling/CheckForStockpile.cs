@@ -17,7 +17,7 @@ public class CheckForStockpile : Node
     public override NodeState Evaluate()
     {
         Stockpile stockpile = InventoryManager.Instance.GetStockpileWithEmptySpace(out Cell cell);
-        InventoryItem inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
+        InventoryItem inventoryItem = (InventoryItem)GetData(EDataName.InventoryItem);
         
         if (cell == null)
         {
@@ -25,7 +25,7 @@ public class CheckForStockpile : Node
 
             if (inventoryItem != null || !colonistData.inventory.IsEmpty())
             {
-                int itemIndex  = (int)GetData(DataName.InventoryIndex);
+                int itemIndex  = (int)GetData(EDataName.InventoryIndex);
                 colonistData.inventory.TakeItemOut(itemIndex).DropItem(agent.transform.position);
                 agent.ResetPath();
 

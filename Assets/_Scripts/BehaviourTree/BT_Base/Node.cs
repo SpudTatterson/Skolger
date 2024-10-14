@@ -20,7 +20,7 @@ namespace BehaviorTree
         public int priority { get; set; }
         public bool flaggedRoot { get; set; }
 
-        [ShowInInspector] private Dictionary<DataName, object> dataContext = new Dictionary<DataName, object>();
+        [ShowInInspector] private Dictionary<EDataName, object> dataContext = new Dictionary<EDataName, object>();
 
         public Node()
         {
@@ -70,13 +70,13 @@ namespace BehaviorTree
             return root;
         }
 
-        public void SetDataOnRoot(DataName key, object value)
+        public void SetDataOnRoot(EDataName key, object value)
         {
             Node root = GetRootNode();
             root.SetData(key, value);
         }
 
-        public void SetDataOnFlaggedRoot(DataName key, object value)
+        public void SetDataOnFlaggedRoot(EDataName key, object value)
         {
             Node root = GetFlaggedRootNode();
             root.SetData(key, value);

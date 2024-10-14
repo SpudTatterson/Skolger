@@ -29,7 +29,7 @@ public class CheckForConstructable : Node
 
         if (constructable != null)
         {
-            parent.parent.SetData(DataName.Constructable, constructable);
+            parent.parent.SetData(EDataName.Constructable, constructable);
             state = NodeState.SUCCESS;
             return state;
         }

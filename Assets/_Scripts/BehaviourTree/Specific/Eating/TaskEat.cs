@@ -15,21 +15,48 @@ public class TaskEat : Node
 
     public override NodeState Evaluate()
     {
-        if (ColonistUtility.ReachedDestinationOrGaveUp(agent))
+        if (ReachedDestinationOrGaveUp())
         {
             EdibleData edibleData = (EdibleData)GetData(EDataName.FoodData);
             Stockpile stockpile = (Stockpile)GetData(EDataName.Stockpile);
-            IEdible edible = (EdibleInventoryItem)InventoryManager.instance.TakeItem(new ItemCost(edibleData, 1), stockpile);
-            colonistData.Eat(edible);
 
             ClearData(EDataName.Target);
             ClearData(EDataName.Stockpile);
             ClearData(EDataName.FoodData);
+
+            if (InventoryManager.Instance.HasItem(new ItemCost(edibleData, 1)))
+            {
+                IEdible edible = (EdibleInventoryItem)InventoryManager.Instance.TakeItem(new ItemCost(edibleData, 1), stockpile);
+                colonistData.hungerManager.Eat(edible);
+            }
+            else
+            {
+                state = NodeState.FAILURE;
+                return state;
+            }
+
             state = NodeState.SUCCESS;
             return state;
         }
 
         state = NodeState.RUNNING;
         return state;
+    }
+
+    public bool ReachedDestinationOrGaveUp()
+    {
+
+        if (!agent.pathPending)
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

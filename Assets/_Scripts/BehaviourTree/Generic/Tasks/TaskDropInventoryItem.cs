@@ -18,13 +18,13 @@ public class TaskDropInventoryItem : Node
         if (inventoryItem != null || !colonistData.inventory.IsEmpty())
         {
             //inventoryItem.DropItem(agent.transform.position);
-            object index = GetData(DataName.InventoryIndex);
+            object index = GetData(EDataName.InventoryIndex);
             int InventoryIndex;
             if (index != null)
             {
                 InventoryIndex = (int)index;
                 colonistData.inventory.TakeItemOut(InventoryIndex).DropItem(GridManager.Instance.GetCellFromPosition(agent.transform.position).GetClosestEmptyCell().position);
-                ClearData(DataName.InventoryItem);
+                ClearData(EDataName.InventoryItem);
             }
         }
 

@@ -5,11 +5,11 @@ public class CheckForConstructableCost : Node
 {
     public override NodeState Evaluate()
     {
-        IConstructable constructable = (IConstructable)GetData(DataName.Constructable);
+        IConstructable constructable = (IConstructable)GetData(EDataName.Constructable);
 
         if (constructable == null)
         {
-            ClearData(DataName.Constructable);
+            ClearData(EDataName.Constructable);
             state = NodeState.FAILURE;
             return state;
         }
@@ -24,7 +24,7 @@ public class CheckForConstructableCost : Node
         }
         else
         {
-            ClearData(DataName.Constructable);
+            ClearData(EDataName.Constructable);
         }
 
         state = NodeState.FAILURE;

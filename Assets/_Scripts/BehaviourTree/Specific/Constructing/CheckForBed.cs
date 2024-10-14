@@ -12,7 +12,7 @@ public class CheckForBed : Node
     {
         if (colonistData.restManger.assignedBed != null)
         {
-            SetDataOnRoot(DataName.Target, colonistData.restManger.assignedBed);
+            SetDataOnRoot(EDataName.Target, colonistData.restManger.assignedBed);
             state = NodeState.SUCCESS;
             return state;
         }
@@ -22,7 +22,7 @@ public class CheckForBed : Node
             {
                 colonistData.restManger.AssignBed(bed);
                 bed.AssignColonist(colonistData);
-                SetDataOnRoot(DataName.Target, colonistData.restManger.assignedBed);
+                SetDataOnRoot(EDataName.Target, colonistData.restManger.assignedBed);
                 state = NodeState.SUCCESS;
                 return state;
             }
@@ -36,7 +36,7 @@ public class CheckForBed : Node
 
                 colonistData.restManger.AssignBed(tempBed);
                 tempBed.AssignColonist(colonistData);
-                SetDataOnRoot(DataName.Target, colonistData.restManger.assignedBed);
+                SetDataOnRoot(EDataName.Target, colonistData.restManger.assignedBed);
                 if (BedManager.tempBeds.ContainsKey(colonistData))
                     BedManager.tempBeds[colonistData].Deconstruct();
                 BedManager.tempBeds.Add(colonistData, tempBed);

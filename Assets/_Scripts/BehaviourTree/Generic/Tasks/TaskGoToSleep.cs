@@ -16,7 +16,7 @@ public class TaskGoToSleep : Node
         if (ReachedDestinationOrGaveUp())
         {
             colonistData.restManger.Sleep();
-            ClearData(DataName.Target);
+            ClearData(EDataName.Target);
             state = NodeState.SUCCESS;
             return state;
         }
