@@ -16,17 +16,17 @@ public class CheckForStockpile : Node
 
     public override NodeState Evaluate()
     {
-        Stockpile stockpile = InventoryManager.instance.GetStockpileWithEmptySpace(out Cell cell);
-        InventoryItem inventoryItem = (InventoryItem)GetData(EDataName.InventoryItem);
+        Stockpile stockpile = InventoryManager.Instance.GetStockpileWithEmptySpace(out Cell cell);
+        InventoryItem inventoryItem = (InventoryItem)GetData(DataName.InventoryItem);
         
         if (cell == null)
         {
             object hasStockpile = GetData(EDataName.Stockpile);
 
-            if (inventoryItem != null || !colonistData.IsEmpty())
+            if (inventoryItem != null || !colonistData.inventory.IsEmpty())
             {
-                int itemIndex  = (int)GetData(EDataName.InventoryIndex);
-                colonistData.TakeItemOut(itemIndex).DropItem(agent.transform.position);
+                int itemIndex  = (int)GetData(DataName.InventoryIndex);
+                colonistData.inventory.TakeItemOut(itemIndex).DropItem(agent.transform.position);
                 agent.ResetPath();
 
                 ClearData(EDataName.InventoryItem);

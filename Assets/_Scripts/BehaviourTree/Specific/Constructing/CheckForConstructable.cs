@@ -13,9 +13,9 @@ public class CheckForConstructable : Node
         var hasConstructable = GetData(EDataName.Constructable);
         var hasInventoryItem = GetData(EDataName.InventoryItem);
 
-        if (hasInventoryItem != null || !colonistData.IsEmpty())
+        if (hasInventoryItem != null || !colonistData.inventory.IsEmpty())
         {
-            state = NodeState.FAILURE;
+            state = NodeState.RUNNING;
             return state;
         }
 
@@ -29,8 +29,7 @@ public class CheckForConstructable : Node
 
         if (constructable != null)
         {
-            parent.parent.SetData(EDataName.Constructable, constructable);
-
+            parent.parent.SetData(DataName.Constructable, constructable);
             state = NodeState.SUCCESS;
             return state;
         }

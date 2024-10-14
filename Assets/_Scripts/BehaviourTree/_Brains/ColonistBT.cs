@@ -1,14 +1,21 @@
+using System;
 using System.Collections.Generic;
 using BehaviorTree;
 using UnityEngine;
 using UnityEngine.AI;
 using NaughtyAttributes;
 using Tree = BehaviorTree.Tree;
+using Random = UnityEngine.Random;
 
 public class ColonistBT : Tree
 {
-    [SerializeField] private ColonistSettingsSO colonistSettings;
+    [SerializeField] ColonistSettingsSO colonistSettings;
 
+    // cache
+    Node workStateRoot;
+    Node unrestrictedStateRoot;
+    Node restingStateRoot;
+    Node sleepStateRoot;
     public bool treeRearrangement;
 
     [BoxGroup("Initial set, player access locked")]
@@ -27,6 +34,7 @@ public class ColonistBT : Tree
     private ColonistData colonistData;
     private Dictionary<ETaskDescription, string> taskDescriptions;
 
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -43,33 +51,118 @@ public class ColonistBT : Tree
         }
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        UpdateBrainState();  // Check and update brain state each frame
+    }
+
+    private void UpdateBrainState()
+    {
+        switch (colonistData.brainState)
+        {
+            case BrainState.Work:
+                root = workStateRoot;
+                break;
+            case BrainState.Unrestricted:
+                root = unrestrictedStateRoot;
+                break;
+            case BrainState.Rest:
+                root = restingStateRoot;
+                break;
+            case BrainState.Breakdown:
+                root = GetBreakDownNode();
+                break;
+            case BrainState.Sleeping:
+                root = sleepStateRoot;
+                break;
+            default: throw new NotImplementedException("Didn't find case for current brain state");
+        }
+    }
+
+
     #region Behaviour Tree Setup
+
+    // This will be called once at the start to setup all root nodes.
     protected override Node SetupTree()
     {
-        Node Task_Wander = CreateTaskWander();
-        Node Task_Eat = CreateTaskEat();
+        // Setup different root nodes based on states
+        workStateRoot = SetupWorkState();
+        unrestrictedStateRoot = SetupUnrestrictedState();
+        restingStateRoot = SetupRestingState();
+        sleepStateRoot = SetupSleepState();
 
-        Node Task_Hauling = CreateTaskHaul();
-        Node Task_Constructing = CreateTaskConstruct();
-        Node Task_Harvesting = CreateTaskHarvest();
-
-        Node root = new Selector(new List<Node>
-        {
-            // Basic AI tasks that the player can not access in game
-            // and the priorities are set from the start.
-            Task_Eat,
-            Task_Wander,
-            // ----------------------------------------------------
-            // AI tasks that the player will have access in game
-            // the priorities can change in runtime.
-            Task_Hauling,
-            Task_Constructing,
-            Task_Harvesting
-            // ----------------------------------------------------
-        });
-
-        return root;
+        // Return the default state to start with (e.g., Wandering)
+        return unrestrictedStateRoot;
     }
+
+    private Node SetupSleepState()
+    {
+        return CreateTaskWakeUp();
+    }
+
+    private Node CreateTaskWakeUp()
+    {
+        return new Sequence(new List<Node>{
+            new CheckIfNotTired(colonistData),
+            new TaskWakeUp(colonistData),
+        })
+        {
+            priority = colonistSettings.taskSleep,
+        };
+    }
+
+    private Node SetupWorkState()
+    {
+        return new Selector(new List<Node>
+        {
+            new TaskWakeUp(colonistData),
+            CreateTaskWander(),
+
+            CreateTaskHaul(),
+            CreateTaskConstruct(),
+            CreateTaskHarvest()
+        });
+    }
+
+    private Node SetupUnrestrictedState()
+    {
+        return new Selector(new List<Node>
+        {
+            new TaskWakeUp(colonistData),
+            CreateTaskEat(),
+            CreateTaskWander(),
+
+            CreateTaskHaul(),
+            CreateTaskConstruct(),
+            CreateTaskHarvest()
+        });
+    }
+
+    private Node SetupRestingState()
+    {
+        return new Selector(new List<Node>
+        {
+            CreateTaskSleep(),
+            CreateTaskEat(),
+            CreateTaskWander()
+        });
+    }
+
+    private Node GetBreakDownNode()
+    {
+        switch (colonistData.moodManager.breakDownType)
+        {
+            case BreakDownType.Wander:
+                return CreateTaskWander();
+            case BreakDownType.EatingFrenzy:
+                return CreateTaskEat();
+
+            default:
+                return unrestrictedStateRoot;
+        }
+    }
+
     #endregion
 
     #region Eating Task
@@ -88,6 +181,19 @@ public class ColonistBT : Tree
         };
     }
     #endregion
+
+    Node CreateTaskSleep()
+    {
+        return new Sequence(new List<Node>{
+            new CheckIfTired(colonistData),
+            new CheckForBed(colonistData),
+            new TaskGoToTarget(agent),
+            new TaskGoToSleep(colonistData),
+        })
+        {
+            priority = colonistSettings.taskSleep,
+        };
+    }
 
     #region Wandering Task
     private Node CreateTaskWander()

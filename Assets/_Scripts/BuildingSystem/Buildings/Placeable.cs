@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class PlaceableData : ScriptableObject
 {
-    [ShowAssetPreview, BoxGroup("Main Info")] public Texture icon;
+    [PreviewField, BoxGroup("Main Info")] public Texture icon;
     [BoxGroup("Main Info")] public string placeableName;
-    [ResizableTextArea, BoxGroup("Main Info")] public string description;
+    [Multiline, BoxGroup("Main Info")] public string description;
     [BoxGroup("Main Info")] public List<ItemCost> costs = new List<ItemCost>();
+    [BoxGroup("Main Info")] public AudioClip placementSound;
 
     [BoxGroup("Settings")] public int xSize = 1;
     [BoxGroup("Settings")] public int ySize = 1;

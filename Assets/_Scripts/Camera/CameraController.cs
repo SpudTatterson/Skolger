@@ -1,42 +1,45 @@
 using UnityEngine;
-using NaughtyAttributes;
 using System.Collections;
+using Sirenix.OdinInspector;
 
-public class CameraController : MonoBehaviour
+public class CameraController : MonoSingleton<CameraController>
 {
-    [Header("Movement Settings")]
+    [Header("General Settings")]
+
     [Tooltip("Minimum and maximum distance the camera can go from the pivotPoint")]
-    [SerializeField] Vector2 minMaxDistance = new Vector2(10, 40);
-    [Tooltip("Speed in units per second")]
-    [SerializeField, DisableIf("useFollowTarget")] float speed = 15f;
-    [Tooltip("Speed to add when sprinting")]
-    [SerializeField, DisableIf("useFollowTarget")] float sprintSpeedAddition = 5f;
+    [SerializeField, MinMaxSlider(0, 100)] Vector2 minMaxDistance = new Vector2(10, 40);
     [SerializeField] bool useFollowTarget = true;
     [Tooltip("Time it takes for the camera to go back to the follow target(in seconds)")]
     [SerializeField] float CamResetSpeed = 1f;
-    bool sprinting;
 
-    [Header("Drag Move Settings")]
-    [SerializeField] KeyCode dragToMoveCameraKeyCode = KeyCode.Mouse2;
-    [SerializeField] float dragSmoothing = 2;
-    [SerializeField] LayerMask draggableLayers;
+    [Header("Mouse Move Settings")]
+    [SerializeField, TabGroup("Movement", "Mouse Movement")] KeyCode dragToMoveCameraKeyCode = KeyCode.Mouse2;
+    [SerializeField, TabGroup("Movement", "Mouse Movement")] float dragSmoothing = 2;
+    [SerializeField, TabGroup("Movement", "Mouse Movement")] LayerMask draggableLayers;
     Vector3 dragOrigin;
     Vector3 dragDiff;
     bool isDragging;
 
+    [Tooltip("Speed in units per second")]
+    [SerializeField, DisableIf("useFollowTarget"), TabGroup("Movement", "Keyboard Movement")] float speed = 15f;
+
+    [Tooltip("Speed to add when sprinting")]
+    [SerializeField, DisableIf("useFollowTarget"), TabGroup("Movement", "Keyboard Movement")] float sprintSpeedAddition = 5f;
+    bool sprinting;
+
     [Header("Drag Rotation Settings")]
-    [SerializeField] KeyCode dragToRotateCameraKeyCode = KeyCode.Mouse1;
-    [SerializeField] float dragRotationSpeed = 25f;
+    [SerializeField, TabGroup("Rotation", "Mouse Rotation")] KeyCode dragToRotateCameraKeyCode = KeyCode.Mouse1;
+    [SerializeField, TabGroup("Rotation", "Mouse Rotation")] float dragRotationSpeed = 25f;
     Vector3 lastMousePosition;
     bool isRotating = false;
 
     [Header("Rotation Settings")]
     [Tooltip("Initial speed of rotation in degrees per second")]
-    [SerializeField] float initialRotationSpeed = 45f;
+    [SerializeField, TabGroup("Rotation", "Keyboard Rotation")] float initialRotationSpeed = 45f;
     [Tooltip("Maximum speed of rotation in degrees per second")]
-    [SerializeField] float maxRotationSpeed = 90f;
+    [SerializeField, TabGroup("Rotation", "Keyboard Rotation")] float maxRotationSpeed = 90f;
     [Tooltip("Speed of acceleration in degrees per second")]
-    [SerializeField] float rotationAcceleration = 22.5f;
+    [SerializeField, TabGroup("Rotation", "Keyboard Rotation")] float rotationAcceleration = 22.5f;
     float currentRotationSpeed = 0f;
 
     [Header("References")]
@@ -48,7 +51,7 @@ public class CameraController : MonoBehaviour
     [SerializeField, EnableIf("useFollowTarget")] Transform followTarget;
 
     [Header("Inputs")]
-    [SerializeField] KeyCode sprintKey = KeyCode.LeftShift;
+    [SerializeField, TabGroup("Movement", "Keyboard Movement")] KeyCode sprintKey = KeyCode.LeftShift;
     float mouseScroll;
     float horiz;
     float vert;
@@ -72,7 +75,7 @@ public class CameraController : MonoBehaviour
             // Calculate target position for smoother movement
             Vector3 targetPosition = dragOrigin - dragDiff;
             // Use Lerp or MoveTowards for smooth transition
-            cameraPivot.position = Vector3.Lerp(cameraPivot.position, targetPosition, Time.deltaTime * dragSmoothing);
+            cameraPivot.position = Vector3.Lerp(cameraPivot.position, targetPosition, Time.unscaledDeltaTime * dragSmoothing);
         }
     }
 
@@ -87,7 +90,7 @@ public class CameraController : MonoBehaviour
             }
 
             Vector3 movementDirection = new Vector3(vert, 0, -horiz);
-            cameraPivot.Translate(movementDirection.normalized * speed * Time.deltaTime);
+            cameraPivot.Translate(movementDirection.normalized * speed * Time.unscaledDeltaTime);
         }
         else
             cameraPivot.position = followTarget.position;
@@ -129,7 +132,7 @@ public class CameraController : MonoBehaviour
             Vector3 dragDiff = Input.mousePosition - lastMousePosition;
 
             // Apply rotation
-            cameraPivot.Rotate(Vector3.up, dragDiff.x * dragRotationSpeed * Time.deltaTime, Space.World);
+            cameraPivot.Rotate(Vector3.up, dragDiff.x * dragRotationSpeed * Time.unscaledDeltaTime, Space.World);
 
             // Update lastMousePosition for the next frame
             lastMousePosition = Input.mousePosition;
@@ -156,13 +159,13 @@ public class CameraController : MonoBehaviour
             }
 
             // Accelerate rotation speed
-            currentRotationSpeed += rotationAcceleration * Time.deltaTime;
+            currentRotationSpeed += rotationAcceleration * Time.unscaledDeltaTime;
             // Clamp the currentRotationSpeed to ensure it doesn't exceed maxRotationSpeed
             currentRotationSpeed = Mathf.Clamp(currentRotationSpeed, 0, maxRotationSpeed);
 
             // Apply rotation
-            // Use currentRotationSpeed multiplied by direction and Time.deltaTime to ensure frame-rate independent rotation
-            cameraPivot.Rotate(Vector3.up, direction * currentRotationSpeed * Time.deltaTime);
+            // Use currentRotationSpeed multiplied by direction and Time.unscaledDeltaTime to ensure frame-rate independent rotation
+            cameraPivot.Rotate(Vector3.up, direction * currentRotationSpeed * Time.unscaledDeltaTime);
         }
         else
         {
@@ -181,6 +184,7 @@ public class CameraController : MonoBehaviour
 
     void ScrollToZoom()
     {
+        if (Input.GetKey(KeyCode.LeftControl)) return;
         float distance = CheckDistance();
 
         if (mouseScroll > 0 && distance > minMaxDistance.x)
@@ -203,7 +207,7 @@ public class CameraController : MonoBehaviour
         while (elapsedTime < CamResetSpeed)
         {
             cameraPivot.position = Vector3.Lerp(startingPosition, followTarget.position, (elapsedTime / CamResetSpeed));
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -218,5 +222,17 @@ public class CameraController : MonoBehaviour
     public bool IsUsingFollowTarget()
     {
         return useFollowTarget;
+    }
+    public IEnumerator SendCameraToTarget(Vector3 desiredPosition, float movementTime = 2f)
+    {
+        float elapsedTime = 0;
+        Vector3 startingPosition = cameraPivot.position;
+        while (elapsedTime < movementTime)
+        {
+            cameraPivot.position = Vector3.Slerp(startingPosition, desiredPosition, (elapsedTime / movementTime));
+            elapsedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        cameraPivot.position = desiredPosition;
     }
 }

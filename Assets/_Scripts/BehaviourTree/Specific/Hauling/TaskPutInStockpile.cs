@@ -31,13 +31,13 @@ public class TaskPutInStockpile : Node
             return state;            
         }
 
-        int itemIndex = (int)GetData(EDataName.InventoryIndex);
-        InventoryItem item = colonistData.Items[itemIndex];
-        stockpile.AddItem(colonistData.TakeItemOut(itemIndex));
-        ClearData(EDataName.InventoryItem);
-        ClearData(EDataName.Cell);
-        ClearData(EDataName.Target);
-        ClearData(EDataName.Stockpile);
+        int itemIndex = (int)GetData(DataName.InventoryIndex);
+        InventoryItem item = colonistData.inventory.Items[itemIndex];
+        stockpile.AddItem(colonistData.inventory.TakeItemOut(itemIndex));
+        ClearData(DataName.InventoryItem);
+        ClearData(DataName.Cell);
+        ClearData(DataName.Target);
+        ClearData(DataName.Stockpile);
         state = NodeState.SUCCESS;
         return state;
     }

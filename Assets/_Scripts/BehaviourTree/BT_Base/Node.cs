@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BehaviorTree
@@ -9,17 +10,17 @@ namespace BehaviorTree
         SUCCESS,
         FAILURE
     }
-
+    [System.Serializable]
     public abstract class Node
     {
         protected NodeState state;
 
         public Node parent;
-        protected List<Node> children = new List<Node>();
+        [ShowInInspector] protected List<Node> children = new List<Node>();
         public int priority { get; set; }
         public bool flaggedRoot { get; set; }
 
-        private Dictionary<EDataName, object> dataContext = new Dictionary<EDataName, object>();
+        [ShowInInspector] private Dictionary<DataName, object> dataContext = new Dictionary<DataName, object>();
 
         public Node()
         {
@@ -69,14 +70,14 @@ namespace BehaviorTree
             return root;
         }
 
-        public void SetDataOnRoot(EDataName key, object value)
-        {            
+        public void SetDataOnRoot(DataName key, object value)
+        {
             Node root = GetRootNode();
             root.SetData(key, value);
         }
 
-        public void SetDataOnFlaggedRoot(EDataName key, object value)
-        {            
+        public void SetDataOnFlaggedRoot(DataName key, object value)
+        {
             Node root = GetFlaggedRootNode();
             root.SetData(key, value);
         }

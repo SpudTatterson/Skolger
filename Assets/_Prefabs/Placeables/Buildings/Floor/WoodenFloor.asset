@@ -9,22 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7c2d85c210dbb24f966b0c6d0546203, type: 3}
+  m_Script: {fileID: 11500000, guid: 696cc32ba7016c645b078a17172237fa, type: 3}
   m_Name: WoodenFloor
   m_EditorClassIdentifier: 
-  icon: {fileID: 2800000, guid: 27cdc5036ee7fb245ab9207a17d58602, type: 3}
+  icon: {fileID: 2800000, guid: 41d8adf6de8cf044bb36283ff33fb4b8, type: 3}
   placeableName: Wooden Floor
   description: Floor Tile (Also used as celling)
   costs:
   - item: {fileID: 11400000, guid: b6960b76762ef8c4a9f55e101765e59e, type: 2}
-    cost: 10
+    cost: 5
+  placementSound: {fileID: 8300000, guid: 6026395438688ea4895c2d2dad4c7e71, type: 3}
   xSize: 1
   ySize: 1
   usesCell: 0
   takesFullCell: 0
   walkable: 1
   placementType: 2
-  unplacedVisual: {fileID: 6181547073965403903, guid: ddb087ed5309b1a48b04860531742255,
+  unplacedVisual: {fileID: 4972117050727208398, guid: 210e0bfe8af81784496cc370cd4cf633,
     type: 3}
-  buildingPrefab: {fileID: 8443945621157679312, guid: 0703bf8642891de489aa383cd7b67bcd,
+  buildingPrefab: {fileID: 8021421149502807262, guid: edb428d5108178f44ae7951bd0b2f36c,
     type: 3}

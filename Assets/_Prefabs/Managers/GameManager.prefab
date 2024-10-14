@@ -1,5 +1,433 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2677286834946066848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4555787296606489877}
+  m_Layer: 0
+  m_Name: Sound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4555787296606489877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2677286834946066848}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6281585803814093734}
+  - {fileID: 6963610857900103238}
+  m_Father: {fileID: 3350276427243490880}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3561077371073613051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1883158461795660498}
+  - component: {fileID: 5544254098563382780}
+  m_Layer: 0
+  m_Name: TutorialManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1883158461795660498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3561077371073613051}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3350276427243490880}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5544254098563382780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3561077371073613051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c290ac2f60919b14ba70c2b2586ea0a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialParts:
+  - name: Part 1
+    visualAids:
+    - rid: 6300629960322187302
+    Steps:
+    - rid: 6300629960322187303
+    - rid: 6300629960322187306
+    - rid: 6300629960322187309
+    - rid: 6300629960322187313
+  - name: Part 2
+    visualAids:
+    - rid: 6300629960322187317
+    - rid: 6300629960322187318
+    - rid: 6300629960322187319
+    Steps:
+    - rid: 6300629960322187320
+    - rid: 6300629960322187330
+    - rid: 6300629960322187339
+  OnFinishedTutorial:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds:
+    - rid: 6300629960322187302
+      type: {class: ChangeTextVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        textObject: {fileID: 0}
+        text: Basic Controls
+    - rid: 6300629960322187303
+      type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: WASD
+        visualAids:
+        - rid: 6300629960322187304
+        - rid: 6300629960322187305
+        keyCodes: 77000000610000007300000064000000
+        neededNumberOfPresses: 4
+    - rid: 6300629960322187304
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Move with WASD
+    - rid: 6300629960322187305
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187306
+      type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Mouse Drag
+        visualAids:
+        - rid: 6300629960322187307
+        - rid: 6300629960322187308
+        keyCodes: 45010000
+        neededNumberOfPresses: 2
+    - rid: 6300629960322187307
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Drag Click Middle Mouse
+    - rid: 6300629960322187308
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187309
+      type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Pause
+        visualAids:
+        - rid: 6300629960322187310
+        - rid: 6300629960322187311
+        - rid: 6300629960322187312
+        keyCodes: 20000000
+        neededNumberOfPresses: 2
+    - rid: 6300629960322187310
+      type: {class: TextBoxVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        textPrefab: {fileID: 2382108017143445734, guid: 1a715652956cdd04c80a9a3ef9a92fce,
+          type: 3}
+        tasksParent: {fileID: 0}
+        text: Sometimes you need to stop to think and plan
+    - rid: 6300629960322187311
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Press the Space bar
+    - rid: 6300629960322187312
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187313
+      type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Pause
+        visualAids:
+        - rid: 6300629960322187314
+        - rid: 6300629960322187315
+        - rid: 6300629960322187316
+        keyCodes: 310000003200000033000000
+        neededNumberOfPresses: 4
+    - rid: 6300629960322187314
+      type: {class: TextBoxVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        textPrefab: {fileID: 2382108017143445734, guid: 1a715652956cdd04c80a9a3ef9a92fce,
+          type: 3}
+        tasksParent: {fileID: 0}
+        text: Sometimes things are going to slow and you want to speed up
+    - rid: 6300629960322187315
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Press 1, 2 & 3
+    - rid: 6300629960322187316
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187317
+      type: {class: ChangeTextVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        textObject: {fileID: 0}
+        text: Rebuild The House
+    - rid: 6300629960322187318
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Place A Stockpile
+    - rid: 6300629960322187319
+      type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
+          type: 3}
+        tasksParent: {fileID: 0}
+        taskName: Harvest Trees
+    - rid: 6300629960322187320
+      type: {class: TutorialPart, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: PlaceStockpile
+        visualAids:
+        - rid: 6300629960322187321
+        Steps:
+        - rid: 6300629960322187322
+        - rid: 6300629960322187323
+        - rid: 6300629960322187324
+    - rid: 6300629960322187321
+      type: {class: FinishTaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskName: Place A Stockpile
+    - rid: 6300629960322187322
+      type: {class: PressTabStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Open Zone Tab
+        visualAids:
+        - rid: 6300629960322187325
+        - rid: 6300629960322187326
+        tab: {fileID: 0}
+    - rid: 6300629960322187323
+      type: {class: PressButtonStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Start Placing Stockpile
+        visualAids:
+        - rid: 6300629960322187327
+        - rid: 6300629960322187328
+        button: {fileID: 0}
+    - rid: 6300629960322187324
+      type: {class: StockpilePlacementStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Place Stockpile
+        visualAids:
+        - rid: 6300629960322187329
+    - rid: 6300629960322187325
+      type: {class: BlinkingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetGraphic: {fileID: 0}
+        blinkColor: {r: 0.63740116, g: 0.98490566, b: 0.94096684, a: 1}
+        time: 1
+        ease: 25
+    - rid: 6300629960322187326
+      type: {class: ScalingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetTransforms:
+        - {fileID: 0}
+        targetScale: {x: 1.1, y: 1.1, z: 1.1}
+        time: 0.5
+        easeType: 25
+    - rid: 6300629960322187327
+      type: {class: BlinkingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetGraphic: {fileID: 0}
+        blinkColor: {r: 0.6392157, g: 0.9843138, b: 0.94117653, a: 1}
+        time: 1
+        ease: 25
+    - rid: 6300629960322187328
+      type: {class: ScalingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetTransforms:
+        - {fileID: 0}
+        targetScale: {x: 1.1, y: 1.1, z: 1.1}
+        time: 0.5
+        easeType: 25
+    - rid: 6300629960322187329
+      type: {class: ActionTextVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        text: Left Click + Drag To Place Stockpile
+    - rid: 6300629960322187330
+      type: {class: TutorialPart, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Get Wood
+        visualAids:
+        - rid: 6300629960322187331
+        Steps:
+        - rid: 6300629960322187332
+        - rid: 6300629960322187333
+    - rid: 6300629960322187331
+      type: {class: FinishTaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        taskName: Harvest Trees
+    - rid: 6300629960322187332
+      type: {class: PressTabStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Start Harvesting
+        visualAids:
+        - rid: 6300629960322187334
+        - rid: 6300629960322187335
+        - rid: 6300629960322187336
+        tab: {fileID: 0}
+    - rid: 6300629960322187333
+      type: {class: HarvestStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Harvest Tree
+        visualAids:
+        - rid: 6300629960322187337
+        - rid: 6300629960322187338
+        harvestables:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+    - rid: 6300629960322187334
+      type: {class: BlinkingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetGraphic: {fileID: 0}
+        blinkColor: {r: 0.63740116, g: 0.98490566, b: 0.94096684, a: 1}
+        time: 1
+        ease: 25
+    - rid: 6300629960322187335
+      type: {class: ScalingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetTransforms:
+        - {fileID: 0}
+        targetScale: {x: 1.1, y: 1.1, z: 1.1}
+        time: 0.5
+        easeType: 25
+    - rid: 6300629960322187336
+      type: {class: Move2DVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        rectTransform: {fileID: 0}
+        time: 1
+        startWorldPoint: {fileID: 0}
+        startScreenPoint: {x: 0, y: 0, z: 0}
+        startType: 0
+        endWorldPoint: {fileID: 0}
+        endScreenPoint: {x: 0, y: 0, z: 0}
+        endType: 0
+        ease: 1
+        loop: 1
+        snapBack: 1
+        snapBackTime: 1
+    - rid: 6300629960322187337
+      type: {class: ScalingVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        targetTransforms:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        targetScale: {x: 1.01, y: 1.01, z: 1.01}
+        time: 1
+        easeType: 23
+    - rid: 6300629960322187338
+      type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
+          type: 3}
+        tasksParent: {fileID: 0}
+    - rid: 6300629960322187339
+      type: {class: TutorialPart, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Rebuild house
+        visualAids: []
+        Steps:
+        - rid: 6300629960322187340
+    - rid: 6300629960322187340
+      type: {class: PlaceBuildingStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        name: Place Door
+        visualAids:
+        - rid: 6300629960322187341
+        - rid: 6300629960322187342
+        cellPos: {x: 62.518307, y: 0, z: 108.615616}
+        buildingData: {fileID: 11400000, guid: bae58b56bbc345242ab0566331760d46, type: 2}
+    - rid: 6300629960322187341
+      type: {class: GhostVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        model: {fileID: 752833526009587429, guid: 5ce6874b24b559f4b8c0e3e04339ee49,
+          type: 3}
+        cellPos: {x: 62.383812, y: 0, z: 108.60121}
+    - rid: 6300629960322187342
+      type: {class: UIPointerVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
+      data:
+        pointer: {fileID: 0}
+        transforms: []
+        positions:
+        - {x: 62.5, y: 0, z: 108.5}
+        onScreenOffset: {x: -100, y: 0, z: 0}
+        lerpSpeed: 5
+        paddingX: 300
+        paddingY: 150
+        lockDistance: 10
 --- !u!1 &6069251704015072993
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,6 +439,7 @@ GameObject:
   - component: {fileID: 3350276427243490880}
   - component: {fileID: 5118616145373962099}
   - component: {fileID: 9153664454649759732}
+  - component: {fileID: 1277449317815865942}
   - component: {fileID: 2176899014970851094}
   - component: {fileID: 7981274547399356321}
   - component: {fileID: 4444768308068659478}
@@ -18,7 +447,8 @@ GameObject:
   - component: {fileID: 547942696602740720}
   - component: {fileID: 7793368260817705079}
   - component: {fileID: 7281736121582617657}
-  - component: {fileID: 7794366429827392130}
+  - component: {fileID: 6083706945564748004}
+  - component: {fileID: 3262080582239986333}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -38,7 +468,10 @@ Transform:
   m_LocalPosition: {x: 29.633213, y: 11.781396, z: 88.047295}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2966592439087320381}
+  - {fileID: 1883158461795660498}
+  - {fileID: 4555787296606489877}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5118616145373962099
@@ -53,8 +486,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869cd2cdb0a7a484aa8564a453a4be97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridsParent: {fileID: 0}
-  worldSettings: {fileID: 0}
+  grids: []
+  GridsParent: {fileID: 0}
+  worldSettings: {fileID: 11400000, guid: a459f3e8c2f06c54b9e0f825ef35ea0f, type: 2}
 --- !u!114 &9153664454649759732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,12 +496,32 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6069251704015072993}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6365d4b528577a849b8bb99190157598, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cells: []
+  onStockpilePlaced:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1277449317815865942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6069251704015072993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 260492e2a726a624d9dc9146153cae53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxYHeight: 12
+  minYHeight: -3
+  yClip: 6
+  offset: 0.2
+  CurrentLayerText: {fileID: 0}
 --- !u!114 &2176899014970851094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83,6 +537,7 @@ MonoBehaviour:
   draggableLayer: 6
   groundLayer: 7
   itemLayer: 8
+  buildableLayer: 12
   GroundLayerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -94,7 +549,7 @@ MonoBehaviour:
     m_Bits: 257
   buildableLayerMask:
     serializedVersion: 2
-    m_Bits: 2176
+    m_Bits: 4224
 --- !u!114 &7981274547399356321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,8 +564,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stockpiles: []
   totalItems:
-    keys: []
-    values: 
+    keys: 
+    values: []
 --- !u!114 &4444768308068659478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,10 +578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ba8a67fae165144a335e17a03096df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridMaterial: {fileID: 2100000, guid: 728b3d800a13b1c4a920504130fb8f08, type: 2}
-  stockpileMaterial: {fileID: 2100000, guid: 1e5ec0d2a694829409f038ae45d3d69b, type: 2}
-  unfinishedBuildingMaterial: {fileID: 2100000, guid: 54a61d413f961ee40b69cc0af66181b7,
-    type: 2}
+  materials: {fileID: 0}
 --- !u!114 &8654645700902479148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,6 +605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingData: {fileID: 0}
   timeForDragStart: 0.1
+  placementDirection: 0
   placedBuildings: []
 --- !u!114 &7793368260817705079
 MonoBehaviour:
@@ -167,8 +620,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSelecting: 1
-  specialSelectionTypes: 
+  specialSelectionTypes: 0500000006000000
   dragDelay: 0.1
+  selectionAction: 0
 --- !u!114 &7281736121582617657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,6 +636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionPanel: {fileID: 0}
+  colonistSelection: {fileID: 0}
   harvestableSelection: {fileID: 0}
   itemSelection: {fileID: 0}
   constructableSelection: {fileID: 0}
@@ -189,7 +644,7 @@ MonoBehaviour:
   stockpileSelection: {fileID: 0}
   multipleSelection: {fileID: 0}
   multipleSelectionContent: {fileID: 0}
-  defaultTextAsset: {fileID: 0}
+  multipleSelectionTextAsset: {fileID: 0}
   selectionBoxImage: {fileID: 0}
   harvestButton: {fileID: 0}
   allowButton: {fileID: 0}
@@ -198,7 +653,20 @@ MonoBehaviour:
   deconstructButton: {fileID: 0}
   growZoneButton: {fileID: 0}
   shrinkZoneButton: {fileID: 0}
---- !u!114 &7794366429827392130
+  SelectionActionCanvas: {fileID: 0}
+  actionText: {fileID: 0}
+  colonistInfoPanel: {fileID: 0}
+  nameText: {fileID: 0}
+  activityText: {fileID: 0}
+  colonistsBoard: {fileID: 0}
+  colonistDataPrefab: {fileID: 3841737032443900864, guid: 57998a69f3ec5674eafa5e92fbd49925,
+    type: 3}
+  defaultInventoryUIPrefab: {fileID: 7782425593505376041, guid: f09a314cfe73d314ba29a4147c854507,
+    type: 3}
+  itemTypeGroupPrefab: {fileID: 4163565694974767020, guid: dfc3562d9517d47429c58918a622d6ac,
+    type: 3}
+  inventoryPanel: {fileID: 0}
+--- !u!114 &6083706945564748004
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,7 +675,345 @@ MonoBehaviour:
   m_GameObject: {fileID: 6069251704015072993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 829559cc3e026aa4f9d8b08763359610, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f81e420f32277449b59ec52b7453047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodeNameText: 
+--- !u!114 &3262080582239986333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6069251704015072993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656e3a6611bbb944189e6fa89979158d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8850378604462149758
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2966592439087320381}
+  - component: {fileID: 7058752154788391183}
+  - component: {fileID: 7302125334535349503}
+  - component: {fileID: 7073123503895159297}
+  m_Layer: 0
+  m_Name: DayNightCycle Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2966592439087320381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850378604462149758}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3350276427243490880}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7058752154788391183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850378604462149758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05b0c2b4e897e15448ee7de1f7e31558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDayCycleOn: 1
+  RandomStartTime: 0
+  <TimeOfDay>k__BackingField: 12
+  StartTime: 12
+  <CycleDuration>k__BackingField: 300
+--- !u!114 &7302125334535349503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850378604462149758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87bd7b210a9544341a57a2a34e576340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsTolerance: 0.2
+  ResetEventsTime: 0.1
+  events:
+  - eventName: Morning
+    Time: 6
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    executed: 0
+  - eventName: Night
+    Time: 19
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    executed: 0
+--- !u!114 &7073123503895159297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850378604462149758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8596d44e656bf114da2eb227bb39df6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Preset: {fileID: 11400000, guid: 10703449fc64e7143a3eb054ef487398, type: 2}
+  morningInterval: {x: 0, y: 0.5}
+  afterNoonInterval: {x: 0.5, y: 1}
+  SunDirectionalLight: {fileID: 0}
+  lightIntensity: {x: 0, y: 1}
+  IsShadowChangeOn: 0
+  shadowStrength: 0.5
+  sunYRotation: 45
+  isMoonActive: 1
+  MoonDirectionalLight: {fileID: 0}
+  IsMoonRotationOn: 1
+  moonYRotation: 15
+  MoonIntensity: {x: 0, y: 0.3}
+  MoonShadowStrength: 0.5
+  IsSkyBoxOn: 0
+  skyboxMat: {fileID: 0}
+  customPropertyName: 
+  rotationAxis: 0
+--- !u!1001 &457540601832430818
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4555787296606489877}
+    m_Modifications:
+    - target: {fileID: 857389972007989104, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_Name
+      value: SoundFXObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: Priority
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.875
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4064850468369043237, guid: dd859ea7effb5284a9de2fef95879571,
+        type: 2}
+    - target: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 0.996
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: reverbZoneMixCustomCurve.m_Curve.Array.data[0].value
+      value: 0.987
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -960
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -540
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 742d72267c3b79f4f8de62857aac7b36, type: 3}
+--- !u!82 &3533795938030622777 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3986550359236723931, guid: 742d72267c3b79f4f8de62857aac7b36,
+    type: 3}
+  m_PrefabInstance: {fileID: 457540601832430818}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6281585803814093734 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5869650195539795780, guid: 742d72267c3b79f4f8de62857aac7b36,
+    type: 3}
+  m_PrefabInstance: {fileID: 457540601832430818}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2775366306503408147
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4555787296606489877}
+    m_Modifications:
+    - target: {fileID: 2674857656973817412, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: Loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2674857656973817412, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: BypassEffects
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -960
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -540
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7548631133363344353, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: m_Name
+      value: SoundManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279645928144928965, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+        type: 3}
+      propertyPath: soundFXObject
+      value: 
+      objectReference: {fileID: 3533795938030622777}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 02bb6a91e85e7a54b9fc372c1e93a28c, type: 3}
+--- !u!4 &6963610857900103238 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5055189279409007701, guid: 02bb6a91e85e7a54b9fc372c1e93a28c,
+    type: 3}
+  m_PrefabInstance: {fileID: 2775366306503408147}
+  m_PrefabAsset: {fileID: 0}

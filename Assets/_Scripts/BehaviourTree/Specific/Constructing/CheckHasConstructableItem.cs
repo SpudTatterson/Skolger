@@ -9,11 +9,11 @@ public class CheckHasConstructableItem : Node
 
         if (itemCost != null)
         {
-            if (InventoryManager.instance.HasItem(itemCost))
+            if (InventoryManager.Instance.HasItem(itemCost))
             {
-                Cell itemPosition = InventoryManager.instance.GetItemLocation(itemCost.item, itemCost.cost, out Stockpile stockpile);
-                parent.parent.SetData(EDataName.Target, itemPosition);
-                parent.parent.SetData(EDataName.Stockpile, stockpile);
+                Cell itemPosition = InventoryManager.Instance.GetItemLocation(itemCost.item, itemCost.cost, out Stockpile stockpile);
+                parent.parent.SetData(DataName.Target, itemPosition);
+                parent.parent.SetData(DataName.Stockpile, stockpile);
 
                 state = NodeState.SUCCESS;
                 return state;

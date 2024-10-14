@@ -11,6 +11,7 @@ public class Cell
     public Vector3 position; // position in the world
     public bool walkable = true; // for Path Finding 
     public bool inUse = false; // does this cell have a building, tree, item etc on it
+    public bool hasFloor = false;
     public bool isVisible = true;
     public CellType cellType;
 
@@ -35,6 +36,15 @@ public class Cell
     {
         bool isCellAboveVisible = GetCellAbove().isVisible;
         if (!inUse && !isCellAboveVisible)
+            return true;
+        else
+            return false;
+    }
+    public bool IsRoofed()
+    {
+        Cell cellAbove = GetCellAbove();
+        
+        if (cellAbove.isVisible || cellAbove.hasFloor)
             return true;
         else
             return false;
@@ -97,16 +107,16 @@ public class Cell
         }
 
         Debug.Log("No empty cell found on grid \n trying to find empty cell on grid below");
-        GetCellBelow().GetClosestEmptyCell();
-        return null; // No free cell found
+        
+        return GetCellBelow().GetClosestEmptyCell();
     }
     public Cell GetCellAbove()
     {
-        return GridManager.instance.GetCellFromPosition(position + new Vector3(0, GridManager.instance.worldSettings.cellHeight, 0));
+        return GridManager.Instance.GetCellFromPosition(position + new Vector3(0, GridManager.Instance.worldSettings.cellHeight, 0));
     }
     public Cell GetCellBelow()
     {
-        return GridManager.instance.GetCellFromPosition(position - new Vector3(0, GridManager.instance.worldSettings.cellHeight, 0));
+        return GridManager.Instance.GetCellFromPosition(position - new Vector3(0, GridManager.Instance.worldSettings.cellHeight, 0));
     }
     public override string ToString()
     {
@@ -122,6 +132,6 @@ public enum CellType
 {
     Grass,
     Rock,
-    Water,
+    Sand,
     Dirt
 }

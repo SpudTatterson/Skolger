@@ -1,17 +1,18 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BehaviorTree
 {
     public abstract class Tree : MonoBehaviour
     {
-        private Node root = null;
+        [ShowInInspector]protected Node root = null;
 
         protected void Start()
         {
             root = SetupTree();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (root != null)
             {

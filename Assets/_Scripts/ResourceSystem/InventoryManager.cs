@@ -1,24 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : MonoSingleton<InventoryManager>
 {
-    public static InventoryManager instance;
-
     public List<Stockpile> stockpiles = new List<Stockpile>();
     public SerializableDictionary<ItemType, SerializableDictionary<ItemData, int>> totalItems = new SerializableDictionary<ItemType, SerializableDictionary<ItemData, int>>();
-
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            Destroy(this);
-            Debug.Log("More than one InventoryManager exists.");
-        }
-    }
+    public event Action<ItemData, int> OnInventoryUpdated;
 
     // Method to get stockpile with empty space
     public Stockpile GetStockpileWithEmptySpace(out Cell cell)
@@ -81,6 +70,7 @@ public class InventoryManager : MonoBehaviour
             var newItemDict = new SerializableDictionary<ItemData, int> { { item, amount } };
             totalItems.Add(item.itemType, newItemDict);
         }
+        OnInventoryUpdated?.Invoke(item, amount);
     }
 
     public bool HasItem(ItemCost itemCost)
@@ -134,6 +124,7 @@ public class InventoryManager : MonoBehaviour
         {
             itemDict[item] = Mathf.Max(0, currentAmount - amount);
         }
+        OnInventoryUpdated?.Invoke(item, -amount);
     }
 
     public int CheckAmount(ItemData item)

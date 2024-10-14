@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Placeable/Building")]
+[CreateAssetMenu(menuName = "Buildings/BasicBuilding")]
 public class BuildingData : PlaceableData
 {
   [BoxGroup("Prefabs"), Required] public GameObject unplacedVisual;

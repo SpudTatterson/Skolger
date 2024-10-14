@@ -12,7 +12,7 @@ public class CheckIfHungry : Node
 
     public override NodeState Evaluate()
     {
-        if(colonistData.IsHungry())
+        if(colonistData.hungerManager.IsHungry() && !colonistData.restManger.sleeping)
         {
             state = NodeState.SUCCESS;
             return state;

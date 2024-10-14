@@ -12,8 +12,7 @@ public class CheckForEdible : Node
             state = NodeState.RUNNING;
             return state;
         }
-        
-        if (InventoryManager.instance.TryFindFoodInStockpiles(out EdibleData edible, out Stockpile stockpile, out Cell itemPosition))
+        if (InventoryManager.Instance.TryFindFoodInStockpiles(out EdibleData edible, out Stockpile stockpile, out Cell itemPosition))
         {
             SetDataOnRoot(EDataName.FoodData, edible);
             SetDataOnRoot(EDataName.Stockpile, stockpile);

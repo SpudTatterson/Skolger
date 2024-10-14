@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/Alex/AI_Test 1.unity
-    guid: bbb1b4b37e065f846b62658d3ddf21c6
+  - enabled: 1
+    path: Assets/Scenes/Main menu/Main Menu.unity
+    guid: ff1031c98e11190499b539396041c19c
+  - enabled: 1
+    path: Assets/Scenes/Ilay/Tutorial Level/Tutorial Level.unity
+    guid: 7cb8dab0fdcb69546834c70770459ffb
   m_configObjects: {}

@@ -51,5 +51,8 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Skolger V2.sln"
+    "dotnet.defaultSolution": "Skolger.sln",
+    "cSpell.words": [
+        "Tweening"
+    ]
 }
