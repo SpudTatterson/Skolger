@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SpudsUtility;
 using UnityEditor;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
             gridManager.RecalculateCellUsage();
         }
 
-        DrawBuildingPlacerDragAndDropArea();
+        UtilityEditor.DrawDragAndDropArea<BuildingData>(AddBuilding, "Drag and Drop Building SO Here", "BuildingData");
 
         if (buildingDatas.Count > 0)
         {
@@ -91,7 +92,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
                 Handles.DrawWireCube(gridPoint, size);
                 if (cornerCell != null && lastCell != null)
                     Handles.DrawLine(cornerCell.position, lastCell.position);
-                
+
                 if (!cellFree) return;
 
                 if (e.type == EventType.MouseDown && e.button == 0)
@@ -147,44 +148,20 @@ public class BuildingPlacerStrategy : IGridToolStrategy
         throw new System.NotImplementedException();
     }
 
-    void DrawBuildingPlacerDragAndDropArea()
+    void AddBuilding(object draggedObject)
     {
-        Event evt = Event.current;
-        Rect dropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
-        GUI.Box(dropArea, "Drag and Drop Building SO Here");
-
-        switch (evt.type)
+        if (draggedObject is BuildingData)
         {
-            case EventType.DragUpdated:
-            case EventType.DragPerform:
-                if (!dropArea.Contains(evt.mousePosition))
-                    return;
-
-                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-
-                if (evt.type == EventType.DragPerform)
-                {
-                    DragAndDrop.AcceptDrag();
-
-                    foreach (ScriptableObject draggedObject in DragAndDrop.objectReferences)
-                    {
-                        if (draggedObject is BuildingData)
-                        {
-                            BuildingData buildingData = draggedObject as BuildingData;
-                            if (!buildingDatas.Contains(buildingData))
-                            {
-                                buildingDatas.Add(buildingData);
-                                buildingIcons.Add(buildingData.icon);
-                            }
-                        }
-                    }
-                }
-                Event.current.Use();
-                break;
+            BuildingData buildingData = draggedObject as BuildingData;
+            if (!buildingDatas.Contains(buildingData))
+            {
+                buildingDatas.Add(buildingData);
+                buildingIcons.Add(buildingData.icon);
+            }
         }
     }
 
-     Vector3 AdjustSizeAndGridPoint(ref Vector3 gridPoint)
+    Vector3 AdjustSizeAndGridPoint(ref Vector3 gridPoint)
     {
         float cellHeight = gridManager.worldSettings.cellHeight / 2f;
         float cellSize = gridManager.worldSettings.cellSize;
@@ -204,7 +181,7 @@ public class BuildingPlacerStrategy : IGridToolStrategy
     {
 
         BuildingObject placed = BuildingObject.MakeInstance(buildingData, cell.position, placementDirection);
-        
+
         Undo.RegisterCreatedObjectUndo(placed.gameObject, $"Created {buildingDatas[selectedBuilding].name}");
     }
 }

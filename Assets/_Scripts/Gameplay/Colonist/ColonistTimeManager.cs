@@ -5,13 +5,14 @@ using UnityEngine;
 public class ColonistTimeManager : MonoBehaviour
 {
     ColonistData colonist;
-    TimeUnit[] hours;
+    [SerializeField] TimeUnit[] hours;
 
 
     void Awake()
     {
-        colonist = GetComponent<ColonistData>();
-        InitializeHours();
+        if (colonist == null) colonist = GetComponent<ColonistData>();
+        if (hours == null || hours.Length != 24) InitializeHours();
+
     }
 
     void Start()
@@ -56,15 +57,22 @@ public class ColonistTimeManager : MonoBehaviour
     {
         hours[time].brainState = state;
     }
+
+    void OnValidate()
+    {
+
+        if (colonist == null) colonist = GetComponent<ColonistData>();
+        if (hours == null || hours.Length != 24) InitializeHours();
+    }
 }
 
 
 [System.Serializable]
 class TimeUnit
 {
-    ColonistData colonist;
+    [SerializeField, HideInInspector] ColonistData colonist;
 
-    public int time { get; private set; }
+    [field: SerializeField, HideInInspector] public int time { get; private set; }  
     public BrainState brainState;
 
     public TimeUnit(int time, BrainState brainState, ColonistData colonist)

@@ -104,7 +104,7 @@ public class ColonistData : MonoBehaviour, ISelectable
 
     void Update()
     {
-        hungerManager.GetHungry(Time.deltaTime);
+        hungerManager.GetHungry(DayNightTimeManager.Instance.adjustedDeltaTime);
         restManger.UpdateRest();
         moodManager.UpdateMood();
     }
