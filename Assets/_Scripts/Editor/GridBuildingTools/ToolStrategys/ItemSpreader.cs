@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using Sirenix.Utilities;
+using SpudsUtility;
+using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,7 +34,7 @@ public class ItemSpreaderStrategy : IGridToolStrategy, IBrushTool
             gridManager.RecalculateCellUsage();
         }
 
-        DrawDragAndDropArea();
+        UtilityEditor.DrawDragAndDropArea<ItemData>(AddItem, "Drag and Drop ItemData here");
 
         if (itemDatas.Count > 0)
         {
@@ -106,42 +109,18 @@ public class ItemSpreaderStrategy : IGridToolStrategy, IBrushTool
         throw new System.NotImplementedException();
     }
 
-    void DrawDragAndDropArea()
+    void AddItem(object draggedObject)
     {
-        Event evt = Event.current;
-        Rect dropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
-        GUI.Box(dropArea, "Drag and Drop Item SO Here");
-
-        switch (evt.type)
+        if (draggedObject is ItemData itemData)
         {
-            case EventType.DragUpdated:
-            case EventType.DragPerform:
-                if (!dropArea.Contains(evt.mousePosition))
-                    return;
-
-                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-
-                if (evt.type == EventType.DragPerform)
-                {
-                    DragAndDrop.AcceptDrag();
-
-                    foreach (ScriptableObject draggedObject in DragAndDrop.objectReferences)
-                    {
-                        if (draggedObject is ItemData)
-                        {
-                            ItemData itemData = draggedObject as ItemData;
-                            if (!itemDatas.Contains(itemData))
-                            {
-                                itemDatas.Add(itemData);
-                                itemIcons.Add(itemData.icon.texture);
-                            }
-                        }
-                    }
-                }
-                Event.current.Use();
-                break;
+            if (!itemDatas.Contains(itemData))
+            {
+                itemDatas.Add(itemData);
+                itemIcons.Add(itemData.icon.texture);
+            }
         }
     }
+
     void Place(List<Cell> cells)
     {
         if (cells.Count == 0) return;
