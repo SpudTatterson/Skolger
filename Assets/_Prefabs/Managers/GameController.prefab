@@ -17826,6 +17826,11 @@ PrefabInstance:
       objectReference: {fileID: 6340034579871094774}
     - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
+      propertyPath: colonistTaskBoard
+      value: 
+      objectReference: {fileID: 2700578835758743358}
+    - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
       propertyPath: deconstructButton
       value: 
       objectReference: {fileID: 6843097583603497760}

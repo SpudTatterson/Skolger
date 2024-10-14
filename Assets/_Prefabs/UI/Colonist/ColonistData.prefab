@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 6490766558623721233}
   - component: {fileID: 3554314900043365268}
   m_Layer: 5
-  m_Name: ColonistData
+  m_Name: ColonistInfoData
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

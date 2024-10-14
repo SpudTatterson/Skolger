@@ -41,6 +41,9 @@ public class UIManager : MonoSingleton<UIManager>
     [TabGroup("Colonist Info")] public GameObject colonistsBoard;
     [TabGroup("Colonist Info")] public GameObject colonistDataPrefab;
     [TabGroup("Colonist Info")] private ColonistData currentColonist;
+    [TabGroup("Colonist Info")] public GameObject colonistsInfoBoard;
+    [TabGroup("Colonist Info")] public GameObject colonistTaskBoard;
+    [TabGroup("Colonist Info")] public GameObject colonistTaskPrefab;
 
     [Space(5f), Header("Inventory")]
     [TabGroup("Inventory")] public GameObject defaultInventoryUIPrefab;
@@ -138,7 +141,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void AddColonistToBoard(string name, ColonistData colonist)
     {
-        var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsBoard.transform);
+        var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsInfoBoard.transform);
         var data = colonistsDataBar.GetComponent<ColonistBar>();
         data.SetDataOnCreation(name, colonist);
     }
