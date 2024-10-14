@@ -51,8 +51,12 @@
         "temp/": true,
         "Temp/": true
     },
+<<<<<<< Updated upstream
     "dotnet.defaultSolution": "Skolger.sln",
     "cSpell.words": [
         "Tweening"
     ]
+=======
+    "dotnet.defaultSolution": "Skolger V2.sln"
+>>>>>>> Stashed changes
 }
