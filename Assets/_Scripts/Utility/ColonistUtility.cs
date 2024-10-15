@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -47,8 +46,9 @@ public static class ColonistUtility
     {
         RenderTexture renderTexture = new RenderTexture(width, height, 32);
 
-        GameObject facePosition = Object.Instantiate(new GameObject(), objectToCapture.transform);
-        GameObject cameraObject = Object.Instantiate(new GameObject(), objectToCapture.transform);
+        GameObject empty = new GameObject();
+        GameObject facePosition = Object.Instantiate(empty, objectToCapture.transform);
+        GameObject cameraObject = Object.Instantiate(empty, objectToCapture.transform);
         Camera captureCamera = cameraObject.AddComponent<Camera>();
 
         captureCamera.targetTexture = renderTexture;
@@ -75,6 +75,7 @@ public static class ColonistUtility
         Object.Destroy(cameraObject);
         Object.Destroy(renderTexture);
         Object.Destroy(facePosition);
+        Object.Destroy(empty);
 
         return sprite;
     }
@@ -84,22 +85,43 @@ public static class ColonistUtility
         int firstName = Random.Range(0, firstNames.Count);
         int lastName = Random.Range(0, lastNames.Count);
 
-        return firstNames[firstName] + " " + lastNames[lastName];
+        return $"{firstNames[firstName]} {lastNames[lastName]}";
     }
 
-
-    public static bool ReachedDestinationOrGaveUp(NavMeshAgent agent)
+    public static bool ReachedDestination(NavMeshAgent agent, Vector3 target)
     {
-        if (agent.pathPending) return false;
+        float distanceFromTarget = Vector3.Distance(agent.transform.position, target);
 
-        if (agent.remainingDistance <= agent.stoppingDistance)
+        if (!agent.pathPending)
         {
-            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+            if (agent.remainingDistance <= agent.stoppingDistance + 0.1f && distanceFromTarget <= agent.stoppingDistance + 0.1f)
             {
-                return true;
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
             }
         }
 
         return false;
+    }
+
+    public static Vector3 ConvertToVector3(object objectToVector3)
+    {
+        if (objectToVector3 is MonoBehaviour monoBehaviour)
+        {
+            objectToVector3 = monoBehaviour.transform.position;
+        }
+        else if (objectToVector3 is Cell cell)
+        {
+            objectToVector3 = cell.position;
+        }
+        else
+        {
+            Debug.LogError("Was not able to convert to vector3");
+            return Vector3.zero;
+        }
+
+        return (Vector3)objectToVector3;
     }
 }

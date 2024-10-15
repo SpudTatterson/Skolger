@@ -14,10 +14,11 @@ public class TaskPutItemInConstructable : Node
 
     public override NodeState Evaluate()
     {
-        var constructable = (IConstructable)GetData(EDataName.Constructable);
-        var item = (InventoryItem)GetData(EDataName.InventoryItem);
+        object constructableData = GetData(EDataName.Constructable);
+        IConstructable constructable = (IConstructable)constructableData;
+        Vector3 constructablePosition = ColonistUtility.ConvertToVector3(colonistData);
 
-        if (constructable != null && ReachedDestinationOrGaveUp())
+        if (constructable != null && ColonistUtility.ReachedDestination(agent, constructablePosition))
         {
             var data = GetData(EDataName.InventoryIndex);
             if (data == null)
@@ -46,22 +47,5 @@ public class TaskPutItemInConstructable : Node
 
         state = NodeState.RUNNING;
         return state;
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

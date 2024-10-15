@@ -15,7 +15,10 @@ public class TaskEat : Node
 
     public override NodeState Evaluate()
     {
-        if (ReachedDestinationOrGaveUp())
+        object foodData = GetData(EDataName.Target);
+        Vector3 foodTarget = ColonistUtility.ConvertToVector3(foodData);
+
+        if (ColonistUtility.ReachedDestination(agent, foodTarget))
         {
             EdibleData edibleData = (EdibleData)GetData(EDataName.FoodData);
             Stockpile stockpile = (Stockpile)GetData(EDataName.Stockpile);
@@ -41,22 +44,5 @@ public class TaskEat : Node
 
         state = NodeState.RUNNING;
         return state;
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }
