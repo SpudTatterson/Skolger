@@ -34,11 +34,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     [Header("Colonist Info Panel")]
     [TabGroup("Colonist Info")] public GameObject colonistInfoPanel;
-    [TabGroup("Colonist Info")] public TextMeshProUGUI nameText;
-    [TabGroup("Colonist Info")] public TextMeshProUGUI activityText;
-    [TabGroup("Colonist Info")]
     [Space]
-    [TabGroup("Colonist Info")] public GameObject colonistsBoard;
     [TabGroup("Colonist Info")] public GameObject colonistDataPrefab;
     [TabGroup("Colonist Info")] private ColonistData currentColonist;
     [TabGroup("Colonist Info")] public GameObject colonistsInfoBoard;
@@ -101,49 +97,6 @@ public class UIManager : MonoSingleton<UIManager>
     public void EnableCancelButton()
     {
         cancelButton.SetActive(true);
-    }
-    #endregion
-
-    #region  Colonist Info Panel
-    public void ShowColonistWindow(string name, string activity)
-    {
-        nameText.text = name;
-        activityText.text = activity;
-        colonistInfoPanel.SetActive(true);
-    }
-
-    public void HideColonistWindow()
-    {
-        colonistInfoPanel.SetActive(false);
-    }
-
-    public void SetCurrentColonist(ColonistData colonist)
-    {
-        if (currentColonist != null)
-        {
-            currentColonist.OnActivityChanged -= UpdateActivityDisplay;
-        }
-
-        currentColonist = colonist;
-        currentColonist.OnActivityChanged += UpdateActivityDisplay;
-
-        UpdateActivityDisplay(currentColonist.colonistActivity);
-    }
-
-    private void UpdateActivityDisplay(string activity)
-    {
-        activityText.text = activity;
-        if (!colonistInfoPanel.activeSelf)
-        {
-            colonistInfoPanel.SetActive(true);
-        }
-    }
-
-    public void AddColonistToBoard(string name, ColonistData colonist)
-    {
-        var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsInfoBoard.transform);
-        var data = colonistsDataBar.GetComponent<ColonistBar>();
-        data.SetDataOnCreation(name, colonist);
     }
     #endregion
 }

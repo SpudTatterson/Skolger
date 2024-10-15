@@ -8287,6 +8287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mask: {fileID: 1698572011788312260}
   textBox: {fileID: 2433302047096980916}
+  bgImage: {fileID: 5384690675914464724}
 --- !u!1 &7717922388502882223
 GameObject:
   m_ObjectHideFlags: 0
@@ -17821,6 +17822,11 @@ PrefabInstance:
       objectReference: {fileID: 1727817329873122130}
     - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
+      propertyPath: colonistInfoPanel
+      value: 
+      objectReference: {fileID: 210645897220182559}
+    - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
       propertyPath: colonistSelection
       value: 
       objectReference: {fileID: 6340034579871094774}
@@ -17828,7 +17834,7 @@ PrefabInstance:
         type: 3}
       propertyPath: colonistTaskBoard
       value: 
-      objectReference: {fileID: 2700578835758743358}
+      objectReference: {fileID: 0}
     - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
       propertyPath: deconstructButton
@@ -17844,6 +17850,11 @@ PrefabInstance:
       propertyPath: selectionBoxImage
       value: 
       objectReference: {fileID: 8369877902863860259}
+    - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
+        type: 3}
+      propertyPath: colonistsInfoBoard
+      value: 
+      objectReference: {fileID: 210645897220182559}
     - target: {fileID: 7281736121582617657, guid: 3041aecc63bc6794c9d0b6173f422de1,
         type: 3}
       propertyPath: stockpileSelection
