@@ -14,9 +14,11 @@ public class TaskHarvest : Node
 
     public override NodeState Evaluate()
     {
-        IHarvestable harvestable = (IHarvestable)GetData(EDataName.Harvestable);
+        object harvestableData = GetData(EDataName.Harvestable);
+        IHarvestable harvestable = (IHarvestable)harvestableData;
+        Vector3 harvestablePosition = ColonistUtility.ConvertToVector3(harvestableData);
 
-        if (harvestable != null && !harvestable.IsBeingHarvested() && !harvestable.FinishedHarvesting() && ColonistUtility.ReachedDestinationOrGaveUp(agent))
+        if (harvestable != null && !harvestable.IsBeingHarvested() && !harvestable.FinishedHarvesting() && ColonistUtility.ReachedDestination(agent, harvestablePosition))
         {
             TaskManager.Instance.StartCoroutine(harvestable.StartHarvesting());
         }

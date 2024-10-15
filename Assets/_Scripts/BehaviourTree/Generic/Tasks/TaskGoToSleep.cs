@@ -13,7 +13,10 @@ public class TaskGoToSleep : Node
     }
     public override NodeState Evaluate()
     {
-        if (ReachedDestinationOrGaveUp())
+        object bedData = GetData(EDataName.Target);
+        Vector3 bedPosition = (Vector3)bedData;
+
+        if (ColonistUtility.ReachedDestination(agent, bedPosition))
         {
             colonistData.restManger.Sleep();
             ClearData(EDataName.Target);
@@ -25,22 +28,5 @@ public class TaskGoToSleep : Node
             state = NodeState.FAILURE;
             return state;
         }
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

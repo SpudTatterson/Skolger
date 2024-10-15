@@ -54,7 +54,7 @@ public class BuilderTest : MonoBehaviour//, IContainer<InventoryItem>
         {
             Cell itemPosition = InventoryManager.Instance.GetItemLocation(costToGet.item, costToGet.cost, out _);
             agent.SetDestination(itemPosition.position);
-            while (!ReachedDestinationOrGaveUp())
+            while (!ColonistUtility.ReachedDestination(agent, itemPosition.position))
             {
                 yield return null;
             }
@@ -67,7 +67,7 @@ public class BuilderTest : MonoBehaviour//, IContainer<InventoryItem>
             PutItemIn(InventoryManager.Instance.TakeItem(costToGet));// take item
             Cell constructablePosition = constructable.GetPosition(); // get constructable position
             agent.SetDestination(constructablePosition.position);
-            while (!ReachedDestinationOrGaveUp())
+            while (!ColonistUtility.ReachedDestination(agent, itemPosition.position))
             {
                 yield return null;
             }
@@ -86,23 +86,6 @@ public class BuilderTest : MonoBehaviour//, IContainer<InventoryItem>
             hauling = false;
             Debug.Log("cant find enough items");
         }
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     public bool HasItem(ItemData itemData, int amount)

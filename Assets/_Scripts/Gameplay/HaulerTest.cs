@@ -38,7 +38,7 @@ public class HaulerTest : MonoBehaviour//, IContainer<InventoryItem>
             yield break;
         }
         agent.SetDestination(item.transform.position);
-        while (!ReachedDestinationOrGaveUp())
+        while (!ColonistUtility.ReachedDestination(agent, item.transform.position))
         {
             yield return null;
         }
@@ -52,7 +52,7 @@ public class HaulerTest : MonoBehaviour//, IContainer<InventoryItem>
         }
 
         agent.SetDestination(cell.position);
-        while (!ReachedDestinationOrGaveUp())
+        while (!ColonistUtility.ReachedDestination(agent, item.transform.position))
         {
             yield return null;
         }
@@ -70,23 +70,6 @@ public class HaulerTest : MonoBehaviour//, IContainer<InventoryItem>
 
         hauling = false;
         itemToHaul = null;
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     public bool HasItem(ItemData itemData, int amount)

@@ -15,9 +15,11 @@ public class TaskPickUpItem : Node
 
     public override NodeState Evaluate()
     {
-        ItemObject item = (ItemObject)GetData(EDataName.Target);
+        object itemData = GetData(EDataName.Target);
+        ItemObject item = (ItemObject)itemData;
+        Vector3 itemPosition = ColonistUtility.ConvertToVector3(itemData);
 
-        if(item != null && ReachedDestinationOrGaveUp())
+        if(item != null && ColonistUtility.ReachedDestination(agent, itemPosition))
         {
             InventoryItem inventoryItem = item.PickUp();
 
@@ -33,22 +35,4 @@ public class TaskPickUpItem : Node
         state = NodeState.RUNNING;
         return state;
     }
-    
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
 }

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using BehaviorTree;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,7 +18,10 @@ public class TaskPutInStockpile : Node
     public override NodeState Evaluate()
     {
         InventoryItem inventoryItem = (InventoryItem)GetData(EDataName.InventoryItem);
-        Stockpile stockpile = (Stockpile)GetData(EDataName.Stockpile);
+        object stockpileData = GetData(EDataName.Stockpile);
+        object cell = GetData(EDataName.Target);
+        Vector3 cellPosition = ColonistUtility.ConvertToVector3(cell); 
+        Stockpile stockpile = (Stockpile)stockpileData;
 
         if (inventoryItem == null)
         {
@@ -25,7 +29,7 @@ public class TaskPutInStockpile : Node
             return state;
         }
 
-        if (!ColonistUtility.ReachedDestinationOrGaveUp(agent))
+        if (!ColonistUtility.ReachedDestination(agent, cellPosition))
         {
             state = NodeState.RUNNING;
             return state;            

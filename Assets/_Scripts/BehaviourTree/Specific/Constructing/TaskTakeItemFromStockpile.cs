@@ -16,8 +16,10 @@ public class TaskTakeItemFromStockpile : Node
     public override NodeState Evaluate()
     {
         var cost = (ItemCost)GetData(EDataName.Cost);
+        object cell = GetData(EDataName.Target);
+        Vector3 cellPosition = ColonistUtility.ConvertToVector3(cell);
 
-        if (cost != null && ReachedDestinationOrGaveUp())
+        if (cost != null && ColonistUtility.ReachedDestination(agent, cellPosition))
         {
             Stockpile stockpile = (Stockpile)GetData(EDataName.Stockpile);
             var item = InventoryManager.Instance.TakeItem(cost, stockpile);
@@ -33,22 +35,5 @@ public class TaskTakeItemFromStockpile : Node
 
         state = NodeState.RUNNING;
         return state;
-    }
-
-    public bool ReachedDestinationOrGaveUp()
-    {
-
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }
