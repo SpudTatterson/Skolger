@@ -99,7 +99,7 @@ public class ColonistData : MonoBehaviour, ISelectable
     void Start()
     {
         faceSprite = ColonistUtility.CaptureFace(gameObject, 1.75f, new Vector3(0, 1.75f, 1.15f), width, height, 1.5f);
-        UIManager.Instance.AddColonistToBoard(colonistName, this);
+        ColonistUtility.AddColonistToBoard(colonistName, this);
     }
 
     void Update()

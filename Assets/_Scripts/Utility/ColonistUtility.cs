@@ -4,6 +4,12 @@ using UnityEngine.AI;
 
 public static class ColonistUtility
 {
+    public static void AddColonistToBoard(string name, ColonistData colonist)
+    {
+        var colonistsDataBar = MonoBehaviour.Instantiate(UIManager.Instance.colonistDataPrefab, UIManager.Instance.colonistsInfoBoard.transform);
+        var data = colonistsDataBar.GetComponent<ColonistBar>();
+        data.SetDataOnCreation(name, colonist);
+    }
     static readonly List<string> firstNames = new List<string>
         {
             "Erik",
