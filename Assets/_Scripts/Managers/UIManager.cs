@@ -16,7 +16,7 @@ public class UIManager : MonoSingleton<UIManager>
     [TabGroup("Selection Panels")] public StockpileSelectionMenu stockpileSelection;
     [TabGroup("Selection Panels")] public GameObject multipleSelection;
     [TabGroup("Selection Assets")] public Transform multipleSelectionContent;
-    [TabGroup("Selection Assets")] public GameObject multipleSelectionTextAsset; 
+    [TabGroup("Selection Assets")] public GameObject multipleSelectionTextAsset;
     [TabGroup("Selection Assets")] public RectTransform selectionBoxImage;
 
     [Header("Selection Action Buttons")]
@@ -34,18 +34,23 @@ public class UIManager : MonoSingleton<UIManager>
 
     [Header("Colonist Info Panel")]
     [TabGroup("Colonist Info")] public GameObject colonistInfoPanel;
-    [TabGroup("Colonist Info")] public TextMeshProUGUI nameText;
-    [TabGroup("Colonist Info")] public TextMeshProUGUI activityText;
-    [TabGroup("Colonist Info")]
     [Space]
-    [TabGroup("Colonist Info")] public GameObject colonistsBoard;
     [TabGroup("Colonist Info")] public GameObject colonistDataPrefab;
     [TabGroup("Colonist Info")] private ColonistData currentColonist;
+    [TabGroup("Colonist Info")] public GameObject colonistsInfoBoard;
+    [TabGroup("Colonist Info")] public GameObject colonistTaskBoard;
+    [TabGroup("Colonist Info")] public GameObject colonistTaskPrefab;
 
     [Space(5f), Header("Inventory")]
     [TabGroup("Inventory")] public GameObject defaultInventoryUIPrefab;
     [TabGroup("Inventory")] public GameObject itemTypeGroupPrefab;
     [TabGroup("Inventory")] public Transform inventoryPanel;
+
+    [TabGroup("Tutorial")] public GameObject taskPrefab;
+    [TabGroup("Tutorial")] public RectTransform taskParent;
+    [TabGroup("Tutorial")] public GameObject fillbarPrefab;
+    //[TabGroup("Tutorial")] 
+
 
 
     #region SelectionUI
@@ -92,49 +97,6 @@ public class UIManager : MonoSingleton<UIManager>
     public void EnableCancelButton()
     {
         cancelButton.SetActive(true);
-    }
-    #endregion
-
-    #region  Colonist Info Panel
-    public void ShowColonistWindow(string name, string activity)
-    {
-        nameText.text = name;
-        activityText.text = activity;
-        colonistInfoPanel.SetActive(true);
-    }
-
-    public void HideColonistWindow()
-    {
-        colonistInfoPanel.SetActive(false);
-    }
-
-    public void SetCurrentColonist(ColonistData colonist)
-    {
-        if (currentColonist != null)
-        {
-            currentColonist.OnActivityChanged -= UpdateActivityDisplay;
-        }
-
-        currentColonist = colonist;
-        currentColonist.OnActivityChanged += UpdateActivityDisplay;
-
-        UpdateActivityDisplay(currentColonist.colonistActivity);
-    }
-
-    private void UpdateActivityDisplay(string activity)
-    {
-        activityText.text = activity;
-        if (!colonistInfoPanel.activeSelf)
-        {
-            colonistInfoPanel.SetActive(true);
-        }
-    }
-
-    public void AddColonistToBoard(string name, ColonistData colonist)
-    {
-        var colonistsDataBar = Instantiate(colonistDataPrefab, colonistsBoard.transform);
-        var data = colonistsDataBar.GetComponent<ColonistBar>();
-        data.SetDataOnCreation(name, colonist);
     }
     #endregion
 }

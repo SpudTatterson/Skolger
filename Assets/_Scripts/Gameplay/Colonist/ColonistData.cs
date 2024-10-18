@@ -15,8 +15,8 @@ public class ColonistData : MonoBehaviour, ISelectable
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public RestManger restManger { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public NavMeshAgent agent { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistBT brain { get; private set; }
-
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistInventory inventory { get; private set; }
+    [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public BillBoard billboard { get; private set; }
 
     [field: SerializeField] public BrainState brainState { get; private set; } = BrainState.Unrestricted;
 
@@ -24,6 +24,9 @@ public class ColonistData : MonoBehaviour, ISelectable
     [SerializeField] int width = 256;
     [SerializeField] int height = 256;
     public Sprite faceSprite { get; private set; }
+
+    [Header("Sprites")]
+    [SerializeField] Sprite sleepSprite;
 
     public event Action<string> OnActivityChanged;
     [HideInInspector] public string colonistName { get; private set; }
@@ -60,20 +63,25 @@ public class ColonistData : MonoBehaviour, ISelectable
     void WakeUp()
     {
         visual.SetActive(true);
-        SetBrainState(BrainState.Unrestricted);   //return to other brain state
+        agent.isStopped = false;
+        billboard.gameObject.SetActive(false);
+        // SetBrainState(BrainState.Unrestricted);   //return to other brain state
     }
 
     void Sleep()
     {
         visual.SetActive(false);
         downedVisual.SetActive(false);
+        agent.isStopped = true;
+        billboard.gameObject.SetActive(true);
+        billboard.UpdateImage(sleepSprite);
         SetBrainState(BrainState.Sleeping);
     }
     void GetDowned()
     {
         visual.SetActive(false);
         downedVisual.SetActive(true);
-        agent.enabled = false;
+        agent.isStopped = true;
         brain.enabled = false;
     }
     void GetRecovered()
@@ -91,19 +99,25 @@ public class ColonistData : MonoBehaviour, ISelectable
     void Start()
     {
         faceSprite = ColonistUtility.CaptureFace(gameObject, 1.75f, new Vector3(0, 1.75f, 1.15f), width, height, 1.5f);
-        UIManager.Instance.AddColonistToBoard(colonistName, this);
+        ColonistUtility.AddColonistToBoard(colonistName, this);
     }
 
     void Update()
     {
-        hungerManager.GetHungry(Time.deltaTime);
+        hungerManager.GetHungry(DayNightTimeManager.Instance.adjustedDeltaTime);
         restManger.UpdateRest();
         moodManager.UpdateMood();
     }
 
     public void SetBrainState(BrainState state)
     {
+        if (state == BrainState.Rest)
+        {
+            billboard.gameObject.SetActive(true);
+            billboard.UpdateImage(sleepSprite);
+        }
         if (state == BrainState.Rest && brainState == BrainState.Sleeping) return;
+        if (state == BrainState.Unrestricted && brainState == BrainState.Sleeping) restManger.WakeUp(); // this is bad code but its 1 am and i need to hand this in tomorow please fix this if you find the issue is that if he was mid task before he went to sleep he wont go into the wake up task in the brain and gets stuck sleeping forever
         brainState = state;
     }
 

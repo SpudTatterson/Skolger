@@ -52,6 +52,8 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         }
         outline?.Disable();
 
+        if (CheckIfCostsFulfilled()) ConstructBuilding();
+
     }
 
     public static ConstructionSiteObject MakeInstance(BuildingData buildingData, Cell cell, Direction placementDirection, Transform parent = null, bool temp = false)
@@ -253,6 +255,16 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         cornerCell.grid.TryGetCells
         ((Vector2Int)cornerCell, buildingData.xSize, buildingData.ySize, out List<Cell> occupiedCells, placementDirection);
+
+        foreach (Cell cell in occupiedCells)
+        {
+            if (cell.inUse)
+            {
+                CancelConstruction();
+                break;
+            }
+        }
+        
         this.occupiedCells = occupiedCells;
     }
 

@@ -14,17 +14,10 @@ namespace Skolger.UI.InfoContainers
         [SerializeField] protected Color emptyColor = Color.red;
         [SerializeField] protected Color fullColor = Color.green;
 
-        protected virtual void OnEnable()
-        {
-            ColonistBar colonistBar = GetComponentInParent<ColonistBar>();
-            if (colonistBar != null)
-                colonist = colonistBar.colonist;
-            else
-            {
-                ColonistSelectionMenu selectionMenu = GetComponentInParent<ColonistSelectionMenu>();
-                colonist = selectionMenu.colonist;
-            }
 
+        public void Initialize(ColonistData colonist)
+        {
+            this.colonist = colonist;
         }
         protected float GetFillPercentage(float full, float empty, float current)
         {

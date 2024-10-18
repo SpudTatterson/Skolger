@@ -64,6 +64,7 @@ public class ColonistInventory : MonoBehaviour, IContainer<InventoryItem>
 
     public void PutItemIn(InventoryItem item)
     {
+        if (emptySlots.Count == 0) return;
         item.OnDestroy += HandleItemDestruction;
         int invIndex = emptySlots.Dequeue();
         item.UpdateOccupiedInventorySlot(invIndex);

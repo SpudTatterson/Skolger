@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SpudsUtility;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,7 +31,7 @@ public class FoliageSpreaderStrategy : IGridToolStrategy, IBrushTool
             gridManager.RecalculateCellUsage();
         }
         
-        DrawFoliageSpreaderDragAndDropArea();
+        UtilityEditor.DrawDragAndDropArea<BaseHarvestable>(AddHarvestable, "Drag And Drop Harvestable Game Object");
 
         if (foliagePrefabs.Count > 0)
         {
@@ -103,44 +104,22 @@ public class FoliageSpreaderStrategy : IGridToolStrategy, IBrushTool
         throw new System.NotImplementedException();
     }
 
-    void DrawFoliageSpreaderDragAndDropArea()
+    void AddHarvestable(object draggedObject)
     {
-        Event evt = Event.current;
-        Rect dropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
-        GUI.Box(dropArea, "Drag and Drop GameObjects here");
-
-        switch (evt.type)
+        if(draggedObject is GameObject draggedGameObject && draggedGameObject.TryGetComponent<ICellOccupier>(out _))
+        if (!foliagePrefabs.Contains(draggedGameObject))
         {
-            case EventType.DragUpdated:
-            case EventType.DragPerform:
-                if (!dropArea.Contains(evt.mousePosition))
-                    return;
-
-                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-
-                if (evt.type == EventType.DragPerform)
-                {
-                    DragAndDrop.AcceptDrag();
-
-                    foreach (GameObject draggedObject in DragAndDrop.objectReferences)
-                    {
-                        if (!foliagePrefabs.Contains(draggedObject))
-                        {
-                            foliagePrefabs.Add(draggedObject);
-                            Texture2D icon = AssetPreview.GetAssetPreview(draggedObject);
-                            while (AssetPreview.IsLoadingAssetPreview(draggedObject.GetInstanceID()) == true || icon == null)
-                            {
-                                Debug.Log("Waiting for asset preview to load");
-                                icon = AssetPreview.GetAssetPreview(draggedObject);
-                            }
-                            foliageIcons.Add(icon);
-                        }
-                    }
-                }
-                Event.current.Use();
-                break;
+            foliagePrefabs.Add(draggedGameObject);
+            Texture2D icon = AssetPreview.GetAssetPreview(draggedGameObject);
+            while (AssetPreview.IsLoadingAssetPreview(draggedGameObject.GetInstanceID()) == true || icon == null)
+            {
+                Debug.Log("Waiting for asset preview to load");
+                icon = AssetPreview.GetAssetPreview(draggedGameObject);
+            }
+            foliageIcons.Add(icon);
         }
     }
+
     void Place(List<Cell> cells)
     {
         if (cells.Count == 0) return;

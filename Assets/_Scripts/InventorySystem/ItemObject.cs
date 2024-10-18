@@ -11,16 +11,16 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
     [SerializeField] bool doManualInitialized = false;
     [SerializeField] bool inStockpile = false;
     [SerializeField] bool allowedOnInit = true;
-    BillBoard forbiddenBillboard;
-    Outline outline;
 
     [field: SerializeField, ReadOnly] public int amount { get; private set; }
 
     [Header("References")]
-    Stockpile currentStockpile;
-    public GameObject visualGO { get; private set; }
-    public Cell cornerCell { get; private set; }
+    [SerializeField, ReadOnly] Stockpile currentStockpile;
+    [SerializeField, ReadOnly] public GameObject visualGO { get; private set; }
+    [SerializeField, ReadOnly] BillBoard forbiddenBillboard;
+    [SerializeField, ReadOnly] Outline outline;
 
+    public Cell cornerCell { get; private set; }
     public bool allowed { get; private set; }
     public bool IsSelected { get; private set; }
 
@@ -35,19 +35,21 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
     public static ItemObject MakeInstance(ItemData itemData, int amount, Vector3 position, bool allowed = true, Transform parent = null, bool inStockpile = false, Stockpile stockpile = null)
     {
-        GameObject visualGO = Instantiate(itemData.visual, position, Quaternion.identity);
+        GameObject mainGO = new GameObject(itemData.name);
+
+        GameObject visualGO = Instantiate(itemData.visual, Vector3.zero, Quaternion.identity, mainGO.transform);
         if (!inStockpile) visualGO.transform.rotation = Quaternion.Euler(new Vector3(0, UnityEngine.Random.Range(0, 180), 0));
 
-        visualGO.AddComponent<BoxCollider>();
+        mainGO.AddComponent<BoxCollider>();
 
-        ItemObject item = visualGO.AddComponent<ItemObject>();
-        
-        visualGO.transform.parent = parent;
+        ItemObject item = mainGO.AddComponent<ItemObject>();
+
+        mainGO.transform.parent = parent;
         item.transform.position = position;
 
-        item.Initialize(itemData, amount, allowed, visualGO, inStockpile, stockpile);
+        item.Initialize(itemData, amount, allowed, mainGO, inStockpile, stockpile);
 
-        visualGO.layer = LayerManager.Instance.itemLayer;
+        mainGO.layer = LayerManager.Instance.itemLayer;
 
         return item;
     }
