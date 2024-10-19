@@ -18,7 +18,7 @@ public class ColonistData : MonoBehaviour, ISelectable
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public ColonistInventory inventory { get; private set; }
     [field: SerializeField, ChildGameObjectsOnly, BoxGroup("References")] public BillBoard billboard { get; private set; }
 
-    [field: SerializeField] public BrainState brainState { get; private set; } = BrainState.Unrestricted;
+    [field: SerializeField] public EBrainState brainState { get; private set; } = EBrainState.Unrestricted;
 
     [Header("Portrait")]
     [SerializeField] int width = 256;
@@ -75,7 +75,7 @@ public class ColonistData : MonoBehaviour, ISelectable
         agent.isStopped = true;
         billboard.gameObject.SetActive(true);
         billboard.UpdateImage(sleepSprite);
-        SetBrainState(BrainState.Sleeping);
+        SetBrainState(EBrainState.Sleep);
     }
     void GetDowned()
     {
@@ -109,15 +109,15 @@ public class ColonistData : MonoBehaviour, ISelectable
         moodManager.UpdateMood();
     }
 
-    public void SetBrainState(BrainState state)
+    public void SetBrainState(EBrainState state)
     {
-        if (state == BrainState.Rest)
+        if (state == EBrainState.Rest)
         {
             billboard.gameObject.SetActive(true);
             billboard.UpdateImage(sleepSprite);
         }
-        if (state == BrainState.Rest && brainState == BrainState.Sleeping) return;
-        if (state == BrainState.Unrestricted && brainState == BrainState.Sleeping) restManger.WakeUp(); // this is bad code but its 1 am and i need to hand this in tomorow please fix this if you find the issue is that if he was mid task before he went to sleep he wont go into the wake up task in the brain and gets stuck sleeping forever
+        if (state == EBrainState.Rest && brainState == EBrainState.Sleep) return;
+        if (state == EBrainState.Unrestricted && brainState == EBrainState.Sleep) restManger.WakeUp(); // this is bad code but its 1 am and i need to hand this in tomorow please fix this if you find the issue is that if he was mid task before he went to sleep he wont go into the wake up task in the brain and gets stuck sleeping forever
         brainState = state;
     }
 

@@ -1,18 +1,19 @@
+using System;
 using System.Collections.Generic;
 using BehaviorTree;
 
 public class CheckForCorrectData : Node
 {
-    private List<EDataName> dataName;
+    private List<Enum> dataTypes;
 
-    public CheckForCorrectData(List<EDataName> dataName)
+    public CheckForCorrectData(List<Enum> data)
     {
-        this.dataName = dataName;
+        dataTypes = data;
     }
 
     public override NodeState Evaluate()
     {        
-        foreach(EDataName data in dataName)
+        foreach(Enum data in dataTypes)
         {
             var dataType = GetData(data);
 
