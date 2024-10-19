@@ -14,7 +14,7 @@ public class TaskGoToSleep : Node
     public override NodeState Evaluate()
     {
         object bedData = GetData(EDataName.Target);
-        Vector3 bedPosition = (Vector3)bedData;
+        Vector3 bedPosition = ColonistUtility.ConvertToVector3(bedData);
 
         if (ColonistUtility.ReachedDestination(agent, bedPosition))
         {

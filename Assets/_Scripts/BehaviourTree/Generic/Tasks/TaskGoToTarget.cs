@@ -24,21 +24,26 @@ public class TaskGoToTarget : Node
     {
         object target = GetData(EDataName.Target);
 
-        if (target is MonoBehaviour monoBehaviour)
-        {
-            target = monoBehaviour.transform.position;
-        }
-        else if (target is Cell cell)
-        {
-            target = cell.position;
-        }
-        else
-        {
-            state = NodeState.FAILURE;
-            return state;
-        }
+        Vector3 targetPos = ColonistUtility.ConvertToVector3(target);
+        // if(target is Vector3 vector3)
+        // {
+        //     target = vector3;
+        // }
+        // else if (target is MonoBehaviour monoBehaviour)
+        // {
+        //     target = monoBehaviour.transform.position;
+        // }
+        // else if (target is Cell cell)
+        // {
+        //     target = cell.position;
+        // }
+        // else
+        // {
+        //     state = NodeState.FAILURE;
+        //     return state;
+        // }
 
-        agent.SetDestination((Vector3)target);
+        agent.SetDestination(targetPos);
         if (colonistData != null)
         {
             colonistData.ChangeActivity(taskDescription);

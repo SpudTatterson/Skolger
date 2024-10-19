@@ -295,7 +295,7 @@ namespace Skolger.Tutorial
         List<IAllowable> allowables = new List<IAllowable>();
         public override void Initialize()
         {
-            allowableObjects.ForEach(gameObject => { allowables.Add(gameObject.GetComponent<IAllowable>()); Debug.Log("test"); });
+            allowableObjects.ForEach(gameObject => allowables.Add(gameObject.GetComponent<IAllowable>()));
             amountToAllow = allowables.Count;
 
             base.Initialize();

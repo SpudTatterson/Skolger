@@ -10,12 +10,12 @@ namespace Skolger.Tutorial
         [SerializeField] Vector2 position;
         [SerializeField] Vector2 sizeDelta;
         [SerializeField, Multiline] string text;
-
+        [SerializeField] bool blockRayCasts = true;
 
         public override void Initialize()
         {
             maskBox.gameObject.SetActive(true);
-            maskBox.UpdateMask(position, sizeDelta, text);
+            maskBox.UpdateMask(position, sizeDelta, text, blockRayCasts);
         }
 
         public override void Reset()

@@ -255,7 +255,7 @@ public class ColonistBT : Tree
         {
             new CheckForConstructable(colonistData),
             new CheckForConstructableCost(),
-            new CheckHasConstructableItem(),
+            new CheckHasConstructableItem(agent),
             new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.ItemsToConstruct]),
             new TaskTakeItemFromStockpile(agent, colonistData),
         })
@@ -291,7 +291,7 @@ public class ColonistBT : Tree
     {
         return new Sequence(new List<Node>
         {
-            new CheckForHarvestable(),
+            new CheckForHarvestable(agent),
             new TaskDropInventoryItem(agent, colonistData),
             new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.Harvesting]),
             new TaskHarvest(agent)

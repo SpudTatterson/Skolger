@@ -5,6 +5,7 @@ public class BedBuilding : BuildingObject
 {
     ColonistData assignedColonist;
     public BedData bedData { get; private set; }
+    [SerializeField] GameObject blanket;
 
     void Awake()
     {
@@ -38,7 +39,10 @@ public class BedBuilding : BuildingObject
         BedManager.Subscribe(this);
     }
 
-
+    public void ToggleBlanket(bool value)
+    {
+        blanket?.SetActive(value);
+    }
 }
 
 public class BedManager
