@@ -27,12 +27,20 @@ public class TaskTakeItemFromStockpile : Node
             colonistData.inventory.PutItemIn(item);
             var constructable = (IConstructable)GetData(EDataName.Constructable);
             ClearData(EDataName.Target);
-            parent.parent.SetData(EDataName.Target, constructable.GetPosition());
+
+            Vector3 position = constructable.GetPosition().position;
+            if (constructable is BuildingObject buildingObject && buildingObject.buildingData is FloorTile)
+            {
+                int heightModifier = Mathf.FloorToInt(position.y / GridManager.Instance.worldSettings.cellHeight);
+                heightModifier = Mathf.RoundToInt(Mathf.Clamp(heightModifier - 1, 0, Mathf.Infinity));
+                if (heightModifier == 0 && Mathf.RoundToInt(position.y) != 0) heightModifier++;
+                position.y -= heightModifier * GridManager.Instance.worldSettings.cellHeight;
+            }
+            parent.parent.SetData(EDataName.Target, position);
 
             state = NodeState.SUCCESS;
             return state;
         }
-
         state = NodeState.RUNNING;
         return state;
     }

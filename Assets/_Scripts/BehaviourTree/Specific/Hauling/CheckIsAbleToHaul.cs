@@ -31,7 +31,7 @@ public class CheckIsAbleToHaul : Node
             return state;
         }
 
-        var haulable = TaskManager.Instance.PullItemFromQueue(agent.transform);
+        var haulable = TaskManager.Instance.PullItemFromQueue(agent);
 
         if (haulable != null) 
         {

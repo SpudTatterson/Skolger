@@ -94,7 +94,7 @@ public static class ColonistUtility
         return $"{firstNames[firstName]} {lastNames[lastName]}";
     }
 
-    public static bool ReachedDestination(NavMeshAgent agent, Vector3 target)
+    public static bool ReachedDestination(this NavMeshAgent agent, Vector3 target)
     {
         float distanceFromTarget = Vector3.Distance(agent.transform.position, target);
 
@@ -114,7 +114,11 @@ public static class ColonistUtility
 
     public static Vector3 ConvertToVector3(object objectToVector3)
     {
-        if (objectToVector3 is MonoBehaviour monoBehaviour)
+        if (objectToVector3 is Vector3 vector3)
+        {
+            return vector3;
+        }
+        else if (objectToVector3 is MonoBehaviour monoBehaviour)
         {
             objectToVector3 = monoBehaviour.transform.position;
         }
@@ -130,4 +134,31 @@ public static class ColonistUtility
 
         return (Vector3)objectToVector3;
     }
+
+    public static bool CanReachPoint(this NavMeshAgent agent, Vector3 targetPosition)
+    {
+        NavMeshPath path = new NavMeshPath();
+        if (agent.CalculatePath(targetPosition, path))
+        {
+            if (path.status == NavMeshPathStatus.PathComplete)
+            {
+                return true; // The path is valid and reachable
+            }
+        }
+        else
+        {
+            Vector3 adjustedPos = targetPosition +
+             VectorUtility.GetDirection(targetPosition, agent.transform.position) * agent.stoppingDistance;
+            Debug.DrawLine(targetPosition, adjustedPos, Color.blue);
+            if (agent.CalculatePath(adjustedPos, path))
+            {
+                if (path.status == NavMeshPathStatus.PathComplete)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
