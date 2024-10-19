@@ -46,7 +46,7 @@ public class BuildingPlacer : MonoSingleton<BuildingPlacer>
                 }
                 else if (Input.GetKey(KeyCode.Mouse0))
                 {
-                    dragTime += Time.deltaTime;
+                    dragTime += Time.unscaledDeltaTime;
 
                     if (lastCell != hitCell && lastCell != null)
                     {
