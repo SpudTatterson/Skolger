@@ -26,6 +26,7 @@ public class RestManger : MonoBehaviour
 
     void Start()
     {
+        restStatus = GetRestStatus();
         OnStatusChange?.Invoke(restStatus);
     }
 

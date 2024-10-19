@@ -60,7 +60,6 @@ public class ColonistTimeManager : MonoBehaviour
 
     void OnValidate()
     {
-
         if (colonist == null) colonist = GetComponent<ColonistData>();
         if (hours == null || hours.Length != 24) InitializeHours();
     }
