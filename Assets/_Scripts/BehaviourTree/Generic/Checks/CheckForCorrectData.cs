@@ -4,16 +4,16 @@ using BehaviorTree;
 
 public class CheckForCorrectData : Node
 {
-    private List<Enum> dataName;
+    private List<Enum> dataTypes;
 
-    public CheckForCorrectData(List<Enum> dataName)
+    public CheckForCorrectData(List<Enum> data)
     {
-        this.dataName = dataName;
+        dataTypes = data;
     }
 
     public override NodeState Evaluate()
     {        
-        foreach(Enum data in dataName)
+        foreach(Enum data in dataTypes)
         {
             var dataType = GetData(data);
 

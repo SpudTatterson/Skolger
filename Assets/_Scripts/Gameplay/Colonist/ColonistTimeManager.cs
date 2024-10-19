@@ -26,34 +26,34 @@ public class ColonistTimeManager : MonoBehaviour
     void InitializeHours()
     {
         hours = new TimeUnit[24]{
-        new TimeUnit(0, BrainState.Rest, colonist),
-        new TimeUnit(1, BrainState.Rest, colonist),
-        new TimeUnit(2, BrainState.Rest, colonist),
-        new TimeUnit(3, BrainState.Rest, colonist),
-        new TimeUnit(4, BrainState.Rest, colonist),
-        new TimeUnit(5, BrainState.Rest, colonist),
-        new TimeUnit(6, BrainState.Rest, colonist),
-        new TimeUnit(7, BrainState.Unrestricted, colonist),
-        new TimeUnit(9, BrainState.Unrestricted, colonist),
-        new TimeUnit(8, BrainState.Unrestricted, colonist),
-        new TimeUnit(10, BrainState.Unrestricted, colonist),
-        new TimeUnit(11, BrainState.Unrestricted, colonist),
-        new TimeUnit(12, BrainState.Unrestricted, colonist),
-        new TimeUnit(13, BrainState.Unrestricted, colonist),
-        new TimeUnit(14, BrainState.Unrestricted, colonist),
-        new TimeUnit(15, BrainState.Unrestricted, colonist),
-        new TimeUnit(16, BrainState.Unrestricted, colonist),
-        new TimeUnit(17, BrainState.Unrestricted, colonist),
-        new TimeUnit(18, BrainState.Unrestricted, colonist),
-        new TimeUnit(19, BrainState.Unrestricted, colonist),
-        new TimeUnit(20, BrainState.Unrestricted, colonist),
-        new TimeUnit(21, BrainState.Unrestricted, colonist),
-        new TimeUnit(22, BrainState.Unrestricted, colonist),
-        new TimeUnit(23, BrainState.Rest, colonist),
+        new TimeUnit(0, EBrainState.Rest, colonist),
+        new TimeUnit(1, EBrainState.Rest, colonist),
+        new TimeUnit(2, EBrainState.Rest, colonist),
+        new TimeUnit(3, EBrainState.Rest, colonist),
+        new TimeUnit(4, EBrainState.Rest, colonist),
+        new TimeUnit(5, EBrainState.Rest, colonist),
+        new TimeUnit(6, EBrainState.Rest, colonist),
+        new TimeUnit(7, EBrainState.Unrestricted, colonist),
+        new TimeUnit(9, EBrainState.Unrestricted, colonist),
+        new TimeUnit(8, EBrainState.Unrestricted, colonist),
+        new TimeUnit(10, EBrainState.Unrestricted, colonist),
+        new TimeUnit(11, EBrainState.Unrestricted, colonist),
+        new TimeUnit(12, EBrainState.Unrestricted, colonist),
+        new TimeUnit(13, EBrainState.Unrestricted, colonist),
+        new TimeUnit(14, EBrainState.Unrestricted, colonist),
+        new TimeUnit(15, EBrainState.Unrestricted, colonist),
+        new TimeUnit(16, EBrainState.Unrestricted, colonist),
+        new TimeUnit(17, EBrainState.Unrestricted, colonist),
+        new TimeUnit(18, EBrainState.Unrestricted, colonist),
+        new TimeUnit(19, EBrainState.Unrestricted, colonist),
+        new TimeUnit(20, EBrainState.Unrestricted, colonist),
+        new TimeUnit(21, EBrainState.Unrestricted, colonist),
+        new TimeUnit(22, EBrainState.Unrestricted, colonist),
+        new TimeUnit(23, EBrainState.Rest, colonist),
     };
     }
 
-    public void SetNewBrainState(int time, BrainState state)
+    public void SetNewBrainState(int time, EBrainState state)
     {
         hours[time].brainState = state;
     }
@@ -73,9 +73,9 @@ class TimeUnit
     [SerializeField, HideInInspector] ColonistData colonist;
 
     [field: SerializeField, HideInInspector] public int time { get; private set; }  
-    public BrainState brainState;
+    public EBrainState brainState;
 
-    public TimeUnit(int time, BrainState brainState, ColonistData colonist)
+    public TimeUnit(int time, EBrainState brainState, ColonistData colonist)
     {
         this.time = time;
         this.brainState = brainState;

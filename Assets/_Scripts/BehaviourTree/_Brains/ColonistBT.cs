@@ -67,46 +67,68 @@ public class ColonistBT : Tree
 
     private Node SetupSleepState()
     {
-        return CreateTaskWakeUp();
+        List<Enum> requiredState = new List<Enum> {EBrainState.Sleeping};
+
+        return new Sequence(new List<Node>
+        {
+            new CheckForCorrectData(requiredState),
+            CreateTaskWakeUp()
+        });
     }
 
 
     private Node SetupWorkState()
     {
-        List<BrainState> requiredState = new List<BrainState> {BrainState.Work};
+        List<Enum> requiredState = new List<Enum> {EBrainState.Work};
 
-        return new Selector(new List<Node>
+        return new Sequence(new List<Node>
         {
-            //new CheckForCorrectData(requiredState),
-            new TaskWakeUp(colonistData),
-            CreateTaskWander(),
-            CreateTaskHaul(),
-            CreateTaskConstruct(),
-            CreateTaskHarvest()
+            new CheckForCorrectData(requiredState),
+            new Selector(new List<Node>
+            {
+                new TaskWakeUp(colonistData),
+                CreateTaskWander(),
+                CreateTaskHaul(),
+                CreateTaskConstruct(),
+                CreateTaskHarvest()
+            })
         });
     }
 
     private Node SetupUnrestrictedState()
     {
-        return new Selector(new List<Node>
+        List<Enum> requiredState = new List<Enum> {EBrainState.Unrestricted};
+
+        return new Sequence(new List<Node>
         {
-            new TaskWakeUp(colonistData),
-            CreateTaskEat(),
-            CreateTaskWander(),
-            CreateTaskHaul(),
-            CreateTaskConstruct(),
-            CreateTaskHarvest()
+            new CheckForCorrectData(requiredState),
+            new Selector(new List<Node>
+            {
+                new TaskWakeUp(colonistData),
+                CreateTaskEat(),
+                CreateTaskWander(),
+                CreateTaskHaul(),
+                CreateTaskConstruct(),
+                CreateTaskHarvest()
+            })
         });
     }
 
     private Node SetupRestingState()
     {
-        return new Selector(new List<Node>
+        List<Enum> requiredState = new List<Enum> {EBrainState.Rest};
+
+        return new Sequence(new List<Node>
         {
-            CreateTaskSleep(),
-            CreateTaskEat(),
-            CreateTaskWander()
+            new CheckForCorrectData(requiredState),
+            new Selector(new List<Node>
+            {
+                CreateTaskSleep(),
+                CreateTaskEat(),
+                CreateTaskWander()
+            })
         });
+
     }
 
     private Node CreateTaskWakeUp()
@@ -218,7 +240,7 @@ public class ColonistBT : Tree
     #region Construction Task
     private Node CreateTaskConstruct()
     {
-        List<EDataName> requiredKeys = new List<EDataName>
+        List<Enum> requiredKeys = new List<Enum>
         {
             EDataName.Constructable,
             EDataName.InventoryItem,

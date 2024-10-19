@@ -25,7 +25,7 @@ public enum ETaskDescription
     Harvesting
 }
 
-public enum BrainState
+public enum EBrainState
 {
     Unrestricted,
     Work,
