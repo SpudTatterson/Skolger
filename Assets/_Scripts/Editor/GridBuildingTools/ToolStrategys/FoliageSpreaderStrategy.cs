@@ -30,7 +30,7 @@ public class FoliageSpreaderStrategy : IGridToolStrategy, IBrushTool
         {
             gridManager.RecalculateCellUsage();
         }
-        
+
         UtilityEditor.DrawDragAndDropArea<BaseHarvestable>(AddHarvestable, "Drag And Drop Harvestable Game Object");
 
         if (foliagePrefabs.Count > 0)
@@ -106,18 +106,18 @@ public class FoliageSpreaderStrategy : IGridToolStrategy, IBrushTool
 
     void AddHarvestable(object draggedObject)
     {
-        if(draggedObject is GameObject draggedGameObject && draggedGameObject.TryGetComponent<ICellOccupier>(out _))
-        if (!foliagePrefabs.Contains(draggedGameObject))
-        {
-            foliagePrefabs.Add(draggedGameObject);
-            Texture2D icon = AssetPreview.GetAssetPreview(draggedGameObject);
-            while (AssetPreview.IsLoadingAssetPreview(draggedGameObject.GetInstanceID()) == true || icon == null)
+        if (draggedObject is GameObject draggedGameObject && draggedGameObject.TryGetComponent<ICellOccupier>(out _))
+            if (!foliagePrefabs.Contains(draggedGameObject))
             {
-                Debug.Log("Waiting for asset preview to load");
-                icon = AssetPreview.GetAssetPreview(draggedGameObject);
+                foliagePrefabs.Add(draggedGameObject);
+                Texture2D icon = AssetPreview.GetAssetPreview(draggedGameObject);
+                while (AssetPreview.IsLoadingAssetPreview(draggedGameObject.GetInstanceID()) == true || icon == null)
+                {
+                    Debug.Log("Waiting for asset preview to load");
+                    icon = AssetPreview.GetAssetPreview(draggedGameObject);
+                }
+                foliageIcons.Add(icon);
             }
-            foliageIcons.Add(icon);
-        }
     }
 
     void Place(List<Cell> cells)

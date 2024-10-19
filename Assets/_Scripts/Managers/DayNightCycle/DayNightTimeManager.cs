@@ -17,14 +17,17 @@ public class DayNightTimeManager : MonoSingleton<DayNightTimeManager>
 
     void Update()
     {
-        adjustedDeltaTime = (Time.deltaTime / CycleDuration) * 24f;
         if (IsDayCycleOn)
         {
             UpdateTime();
         }
     }
+    void LateUpdate()
+    {
+        adjustedDeltaTime = 0;
+    }
 
-    public void Initialize()
+    void Initialize()
     {
         if (IsDayCycleOn)
         {
@@ -32,9 +35,15 @@ public class DayNightTimeManager : MonoSingleton<DayNightTimeManager>
         }
     }
 
-    public void UpdateTime()
+    void UpdateTime()
     {
+        adjustedDeltaTime = (Time.deltaTime / CycleDuration) * 24f;
         TimeOfDay += adjustedDeltaTime;
         TimeOfDay %= 24;
+    }
+
+    public void ToggleDayCycle(bool value)
+    {
+        IsDayCycleOn = value;
     }
 }

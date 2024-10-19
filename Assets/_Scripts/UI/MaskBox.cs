@@ -10,8 +10,9 @@ namespace Skolger.UI
     {
         [SerializeField] RectTransform mask;
         [SerializeField] TextMeshProUGUI textBox;
+        [SerializeField] Image bgImage;
 
-        public void UpdateMask(Vector2 position, Vector2 sizeDelta, string text)
+        public void UpdateMask(Vector2 position, Vector2 sizeDelta, string text, bool blockRayCast)
         {
             mask.localPosition = position;
             mask.sizeDelta = sizeDelta;
@@ -25,7 +26,7 @@ namespace Skolger.UI
             textRect.localPosition = VectorUtility.OffsetPositionToScreen(textRect.localPosition, sizeDelta);
             textRect.localPosition = VectorUtility.ClampPositionToScreen(textRect.localPosition, textRect.sizeDelta);
 
-
+            bgImage.raycastTarget = blockRayCast;
         }
     }
 }

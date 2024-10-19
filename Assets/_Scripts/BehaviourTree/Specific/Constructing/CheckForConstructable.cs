@@ -29,9 +29,19 @@ public class CheckForConstructable : Node
 
         if (constructable != null)
         {
-            parent.parent.SetData(EDataName.Constructable, constructable);
-            state = NodeState.SUCCESS;
-            return state;
+            if (colonistData.agent.CanReachPoint(constructable.GetPosition().position))
+            {
+                parent.parent.SetData(EDataName.Constructable, constructable);
+                state = NodeState.SUCCESS;
+                return state;
+            }
+            else
+            {
+                // mark constructable as unreachable and add to issue tracker
+                TaskManager.Instance.AddToConstructionQueue(constructable);
+                state = NodeState.FAILURE;
+                return state;
+            }
         }
 
         state = NodeState.FAILURE;

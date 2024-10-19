@@ -14,7 +14,7 @@ public class ColonistMoodManager : MonoBehaviour
     [SerializeField] BaseMoodEffectSO postBreakDownBuff;
 
     [SerializeField] int currentMood;
-    MoodStatus moodStatus;
+    MoodStatus moodStatus = MoodStatus.Content;
     public event Action<int, MoodStatus> onMoodChange;
     public event Action<List<BaseMoodEffect>> OnEffectsChanged;
     public event Action onColonistBreakdown;
@@ -29,6 +29,7 @@ public class ColonistMoodManager : MonoBehaviour
 
     void Awake()
     {
+        moodStatus = MoodUtility.DetermineMoodState(currentMood);
         colonist = GetComponent<ColonistData>();
 
         moodModifiers.Add(MoodModifiers.Hunger, 0);
@@ -36,9 +37,6 @@ public class ColonistMoodManager : MonoBehaviour
 
         moodModifiers.Add(MoodModifiers.Rest, 0);
         colonist.restManger.OnStatusChange += UpdateRestModifier;
-        //subscribe to colonist rest on status change
-
-        onMoodChange += UpdateBillboard;
     }
 
     public void ForceMoodUpdate()
@@ -75,8 +73,13 @@ public class ColonistMoodManager : MonoBehaviour
         {
             // StartBreakdown();
         }
-        moodStatus = MoodUtility.DetermineMoodState(currentMood);
+        MoodStatus moodStatus = MoodUtility.DetermineMoodState(currentMood);
         onMoodChange?.Invoke(currentMood, moodStatus);
+        if (moodStatus != this.moodStatus)
+        {
+            this.moodStatus = moodStatus;
+            UpdateBillboard(moodStatus);
+        }
     }
 
     void StartBreakdown()
@@ -98,6 +101,9 @@ public class ColonistMoodManager : MonoBehaviour
 
     public void UpdateMoodModifier(MoodModifiers moodModifierType, int modifier)
     {
+        // Debug.Log($"{moodModifierType}: {modifier} current: {currentMood}");
+        int previousModifier = moodModifiers[moodModifierType];
+        currentMood += -previousModifier;
         moodModifiers[moodModifierType] = modifier;
         UpdateCurrentMood(modifier);
     }
@@ -127,7 +133,7 @@ public class ColonistMoodManager : MonoBehaviour
         UpdateMoodModifier(MoodModifiers.Rest, MoodUtility.GetMoodModifier(status));
     }
 
-    void UpdateBillboard(int mood, MoodStatus status)
+    void UpdateBillboard(MoodStatus status)
     {
         colonist.billboard.gameObject.SetActive(true);
         colonist.billboard.UpdateImage(moodSprites.Find(x => x.Status == status).sprite);

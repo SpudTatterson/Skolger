@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TaskManager : MonoSingleton<TaskManager>
 {
-
-    [ShowInInspector] HashSet<IHarvestable> harvestQueue = new HashSet<IHarvestable>();
-    [ShowInInspector] HashSet<IConstructable> constructionQueue = new HashSet<IConstructable>();
-    [ShowInInspector] HashSet<ItemObject> haulQueue = new HashSet<ItemObject>();
+    [ShowInInspector] UniqueQueue<IHarvestable> harvestQueue = new UniqueQueue<IHarvestable>();
+    [ShowInInspector] UniqueQueue<IConstructable> constructionQueue = new UniqueQueue<IConstructable>();
+    [ShowInInspector] List<ItemObject> haulQueue = new List<ItemObject>();
 
     public void AddToHarvestQueue(IHarvestable harvestable)
     {
-        harvestQueue.Add(harvestable);
+        harvestQueue.Enqueue(harvestable);
     }
     public void RemoveFromHarvestQueue(IHarvestable harvestable)
     {
@@ -20,14 +20,8 @@ public class TaskManager : MonoSingleton<TaskManager>
     }
     public IHarvestable PullHarvestableFromQueue()
     {
-        if (CheckIfHarvestTaskExists())
-        {
-            var enumerator = harvestQueue.GetEnumerator();
-            enumerator.MoveNext();
-            IHarvestable harvestable = enumerator.Current;
-            harvestQueue.Remove(harvestable);
-            return harvestable;
-        }
+        if (harvestQueue.Count != 0)
+            return harvestQueue.Dequeue();
         return null;
     }
     public bool CheckIfHarvestTaskExists()
@@ -37,7 +31,7 @@ public class TaskManager : MonoSingleton<TaskManager>
 
     public void AddToConstructionQueue(IConstructable constructable)
     {
-        constructionQueue.Add(constructable);
+        constructionQueue.Enqueue(constructable);
     }
     public void RemoveFromConstructionQueue(IConstructable constructable)
     {
@@ -45,19 +39,9 @@ public class TaskManager : MonoSingleton<TaskManager>
     }
     public IConstructable PullConstructableFromQueue()
     {
-        if (CheckIfConstructableTaskExists())
-        {
-            var enumerator = constructionQueue.GetEnumerator();
-            enumerator.MoveNext();
-            IConstructable constructable = enumerator.Current;
-            constructionQueue.Remove(constructable);
-            return constructable;
-        }
+        if (constructionQueue.Count != 0)
+            return constructionQueue.Dequeue();
         return null;
-    }
-    public bool CheckIfConstructableTaskExists()
-    {
-        return constructionQueue.Count > 0;
     }
 
     public void AddToHaulQueue(ItemObject itemObject)
@@ -70,17 +54,15 @@ public class TaskManager : MonoSingleton<TaskManager>
     }
     public ItemObject PullItemFromQueue()
     {
-        if (haulQueue.Count > 0)
+        if (haulQueue.Count != 0)
         {
-            var enumerator = haulQueue.GetEnumerator();
-            enumerator.MoveNext();
-            ItemObject item = enumerator.Current;
-            haulQueue.Remove(item);
-            return item;
+            ItemObject itemObject = haulQueue[0];
+            haulQueue.RemoveAt(0);
+            return itemObject;
         }
         return null;
     }
-    public ItemObject PullItemFromQueue(Transform transform)
+    public ItemObject PullItemFromQueue(NavMeshAgent agent)
     {
         if (CheckIfHaulTaskExists())
         {
@@ -89,7 +71,8 @@ public class TaskManager : MonoSingleton<TaskManager>
 
             foreach (var item in haulQueue)
             {
-                float distance = Vector3.Distance(item.transform.position, transform.position);
+                if(!agent.CanReachPoint(item.transform.position)) continue;
+                float distance = Vector3.Distance(item.transform.position, agent.transform.position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;

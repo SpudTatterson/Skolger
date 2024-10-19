@@ -17,15 +17,14 @@ public class CheckForStockpile : Node
     public override NodeState Evaluate()
     {
         Stockpile stockpile = InventoryManager.Instance.GetStockpileWithEmptySpace(out Cell cell);
-        InventoryItem inventoryItem = (InventoryItem)GetData(EDataName.InventoryItem);
-        
+
         if (cell == null)
         {
             object hasStockpile = GetData(EDataName.Stockpile);
 
-            if (inventoryItem != null || !colonistData.inventory.IsEmpty())
+            if (!colonistData.inventory.IsEmpty())
             {
-                int itemIndex  = (int)GetData(EDataName.InventoryIndex);
+                int itemIndex = (int)GetData(EDataName.InventoryIndex);
                 colonistData.inventory.TakeItemOut(itemIndex).DropItem(agent.transform.position);
                 agent.ResetPath();
 
@@ -45,16 +44,36 @@ public class CheckForStockpile : Node
         }
 
         var target = GetData(EDataName.Target);
-
-        if (inventoryItem != null && target == null)
+        if (target == null)
         {
-            parent.parent.SetData(EDataName.Target, cell);
+            if (agent.CanReachPoint(ColonistUtility.ConvertToVector3(cell)))
+            {
+                parent.parent.SetData(EDataName.Target, cell);
+                parent.parent.SetData(EDataName.Cell, cell);
+                parent.parent.SetData(EDataName.Stockpile, stockpile);
+
+                state = NodeState.SUCCESS;
+                return state;
+            }
+            else
+            {
+                // add to issue tracker
+
+                // ClearData(EDataName.Target);
+                // ClearData(EDataName.Stockpile);
+                // ClearData(EDataName.Cell);
+                InventoryManager.Instance.stockpiles.Remove(stockpile);
+                InventoryManager.Instance.stockpiles.Add(stockpile);
+                state = NodeState.FAILURE;
+                return state;
+
+            }
+        }
+        else
+        {
+            state = NodeState.SUCCESS;
+            return state;
         }
 
-        parent.parent.SetData(EDataName.Cell, cell);
-        parent.parent.SetData(EDataName.Stockpile, stockpile);
-
-        state = NodeState.SUCCESS;
-        return state;
     }
 }

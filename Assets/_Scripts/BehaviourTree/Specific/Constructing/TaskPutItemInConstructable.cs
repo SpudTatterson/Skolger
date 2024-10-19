@@ -1,4 +1,5 @@
 using BehaviorTree;
+using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,7 +17,7 @@ public class TaskPutItemInConstructable : Node
     {
         object constructableData = GetData(EDataName.Constructable);
         IConstructable constructable = (IConstructable)constructableData;
-        Vector3 constructablePosition = ColonistUtility.ConvertToVector3(constructableData);
+        Vector3 constructablePosition = ColonistUtility.ConvertToVector3(GetData(EDataName.Target));
 
         if (constructable != null && ColonistUtility.ReachedDestination(agent, constructablePosition))
         {
