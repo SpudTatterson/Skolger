@@ -84,7 +84,7 @@ public class ColonistMoodManager : MonoBehaviour
 
     void StartBreakdown()
     {
-        colonist.SetBrainState(BrainState.Breakdown);
+        colonist.SetBrainState(EBrainState.Breakdown);
         onColonistBreakdown?.Invoke();
         float breakDownTime = Random.Range(minMaxBreakdownTimes.x, minMaxBreakdownTimes.y);
         int breakDownType = Random.Range(1, Enum.GetNames(typeof(BreakDownType)).Length);
@@ -94,7 +94,7 @@ public class ColonistMoodManager : MonoBehaviour
 
     void StopBreakDown()
     {
-        colonist.SetBrainState(BrainState.Unrestricted);
+        colonist.SetBrainState(EBrainState.Unrestricted);
         breakDownType = BreakDownType.None;
         AddEffect(postBreakDownBuff);
     }
