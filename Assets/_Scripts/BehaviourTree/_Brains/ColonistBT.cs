@@ -236,8 +236,8 @@ public class ColonistBT : Tree
         List<Enum> requiredKeys = new List<Enum>
         {
             EDataName.Constructable,
-            EDataName.InventoryItem,
-            EDataName.Cost
+            EDataName.Cost,
+            EDataName.InventoryIndex
         };
 
         Node getItemsFromStockpile = new Sequence(new List<Node>
