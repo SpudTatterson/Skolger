@@ -41,6 +41,12 @@ namespace SpudsUtility
                             if (draggedObject is T)
                             {
                                 foreachAction(draggedObject);
+                                continue;
+                            }
+                            if (draggedObject is GameObject gameObject)
+                            {
+                                if (gameObject.TryGetComponent(out T _))
+                                    foreachAction(gameObject);
                             }
                         }
                     }
