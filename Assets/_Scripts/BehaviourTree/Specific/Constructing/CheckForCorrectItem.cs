@@ -1,5 +1,4 @@
 using BehaviorTree;
-using UnityEngine;
 
 class CheckForCorrectItem : Node
 {
@@ -13,10 +12,8 @@ class CheckForCorrectItem : Node
     public override NodeState Evaluate()
     {
         ItemCost cost = (ItemCost)GetData(EDataName.Cost);
-        if(colonistData.inventory.HasItem(cost.item, cost.cost, out int? InventoryIndex))
+        if(colonistData.inventory.HasItem(cost.item, cost.cost, out _))
         {
-            Debug.Log("ASGSWAEGFASDFAS");
-            SetDataOnRoot(EDataName.InventoryIndex, InventoryIndex);
             state = NodeState.SUCCESS;
             return state;
         }

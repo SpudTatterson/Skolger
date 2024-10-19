@@ -23,6 +23,7 @@ public class TaskTakeItemFromStockpile : Node
         {
             Stockpile stockpile = (Stockpile)GetData(EDataName.Stockpile);
             var item = InventoryManager.Instance.TakeItem(cost, stockpile);
+            parent.parent.SetData(EDataName.InventoryItem, item);
             colonistData.inventory.PutItemIn(item);
             var constructable = (IConstructable)GetData(EDataName.Constructable);
             ClearData(EDataName.Target);
