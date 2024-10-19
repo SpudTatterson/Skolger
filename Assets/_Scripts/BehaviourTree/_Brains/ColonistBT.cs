@@ -63,7 +63,9 @@ public class ColonistBT : Tree
 
         return root;
     }
+    #endregion
 
+    #region Brain State Setup
     private Node SetupSleepState()
     {
         return new Sequence(new List<Node>
@@ -133,6 +135,7 @@ public class ColonistBT : Tree
             priority = taskSleep,
         };
     }
+    #endregion
 
     // private Node GetBreakDownNode()
     // {
@@ -148,9 +151,7 @@ public class ColonistBT : Tree
     //     }
     // }
 
-    #endregion
-
-    #region  Sleeping Task
+    #region Sleeping Task
     private Node CreateTaskSleep()
     {
         return new Sequence(new List<Node>
@@ -204,7 +205,7 @@ public class ColonistBT : Tree
             new TaskPickUpItem(agent, colonistData)
         })
         {
-            priority = 0
+            priority = 0,
         };
 
         Node haulToStockpileSequence = new Sequence(new List<Node>

@@ -12,7 +12,7 @@ public class CheckForBrainState : Node
         this.currentState = currentState;
         this.desiredState = desiredState;
     }
-
+    
     public override NodeState Evaluate()
     {
         if (currentState == desiredState)

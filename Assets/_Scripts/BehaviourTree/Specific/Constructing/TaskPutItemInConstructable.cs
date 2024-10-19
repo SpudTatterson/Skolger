@@ -16,7 +16,7 @@ public class TaskPutItemInConstructable : Node
     {
         object constructableData = GetData(EDataName.Constructable);
         IConstructable constructable = (IConstructable)constructableData;
-        Vector3 constructablePosition = ColonistUtility.ConvertToVector3(colonistData);
+        Vector3 constructablePosition = ColonistUtility.ConvertToVector3(constructableData);
 
         if (constructable != null && ColonistUtility.ReachedDestination(agent, constructablePosition))
         {
