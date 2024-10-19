@@ -93,7 +93,18 @@ public class RestManger : MonoBehaviour
     public void AssignBed(BedBuilding bed)
     {
         assignedBed = bed;
+        OnSleep += TurnBedOn;
+        void TurnBedOn()
+        {
+            bed.ToggleBlanket(true);
+        }
+        OnWakeUp += TurnBedOff;
+        void TurnBedOff()
+        {
+            bed.ToggleBlanket(false);
+        }
     }
+
 }
 
 public enum RestStatus
