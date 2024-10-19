@@ -75,7 +75,7 @@ public class ColonistData : MonoBehaviour, ISelectable
         agent.isStopped = true;
         billboard.gameObject.SetActive(true);
         billboard.UpdateImage(sleepSprite);
-        SetBrainState(EBrainState.Sleeping);
+        SetBrainState(EBrainState.Sleep);
     }
     void GetDowned()
     {
@@ -116,8 +116,8 @@ public class ColonistData : MonoBehaviour, ISelectable
             billboard.gameObject.SetActive(true);
             billboard.UpdateImage(sleepSprite);
         }
-        if (state == EBrainState.Rest && brainState == EBrainState.Sleeping) return;
-        if (state == EBrainState.Unrestricted && brainState == EBrainState.Sleeping) restManger.WakeUp(); // this is bad code but its 1 am and i need to hand this in tomorow please fix this if you find the issue is that if he was mid task before he went to sleep he wont go into the wake up task in the brain and gets stuck sleeping forever
+        if (state == EBrainState.Rest && brainState == EBrainState.Sleep) return;
+        if (state == EBrainState.Unrestricted && brainState == EBrainState.Sleep) restManger.WakeUp(); // this is bad code but its 1 am and i need to hand this in tomorow please fix this if you find the issue is that if he was mid task before he went to sleep he wont go into the wake up task in the brain and gets stuck sleeping forever
         brainState = state;
     }
 

@@ -33,5 +33,5 @@ public enum EBrainState
     Recreational,
     Drafted,
     Breakdown,
-    Sleeping
+    Sleep
 }
