@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using System;
 
 namespace BehaviorTree
 {
@@ -20,7 +21,7 @@ namespace BehaviorTree
         public int priority { get; set; }
         public bool flaggedRoot { get; set; }
 
-        [ShowInInspector] private Dictionary<EDataName, object> dataContext = new Dictionary<EDataName, object>();
+        [ShowInInspector] private Dictionary<Enum, object> dataContext = new Dictionary<Enum, object>();
 
         public Node()
         {
@@ -45,7 +46,7 @@ namespace BehaviorTree
 
         public abstract NodeState Evaluate();
 
-        public void SetData(EDataName key, object value)
+        public void SetData(Enum key, object value)
         {
             dataContext[key] = value;
         }
@@ -70,19 +71,19 @@ namespace BehaviorTree
             return root;
         }
 
-        public void SetDataOnRoot(EDataName key, object value)
+        public void SetDataOnRoot(Enum key, object value)
         {
             Node root = GetRootNode();
             root.SetData(key, value);
         }
 
-        public void SetDataOnFlaggedRoot(EDataName key, object value)
+        public void SetDataOnFlaggedRoot(Enum key, object value)
         {
             Node root = GetFlaggedRootNode();
             root.SetData(key, value);
         }
 
-        public object GetData(EDataName key)
+        public object GetData(Enum key)
         {
             object value = null;
             if (dataContext.TryGetValue(key, out value))
@@ -103,7 +104,7 @@ namespace BehaviorTree
             return null;
         }
 
-        public bool ClearData(EDataName key)
+        public bool ClearData(Enum key)
         {
             if (dataContext.ContainsKey(key))
             {
