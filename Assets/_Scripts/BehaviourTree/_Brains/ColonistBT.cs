@@ -27,6 +27,7 @@ public class ColonistBT : Tree
     private NavMeshAgent agent;
     private ColonistData colonistData;
     private Dictionary<ETaskDescription, string> taskDescriptions;
+    public bool rearrangeTree;
 
     private void Awake()
     {
@@ -35,7 +36,7 @@ public class ColonistBT : Tree
         taskDescriptions = TaskDescriptions();
     }
 
-    private void LateUpdate()
+    public void TriggerTreeSetup()
     {
         if (rearrangeTree)
         {
@@ -182,7 +183,7 @@ public class ColonistBT : Tree
     #region Wandering Task
     private Node CreateTaskWander()
     {
-        return new TaskWander(agent, colonistSettings, colonistData, taskDescriptions[ETaskDescription.Wandering])
+        return new TaskWander(agent, colonistSettings, colonistData, this, taskDescriptions[ETaskDescription.Wandering])
         {
             priority = taskWander
         };

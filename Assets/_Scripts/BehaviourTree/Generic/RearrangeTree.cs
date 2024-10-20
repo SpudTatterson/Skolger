@@ -1,36 +1,29 @@
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using BehaviorTree;
-using Sirenix.OdinValidator.Editor.Validators;
-using Unity.VisualScripting;
-using UnityEngine;
-using Tree = BehaviorTree.Tree;
 
 public class RearrangeTree : Node
 {
-    Node lastTask;
-    Tree root;
+    Node lastTaskNode;
+    ColonistBT brain;
 
-    public RearrangeTree(Node nodeToEvaluate, Tree rootToCheck)
+    public RearrangeTree(Node lastTaskNode, ColonistBT brain)
     {
-        lastTask = nodeToEvaluate;
-        root = rootToCheck;
+        this.lastTaskNode = lastTaskNode;
+        this.brain = brain;
     }
 
     public override NodeState Evaluate()
     {
-        if(lastTask.state == NodeState.SUCCESS)
+        if(lastTaskNode.state == NodeState.SUCCESS)
         {
-            root.rearrangeTree = true;
+            if(brain.rearrangeTree)
+            {
+                brain.TriggerTreeSetup();
+            }
             state = NodeState.SUCCESS;
         }
-        else if(lastTask.state == NodeState.RUNNING)
+        else if(lastTaskNode.state == NodeState.RUNNING)
         {
             state = NodeState.RUNNING;
-        }
-        else if(lastTask.state == NodeState.FAILURE)
-        {
-            state = NodeState.FAILURE;
         }
 
         return state;
