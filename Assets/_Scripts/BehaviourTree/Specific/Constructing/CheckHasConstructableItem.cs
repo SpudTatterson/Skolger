@@ -16,7 +16,7 @@ public class CheckHasConstructableItem : Node
         if (itemCost != null)
         {
             if (InventoryManager.Instance.HasItem(itemCost))
-            {
+            {               
                 Cell itemPosition = InventoryManager.Instance.GetItemLocation(itemCost.item, itemCost.cost, out Stockpile stockpile);
 
                 if (agent.CanReachPoint(itemPosition.position))

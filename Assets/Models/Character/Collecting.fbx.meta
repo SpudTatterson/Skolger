@@ -34,8 +34,8 @@ ModelImporter:
     clipAnimations:
     - serializedVersion: 16
       name: Collecting
-      takeName: Take 001
-      internalID: 1827226128182048838
+      takeName: Character
+      internalID: 5254882722215549857
       firstFrame: 0
       lastFrame: 40
       wrapMode: 0

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UnityEngine;
 using System;
 
 namespace BehaviorTree
@@ -14,10 +13,9 @@ namespace BehaviorTree
     [System.Serializable]
     public abstract class Node
     {
-        protected NodeState state;
-
+        protected internal NodeState state;
         public Node parent;
-        [ShowInInspector] protected List<Node> children = new List<Node>();
+        [ShowInInspector] protected internal List<Node> children = new List<Node>();
         public int priority { get; set; }
         public bool flaggedRoot { get; set; }
 
