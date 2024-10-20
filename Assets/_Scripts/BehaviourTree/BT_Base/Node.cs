@@ -13,7 +13,7 @@ namespace BehaviorTree
     [System.Serializable]
     public abstract class Node
     {
-        protected internal NodeState state;
+        [ShowInInspector] protected internal NodeState state;
         public Node parent;
         [ShowInInspector] protected internal List<Node> children = new List<Node>();
         public int priority { get; set; }

@@ -65,7 +65,7 @@ public class ColonistBT : Tree
     {
         return new Sequence(new List<Node>
         {
-            new CheckForBrainState(colonistData.brainState, EBrainState.Sleep),              // Checks if the brain is in the correct state
+            new CheckForBrainState(colonistData, EBrainState.Sleep),              // Checks if the brain is in the correct state
             CreateTaskWakeUp()
         });
     }
@@ -75,7 +75,7 @@ public class ColonistBT : Tree
     {
         return new Sequence(new List<Node>
         {
-            new CheckForBrainState(colonistData.brainState, EBrainState.Work),                 // Checks if the brain is in the correct state
+            new CheckForBrainState(colonistData, EBrainState.Work),                 // Checks if the brain is in the correct state
             new Selector(new List<Node>
             {
                 new TaskWakeUp(colonistData),
@@ -91,7 +91,7 @@ public class ColonistBT : Tree
     {
         return new Sequence(new List<Node>
         {
-            new CheckForBrainState(colonistData.brainState, EBrainState.Unrestricted),          // Checks if the brain is in the correct state
+            new CheckForBrainState(colonistData, EBrainState.Unrestricted),          // Checks if the brain is in the correct state
             new Selector(new List<Node>
             {
                 new TaskWakeUp(colonistData),
@@ -108,7 +108,7 @@ public class ColonistBT : Tree
     {        
         return new Sequence(new List<Node>
         {
-            new CheckForBrainState(colonistData.brainState, EBrainState.Rest),                 // Checks if the brain is in the correct state
+            new CheckForBrainState(colonistData, EBrainState.Rest),                 // Checks if the brain is in the correct state
             new Selector(new List<Node>
             {
                 CreateTaskSleep(),
