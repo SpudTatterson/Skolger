@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class CheckForBrainState : Node
 {
-    private EBrainState currentState;
+    private ColonistData colonistData;
     private EBrainState desiredState;
 
-    public CheckForBrainState(EBrainState currentState, EBrainState desiredState)
+    public CheckForBrainState(ColonistData colonistData, EBrainState desiredState)
     {
-        this.currentState = currentState;
+        this.colonistData = colonistData;
         this.desiredState = desiredState;
     }
     
     public override NodeState Evaluate()
     {
-        if (currentState == desiredState)
+        if (colonistData.brainState == desiredState)
         {
             state = NodeState.SUCCESS;
             return state;

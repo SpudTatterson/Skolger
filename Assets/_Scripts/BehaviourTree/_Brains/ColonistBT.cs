@@ -27,6 +27,7 @@ public class ColonistBT : Tree
     private NavMeshAgent agent;
     private ColonistData colonistData;
     private Dictionary<ETaskDescription, string> taskDescriptions;
+    public bool rearrangeTree;
 
     private void Awake()
     {
@@ -35,7 +36,7 @@ public class ColonistBT : Tree
         taskDescriptions = TaskDescriptions();
     }
 
-    private void LateUpdate()
+    public void TriggerTreeSetup()
     {
         if (rearrangeTree)
         {
@@ -65,7 +66,7 @@ public class ColonistBT : Tree
     {
         return new Sequence(new List<Node>
         {
-            new CheckForBrainState(colonistData.brainState, EBrainState.Sleep),              // Checks if the brain is in the correct state
+            new CheckForBrainState(colonistData, EBrainState.Sleep),              // Checks if the brain is in the correct state
             CreateTaskWakeUp()
         });
     }
@@ -75,7 +76,7 @@ public class ColonistBT : Tree
     {
         return new Sequence(new List<Node>
         {
-            new CheckForBrainState(colonistData.brainState, EBrainState.Work),                 // Checks if the brain is in the correct state
+            new CheckForBrainState(colonistData, EBrainState.Work),                 // Checks if the brain is in the correct state
             new Selector(new List<Node>
             {
                 new TaskWakeUp(colonistData),
@@ -91,7 +92,7 @@ public class ColonistBT : Tree
     {
         return new Sequence(new List<Node>
         {
-            new CheckForBrainState(colonistData.brainState, EBrainState.Unrestricted),          // Checks if the brain is in the correct state
+            new CheckForBrainState(colonistData, EBrainState.Unrestricted),          // Checks if the brain is in the correct state
             new Selector(new List<Node>
             {
                 new TaskWakeUp(colonistData),
@@ -108,7 +109,7 @@ public class ColonistBT : Tree
     {        
         return new Sequence(new List<Node>
         {
-            new CheckForBrainState(colonistData.brainState, EBrainState.Rest),                 // Checks if the brain is in the correct state
+            new CheckForBrainState(colonistData, EBrainState.Rest),                 // Checks if the brain is in the correct state
             new Selector(new List<Node>
             {
                 CreateTaskSleep(),
@@ -182,7 +183,7 @@ public class ColonistBT : Tree
     #region Wandering Task
     private Node CreateTaskWander()
     {
-        return new TaskWander(agent, colonistSettings, colonistData, taskDescriptions[ETaskDescription.Wandering])
+        return new TaskWander(agent, colonistSettings, colonistData, this, taskDescriptions[ETaskDescription.Wandering])
         {
             priority = taskWander
         };
