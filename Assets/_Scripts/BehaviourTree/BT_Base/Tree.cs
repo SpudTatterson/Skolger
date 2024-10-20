@@ -6,6 +6,7 @@ namespace BehaviorTree
     public abstract class Tree : MonoBehaviour
     {
         [ShowInInspector]protected Node root = null;
+        internal bool rearrangeTree;
 
         protected void Start()
         {

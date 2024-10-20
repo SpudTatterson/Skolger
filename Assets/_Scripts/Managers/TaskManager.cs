@@ -71,7 +71,8 @@ public class TaskManager : MonoSingleton<TaskManager>
 
             foreach (var item in haulQueue)
             {
-                if(!agent.CanReachPoint(item.transform.position)) continue;
+                if (item == null) continue;
+                if (!agent.CanReachPoint(item.transform.position)) continue;
                 float distance = Vector3.Distance(item.transform.position, agent.transform.position);
                 if (distance < closestDistance)
                 {
