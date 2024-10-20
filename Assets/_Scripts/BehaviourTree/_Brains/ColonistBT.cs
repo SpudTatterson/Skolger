@@ -9,7 +9,6 @@ using Tree = BehaviorTree.Tree;
 public class ColonistBT : Tree
 {
     [SerializeField] ColonistSettingsSO colonistSettings;
-    public bool treeRearrangement;
     [Space]
     [BoxGroup("Initial set, player access locked")]
     [SerializeField] private int taskEat;
@@ -36,29 +35,25 @@ public class ColonistBT : Tree
         taskDescriptions = TaskDescriptions();
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
-        if (treeRearrangement)
+        if (rearrangeTree)
         {
             RearrangeTree();
-            treeRearrangement = false;
+            rearrangeTree = false;
         }
     }
-
+        
     #region Behaviour Tree Setup
+
     protected override Node SetupTree()
     {
-        Node workState = SetupWorkState();
-        Node unrestrictedState = SetupUnrestrictedState();
-        Node restingState = SetupRestingState();
-        Node sleepState = SetupSleepState();
-
         Node root = new Selector(new List<Node>
         {
-            workState,
-            unrestrictedState,
-            restingState,
-            sleepState
+            SetupWorkState(),
+            SetupUnrestrictedState(),
+            SetupRestingState(),
+            SetupSleepState()
         });
 
         return root;
@@ -197,6 +192,8 @@ public class ColonistBT : Tree
     #region Hauling Task
     private Node CreateTaskHaul()
     {
+        Node taskPutInStockpile = new TaskPutInStockpile(agent, colonistData);
+
         Node pickUpItemSequence = new Sequence(new List<Node>
         {
             new CheckForStockpile(agent,colonistData),
@@ -213,7 +210,8 @@ public class ColonistBT : Tree
             new CheckItemInInventory(colonistData),
             new CheckForStockpile(agent,colonistData),
             new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.HaulingToStockpile]),
-            new TaskPutInStockpile(agent, colonistData)
+            taskPutInStockpile,
+            new RearrangeTree(taskPutInStockpile, this)
         })
         {
             priority = 1
@@ -233,6 +231,8 @@ public class ColonistBT : Tree
     #region Construction Task
     private Node CreateTaskConstruct()
     {
+        Node taskPutItemInConstructable = new TaskPutItemInConstructable(agent, colonistData);
+
         List<Enum> requiredKeys = new List<Enum>
         {
             EDataName.Constructable,
@@ -258,7 +258,8 @@ public class ColonistBT : Tree
             new CheckForCorrectItem(colonistData),
             new CheckItemInInventory(colonistData),
             new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.Constructing]),
-            new TaskPutItemInConstructable(agent, colonistData)
+            taskPutItemInConstructable,
+            new RearrangeTree(taskPutItemInConstructable, this)
         })
         {
             priority = 1
@@ -278,12 +279,15 @@ public class ColonistBT : Tree
     #region Harvest Task
     private Node CreateTaskHarvest()
     {
+        Node harvestTask = new TaskHarvest(agent);
+
         return new Sequence(new List<Node>
         {
             new CheckForHarvestable(agent),
             new TaskDropInventoryItem(agent, colonistData),
             new TaskGoToTarget(agent, colonistData, taskDescriptions[ETaskDescription.Harvesting]),
-            new TaskHarvest(agent)
+            harvestTask,
+            new RearrangeTree(harvestTask, this)
         })
         {
             priority = taskHarvest
