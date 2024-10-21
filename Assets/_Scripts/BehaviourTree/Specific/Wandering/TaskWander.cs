@@ -11,13 +11,15 @@ public class TaskWander : Node
     private NavMeshAgent agent;
     private string taskDescription;
     private ColonistData colonistData;
+    private ColonistBT colonistBT;
 
-    public TaskWander(NavMeshAgent agent, ColonistSettingsSO colonistSettings, ColonistData colonistData, string taskDescription)
+    public TaskWander(NavMeshAgent agent, ColonistSettingsSO colonistSettings, ColonistData colonistData, ColonistBT colonistBT, string taskDescription)
     {
         this.agent = agent;
         this.colonistSettings = colonistSettings;
         this.colonistData = colonistData;
         this.taskDescription = taskDescription;
+        this.colonistBT = colonistBT;
         currentWaitTime = Random.Range(0f, colonistSettings.maxWaitTime);
     }
 
@@ -35,6 +37,10 @@ public class TaskWander : Node
         }
         colonistData.ChangeActivity(taskDescription);
 
+        if (colonistBT.rearrangeTree)
+        {
+            colonistBT.TriggerTreeSetup();
+        }
         state = NodeState.RUNNING;
         return state;
     }
