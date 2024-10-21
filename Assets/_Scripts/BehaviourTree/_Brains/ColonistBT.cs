@@ -18,11 +18,11 @@ public class ColonistBT : Tree
     [SerializeField] private int taskSleep;
     [Space]
     [BoxGroup("Editable at runtime, player access available")]
-    [SerializeField] private int taskHaul;
+    [SerializeField] public int taskHaul;
     [BoxGroup("Editable at runtime, player access available")]
-    [SerializeField] private int taskConstruct;
+    [SerializeField] public int taskConstruct;
     [BoxGroup("Editable at runtime, player access available")]
-    [SerializeField] private int taskHarvest;
+    [SerializeField] public int taskHarvest;
 
     private NavMeshAgent agent;
     private ColonistData colonistData;
