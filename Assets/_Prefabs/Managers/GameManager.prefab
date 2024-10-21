@@ -130,16 +130,10 @@ MonoBehaviour:
     - rid: 6300629960322187304
       type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
-        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
-          type: 3}
-        tasksParent: {fileID: 0}
         taskName: Move with WASD
     - rid: 6300629960322187305
       type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
-      data:
-        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
-          type: 3}
-        tasksParent: {fileID: 0}
+      data: 
     - rid: 6300629960322187306
       type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
@@ -152,16 +146,10 @@ MonoBehaviour:
     - rid: 6300629960322187307
       type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
-        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
-          type: 3}
-        tasksParent: {fileID: 0}
         taskName: Drag Click Middle Mouse
     - rid: 6300629960322187308
       type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
-      data:
-        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
-          type: 3}
-        tasksParent: {fileID: 0}
+      data: 
     - rid: 6300629960322187309
       type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
@@ -177,21 +165,14 @@ MonoBehaviour:
       data:
         textPrefab: {fileID: 2382108017143445734, guid: 1a715652956cdd04c80a9a3ef9a92fce,
           type: 3}
-        tasksParent: {fileID: 0}
         text: Sometimes you need to stop to think and plan
     - rid: 6300629960322187311
       type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
-        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
-          type: 3}
-        tasksParent: {fileID: 0}
         taskName: Press the Space bar
     - rid: 6300629960322187312
       type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
-      data:
-        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
-          type: 3}
-        tasksParent: {fileID: 0}
+      data: 
     - rid: 6300629960322187313
       type: {class: PressKeyStep, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
@@ -207,21 +188,14 @@ MonoBehaviour:
       data:
         textPrefab: {fileID: 2382108017143445734, guid: 1a715652956cdd04c80a9a3ef9a92fce,
           type: 3}
-        tasksParent: {fileID: 0}
         text: Sometimes things are going to slow and you want to speed up
     - rid: 6300629960322187315
       type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
-        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
-          type: 3}
-        tasksParent: {fileID: 0}
         taskName: Press 1, 2 & 3
     - rid: 6300629960322187316
       type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
-      data:
-        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
-          type: 3}
-        tasksParent: {fileID: 0}
+      data: 
     - rid: 6300629960322187317
       type: {class: ChangeTextVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
@@ -230,16 +204,10 @@ MonoBehaviour:
     - rid: 6300629960322187318
       type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
-        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
-          type: 3}
-        tasksParent: {fileID: 0}
         taskName: Place A Stockpile
     - rid: 6300629960322187319
       type: {class: TaskVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
-        taskPrefab: {fileID: 7514099989879810555, guid: ab2a3ab2f6c47b442b71e57ff23b3e1e,
-          type: 3}
-        tasksParent: {fileID: 0}
         taskName: Harvest Trees
     - rid: 6300629960322187320
       type: {class: TutorialPart, ns: Skolger.Tutorial, asm: Assembly-CSharp}
@@ -390,10 +358,7 @@ MonoBehaviour:
         easeType: 23
     - rid: 6300629960322187338
       type: {class: UIFillBarVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
-      data:
-        fillbarPrefab: {fileID: 2137832509259981723, guid: d4a7d410466c47f43985306a8ecac634,
-          type: 3}
-        tasksParent: {fileID: 0}
+      data: 
     - rid: 6300629960322187339
       type: {class: TutorialPart, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
@@ -408,14 +373,19 @@ MonoBehaviour:
         visualAids:
         - rid: 6300629960322187341
         - rid: 6300629960322187342
-        cellPos: {x: 62.518307, y: 0, z: 108.615616}
+        positions: []
         buildingData: {fileID: 11400000, guid: bae58b56bbc345242ab0566331760d46, type: 2}
+        needToPlaceOnAllCells: 1
+        neededBuildingsPlaced: 0
+        ignoreInUseCells: 1
     - rid: 6300629960322187341
       type: {class: GhostVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
         model: {fileID: 752833526009587429, guid: 5ce6874b24b559f4b8c0e3e04339ee49,
           type: 3}
-        cellPos: {x: 62.383812, y: 0, z: 108.60121}
+        isFloor: 0
+        positions: []
+        deleteObjectsInUsedCells: 0
     - rid: 6300629960322187342
       type: {class: UIPointerVisualAid, ns: Skolger.Tutorial, asm: Assembly-CSharp}
       data:
@@ -656,16 +626,19 @@ MonoBehaviour:
   SelectionActionCanvas: {fileID: 0}
   actionText: {fileID: 0}
   colonistInfoPanel: {fileID: 0}
-  nameText: {fileID: 0}
-  activityText: {fileID: 0}
-  colonistsBoard: {fileID: 0}
-  colonistDataPrefab: {fileID: 3841737032443900864, guid: 57998a69f3ec5674eafa5e92fbd49925,
+  colonistDataPrefab: {fileID: 5714034643103146621, guid: 638bda84efc49464d8137aafeff84475,
     type: 3}
+  colonistBoard: {fileID: 0}
+  colonistTaskBoard: {fileID: 0}
+  colonistTaskPrefab: {fileID: 0}
   defaultInventoryUIPrefab: {fileID: 7782425593505376041, guid: f09a314cfe73d314ba29a4147c854507,
     type: 3}
   itemTypeGroupPrefab: {fileID: 4163565694974767020, guid: dfc3562d9517d47429c58918a622d6ac,
     type: 3}
   inventoryPanel: {fileID: 0}
+  taskPrefab: {fileID: 0}
+  taskParent: {fileID: 0}
+  fillbarPrefab: {fileID: 0}
 --- !u!114 &6083706945564748004
 MonoBehaviour:
   m_ObjectHideFlags: 0
