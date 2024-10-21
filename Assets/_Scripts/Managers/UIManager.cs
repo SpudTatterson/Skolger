@@ -36,8 +36,7 @@ public class UIManager : MonoSingleton<UIManager>
     [TabGroup("Colonist Info")] public GameObject colonistInfoPanel;
     [Space]
     [TabGroup("Colonist Info")] public GameObject colonistDataPrefab;
-    [TabGroup("Colonist Info")] private ColonistData currentColonist;
-    [TabGroup("Colonist Info")] public GameObject colonistsInfoBoard;
+    [TabGroup("Colonist Info")] public ColonistBoard colonistBoard;
     [TabGroup("Colonist Info")] public GameObject colonistTaskBoard;
     [TabGroup("Colonist Info")] public GameObject colonistTaskPrefab;
 
