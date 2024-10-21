@@ -12,7 +12,14 @@ public class ColonistBar : MonoBehaviour
     [SerializeField] TextMeshProUGUI colonistName;
     [SerializeField] TextMeshProUGUI activity;
     [SerializeField] Button colonistButton;
+
+    [Header("Extended info tab")]
+    [SerializeField] GameObject infoTab;
     [SerializeField] InfoContainer[] infoContainers;
+
+    [Header("Priority tab")]
+    [SerializeField] GameObject priorities;
+
 
     private void Update()
     {
@@ -22,9 +29,9 @@ public class ColonistBar : MonoBehaviour
         }
     }
 
-    public void SetDataOnCreation(string colonistName, ColonistData colonist)
+    public void SetDataOnCreation(ColonistData colonist)
     {
-        this.colonistName.text = colonistName;
+        this.colonistName.text = colonist.colonistName;
         this.colonist = colonist;
         colonistFace.sprite = colonist.faceSprite;
 
@@ -54,5 +61,20 @@ public class ColonistBar : MonoBehaviour
         {
             colonist.OnActivityChanged -= UpdateActivity;
         }
+    }
+
+    public void TurnOnInfoTab()
+    {
+        infoTab.SetActive(true);
+    }
+
+    public void TurnOnPriorityTab()
+    {
+        priorities.SetActive(true);
+    }
+    public void TurnOffAllTabs()
+    {
+        infoTab.SetActive(false);
+        priorities.SetActive(false);
     }
 }
