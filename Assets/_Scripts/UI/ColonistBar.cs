@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.Utilities;
 using Skolger.UI.InfoContainers;
 using TMPro;
 using UnityEngine;
@@ -19,9 +20,7 @@ public class ColonistBar : MonoBehaviour
 
     [Header("Priority tab")]
     [SerializeField] GameObject priorities;
-    [SerializeField] TextMeshProUGUI haulTaskText;
-    [SerializeField] TextMeshProUGUI constructTaskText;
-    [SerializeField] TextMeshProUGUI harvestTaskText;
+    [SerializeField] PriorityButton[] priorityButtons;
 
 
     private void Update()
@@ -38,10 +37,6 @@ public class ColonistBar : MonoBehaviour
         this.colonist = colonist;
         colonistFace.sprite = colonist.faceSprite;
 
-        haulTaskText.text = colonist.brain.taskHaul.ToString();
-        constructTaskText.text = colonist.brain.taskConstruct.ToString();
-        harvestTaskText.text = colonist.brain.taskHarvest.ToString();
-
         if (this.colonist != null)
         {
             this.colonist.OnActivityChanged += UpdateActivity;
@@ -52,8 +47,13 @@ public class ColonistBar : MonoBehaviour
         {
             infoContainer.Initialize(colonist);
         }
+
+        foreach (PriorityButton button in priorityButtons)
+        {
+            button.Initialize(colonist);
+        }
     }
-    
+
     void FocusOnColonist()
     {
         StartCoroutine(CameraController.Instance.SendCameraToTarget(colonist.transform.position));
