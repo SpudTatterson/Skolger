@@ -79,11 +79,15 @@ public class ItemObject : MonoBehaviour, IItem, ISelectable, IAllowable, ICellOc
 
         if (allowed) OnAllow();
         else OnDisallow();
+
         if (GridManager.Instance.GetCellFromPosition(transform.position) == null) cornerCell = null;
         else
         {
             cornerCell = GridManager.Instance.GetCellFromPosition(transform.position);
         }
+
+        GetOccupiedCells();
+        OnOccupy();
     }
 
     public bool UpdateAmount(int amount)
