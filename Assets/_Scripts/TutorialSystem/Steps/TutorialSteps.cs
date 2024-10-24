@@ -332,13 +332,17 @@ namespace Skolger.Tutorial
             return true;
         }
     }
-
-    public interface INumberedStep
+    public class FinishConstructionStep : BaseStep 
     {
-        float max { get; }
-        float current { get; }
+        public override void Update()
+        {
+            base.Update();
 
-        event Action<float> OnNumberChange;
+            if(!TaskManager.Instance.CheckIfConstructionTaskExists())
+            {
+                Finish();
+            }
+        }
     }
 }
 

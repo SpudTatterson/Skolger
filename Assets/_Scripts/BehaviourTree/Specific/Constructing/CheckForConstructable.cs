@@ -22,14 +22,22 @@ public class CheckForConstructable : Node
         if (hasConstructable != null)
         {
             state = NodeState.SUCCESS;
-            return state;
+            return state; 
         }
 
         var constructable = TaskManager.Instance.PullConstructableFromQueue();
 
         if (constructable != null)
         {
-            if (colonistData.agent.CanReachPoint(constructable.GetPosition().position))
+            Vector3 position = constructable.GetPosition().position;
+            if (constructable is ConstructionSiteObject buildingObject && buildingObject.buildingData is FloorTile)
+            {
+                int heightModifier = Mathf.FloorToInt(position.y / GridManager.Instance.worldSettings.cellHeight);
+                heightModifier = Mathf.RoundToInt(Mathf.Clamp(heightModifier - 1, 0, Mathf.Infinity));
+                if (heightModifier == 0 && Mathf.RoundToInt(position.y) != 0) heightModifier++;
+                position.y -= heightModifier * GridManager.Instance.worldSettings.cellHeight;
+            }
+            if (colonistData.agent.CanReachPoint(position) && InventoryManager.Instance.HasItems(constructable.GetAllCosts()))
             {
                 parent.parent.SetData(EDataName.Constructable, constructable);
                 state = NodeState.SUCCESS;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.Utilities;
 using Skolger.UI.InfoContainers;
 using TMPro;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class ColonistBar : MonoBehaviour
 
     [Header("Priority tab")]
     [SerializeField] GameObject priorities;
+    [SerializeField] PriorityButton[] priorityButtons;
 
 
     private void Update()
@@ -45,7 +47,13 @@ public class ColonistBar : MonoBehaviour
         {
             infoContainer.Initialize(colonist);
         }
+
+        foreach (PriorityButton button in priorityButtons)
+        {
+            button.Initialize(colonist);
+        }
     }
+
     void FocusOnColonist()
     {
         StartCoroutine(CameraController.Instance.SendCameraToTarget(colonist.transform.position));

@@ -88,7 +88,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 3.399994, y: 0}
+  m_AnchoredPosition: {x: 3.4000244, y: 0}
   m_SizeDelta: {x: 15.8287, y: 15.8287}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &3906030792773052770
@@ -145,12 +145,12 @@ PrefabInstance:
     - target: {fileID: 2699217162409157615, guid: 99d73b1146071a047b51d2aae787c734,
         type: 3}
       propertyPath: m_text
-      value: Testing task
+      value: Harvest Trees & Bushes
       objectReference: {fileID: 0}
     - target: {fileID: 2699217162409157615, guid: 99d73b1146071a047b51d2aae787c734,
         type: 3}
       propertyPath: m_fontSize
-      value: 49.95
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 2699217162409157615, guid: 99d73b1146071a047b51d2aae787c734,
         type: 3}
@@ -165,7 +165,7 @@ PrefabInstance:
     - target: {fileID: 2699217162409157615, guid: 99d73b1146071a047b51d2aae787c734,
         type: 3}
       propertyPath: m_fontSizeBase
-      value: 21.6
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 2699217162409157615, guid: 99d73b1146071a047b51d2aae787c734,
         type: 3}
@@ -181,7 +181,7 @@ PrefabInstance:
     - target: {fileID: 2699217162409157615, guid: 99d73b1146071a047b51d2aae787c734,
         type: 3}
       propertyPath: m_enableAutoSizing
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2699217162409157615, guid: 99d73b1146071a047b51d2aae787c734,
         type: 3}

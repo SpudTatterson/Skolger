@@ -1,5 +1,4 @@
 using BehaviorTree;
-using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -27,19 +26,33 @@ public class TaskPutItemInConstructable : Node
                 state = NodeState.FAILURE;
                 return state;
             }
-
-            int itemIndex = (int)data;
-            constructable.AddItem(colonistData.inventory.TakeItemOut(itemIndex));
-            ClearData(EDataName.InventoryItem);
-            ClearData(EDataName.Target);
-            ClearData(EDataName.Cost);
+            if (!constructable.beingConstructed)
+            {
+                int itemIndex = (int)data;
+                constructable.AddItem(colonistData.inventory.TakeItemOut(itemIndex));
+            }
 
             if (constructable.CheckIfCostsFulfilled())
             {
-                constructable.ConstructBuilding();
-                ClearData(EDataName.Constructable);
-                state = NodeState.SUCCESS;
-                return state;
+                if (!constructable.beingConstructed)
+                {
+                    TaskManager.Instance.StartCoroutine(constructable.ConstructBuilding());
+                }
+                if (constructable.finishedConstruction)
+                {
+                    ClearData(EDataName.InventoryItem);
+                    ClearData(EDataName.Target);
+                    ClearData(EDataName.Cost);
+                    ClearData(EDataName.Constructable);
+                    state = NodeState.SUCCESS;
+                    return state;
+                }
+            }
+            else
+            {
+                ClearData(EDataName.InventoryItem);
+                ClearData(EDataName.Target);
+                ClearData(EDataName.Cost);
             }
 
             state = NodeState.RUNNING;

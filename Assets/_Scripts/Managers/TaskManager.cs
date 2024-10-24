@@ -43,6 +43,10 @@ public class TaskManager : MonoSingleton<TaskManager>
             return constructionQueue.Dequeue();
         return null;
     }
+    public bool CheckIfConstructionTaskExists()
+    {
+        return constructionQueue.Count > 0;
+    }
 
     public void AddToHaulQueue(ItemObject itemObject)
     {

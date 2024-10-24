@@ -61,10 +61,11 @@ public class BaseHarvestable : MonoBehaviour, IHarvestable, ISelectable, ICellOc
             if (timeSincePlayedEffect >= effectsWaitTime)
             {
                 HitTree();
+                fillBar.UpdateFillAmount(timeHarvesting);
                 timeSincePlayedEffect = 0f;
             }
 
-            fillBar.UpdateFillAmount(timeHarvesting);
+            
             yield return null;
         }
 

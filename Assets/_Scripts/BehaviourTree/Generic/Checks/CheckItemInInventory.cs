@@ -11,6 +11,12 @@ public class CheckItemInInventory : Node
 
     public override NodeState Evaluate()
     {
+        IConstructable constructable = (IConstructable)GetData(EDataName.Constructable);
+        if (constructable != null && constructable.beingConstructed)
+        {
+            state = NodeState.SUCCESS;
+            return state;
+        }
         var inventoryItem = GetData(EDataName.InventoryItem);
         if (inventoryItem == null || colonistData.inventory.IsEmpty())
         {

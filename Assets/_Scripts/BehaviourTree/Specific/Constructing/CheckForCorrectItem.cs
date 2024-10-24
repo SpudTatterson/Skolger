@@ -1,4 +1,5 @@
 using BehaviorTree;
+using UnityEngine;
 
 class CheckForCorrectItem : Node
 {
@@ -18,7 +19,12 @@ class CheckForCorrectItem : Node
             state = NodeState.SUCCESS;
             return state;
         }
-
+        IConstructable constructable = (IConstructable)GetData(EDataName.Constructable);
+        if (constructable != null && constructable.beingConstructed)
+        {
+            state = NodeState.SUCCESS;
+            return state;
+        }
         state = NodeState.FAILURE;
         return state;
     }

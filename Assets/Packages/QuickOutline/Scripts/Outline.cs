@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [DisallowMultipleComponent]
 
@@ -88,7 +89,7 @@ public class Outline : MonoBehaviour
   private Material outlineFillMaterial;
 
   [SerializeField] int _stencilValue = 1;
-  [SerializeField] int addToQueue =  50;
+  [SerializeField] int addToQueue = 50;
   [SerializeField] bool _dontOutlineSprites = true;
   [SerializeField] bool _useFade = true;
   private bool needsUpdate;
@@ -109,12 +110,14 @@ public class Outline : MonoBehaviour
 
     // Cache renderers
     renderers = GetComponentsInChildren<Renderer>().ToList();
-    for (int i = 0; i < renderers.Count; i++)
+    List<Renderer> cleanedRenderers = new List<Renderer>();
+    foreach (Renderer renderer in renderers)
     {
-      if (_dontOutlineSprites && renderers[i] is SpriteRenderer)
-        renderers.RemoveAt(i);
+      if (_dontOutlineSprites && (renderer is SpriteRenderer || renderer is SpriteMask))
+        continue;
+      cleanedRenderers.Add(renderer);
     }
-
+    renderers = cleanedRenderers;
     // Instantiate outline materials
     // outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMaskFade"));
     outlineMaskMaterial = _useFade ? Instantiate(Resources.Load<Material>(@"Materials/OutlineMaskFade")) : outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));

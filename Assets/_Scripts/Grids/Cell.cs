@@ -43,7 +43,7 @@ public class Cell
     public bool IsRoofed()
     {
         Cell cellAbove = GetCellAbove();
-        
+
         if (cellAbove.isVisible || cellAbove.hasFloor)
             return true;
         else
@@ -65,6 +65,9 @@ public class Cell
     }
     public Cell GetClosestEmptyCell()
     {
+        if (!this.isVisible)
+            return GetCellBelow()?.GetClosestEmptyCell();
+
         Queue<Vector2Int> toExplore = new Queue<Vector2Int>();
         HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 
@@ -107,8 +110,8 @@ public class Cell
         }
 
         Debug.Log("No empty cell found on grid \n trying to find empty cell on grid below");
-        
-        return GetCellBelow().GetClosestEmptyCell();
+
+        return GetCellBelow()?.GetClosestEmptyCell();
     }
     public Cell GetCellAbove()
     {

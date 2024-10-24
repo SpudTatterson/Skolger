@@ -17,14 +17,19 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
     public bool SetForCancellation { get; private set; }
     public bool IsSelected { get; private set; }
     [SerializeField, HideInInspector] Direction placementDirection = Direction.TopLeft;
-
+    public bool beingConstructed { get; private set; } = false;
+    public bool finishedConstruction { get; private set; } = false;
     Outline outline;
 
     BillBoard forbiddenBillboard;
+    FillBar fillBar;
     // should probably hold ref to colonist that is supposed to build incase of canceling action + so that there wont be 2 colonists working on the same thing
 
     public void Initialize(BuildingData buildingData, Direction placementDirection)
     {
+        beingConstructed = false;
+        finishedConstruction = false;
+
         this.buildingData = buildingData;
         this.placementDirection = placementDirection;
 
@@ -46,6 +51,8 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
 
         // get necessary components
         forbiddenBillboard = GetComponentInChildren<BillBoard>(true);
+        fillBar = GetComponentInChildren<FillBar>(true);
+        fillBar.UpdateFillAmount(0);
         if (!TryGetComponent(out outline))
         {
             outline = gameObject.AddComponent<Outline>();
@@ -119,8 +126,32 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         return false;
     }
 
-    public void ConstructBuilding()
+    public IEnumerator ConstructBuilding()
     {
+        float timeConstructing = 0f;
+        beingConstructed = true;
+        fillBar.gameObject.SetActive(true);
+        fillBar.UpdateMaxFillAmount(buildingData.buildTime);
+
+        float timeSincePlayedEffect = 0;
+        float effectsWaitTime = 0.5f / buildingData.buildTime;
+
+        while (timeConstructing < buildingData.buildTime)
+        {
+            timeConstructing += Time.deltaTime;
+            timeSincePlayedEffect += Time.deltaTime;
+
+            if (timeSincePlayedEffect >= 0.5)
+            {
+                fillBar.UpdateFillAmount(timeConstructing);
+                timeSincePlayedEffect = 0f;
+            }
+
+            yield return null;
+        }
+
+        finishedConstruction = true;
+        fillBar.gameObject.SetActive(false);
         PoolManager.Instance.ReturnObject(buildingData.unplacedVisual, gameObject);
         BuildingObject.MakeInstance(buildingData, this.transform.position, placementDirection);
     }
@@ -264,7 +295,7 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
                 break;
             }
         }
-        
+
         this.occupiedCells = occupiedCells;
     }
 

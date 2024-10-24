@@ -22,10 +22,10 @@ public class CheckForConstructableCost : Node
             state = NodeState.SUCCESS;
             return state;
         }
-        else
-        {
-            ClearData(EDataName.Constructable);
-        }
+        // else
+        // {
+        //     ClearData(EDataName.Constructable);
+        // }
 
         state = NodeState.FAILURE;
         return state;

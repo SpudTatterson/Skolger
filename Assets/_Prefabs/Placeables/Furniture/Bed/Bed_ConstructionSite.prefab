@@ -18,6 +18,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bed_ConstructionSite
       objectReference: {fileID: 0}
+    - target: {fileID: 5968511465473940751, guid: 6f9e034c15017f34fa6aea5bed1949d4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 54a61d413f961ee40b69cc0af66181b7, type: 2}
     - target: {fileID: 7679545104010288202, guid: 6f9e034c15017f34fa6aea5bed1949d4,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
