@@ -16,6 +16,8 @@ MonoBehaviour:
   placeableName: SleepingSpot
   description: 
   costs: []
+  buildTime: 0
+  placementSound: {fileID: 0}
   xSize: 1
   ySize: 2
   usesCell: 1

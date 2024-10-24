@@ -29,7 +29,7 @@ public class TaskTakeItemFromStockpile : Node
             ClearData(EDataName.Target);
 
             Vector3 position = constructable.GetPosition().position;
-            if (constructable is BuildingObject buildingObject && buildingObject.buildingData is FloorTile)
+            if (constructable is ConstructionSiteObject buildingObject && buildingObject.buildingData is FloorTile)
             {
                 int heightModifier = Mathf.FloorToInt(position.y / GridManager.Instance.worldSettings.cellHeight);
                 heightModifier = Mathf.RoundToInt(Mathf.Clamp(heightModifier - 1, 0, Mathf.Infinity));

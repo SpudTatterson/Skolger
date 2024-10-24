@@ -20,6 +20,7 @@ MonoBehaviour:
     cost: 10
   - item: {fileID: 11400000, guid: 4aa0672e957819344873fedb144622a0, type: 2}
     cost: 20
+  buildTime: 4
   placementSound: {fileID: 8300000, guid: 6026395438688ea4895c2d2dad4c7e71, type: 3}
   xSize: 2
   ySize: 3

@@ -9,6 +9,7 @@ public class PlaceableData : ScriptableObject
     [BoxGroup("Main Info")] public string placeableName;
     [Multiline, BoxGroup("Main Info")] public string description;
     [BoxGroup("Main Info")] public List<ItemCost> costs = new List<ItemCost>();
+    [BoxGroup("Main Info")] public float buildTime = 5;
     [BoxGroup("Main Info")] public AudioClip placementSound;
 
     [BoxGroup("Settings")] public int xSize = 1;
@@ -37,13 +38,13 @@ public class PlaceableData : ScriptableObject
         {
             case PlacementType.Line:
                 return new LinePlacementStrategy();
-                
+
             case PlacementType.Single:
                 return new SinglePlacementStrategy();
-                
+
             case PlacementType.Square:
                 return new SquarePlacementStrategy();
-                
+
         }
         throw new NullReferenceException("No placement strategy found for selection type");
     }
