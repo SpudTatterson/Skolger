@@ -58,6 +58,7 @@ public class ColonistData : MonoBehaviour, ISelectable
         healthManager.OnDeath += Die;
 
         colonistName = ColonistUtility.SetRandomName();
+        gameObject.name = colonistName;
     }
 
     void WakeUp()
@@ -117,7 +118,7 @@ public class ColonistData : MonoBehaviour, ISelectable
             billboard.UpdateImage(sleepSprite);
         }
         if (state == EBrainState.Rest && brainState == EBrainState.Sleep) return;
-        if (state == EBrainState.Unrestricted && brainState == EBrainState.Sleep) restManger.WakeUp(); // this is bad code but its 1 am and i need to hand this in tomorow please fix this if you find the issue is that if he was mid task before he went to sleep he wont go into the wake up task in the brain and gets stuck sleeping forever
+        if (state == EBrainState.Unrestricted && brainState == EBrainState.Sleep) restManger.WakeUp(); // this is bad code but its 1 am and i need to hand this in tomorrow please fix this if you find. the issue is that if he was mid task before he went to sleep he wont go into the wake up task in the brain and gets stuck sleeping forever
         brainState = state;
     }
 
