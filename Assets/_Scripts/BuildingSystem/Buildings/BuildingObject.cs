@@ -156,9 +156,13 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     {
         foreach (Cell cell in occupiedCells)
         {
-            cell.inUse = buildingData.usesCell;
-            cell.walkable = buildingData.walkable;
             if (buildingData is FloorTile) cell.hasFloor = true;
+            else
+            {
+                cell.inUse = buildingData.usesCell;
+                cell.walkable = buildingData.walkable;
+                cell.GetCellAbove().inFullUse = buildingData.takesFullCell;
+            }
         }
     }
 
@@ -166,9 +170,13 @@ public class BuildingObject : MonoBehaviour, ISelectable, ICellOccupier
     {
         foreach (Cell cell in occupiedCells)
         {
-            cell.inUse = false;
-            cell.walkable = true;
             if (buildingData is FloorTile) cell.hasFloor = false;
+            else
+            {
+                cell.inUse = false;
+                cell.walkable = true;
+                cell.GetCellAbove().inFullUse = false;
+            }
         }
     }
 

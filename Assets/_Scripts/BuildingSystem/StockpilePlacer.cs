@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -132,6 +133,7 @@ public class StockpilePlacer : MonoSingleton<StockpilePlacer>
         inUse = true;
         makingStockpile = true;
         SelectionManager.Instance.isSelecting = false;
+        BuildingPlacer.Instance.CancelPlacement();
     }
     public void StopMakingStockpile()
     {

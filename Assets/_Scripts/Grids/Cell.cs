@@ -13,6 +13,7 @@ public class Cell
     public bool inUse = false; // does this cell have a building, tree, item etc on it
     public bool hasFloor = false;
     public bool isVisible = true;
+    public bool inFullUse = false;
     public CellType cellType;
 
     public Cell(int x, int y, bool isVisible, Vector3 position, GridObject grid)
@@ -27,11 +28,12 @@ public class Cell
     }
     public bool IsFreeAndExists()
     {
-        if (IsFree() && isVisible)
+        if (IsFree() && (isVisible || inFullUse))
             return true;
         else
             return false;
     }
+
     public bool IsFree()
     {
         bool isCellAboveVisible = GetCellAbove().isVisible;
@@ -123,7 +125,7 @@ public class Cell
     }
     public override string ToString()
     {
-        return id;
+        return $"{id}, {grid.gameObject.name} \n {cellType} \n in use {inUse} \n has floor {hasFloor} \n in full use {inFullUse} \n is visible {isVisible}";
     }
     public static explicit operator Vector2Int(Cell cell)
     {

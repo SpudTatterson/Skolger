@@ -21,7 +21,7 @@ public class CellDebugger : MonoBehaviour
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
                     Cell cell = GridManager.Instance.GetCellFromPosition(hit.point);
-                    Debug.Log($"{cell}, {cell.cellType} \n in use {cell.inUse} \n has floor {cell.hasFloor} \n hit point: {hit.point}");
+                    Debug.Log($"{cell}, \n hit point: {hit.point}");
                 }
             }
         }

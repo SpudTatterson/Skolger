@@ -133,19 +133,13 @@ public class ConstructionSiteObject : MonoBehaviour, IConstructable, ISelectable
         fillBar.gameObject.SetActive(true);
         fillBar.UpdateMaxFillAmount(buildingData.buildTime);
 
-        float timeSincePlayedEffect = 0;
-        float effectsWaitTime = 0.5f / buildingData.buildTime;
+
 
         while (timeConstructing < buildingData.buildTime)
         {
             timeConstructing += Time.deltaTime;
-            timeSincePlayedEffect += Time.deltaTime;
 
-            if (timeSincePlayedEffect >= 0.5)
-            {
-                fillBar.UpdateFillAmount(timeConstructing);
-                timeSincePlayedEffect = 0f;
-            }
+            fillBar.UpdateFillAmount(timeConstructing);
 
             yield return null;
         }

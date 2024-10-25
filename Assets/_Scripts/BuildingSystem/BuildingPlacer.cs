@@ -95,7 +95,8 @@ public class BuildingPlacer : MonoSingleton<BuildingPlacer>
 
     void PlaceBuilding(Cell cell)
     {
-        if ((cell.IsFree() && buildingData is not FloorTile) || (buildingData is FloorTile && !cell.hasFloor))
+        if ((cell.IsFreeAndExists() && buildingData is not FloorTile)//regular building
+         || (buildingData is FloorTile && !cell.hasFloor)) // floor tile
         {
             ConstructionSiteObject constructionSite = ConstructionSiteObject.MakeInstance(buildingData, cell, placementDirection);
 
@@ -139,6 +140,7 @@ public class BuildingPlacer : MonoSingleton<BuildingPlacer>
 
     public void SetNewBuilding(BuildingData buildingData)
     {
+        StockpilePlacer.Instance.StopMakingStockpile();
         if (tempGO != null)
             CancelPlacement();
         this.buildingData = buildingData;
